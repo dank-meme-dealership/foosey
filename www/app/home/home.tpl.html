@@ -1,80 +1,24 @@
-<div class="full-screen-wrapper">
-  
-  <!-- The list of categories, which always shows but is resized whenever a
-       category's detail view is selected -->
-  <ion-content class="category-container-full" has-bouncing="true" scrollbar-y="false">
-    <!-- Repeating on categories -->
-    <ion-list ng-repeat="category in list.categories">
-      
-      <div ng-class="{'extra-scroll': $last && showDetails}">
+<!-- Header bar -->
+<ion-header-bar class="bar-positive">
+  <h1 class="title">Foosey</h1>
+  <div class="buttons">
+    <div class="ion-gear-a" style="font-size: 35px"></div>
+  </div>
+</ion-header-bar>
 
-        <!-- The title of each category -->
-        <ion-item class="category-section">{{ category.categoryName | uppercase }}</ion-item>
-        
-        <!-- Repeating on metrics -->
-        <ion-item id="{{entry.metricCode}}" ng-repeat="entry in category.entries" ng-click="selectMetric(entry)" ng-class="{'selected': entry.metricCode ==   selected.metricCode}">
-          <div>
-            <div class="title" ng-class="{'overall': entry.metricCode == 'overall'}">
-              {{entry.text}}
-            </div>
-            <div class="num-denom" ng-class="{'overall': entry.metricCode == 'overall'}">{{ entry.num }} / {{ entry.denom}}</div>
-          </div>
-          <div class="progress-bar {{entry.color}}">
-            <img src="img/triangle.png" class="progress-bar-peer" style="left: {{ entry.peerRate * 100 | number :0 }}%;" />
-            <img src="img/line.png" class="progress-bar-target" style="left: {{ entry.target * 100 | number :0}}%;" />
-            <div class="progress-bar-rate">{{ entry.rate * 100 | number :0 }}%</div>
-            <progress value={{entry.rate}} max=1></progress>
-          </div>
-        </ion-item>
-
-      </div>
-      
-    </ion-list>
-  </ion-content>
-
-  <!-- The lower panel that is displayed when a metric is selected -->
-  <ion-content class="details-container" ng-if="showDetails"
-               on-swipe-left="setTab(2)" on-swipe-right="setTab(1)"
-               scroll="false">
-    
-    <hr class="divider" />
-      
-    <!-- The default (left) detail panel -->
-    <div class="details-left" ng-show="tab === 1">
-      <ion-item style="background: #F7F7F7">
-        <div class="title">{{ selected.text }}</div>
-        <p>{{ selected.dateRange }}</p>
-      </ion-item>
-    
-      <div class="centered-table">
-          <div ng-repeat="row in detail.detailsRows" class="row">
-            <div align="right" class="column column1">{{row.title}}:</div>
-            <div align="right" class="column column2" ng-class="{ 'bold': row.title == 'Rate' }">{{row.prefix}}</div>
-            <div align="left" class="column column3">{{row.suffix}}</div>
-          </div>
-      </div>
-    
-    </div>
-    
-    <!-- The second (right) detail panel -->
-    <div class="details-right" ng-show="tab === 2">
-      <img src="http://i.imgur.com/vzNyiPF.png" class="graph" />
-    </div>
-    
-    <!-- Detail view indicators and exit button -->
-    <div class="details-control">
-      
-      <!-- Current detail view indicator -->
-      <div class="details-indicator">
-        <i class="icon" ng-class="{'ion-ios-circle-outline': tab !== 1, 'ion-record': tab === 1}"></i>
-        <i class="icon" ng-class="{'ion-ios-circle-outline': tab !== 2, 'ion-record': tab === 2}"></i>
-      </div>
+<!-- The content -->
+<ion-content has-bouncing="true" scrollbar-y="false">
   
-      <!-- Exit button -->
-      <i class="exit icon ion-close-circled" ng-click="closeDetails()"></i>
-      
-    </div>
-    
-  </ion-content>
-  
-</div>
+  <!-- show loading while waiting -->
+  <div ng-show="!foosey" class="loading">
+    <ion-spinner icon="ripple"></ion-spinner>
+  </div>
+
+  <!-- list of names -->
+  <ion-list ng-repeat="player in foosey.elos">
+    <ion-item>
+    <h2>{{player.name | capitalize}}</h2> 
+    <div>{{player.elo}}</div>
+    </ion-item>
+  </ion-list>
+</ion-content>
