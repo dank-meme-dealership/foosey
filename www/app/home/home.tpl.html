@@ -1,24 +1,25 @@
 <!-- Header bar -->
-<ion-header-bar class="bar-positive">
+<ion-header-bar>
   <h1 class="title">Foosey</h1>
   <div class="buttons">
-    <div class="ion-gear-a" style="font-size: 35px"></div>
+    <div class="ion-gear-a" style="font-size: 35px; padding-right: 3px"></div>
   </div>
 </ion-header-bar>
 
 <!-- The content -->
-<ion-content has-bouncing="true" scrollbar-y="false">
+<ion-content has-bouncing="true" scrollbar-y="false" class="background">
   
   <!-- show loading while waiting -->
-  <div ng-show="!foosey" class="loading">
-    <ion-spinner icon="ripple"></ion-spinner>
+  <div ng-show="!foosey">
+    <div class="loading-text">Serving ball</div>
+    <ion-spinner class="loading-dots" icon="dots"></ion-spinner>
   </div>
 
   <!-- list of names -->
   <ion-list ng-repeat="player in foosey.elos">
-    <ion-item>
-    <h2>{{player.name | capitalize}}</h2> 
-    <div>{{player.elo}}</div>
+    <ion-item style="margin: 10px 10px 0">
+      <h2>{{player.name | capitalize}}</h2> 
+      <div>{{player.elo}}</div>
     </ion-item>
   </ion-list>
 </ion-content>

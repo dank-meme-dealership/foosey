@@ -1,12 +1,25 @@
-.loading
+.background
 {
-  margin: calc((100% - 42px)/2);
+  background: url(../img/foos.jpg) no-repeat center;
+}
+
+.loading-dots
+{
+  margin: 0px calc((100% - 72px)/2);
+}
+
+.loading-text
+{
+  text-align: center;
+  color: white;
+  font-size: 28px;
+  margin-top: 42px;
 }
 
 .spinner svg 
 {
-  width: 42px;
-  height: 42px;
-  stroke: #444;
-  fill: #444;
+  width: 72px;
+  height: 72px;
+  stroke: white;
+  fill: white;
 }
