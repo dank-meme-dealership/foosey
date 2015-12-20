@@ -1,0 +1,29 @@
+{  
+   "detailsRows":[  
+      {  
+         "title":"Possible",
+         "prefix":"361",
+         "suffix":"points"
+      },
+      {  
+         "title":"Recieved",
+         "prefix":"251",
+         "suffix":"points"
+      },
+      {  
+         "title":"Rate",
+         "prefix":"69%",
+         "suffix":""
+      },
+      {  
+         "title":"Peer Rate",
+         "prefix":"77%",
+         "suffix":""
+      },
+      {  
+         "title":"Target",
+         "prefix":"None",
+         "suffix":""
+      }
+   ]
+}
