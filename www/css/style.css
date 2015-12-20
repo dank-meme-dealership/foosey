@@ -15,6 +15,16 @@
   margin: 0px calc((100% - 72px)/2);
 }
 
+ion-item.item
+{
+  margin: 10px 10px 0;
+}
+
+ion-item.item.last
+{
+  margin-bottom: 10px;
+}
+
 .loading-text
 {
   text-align: center;

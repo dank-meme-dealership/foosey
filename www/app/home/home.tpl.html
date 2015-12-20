@@ -17,7 +17,7 @@
 
   <!-- list of names -->
   <ion-list ng-repeat="player in foosey.elos">
-    <ion-item style="margin: 10px 10px 0">
+    <ion-item ng-class="{'last': $last}">
       <div style="float:left">
         <h2>{{player.name | capitalize}}</h2> 
         <div>{{player.elo}}</div>
