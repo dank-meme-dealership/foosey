@@ -3,6 +3,13 @@
   background: url(../img/foos.jpg) no-repeat center;
 }
 
+.ion-ios-arrow-right
+{
+  float: right;
+  font-size: 30px;
+  padding-top: 6px;
+}
+
 .loading-dots
 {
   margin: 0px calc((100% - 72px)/2);
