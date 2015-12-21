@@ -23,4 +23,9 @@ angular.module('foosey', ['ionic'])
           StatusBar.styleDefault();
         }
       });
+    })
+
+    .config(function($ionicConfigProvider) 
+    {
+      $ionicConfigProvider.views.transition('none');
     });

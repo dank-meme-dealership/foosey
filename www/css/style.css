@@ -11,6 +11,11 @@
   padding: 7px 5px;
 }
 
+.history-date
+{
+  font-size: 25px;
+}
+
 .ion-ios-arrow-right
 {
   float: right;
@@ -28,7 +33,7 @@ ion-item.item
   margin: 10px 10px 0;
 }
 
-ion-item.item.last
+ion-item.item.last, ion-list.last ion-item.item
 {
   margin-bottom: 10px;
 }

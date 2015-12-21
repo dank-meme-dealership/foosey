@@ -23,31 +23,44 @@
     <script src="app/app.js"></script>
     <script src="app/foosey-route.js"></script>
 	<script src="app/foosey-service.js"></script>
+
+    <!-- foosey features -->
+    <script src="app/add-game/add-game-controller.js"></script>
+    <script src="app/history/history-controller.js"></script>
     <script src="app/leaderboard/leaderboard-controller.js"></script>
     <script src="app/settings/settings-controller.js"></script>
     
   </head>
   <body ng-app="foosey">
     <!-- View -->
-    <ion-nav-view></ion-nav-view>
+    <ion-nav-view animation="no-animation"></ion-nav-view>
     <ion-tabs class="tabs-icon-top">
         <ion-tab 
-            title="Leaderboard" 
-            icon-on="ion-ios-calculator"
-            icon-off="ion-ios-calculator-outline"
+            title="Leaderboard"
+            href="#/leaderboard"
+            icon="ion-trophy"
+            nav-transition="none"
         >
         </ion-tab>
         <ion-tab 
             title="Add Game" 
-            href="#/settings"
-            icon-on="ion-ios-plus"
-            icon-off="ion-ios-plus-outline"
+            href="#/add-game"
+            icon="ion-ios-plus"
+            nav-direction="back"
         >
         </ion-tab>
         <ion-tab 
-            title="History" 
-            icon-on="ion-ios-clock"
-            icon-off="ion-ios-clock-outline"
+            title="History"
+            href="#/history" 
+            icon="ion-ios-clock"
+            nav-transition="none"
+        >
+        </ion-tab>
+        <ion-tab 
+            title="Settings"
+            href="#/settings" 
+            icon="ion-ios-gear"
+            nav-transition="none"
         >
         </ion-tab>
     </ion-tabs>

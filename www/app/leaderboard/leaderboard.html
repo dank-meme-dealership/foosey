@@ -1,17 +1,14 @@
 <!-- Header bar -->
 <ion-header-bar>
   <h1 class="title">Leaderboard</h1>
-  <div class="buttons">
-    <div class="ion-gear-a" style="font-size: 35px; padding-    right: 3px" ui-sref="settings"></div>
-  </div>
 </ion-header-bar>
 
 <!-- The content -->
-<ion-content scrollbar-y="false" class="background">
+<ion-content class="background">
   
   <!-- show loading while waiting -->
   <div ng-show="!foosey">
-    <div class="loading-text">Serving ball</div>
+    <!-- <div class="loading-text">Serving ball</div> -->
     <ion-spinner class="loading-dots" icon="dots"></ion-spinner>
   </div>
 
@@ -22,7 +19,7 @@
         <h2>{{player.name | capitalize}}</h2> 
         <div>{{player.elo}}</div>
       </div>
-      <div class="ion-ios-arrow-right"></div>
+      <!-- <div class="ion-ios-arrow-right"></div> -->
     </ion-item>
   </ion-list>
 </ion-content>
