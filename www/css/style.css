@@ -1,6 +1,14 @@
 .background
 {
-  background: url(../img/foos.jpg) no-repeat center;
+  bottom: 48px;
+  /*background: url(../img/foos.jpg) no-repeat center;*/
+  background: #3D485F;
+}
+
+.header-text
+{
+  font-size: 16px;
+  padding: 7px 5px;
 }
 
 .ion-ios-arrow-right
@@ -39,4 +47,19 @@ ion-item.item.last
   height: 72px;
   stroke: white;
   fill: white;
+}
+
+.tab-item.tab-item-active
+{
+  background: #DADADA;
+}
+
+.tab-title
+{
+  font-size: 13px;
+}
+
+.tabs
+{
+  padding-top: 1px;
 }

@@ -1,5 +1,5 @@
 angular.module('foosey')
-  .controller("FooseyController", function ($scope, FooseyService) 
+  .controller('LeaderboardController', function ($scope, FooseyService) 
   {
     // get foosey
     FooseyService.foosey().then(function(result) { 

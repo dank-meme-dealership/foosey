@@ -1,13 +1,13 @@
 <!-- Header bar -->
 <ion-header-bar>
-  <h1 class="title">Foosey</h1>
+  <h1 class="title">Leaderboard</h1>
   <div class="buttons">
-    <div class="ion-gear-a" style="font-size: 35px; padding-right: 3px"></div>
+    <div class="ion-gear-a" style="font-size: 35px; padding-    right: 3px" ui-sref="settings"></div>
   </div>
 </ion-header-bar>
 
 <!-- The content -->
-<ion-content has-bouncing="true" scrollbar-y="false" class="background">
+<ion-content scrollbar-y="false" class="background">
   
   <!-- show loading while waiting -->
   <div ng-show="!foosey">
@@ -16,8 +16,8 @@
   </div>
 
   <!-- list of names -->
-  <ion-list ng-repeat="player in foosey.elos">
-    <ion-item ng-class="{'last': $last}">
+  <ion-list>
+    <ion-item ng-repeat="player in foosey.elos" ng-class="{'last': $last}">
       <div style="float:left">
         <h2>{{player.name | capitalize}}</h2> 
         <div>{{player.elo}}</div>
