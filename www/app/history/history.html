@@ -15,15 +15,16 @@
 	<!-- The full history of games -->
 	<ion-list ng-repeat="day in dates" ng-class="{'last': $last}">
 		<ion-item>
-			<div class="history-date">{{day.date}}</div>
-			<div ng-repeat="game in day.games" style="padding-top:15px">
-				<!-- Will use later -->
-				<!-- <h2>{{game.title}}</h2> -->
-				<!-- <div>{{game.score}}</div> -->
-
+			<div class="history-date">
+				{{day.date}} - {{day.games.length}} game<span ng-if="day.games.length > 1">s</span>
+			</div>
+		</ion-item>
+		<ion-item style="margin-top:0">
+			<div ng-repeat="game in day.games">
 				<div ng-repeat="player in game.players">
 					{{player.name}} - {{player.score}}
 				</div>
+				<div ng-if="!$last" class="divider"></div>
 			</div>
 		</ion-item>
 	</ion-list>

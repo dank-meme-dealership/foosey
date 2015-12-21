@@ -5,6 +5,13 @@
   background: #3D485F;
 }
 
+.divider
+{
+  height: 1px;
+  background: #ddd;
+  margin: 7px 0;
+}
+
 .header-text
 {
   font-size: 16px;
