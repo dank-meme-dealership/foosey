@@ -10,7 +10,10 @@
 	<ion-refresher pulling-text="Pull to refresh..." spinner="dots" on-refresh="refresh()"></ion-refresher>
 
 	<!-- show loading while waiting -->
-  <ion-spinner ng-show="!dates" class="loading-dots" icon="dots"></ion-spinner>
+  <ion-spinner ng-show="loading && !error" class="loading-dots" icon="dots"></ion-spinner>
+
+  <!-- no internet message -->
+  <ion-item ng-show="error">No internet connection :(</ion-item>
 
 	<!-- The full history of games -->
 	<ion-list ng-repeat="day in dates" ng-class="{'last': $last}">

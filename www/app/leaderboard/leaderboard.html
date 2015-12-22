@@ -10,7 +10,9 @@
   <ion-refresher pulling-text="Pull to refresh..." spinner="dots" on-refresh="refresh()"></ion-refresher>
 
   <!-- show loading while waiting -->
-  <ion-spinner ng-show="!elos" class="loading-dots" icon="dots"></ion-spinner>
+  <ion-spinner ng-show="loading && !error" class="loading-dots" icon="dots"></ion-spinner>
+
+  <ion-item ng-show="error">No internet connection :(</ion-item>
 
   <!-- list of names -->
   <ion-list>
