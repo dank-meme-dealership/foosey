@@ -6,35 +6,52 @@
 <ion-content class="background" has-bouncing="true">
 
 	<!-- Selecting the game type -->
-	<ion-item 
-		ng-show="state === 'game-select'" 
-		ng-repeat="type in gameTypes" 
-		ng-click="gameSelect(type)">
-		{{ type.name }}
-	</ion-item>
+	<div ng-show="state === 'game-select'">
+		<div class="action">Select the type of game:</div>
+		<ion-item 
+			ng-repeat="type in gameTypes" 
+			ng-click="gameSelect(type)">
+			{{ type.name }}
+		</ion-item>
+	</div>
 
 	<!-- Player select -->
-	<div ng-show="state === 'player-select'" class="grid-container">
-		<div 
-			class="grid-item item" 
-			ng-class="{'selected': player.selected}"
-			ng-repeat="player in players"
-  	  ng-click="playerSelect(player)">
-  	  {{player.name | capitalize}}
-  	</div>
+	<div ng-show="state === 'player-select'">
+		<div class="action">Select players:</div>
+		<div class="grid-container">
+			<div 
+				class="grid-item item" 
+				ng-class="{'selected': player.selected}"
+				ng-repeat="player in players"
+  		  ng-click="playerSelect(player)">
+  		  {{player.name | capitalize}}
+  		</div>
+		</div>
 	</div>
 	
 	<!-- Score select -->
-	<div ng-show="state === 'score-select'" class="grid-container">
-		<div 
-			class="grid-item item" 
-			ng-repeat="score in scores track by $index"
-  	  ng-click="scoreSelect(scores.length - 1 - $index)">
-  	  {{scores.length - 1 - $index}}
-  	</div>
+	<div ng-show="state === 'score-select'">
+		<div class="action">Select score:</div>
+		<div class="grid-container">
+			<div 
+				class="grid-item item" 
+				ng-repeat="score in scores track by $index"
+  		  ng-click="scoreSelect(scores.length - 1 - $index)">
+  		  {{scores.length - 1 - $index}}
+  		</div>
+		</div>
 	</div>
 
+	<!-- State to confirm the game -->
 	<div ng-show="state === 'confirm'">
+		<div class="action">Does this look right?</div>
+		<ion-item ng-repeat="team in game">
+			{{team.players | team | capitalize}}: {{team.score}}
+		</ion-item>
+		<!-- Big divider -->
+		<div style="margin: 50px"></div>
+		<ion-item ng-click="reset()">Cancel</ion-item>
+		<ion-item ng-click="submit()">Save</ion-item>
 
 	</div>
 

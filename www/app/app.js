@@ -1,13 +1,5 @@
 // set up foosey module
 angular.module('foosey', ['ionic', 'ngIOS9UIWebViewPatch'])
-    
-    .filter('capitalize', function() {
-      return function(input, scope) {
-        if (input!=null)
-        input = input.toLowerCase();
-        return input.substring(0,1).toUpperCase()+input.substring(1);
-      }
-    })
 
     // This establishes a few settings for Ionic
     .run(function($ionicPlatform) 

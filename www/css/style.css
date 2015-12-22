@@ -1,3 +1,11 @@
+.action
+{
+  color: white;
+  text-align: center;
+  font-size: 28px;
+  padding: 10px 0 5px;
+}
+
 .background
 {
   bottom: 48px;

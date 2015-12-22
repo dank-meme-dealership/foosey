@@ -4,6 +4,7 @@ angular.module('foosey')
 		// initialize page
 		reset();
 		$scope.scores = new Array(11); // 0-10
+		$scope.reset = reset;
 
 		// Load players from local storage
 		
@@ -16,21 +17,22 @@ angular.module('foosey')
 			{
 				name: "1 vs. 1",
 				teams: 2,
-				players: 2
+				playersPerTeam: 1
 			},
 			{
 				name: "2 vs. 2",
 				teams: 2,
-				players: 4
+				playersPerTeam: 2
 			},
 			{
 				name: "Trips",
 				teams: 3,
-				players: 3
-			},
-			{
-				name: "Other"
+				playersPerTeam: 1
 			}
+			// ,
+			// {
+			// 	name: "Other"
+			// }
 		];
 
 		// function to select game
@@ -38,7 +40,6 @@ angular.module('foosey')
 		{
 			$scope.type = _.clone(type);
 			$scope.playersSelected = [];
-			$scope.playersPerTeam = $scope.type.players / $scope.type.teams;
 			$scope.state = "player-select";
 		};
 
@@ -53,7 +54,7 @@ angular.module('foosey')
 			$scope.playersSelected.push(player);
 
 			// if we have selected all players for the team, select the score
-			if ($scope.playersSelected.length === $scope.playersPerTeam)
+			if ($scope.playersSelected.length === $scope.type.playersPerTeam)
 			{
 				$scope.state = "score-select";
 			}
@@ -63,31 +64,37 @@ angular.module('foosey')
 		$scope.scoreSelect = function(score)
 		{
 			appendToCommand($scope.playersSelected, score);
+
+			$scope.game.push({
+				players: $scope.playersSelected,
+				score: score
+			});
+
 			$scope.playersSelected = [];
 			$scope.type.teams--;
 			
-			// if we have scores for every team, submit
+			// if we have scores for every team, go to confirm
 			if ($scope.type.teams === 0)
-				submit();
+				$scope.state = "confirm";
 			else
 				$scope.state = "player-select";
 		};
 
-		// function to build the add command out for foosey
-		function appendToCommand(players, score)
-		{
-			for (var i = 0; i < $scope.playersPerTeam; i++)
-			{
-				$scope.command += players[i].name + " " + score + " ";
-			}
-		}
-
 		// add the game
-		function submit()
+		$scope.submit = function()
 		{
 			console.log($scope.command);
 			FooseyService.addGame($scope.command);
 			reset();
+		}
+
+		// function to build the add command out for foosey
+		function appendToCommand(players, score)
+		{
+			for (var i = 0; i < $scope.type.playersPerTeam; i++)
+			{
+				$scope.command += players[i].name + " " + score + " ";
+			}
 		}
 
 		// reset the game
@@ -95,6 +102,7 @@ angular.module('foosey')
 		{
 			$scope.state = "game-select";
 			$scope.command = "";
+			$scope.game = [];
 			$scope.players = [
 				{
 					name: "matt",
