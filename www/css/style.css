@@ -23,6 +23,11 @@
   width: 90px;
 }
 
+.grid-item.selected
+{
+  background: #CCCCCC;
+}
+
 .header-text
 {
   font-size: 16px;
@@ -34,6 +39,11 @@
   font-size: 25px;
   display: flex;
   justify-content: space-between;
+}
+
+.history-games
+{
+  font-size: 18px;
 }
 
 .ion-ios-arrow-right

@@ -1,7 +1,18 @@
 angular.module('foosey')
   .factory('FooseyService', function($http) 
   {
+    var url = "https://run.blockspring.com/api_v2/blocks/foosey?api_key=br_4396_df06230a033b243b55fedbcd7fd3392d847df3bf";
+
 	 return {
+
+      addGame: function(game)
+      {
+        data =
+        {
+          text: game
+        }
+        return $http.post(url, data);
+      },
 
       // gets a list of players and their elo ratings
       elo: function()
@@ -11,7 +22,6 @@ angular.module('foosey')
           text: "elo",
           device: "app"
         };
-        url = "https://run.blockspring.com/api_v2/blocks/foosey?api_key=br_4396_df06230a033b243b55fedbcd7fd3392d847df3bf";
         return $http.post(url, data);
       },
 
@@ -23,7 +33,6 @@ angular.module('foosey')
           text: "history",
           device: "app"
         };
-        url = "https://run.blockspring.com/api_v2/blocks/foosey?api_key=br_4396_df06230a033b243b55fedbcd7fd3392d847df3bf";
         return $http.post(url, data);
       }
     }

@@ -17,9 +17,10 @@
 	<div ng-show="state === 'player-select'" class="grid-container">
 		<div 
 			class="grid-item item" 
+			ng-class="{'selected': player.selected}"
 			ng-repeat="player in players"
   	  ng-click="playerSelect(player)">
-  	  {{player | capitalize}}
+  	  {{player.name | capitalize}}
   	</div>
 	</div>
 	
@@ -31,6 +32,10 @@
   	  ng-click="scoreSelect(scores.length - 1 - $index)">
   	  {{scores.length - 1 - $index}}
   	</div>
+	</div>
+
+	<div ng-show="state === 'confirm'">
+
 	</div>
 
 </ion-content>

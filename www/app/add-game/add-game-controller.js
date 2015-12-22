@@ -1,14 +1,12 @@
 angular.module('foosey')
-	.controller('AddGameController', function($scope)
+	.controller('AddGameController', function($scope, FooseyService)
 	{
 		// initialize page
 		reset();
 		$scope.scores = new Array(11); // 0-10
 
 		// Load players from local storage
-		$scope.players = [
-			"matt", "brik", "roger", "conner", "adam", "erich", "jody", "greg", "blake"
-		];
+		
 
 		// Grab list of players from server
 
@@ -47,6 +45,11 @@ angular.module('foosey')
 		// function to select player
 		$scope.playerSelect = function(player)
 		{
+			// don't allow selected players to be selected again
+			if (player.selected) return;
+
+			// add player to this team
+			player.selected = true;
 			$scope.playersSelected.push(player);
 
 			// if we have selected all players for the team, select the score
@@ -62,35 +65,74 @@ angular.module('foosey')
 			appendToCommand($scope.playersSelected, score);
 			$scope.playersSelected = [];
 			$scope.type.teams--;
+			
+			// if we have scores for every team, submit
 			if ($scope.type.teams === 0)
-			{
 				submit();
-			}
 			else
-			{
 				$scope.state = "player-select";
-			}
 		};
 
+		// function to build the add command out for foosey
 		function appendToCommand(players, score)
 		{
 			for (var i = 0; i < $scope.playersPerTeam; i++)
 			{
-				$scope.command += players[i] + " " + score + " ";
+				$scope.command += players[i].name + " " + score + " ";
 			}
 		}
 
+		// add the game
 		function submit()
 		{
-			$scope.state = "game-select";
 			console.log($scope.command);
-			$scope.command = "";
+			FooseyService.addGame($scope.command);
+			reset();
 		}
 
+		// reset the game
 		function reset()
 		{
 			$scope.state = "game-select";
 			$scope.command = "";
+			$scope.players = [
+				{
+					name: "matt",
+					selected: false
+				},
+				{
+					name: "brik",
+					selected: false
+				},
+				{
+					name: "roger",
+					selected: false
+				},
+				{
+					name: "conner",
+					selected: false
+				},
+				{
+					name: "adam",
+					selected: false
+				},
+				{
+					name: "erich",
+					selected: false
+				},
+				{
+					name: "jody",
+					selected: false
+				},
+				{
+					name: "greg",
+					selected: false
+				},
+				{
+					name: "blake",
+					selected: false
+				},
+			];
 		}
 
 	});
