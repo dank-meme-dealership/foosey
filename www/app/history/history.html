@@ -6,11 +6,11 @@
 <!-- The content -->
 <ion-content class="background" has-bouncing="true">
 
+	<!-- pull to refresh -->
+	<ion-refresher pulling-text="Pull to refresh..." spinner="dots" on-refresh="refresh()"></ion-refresher>
+
 	<!-- show loading while waiting -->
-  <div ng-show="!dates">
-    <!-- <div class="loading-text">Serving ball</div> -->
-    <ion-spinner class="loading-dots" icon="dots"></ion-spinner>
-  </div>
+  <ion-spinner ng-show="!dates" class="loading-dots" icon="dots"></ion-spinner>
 
 	<!-- The full history of games -->
 	<ion-list ng-repeat="day in dates" ng-class="{'last': $last}">

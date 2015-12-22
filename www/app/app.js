@@ -1,5 +1,5 @@
 // set up foosey module
-angular.module('foosey', ['ionic'])
+angular.module('foosey', ['ionic', 'ngIOS9UIWebViewPatch'])
     
     .filter('capitalize', function() {
       return function(input, scope) {

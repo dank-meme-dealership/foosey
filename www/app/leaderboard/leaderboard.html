@@ -6,15 +6,15 @@
 <!-- The content -->
 <ion-content class="background" has-bouncing="true">
   
+  <!-- pull to refresh -->
+  <ion-refresher pulling-text="Pull to refresh..." spinner="dots" on-refresh="refresh()"></ion-refresher>
+
   <!-- show loading while waiting -->
-  <div ng-show="!foosey">
-    <!-- <div class="loading-text">Serving ball</div> -->
-    <ion-spinner class="loading-dots" icon="dots"></ion-spinner>
-  </div>
+  <ion-spinner ng-show="!elos" class="loading-dots" icon="dots"></ion-spinner>
 
   <!-- list of names -->
   <ion-list>
-    <ion-item ng-repeat="player in foosey.elos" ng-class="{'last': $last}">
+    <ion-item ng-repeat="player in elos" ng-class="{'last': $last}">
       <div style="float:left">
         <h2>{{player.name | capitalize}}</h2> 
         <div>{{player.elo}}</div>
