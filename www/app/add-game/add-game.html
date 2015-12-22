@@ -4,5 +4,33 @@
 </ion-header-bar>
 
 <ion-content class="background" has-bouncing="true">
-	<ion-item>Add Game</ion-item>
+
+	<!-- Selecting the game type -->
+	<ion-item 
+		ng-show="state === 'game-select'" 
+		ng-repeat="type in gameTypes" 
+		ng-click="gameSelect(type)">
+		{{ type.name }}
+	</ion-item>
+
+	<!-- Player select -->
+	<div ng-show="state === 'player-select'" class="grid-container">
+		<div 
+			class="grid-item item" 
+			ng-repeat="player in players"
+  	  ng-click="playerSelect(player)">
+  	  {{player | capitalize}}
+  	</div>
+	</div>
+	
+	<!-- Score select -->
+	<div ng-show="state === 'score-select'" class="grid-container">
+		<div 
+			class="grid-item item" 
+			ng-repeat="score in scores track by $index"
+  	  ng-click="scoreSelect(scores.length - 1 - $index)">
+  	  {{scores.length - 1 - $index}}
+  	</div>
+	</div>
+
 </ion-content>

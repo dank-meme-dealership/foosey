@@ -12,6 +12,17 @@
   margin: 7px 0;
 }
 
+.grid-container
+{
+  margin: 5px;
+}
+
+.grid-item
+{
+  float: left;
+  width: 90px;
+}
+
 .header-text
 {
   font-size: 16px;
@@ -32,9 +43,10 @@
   padding-top: 6px;
 }
 
-.loading-dots
+div.item
 {
-  margin: 0px calc((100% - 72px)/2);
+  margin: 5px;
+  text-align: center;
 }
 
 ion-item.item
@@ -47,6 +59,11 @@ ion-item.item.last, ion-list.last ion-item.item
   margin-bottom: 10px;
 }
 
+.loading-dots
+{
+  margin: 0px calc((100% - 26px)/2);
+}
+
 .loading-text
 {
   text-align: center;
@@ -55,10 +72,17 @@ ion-item.item.last, ion-list.last ion-item.item
   margin-top: 42px;
 }
 
+.row.unlimited-items {
+  flex-wrap: wrap;
+}
+
+.row.unlimited-items .col{
+  flex: none;
+  width: 33%;
+}
+
 .spinner svg 
 {
-  width: 72px;
-  height: 72px;
   stroke: white;
   fill: white;
 }
