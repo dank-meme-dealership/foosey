@@ -37,10 +37,9 @@ angular.module('foosey')
           $scope.$broadcast('scroll.refreshComplete');
         }
 
-        // Remove game
-        $scope.removeLast = function()
+        /// confirm that they actually want to remove
+        $scope.confirmRemove = function()
         {
-            // confirm that they actually want to remove
             var confirmPopup = $ionicPopup.confirm({
               title: 'Remove Last Game',
               template: 'Are you sure you want to remove the last game? This cannot be undone.'
@@ -49,12 +48,18 @@ angular.module('foosey')
             // if yes, delete the last game
             confirmPopup.then(function(positive) {
               if(positive) {
-                $scope.loading = true;
-                FooseyService.undo().then(function() 
-                {
-                    refresh();
-                });
+                
               }
+            });
+        }
+
+        // Remove game
+        $scope.removeLast = fucntion()
+        {
+            $scope.loading = true;
+            FooseyService.undo().then(function() 
+            {
+                refresh();
             });
         }
 	});

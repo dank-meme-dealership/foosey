@@ -17,7 +17,7 @@
 
 	<!-- The full history of games -->
 	<div ng-show="dates">
-		<ion-item ng-click="removeLast()">Remove last game</ion-item>
+		<ion-item ng-click="confirmRemove()">Remove last game</ion-item>
 		<div style="margin: 20px"></div>
 		<ion-list ng-repeat="day in dates" ng-class="{'last': $last}">
 			<ion-item>
