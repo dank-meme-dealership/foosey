@@ -9,7 +9,7 @@ angular.module('foosey')
     }
    })
 
-	// 
+	// nice string for teams
 	.filter('team', function()
 	{
 		return function(players)
@@ -31,5 +31,19 @@ angular.module('foosey')
 				i++;
 			}
 			return teamName;
+		}
+	})
+
+	// convert from 24-hour to am/pm
+	.filter('time', function()
+	{
+		return function(time)
+		{
+			var hours = time.split(":")[0];
+			var mins = time.split(":")[1];
+			var ampm = hours < 12 ? "am" : "pm";
+			hours = hours === 0 || hours == 12 ? 12 : hours % 12;
+
+			return hours + ":" + mins + ampm;
 		}
 	});

@@ -45,8 +45,6 @@
 .history-date
 {
   font-size: 25px;
-  display: flex;
-  justify-content: space-between;
 }
 
 .history-games
@@ -97,6 +95,12 @@ ion-item.item.last, ion-list.last ion-item.item
 .row.unlimited-items .col{
   flex: none;
   width: 33%;
+}
+
+.spaced-out
+{
+  display: flex;
+  justify-content: space-between;
 }
 
 .spinner svg 

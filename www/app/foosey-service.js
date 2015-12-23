@@ -34,6 +34,17 @@ angular.module('foosey')
           device: "app"
         };
         return $http.post(url, data);
+      },
+
+      // return a list of players
+      players: function()
+      {
+        data = 
+        {
+          text: "players",
+          device: "app"
+        };
+        return $http.post(url, data);
       }
     }
   });

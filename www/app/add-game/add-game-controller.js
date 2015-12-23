@@ -103,44 +103,18 @@ angular.module('foosey')
 			$scope.state = "game-select";
 			$scope.command = "";
 			$scope.game = [];
-			$scope.players = [
-				{
-					name: "matt",
-					selected: false
-				},
-				{
-					name: "brik",
-					selected: false
-				},
-				{
-					name: "roger",
-					selected: false
-				},
-				{
-					name: "conner",
-					selected: false
-				},
-				{
-					name: "adam",
-					selected: false
-				},
-				{
-					name: "erich",
-					selected: false
-				},
-				{
-					name: "jody",
-					selected: false
-				},
-				{
-					name: "greg",
-					selected: false
-				},
-				{
-					name: "blake",
-					selected: false
-				},
-			];
+			getPlayers();
+		}
+
+		function getPlayers()
+		{
+			FooseyService.players().then(function successCallback(response)
+      { 
+      	$scope.players = response.data.players;
+    	}, function errorCallback(response)
+      {
+        $scope.error = true;
+      });
 		}
 
 	});
