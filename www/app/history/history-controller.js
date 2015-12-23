@@ -1,5 +1,5 @@
 angular.module('foosey')
-	.controller('HistoryController', function($scope, FooseyService)
+	.controller('HistoryController', function($scope, $ionicPopup, FooseyService)
 	{
         // create a pull-to-refresh function
         $scope.refresh = refresh;
@@ -40,10 +40,21 @@ angular.module('foosey')
         // Remove game
         $scope.removeLast = function()
         {
-            $scope.loading = true;
-            FooseyService.undo().then(function() 
-            {
-                refresh();
+            // confirm that they actually want to remove
+            var confirmPopup = $ionicPopup.confirm({
+              title: 'Remove Last Game',
+              template: 'Are you sure you want to remove the last game? This cannot be undone.'
+            });
+
+            // if yes, delete the last game
+            confirmPopup.then(function(positive) {
+              if(positive) {
+                $scope.loading = true;
+                FooseyService.undo().then(function() 
+                {
+                    refresh();
+                });
+              }
             });
         }
 	});
