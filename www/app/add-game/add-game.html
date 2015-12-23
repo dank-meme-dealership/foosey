@@ -18,6 +18,8 @@
 	<!-- Player select -->
 	<div ng-show="state === 'player-select'">
 		<div class="action">Select players:</div>
+		<!-- show loading while waiting -->
+  	<ion-spinner ng-show="!players" class="loading-dots" icon="lines"></ion-spinner>
 		<div class="grid-container">
 			<div 
 				class="grid-item item" 
