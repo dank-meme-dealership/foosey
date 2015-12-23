@@ -45,6 +45,16 @@ angular.module('foosey')
           device: "app"
         };
         return $http.post(url, data);
+      },
+
+      // undo last game
+      undo: function()
+      {
+        data = 
+        {
+          text: "undo"
+        };
+        return $http.post(url, data);
       }
     }
   });

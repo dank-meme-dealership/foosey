@@ -50,7 +50,6 @@
 		<ion-item ng-repeat="team in game">
 			{{team.players | team | capitalize}}: {{team.score}}
 		</ion-item>
-		<!-- Big divider -->
 		<div style="margin: 50px"></div>
 		<ion-item ng-click="reset()">Cancel</ion-item>
 		<ion-item ng-click="submit()">Save</ion-item>

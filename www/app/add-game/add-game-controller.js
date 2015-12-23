@@ -106,6 +106,7 @@ angular.module('foosey')
 			getPlayers();
 		}
 
+		// get players from server
 		function getPlayers()
 		{
 			FooseyService.players().then(function successCallback(response)

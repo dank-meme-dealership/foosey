@@ -36,4 +36,14 @@ angular.module('foosey')
           $scope.loading = false;
           $scope.$broadcast('scroll.refreshComplete');
         }
+
+        // Remove game
+        $scope.removeLast = function()
+        {
+            $scope.loading = true;
+            FooseyService.undo().then(function() 
+            {
+                refresh();
+            });
+        }
 	});
