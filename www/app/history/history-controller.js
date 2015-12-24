@@ -54,7 +54,7 @@ angular.module('foosey')
         }
 
         // Remove game
-        $scope.removeLast = fucntion()
+        $scope.removeLast = function()
         {
             $scope.loading = true;
             FooseyService.undo().then(function() 
