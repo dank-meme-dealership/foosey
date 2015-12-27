@@ -1,16 +1,10 @@
 angular.module('foosey')
-	.controller('AddGameController', function($scope, FooseyService)
+	.controller('AddGameController', function($scope, localStorage, FooseyService)
 	{
 		// initialize page
 		reset();
 		$scope.scores = new Array(11); // 0-10
 		$scope.reset = reset;
-
-		// Load players from local storage
-		
-
-		// Grab list of players from server
-
 
 		// Set up the types of games you cal play
 		$scope.gameTypes = [
@@ -109,9 +103,14 @@ angular.module('foosey')
 		// get players from server
 		function getPlayers()
 		{
+			// load from local storage
+			$scope.players = localStorage.getObject('players');
+
+			// load from server
 			FooseyService.players().then(function successCallback(response)
       { 
       	$scope.players = response.data.players;
+      	localStorage.setObject('players', $scope.players);
     	}, function errorCallback(response)
       {
         $scope.error = true;

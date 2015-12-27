@@ -1,5 +1,5 @@
 angular.module('foosey')
-  .controller('LeaderboardController', function ($scope, FooseyService) 
+  .controller('LeaderboardController', function ($scope, localStorage, FooseyService) 
   {
   	// create a pull-to-refresh function
   	$scope.refresh = refresh;
@@ -8,14 +8,26 @@ angular.module('foosey')
     $scope.refresh();
     $scope.loading = true;
 
+    // refresh function
     function refresh()
     {
-    	// get elos
-    	FooseyService.elo().then(function successCallback(response)
+      // get elos
+      getElos();
+    }
+
+    // gets the list of names and elos
+    function getElos()
+    {
+      // load from local storage
+      $scope.elos = localStorage.getObject('elos');
+
+      // load from server
+      FooseyService.elo().then(function successCallback(response)
       { 
-      	$scope.elos = response.data.elos;
+        $scope.elos = response.data.elos;
+        localStorage.setObject('elos', $scope.elos);
         done();
-    	}, function errorCallback(response)
+      }, function errorCallback(response)
       {
         $scope.error = true;
         done();

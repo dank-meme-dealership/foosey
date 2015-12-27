@@ -1,5 +1,5 @@
 angular.module('ionic.utils', [])
-  .factory('$localStorage', ['$window', function ($window)
+  .factory('localStorage', ['$window', function ($window)
   {
     return {
       set       : function (key, value)

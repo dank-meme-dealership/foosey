@@ -1,5 +1,5 @@
 angular.module('foosey')
-	.controller('HistoryController', function($scope, $ionicPopup, FooseyService)
+	.controller('HistoryController', function($scope, $ionicPopup, localStorage, FooseyService)
 	{
         // create a pull-to-refresh function
         $scope.refresh = refresh;
@@ -8,12 +8,17 @@ angular.module('foosey')
         $scope.refresh();
         $scope.loading = true;
 
+        // refresh page function
         function refresh()
         {
+            // load from local storage
+            $scope.dates = localStorage.getObject('history');
+
 		    // get history of games and group by the date
             FooseyService.history()
             .then(function successCallback(result) 
             { 
+                // get dates from server
                 $scope.dates = _.chain(result.data.games)
                     .groupBy('date')
                     .pairs()
@@ -22,6 +27,10 @@ angular.module('foosey')
                       return _.object(_.zip(['date', 'games'], currentItem));
                     })
                     .value();
+
+                // store them to local storage
+                localStorage.setObject('history', $scope.dates);
+
                 done();
             }, function errorCallback(response)
             {
@@ -48,13 +57,13 @@ angular.module('foosey')
             // if yes, delete the last game
             confirmPopup.then(function(positive) {
               if(positive) {
-                
+                removeLast();
               }
             });
         }
 
         // Remove game
-        $scope.removeLast = function()
+        function removeLast()
         {
             $scope.loading = true;
             FooseyService.undo().then(function() 
