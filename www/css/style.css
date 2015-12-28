@@ -13,6 +13,11 @@
   background: #3D485F;
 }
 
+.bar.bar-stable
+{
+   background-color : #ffffff;
+}
+
 .divider
 {
   height: 1px;

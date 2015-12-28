@@ -1,27 +1,24 @@
-<!-- Header bar -->
-<ion-header-bar>
-  <h1 class="title">Leaderboard</h1>
-</ion-header-bar>
-
-<!-- The content -->
-<ion-content class="background" has-bouncing="true">
+<ion-view view-title="Leaderboard">
+  <!-- The content -->
+  <ion-content class="background" has-bouncing="true">
+    
+    <!-- pull to refresh -->
+    <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
   
-  <!-- pull to refresh -->
-  <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
-
-  <!-- show loading while waiting -->
-  <ion-spinner ng-show="loading && !error" class="loading-dots" icon="lines"></ion-spinner>
-
-  <ion-item ng-show="error">No internet connection :(</ion-item>
-
-  <!-- list of names -->
-  <ion-list>
-    <ion-item ng-repeat="player in elos" ng-class="{'last': $last}">
-      <div style="float:left">
-        <h2>{{player.name | capitalize}}</h2> 
-        <div>{{player.elo}}</div>
-      </div>
-      <!-- <div class="ion-ios-arrow-right"></div> -->
-    </ion-item>
-  </ion-list>
-</ion-content>
+    <!-- show loading while waiting -->
+    <ion-spinner ng-show="loading && !error" class="loading-dots" icon="lines"></ion-spinner>
+  
+    <ion-item ng-show="error">No internet connection :(</ion-item>
+  
+    <!-- list of names -->
+    <ion-list>
+      <ion-item ng-repeat="player in elos" ng-class="{'last': $last}">
+        <div style="float:left">
+          <h2>{{player.name | capitalize}}</h2> 
+          <div>{{player.elo}}</div>
+        </div>
+        <!-- <div class="ion-ios-arrow-right"></div> -->
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
