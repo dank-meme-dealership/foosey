@@ -1,4 +1,4 @@
-angular.module('foosey')
+angular.module('leaderboard', [])
   .controller('LeaderboardController', function ($scope, localStorage, FooseyService) 
   {
   	// create a pull-to-refresh function

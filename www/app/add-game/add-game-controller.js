@@ -1,4 +1,4 @@
-angular.module('foosey')
+angular.module('addGame', [])
 	.controller('AddGameController', function($scope, localStorage, FooseyService)
 	{
 		// initialize page

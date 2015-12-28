@@ -1,5 +1,15 @@
 // set up foosey module
-angular.module('foosey', ['ionic', 'ionic.utils', 'ngIOS9UIWebViewPatch'])
+angular.module('foosey', [
+    'ionic', 
+    'ionic.utils',
+
+    'ngIOS9UIWebViewPatch',
+
+    'addGame',
+    'history',
+    'leaderboard',
+    'settings'
+  ])
 
     // This establishes a few settings for Ionic
     .run(function($ionicPlatform) 

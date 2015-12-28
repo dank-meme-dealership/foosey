@@ -1,4 +1,4 @@
-angular.module('foosey')
+angular.module('settings', [])
 	.controller('SettingsController', function($scope, FooseyService)
 	{
 

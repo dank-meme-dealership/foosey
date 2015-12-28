@@ -1,4 +1,4 @@
-angular.module('foosey')
+angular.module('history', [])
 	.controller('HistoryController', function($scope, $ionicPopup, localStorage, FooseyService)
 	{
         // create a pull-to-refresh function
