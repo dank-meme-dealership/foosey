@@ -46,7 +46,7 @@ angular.module('foosey')
           $scope.$broadcast('scroll.refreshComplete');
         }
 
-        /// confirm that they actually want to remove
+        // confirm that they actually want to remove
         $scope.confirmRemove = function()
         {
             var confirmPopup = $ionicPopup.confirm({
