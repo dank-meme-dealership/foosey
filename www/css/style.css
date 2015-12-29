@@ -18,6 +18,12 @@
    background-color : #ffffff;
 }
 
+.button.button-positive
+{
+  background: #3D485F;
+  border-color: #242A38;
+}
+
 .divider
 {
   height: 1px;

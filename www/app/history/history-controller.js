@@ -1,5 +1,5 @@
 angular.module('history', [])
-	.controller('HistoryController', function($scope, $ionicPopup, localStorage, FooseyService)
+	.controller('HistoryController', function($scope, $ionicPopup, $ionicActionSheet, localStorage, FooseyService)
 	{
         // create a pull-to-refresh function
         $scope.refresh = refresh;
@@ -42,31 +42,47 @@ angular.module('history', [])
         // turns off spinner and notifies
         function done()
         {
-          $scope.loading = false;
-          $scope.$broadcast('scroll.refreshComplete');
+            $scope.loading = false;
+            $scope.$broadcast('scroll.refreshComplete');
         }
 
+        $scope.show = function(game) 
+        {
+            // Show the action sheet
+            $ionicActionSheet.show(
+            {
+                destructiveText: 'Remove Game',
+                cancelText: 'Cancel',
+                destructiveButtonClicked: function(index) 
+                {
+                    confirmRemove(game.id);
+                    return true;
+                }
+            });
+        };
+
         // confirm that they actually want to remove
-        $scope.confirmRemove = function()
+        function confirmRemove(id)
         {
             var confirmPopup = $ionicPopup.confirm({
-              title: 'Remove Last Game',
-              template: 'Are you sure you want to remove the last game? This cannot be undone.'
+              title: 'Remove This Game',
+              template: 'Are you sure you want to remove this game? This cannot be undone.'
             });
 
             // if yes, delete the last game
             confirmPopup.then(function(positive) {
               if(positive) {
-                removeLast();
+                remove(id);
               }
             });
         }
 
         // Remove game
-        function removeLast()
+        function remove(id)
         {
             $scope.loading = true;
-            FooseyService.undo().then(function() 
+            FooseyService.remove(id)
+            .then(function()
             {
                 refresh();
             });

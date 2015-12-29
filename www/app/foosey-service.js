@@ -48,11 +48,12 @@ angular.module('foosey')
       },
 
       // undo last game
-      undo: function()
+      remove: function(id)
       {
         data = 
         {
-          text: "undo"
+          text: "remove " + id,
+          device: "app"
         };
         return $http.post(url, data);
       }
