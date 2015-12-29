@@ -39,6 +39,8 @@ angular.module('leaderboard', [])
         $scope.elos = response.data.elos;
         $ionicSlideBoxDelegate.update();
         localStorage.setObject('elos', $scope.elos);
+        $scope.error = false;
+        
         done();
       }, function errorCallback(response)
       {

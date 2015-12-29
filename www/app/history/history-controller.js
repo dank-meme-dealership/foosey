@@ -30,7 +30,8 @@ angular.module('history', [])
 
                 // store them to local storage
                 localStorage.setObject('history', $scope.dates);
-
+                $scope.error = false;
+                
                 done();
             }, function errorCallback(response)
             {
