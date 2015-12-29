@@ -35,6 +35,7 @@ angular.module('addGame', [])
 			$scope.type = _.clone(type);
 			$scope.playersSelected = [];
 			$scope.state = "player-select";
+			$scope.title = "Select Players";
 		};
 
 		// function to select player
@@ -51,6 +52,7 @@ angular.module('addGame', [])
 			if ($scope.playersSelected.length === $scope.type.playersPerTeam)
 			{
 				$scope.state = "score-select";
+				$scope.title = "Select Score";
 			}
 		};
 
@@ -69,9 +71,15 @@ angular.module('addGame', [])
 			
 			// if we have scores for every team, go to confirm
 			if ($scope.type.teams === 0)
+			{
 				$scope.state = "confirm";
+				$scope.title = "Confirm";
+			}
 			else
+			{
 				$scope.state = "player-select";
+				$scope.title = "Select Players";
+			}
 		};
 
 		// add the game
@@ -95,6 +103,7 @@ angular.module('addGame', [])
 		function reset()
 		{
 			$scope.state = "game-select";
+			$scope.title = "Select the Type of Game";
 			$scope.command = "";
 			$scope.game = [];
 			getPlayers();

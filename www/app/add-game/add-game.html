@@ -1,9 +1,8 @@
-<ion-view view-title="Add Game">
+<ion-view view-title="{{title}}">
 	<ion-content class="background" has-bouncing="true">
 	
 		<!-- Selecting the game type -->
 		<div ng-show="state === 'game-select'">
-			<div class="action">Select the type of game:</div>
 			<ion-item 
 				ng-repeat="type in gameTypes" 
 				ng-click="gameSelect(type)">
@@ -13,7 +12,6 @@
 	
 		<!-- Player select -->
 		<div ng-show="state === 'player-select'">
-			<div class="action">Select players:</div>
 			<!-- show loading while waiting -->
 	  	<ion-spinner ng-show="!players" class="loading-dots" icon="lines"></ion-spinner>
 			<div class="grid-container">
@@ -29,7 +27,6 @@
 		
 		<!-- Score select -->
 		<div ng-show="state === 'score-select'">
-			<div class="action">Select score:</div>
 			<div class="grid-container">
 				<div 
 					class="grid-item item" 
@@ -42,7 +39,6 @@
 	
 		<!-- State to confirm the game -->
 		<div ng-show="state === 'confirm'">
-			<div class="action">Does this look right?</div>
 			<ion-item ng-repeat="team in game">
 				{{team.players | team | capitalize}}: {{team.score}}
 			</ion-item>
