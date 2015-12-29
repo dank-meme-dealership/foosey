@@ -1,12 +1,24 @@
 angular.module('leaderboard', [])
-  .controller('LeaderboardController', function ($scope, localStorage, FooseyService) 
+  .controller('LeaderboardController', function ($scope, localStorage, $ionicSlideBoxDelegate, FooseyService) 
   {
   	// create a pull-to-refresh function
   	$scope.refresh = refresh;
 
   	// initialize the page
     $scope.refresh();
+    $scope.title = "ELO Ratings";
     $scope.loading = true;
+
+    // function for swiping between views
+    $scope.changeSlide = function(index)
+    {
+      if (index === 0)
+        $scope.title = "ELO Ratings";
+      else if (index === 1)
+        $scope.title = "Average Score Per Game";
+      else if (index === 2)
+        $scope.title = "% Games Won";
+    }
 
     // refresh function
     function refresh()
@@ -25,6 +37,7 @@ angular.module('leaderboard', [])
       FooseyService.elo().then(function successCallback(response)
       { 
         $scope.elos = response.data.elos;
+        $ionicSlideBoxDelegate.update();
         localStorage.setObject('elos', $scope.elos);
         done();
       }, function errorCallback(response)

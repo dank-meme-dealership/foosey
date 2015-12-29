@@ -1,24 +1,42 @@
-<ion-view view-title="Leaderboard">
+<ion-view view-title="{{title}}">
   <!-- The content -->
   <ion-content class="background" has-bouncing="true">
     
     <!-- pull to refresh -->
     <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
-  
+
+    <!-- Show if error -->
+    <ion-item ng-show="error">No internet connection :(</ion-item>
+
     <!-- show loading while waiting -->
     <ion-spinner ng-show="loading && !error" class="loading-dots" icon="lines"></ion-spinner>
-  
-    <ion-item ng-show="error">No internet connection :(</ion-item>
-  
-    <!-- list of names -->
-    <ion-list>
-      <ion-item ng-repeat="player in elos" ng-class="{'last': $last}">
-        <div style="float:left">
-          <h2>{{player.name | capitalize}}</h2> 
-          <div>{{player.elo}}</div>
-        </div>
-        <!-- <div class="ion-ios-arrow-right"></div> -->
-      </ion-item>
-    </ion-list>
+
+    <ion-slide-box on-slide-changed="changeSlide($index)" show-pager="false">
+
+      <!-- ELO Ratings -->
+      <ion-slide>
+        <!-- list -->
+        <ion-list>
+          <ion-item ng-repeat="player in elos" ng-class="{'last': $last}">
+            <div style="float:left">
+              <h2>{{player.name | capitalize}}</h2> 
+              <div>{{player.elo}}</div>
+            </div>
+            <!-- <div class="ion-ios-arrow-right"></div> -->
+          </ion-item>
+        </ion-list>
+      </ion-slide>
+
+      <!-- Avg Score -->
+      <ion-slide>
+        <ion-item>Unimplemented</ion-item>
+      </ion-slide>
+
+      <!-- % Games won -->
+      <ion-slide>
+        <ion-item>Unimplemented</ion-item>
+      </ion-slide>
+
+    </ion-slide-box>
   </ion-content>
 </ion-view>
