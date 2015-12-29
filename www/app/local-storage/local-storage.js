@@ -16,7 +16,7 @@ angular.module('ionic.utils', [])
       },
       getObject : function (key)
       {
-        return JSON.parse($window.localStorage[key] || '{}');
+        return $window.localStorage[key] === "undefined" ? {} : JSON.parse($window.localStorage[key] || '{}');
       },
       setArray  : function (key, value)
       {
