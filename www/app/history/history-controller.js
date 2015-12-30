@@ -36,6 +36,7 @@ angular.module('history', [])
             });
         }
 
+        // group the games by date
         function groupByDate(games)
         {
             return _.chain(games)
@@ -55,6 +56,7 @@ angular.module('history', [])
             $scope.$broadcast('scroll.refreshComplete');
         }
 
+        // show the action sheet for deleting games
         $scope.show = function(game) 
         {
             // Show the action sheet
@@ -64,14 +66,14 @@ angular.module('history', [])
                 cancelText: 'Cancel',
                 destructiveButtonClicked: function(index) 
                 {
-                    confirmRemove(game.id);
+                    confirmRemove(game);
                     return true;
                 }
             });
         };
 
         // confirm that they actually want to remove
-        function confirmRemove(id)
+        function confirmRemove(game)
         {
             var confirmPopup = $ionicPopup.confirm({
               title: 'Remove This Game',
@@ -81,16 +83,16 @@ angular.module('history', [])
             // if yes, delete the last game
             confirmPopup.then(function(positive) {
               if(positive) {
-                remove(id);
+                remove(game);
               }
             });
         }
 
         // Remove game
-        function remove(id)
+        function remove(game)
         {
             $scope.loading = true;
-            FooseyService.remove(id)
+            FooseyService.remove(game.id)
             .then(function()
             {
                 refresh();
