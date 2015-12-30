@@ -1,5 +1,18 @@
-<ion-view view-title="{{title}}">
-  <ion-content class="background" has-bouncing="true">
+<ion-view view-title="Leaderboard">
+  
+  <!-- Header bar for different leaderboards -->
+  <div class="bar bar-subheader background">
+    <div class="button-bar">
+      <a class="button" ng-click="slideTo(0)"
+        ng-class="{active: slide === 0}">ELO Rating</a>     
+      <a class="button" ng-click="slideTo(1)"
+        ng-class="{active: slide === 1}">Avg Score</a>      
+      <a class="button" ng-click="slideTo(2)"
+        ng-class="{active: slide === 2}">% Wins</a>
+    </div>      
+  </div>
+
+  <ion-content class="background has-subheader" has-bouncing="true">
     <!-- pull to refresh -->
     <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
 
@@ -17,7 +30,7 @@
         <ion-list>
           <ion-item 
             ng-repeat="player in elos" 
-            ng-class="{'last': $last}"
+            ng-class="{'first': $first, 'last': $last}"
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
               <h2>{{player.name | capitalize}}</h2> 
@@ -31,7 +44,7 @@
       <ion-slide>
         <ion-item 
             ng-repeat="player in elos" 
-            ng-class="{'last': $last}"
+            ng-class="{'first': $first, 'last': $last}"
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
               <h2>{{player.name | capitalize}}</h2> 
@@ -44,7 +57,7 @@
       <ion-slide>
         <ion-item 
             ng-repeat="player in elos" 
-            ng-class="{'last': $last}"
+            ng-class="{'first': $first, 'last': $last}"
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
               <h2>{{player.name | capitalize}}</h2> 

@@ -6,18 +6,18 @@ angular.module('leaderboard', [])
 
   	// initialize the page
     $scope.refresh();
-    $scope.title = "ELO Ratings";
+    $scope.slide = 0;
     $scope.loading = true;
 
     // function for swiping between views
     $scope.changeSlide = function(index)
     {
-      if (index === 0)
-        $scope.title = "ELO Ratings";
-      else if (index === 1)
-        $scope.title = "Average Score Per Game";
-      else if (index === 2)
-        $scope.title = "% Games Won";
+      $scope.slide = index;
+    }
+
+    $scope.slideTo = function(index)
+    {
+      $ionicSlideBoxDelegate.slide(index);
     }
 
     // refresh function
