@@ -14,19 +14,15 @@ angular.module('history', [])
             // load from local storage
             $scope.dates = localStorage.getObject('history');
 
-		    // get history of games and group by the date
-            FooseyService.history()
+		    // get 30 most recent games and group by the date
+            FooseyService.history(0, 30)
             .then(function successCallback(result) 
             { 
+                // get games
+                $scope.games = result.data.games;
+
                 // get dates from server
-                $scope.dates = _.chain(result.data.games)
-                    .groupBy('date')
-                    .pairs()
-                    .map(function (currentItem)
-                    {
-                      return _.object(_.zip(['date', 'games'], currentItem));
-                    })
-                    .value();
+                $scope.dates = groupByDate($scope.games);
 
                 // store them to local storage
                 localStorage.setObject('history', $scope.dates);
@@ -38,6 +34,18 @@ angular.module('history', [])
                 $scope.error = true;
                 done();
             });
+        }
+
+        function groupByDate(games)
+        {
+            return _.chain(games)
+                    .groupBy('date')
+                    .pairs()
+                    .map(function (currentItem)
+                    {
+                      return _.object(_.zip(['date', 'games'], currentItem));
+                    })
+                    .value();
         }
 
         // turns off spinner and notifies

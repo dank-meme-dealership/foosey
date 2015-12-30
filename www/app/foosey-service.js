@@ -26,11 +26,11 @@ angular.module('foosey')
       },
 
       // gets the full game history
-      history: function()
+      history: function(start, limit)
       {
         data = 
         {
-          text: "history",
+          text: "history " + start + " " + limit,
           device: "app"
         };
         return $http.post(url, data);
