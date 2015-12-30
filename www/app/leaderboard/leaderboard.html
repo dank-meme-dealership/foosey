@@ -19,11 +19,10 @@
             ng-repeat="player in elos" 
             ng-class="{'last': $last}"
             href="#/app/player/{{player.name}}">
-            <div style="float:left">
+            <div class="spaced-out">
               <h2>{{player.name | capitalize}}</h2> 
-              <div>{{player.elo}}</div>
+              <div><b>{{player.elo}}</b></div>
             </div>
-            <div class="ion-ios-arrow-right"></div>
           </ion-item>
         </ion-list>
       </ion-slide>
@@ -34,11 +33,10 @@
             ng-repeat="player in elos" 
             ng-class="{'last': $last}"
             href="#/app/player/{{player.name}}">
-            <div style="float:left">
+            <div class="spaced-out">
               <h2>{{player.name | capitalize}}</h2> 
-              <div>???</div>
+              <div><b>???</b></div>
             </div>
-            <div class="ion-ios-arrow-right"></div>
           </ion-item>
       </ion-slide>
 
@@ -48,11 +46,10 @@
             ng-repeat="player in elos" 
             ng-class="{'last': $last}"
             href="#/app/player/{{player.name}}">
-            <div style="float:left">
+            <div class="spaced-out">
               <h2>{{player.name | capitalize}}</h2> 
-              <div>???</div>
+              <div><b>???</b></div>
             </div>
-            <div class="ion-ios-arrow-right"></div>
           </ion-item>
       </ion-slide>
 
