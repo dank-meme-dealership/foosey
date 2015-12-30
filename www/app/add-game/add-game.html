@@ -1,4 +1,15 @@
 <ion-view view-title="{{title}}">
+	
+	<!-- Cancel button to return to game select state -->
+	<ion-nav-buttons side="right">
+    <button 
+    	class="button button-clear button-assertive"
+    	ng-if="state !== 'game-select'"
+    	ng-click="reset()">
+    	Cancel
+		</button>
+  </ion-nav-buttons>
+
 	<ion-content class="background" has-bouncing="true">
 	
 		<!-- Selecting the game type -->
