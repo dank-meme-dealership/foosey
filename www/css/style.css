@@ -8,8 +8,17 @@
 
 .background
 {
-  /*background: url(../img/foos.jpg) no-repeat center;*/
   background: #3D485F;
+}
+
+.background-foos
+{
+  background: url(../img/foos.jpg) no-repeat center;
+}
+
+.background-menu
+{
+  background: #7A818A;
 }
 
 .bar.bar-stable
