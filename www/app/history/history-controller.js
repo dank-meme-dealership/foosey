@@ -1,6 +1,10 @@
 angular.module('history', [])
 	.controller('HistoryController', function($scope, $ionicPopup, $ionicActionSheet, localStorage, FooseyService)
 	{
+        // some variables
+        var loaded = 0;
+        var gamesToLoad = 30;
+
         // create a pull-to-refresh function
         $scope.refresh = refresh;
 
@@ -14,14 +18,15 @@ angular.module('history', [])
             // load from local storage
             $scope.dates = localStorage.getObject('history');
 
-		    // get 30 most recent games and group by the date
-            FooseyService.history(0, 30)
+		    // get most recent games and group by the date
+            FooseyService.history(0, gamesToLoad)
             .then(function successCallback(result) 
             { 
-                // get games
+                // get games from server
                 $scope.games = result.data.games;
+                loaded += result.data.games.length;
 
-                // get dates from server
+                // sort the games by date
                 $scope.dates = groupByDate($scope.games);
 
                 // store them to local storage
@@ -34,6 +39,28 @@ angular.module('history', [])
                 $scope.error = true;
                 done();
             });
+        }
+
+        $scope.loadMore = function()
+        {
+            console.log("Loading new games starting from " + loaded + " to " + (loaded + gamesToLoad));
+            FooseyService.history(loaded, loaded + gamesToLoad)
+            .then(function successCallback(result)
+            {
+                // push new games to the end of the games list
+                $scope.games.push.apply($scope.games, result.data.games);
+                console.log("Loaded " + result.data.games.length);
+                loaded += result.data.games.length;
+
+                // see if we can load more games or not
+                $scope.allLoaded = $scope.games[$scope.games.length - 1].id === 0;
+
+                // sort the games by date
+                $scope.dates = groupByDate($scope.games);
+            
+                // broadcast
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+            })
         }
 
         // group the games by date
@@ -54,6 +81,7 @@ angular.module('history', [])
         {
             $scope.loading = false;
             $scope.$broadcast('scroll.refreshComplete');
+            $scope.$broadcast('scroll.infiniteScrollComplete');
         }
 
         // show the action sheet for deleting games

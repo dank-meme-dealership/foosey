@@ -33,6 +33,13 @@
 					</div>
 				</ion-item>
 			</ion-list>
+
+			<!-- Load more games if you reach the bottom -->
+			<ion-infinite-scroll
+				ng-if="!allLoaded"
+  		  on-infinite="loadMore()"
+  		  distance="1%">
+  		</ion-infinite-scroll>
 		</div>
 	</ion-content>
 </ion-view>
