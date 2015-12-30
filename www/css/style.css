@@ -8,7 +8,6 @@
 
 .background
 {
-  bottom: 48px;
   /*background: url(../img/foos.jpg) no-repeat center;*/
   background: #3D485F;
 }
@@ -79,6 +78,11 @@ div.item
   text-align: center;
 }
 
+.item-complex .item-content, .item-radio .item-content
+{
+  padding: 16px;
+}
+
 ion-item.item
 {
   margin: 10px 10px 0;
@@ -102,13 +106,9 @@ ion-item.item.last, ion-list.last ion-item.item
   margin-top: 42px;
 }
 
-.row.unlimited-items {
-  flex-wrap: wrap;
-}
-
-.row.unlimited-items .col{
-  flex: none;
-  width: 33%;
+.space:before
+{
+  padding-right: 16px;
 }
 
 .spaced-out

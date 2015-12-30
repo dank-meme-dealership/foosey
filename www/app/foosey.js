@@ -8,6 +8,7 @@ angular.module('foosey', [
     'addGame',
     'history',
     'leaderboard',
+    'player',
     'settings'
   ])
 
@@ -25,9 +26,4 @@ angular.module('foosey', [
           StatusBar.styleDefault();
         }
       });
-    })
-
-    .config(function($ionicConfigProvider) 
-    {
-      $ionicConfigProvider.views.transition('none');
     });

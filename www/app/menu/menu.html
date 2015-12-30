@@ -1,0 +1,35 @@
+<ion-side-menus enable-menu-with-back-views="false"
+                delegate-handle="left-hand-side-menu">
+  <ion-side-menu-content >
+    <ion-nav-bar class="bar-stable" align-title="center">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"> </ion-nav-view>
+    <now-playing></now-playing>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left" class="background">
+    <ion-header-bar>
+      <h1 class="title"><!-- nothing here--></h1>
+    </ion-header-bar>
+    <ion-content>
+      <ion-list>
+        <ion-item menu-close href="#/app/leaderboard">
+          <div class="ion-trophy space">Leaderboard</div>
+        </ion-item>
+        <ion-item menu-close href="#/app/add-game">
+          <div class="ion-plus space">Add Game</div>
+        </ion-item>
+        <ion-item menu-close href="#/app/history">
+          <div class="ion-ios-clock space">History</div>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>
