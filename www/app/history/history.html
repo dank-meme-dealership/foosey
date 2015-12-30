@@ -6,7 +6,7 @@
 		<ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
 	
 		<!-- show loading while waiting -->
-	  <ion-spinner ng-show="loading && !error" class="loading-dots" icon="lines"></ion-spinner>
+	  <ion-spinner ng-show="!dates && !error" class="loading-dots" icon="lines"></ion-spinner>
 	
 	  <!-- no internet message -->
 	  <ion-item ng-show="error">No internet connection :(</ion-item>

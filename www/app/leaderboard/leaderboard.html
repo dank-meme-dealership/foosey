@@ -7,7 +7,7 @@
     <ion-item ng-show="error">No internet connection :(</ion-item>
 
     <!-- show loading while waiting -->
-    <ion-spinner ng-show="loading && !error" class="loading-dots" icon="lines"></ion-spinner>
+    <ion-spinner ng-show="!elos && !error" class="loading-dots" icon="lines"></ion-spinner>
 
     <ion-slide-box on-slide-changed="changeSlide($index)" show-pager="false">
 
