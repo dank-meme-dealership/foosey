@@ -26,6 +26,11 @@
    background-color : #ffffff;
 }
 
+.bar-subheader
+{
+  padding: 0;
+}
+
 .button.button-positive
 {
   background: #3D485F;
@@ -90,11 +95,6 @@ ion-item.item
   margin: 10px 10px 0;
 }
 
-ion-item.item.first, ion-list.first ion-item.item
-{
-  margin-top: 5px;
-}
-
 ion-item.item.last, ion-list.last ion-item.item
 {
   margin-bottom: 10px;
@@ -130,9 +130,9 @@ ion-item.item.last, ion-list.last ion-item.item
   fill: white;
 }
 
-.tab-item.tab-item-active
+.tab-item.active
 {
-  background: #DADADA;
+  background: #E0E0E0;
 }
 
 .tab-title
