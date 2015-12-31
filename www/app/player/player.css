@@ -1,7 +1,13 @@
+.player-header
+{
+	padding: 20px;
+}
+
 .player-stat
 {
 	font-weight: bold;
-	font-size: 18px;
+	font-size: 6vw;
+  line-height: normal;
 	text-align: center;
 	text-shadow: 2px 2px #000000;
 }
