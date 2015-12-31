@@ -1,5 +1,5 @@
 angular.module('addGame', [])
-	.controller('AddGameController', function($scope, localStorage, FooseyService)
+	.controller('AddGameController', function($scope, $rootScope, localStorage, FooseyService)
 	{
 		// initialize page
 		reset();
@@ -140,5 +140,9 @@ angular.module('addGame', [])
 			}
 			return true;
 		}
+
+		$rootScope.$on("$stateChangeSuccess", function() {
+  	  reset();
+  	});
 
 	});
