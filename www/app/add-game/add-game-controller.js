@@ -118,14 +118,27 @@ angular.module('addGame', [])
 			// load from server
 			FooseyService.players().then(function successCallback(response)
       { 
-      	// only overwrite players if there are none
-      	if ($scope.players.length === 0)
+      	// only overwrite if they haven't selected one yet
+      	if (noneSelected())
+      	{
       		$scope.players = response.data.players;
+      	}
+
       	localStorage.setObject('players', response.data.players);
     	}, function errorCallback(response)
       {
         $scope.error = true;
       });
+		}
+
+		// return true if none of the players have been selected yet
+		function noneSelected()
+		{
+			for (var i = 0; i < $scope.players.length; i++)
+			{
+				if ($scope.players[i].selected) return false;
+			}
+			return true;
 		}
 
 	});
