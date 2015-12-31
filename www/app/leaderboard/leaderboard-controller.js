@@ -24,24 +24,27 @@ angular.module('leaderboard', [])
     function refresh()
     {
       // get elos
-      getElos();
+      getStats();
     }
 
     // gets the list of names and elos
-    function getElos()
+    function getStats()
     {
       // load from local storage
       $scope.elos = localStorage.getObject('elos');
       $scope.avgs = localStorage.getObject('avgs');
+      $scope.percent = localStorage.getObject('percent');
 
       // load from server
       FooseyService.leaderboard().then(function successCallback(response)
       { 
         $scope.elos = response.data.elos;
         $scope.avgs = response.data.avgs;
+        $scope.percent = response.data.percent;
         $ionicSlideBoxDelegate.update();
         localStorage.setObject('elos', $scope.elos);
         localStorage.setObject('avgs', $scope.avgs);
+        localStorage.setObject('percent', $scope.percent);
         $scope.error = false;
         
         done();
