@@ -118,8 +118,10 @@ angular.module('addGame', [])
 			// load from server
 			FooseyService.players().then(function successCallback(response)
       { 
-      	$scope.players = response.data.players;
-      	localStorage.setObject('players', $scope.players);
+      	// only overwrite players if there are none
+      	if ($scope.players.length === 0)
+      		$scope.players = response.data.players;
+      	localStorage.setObject('players', response.data.players);
     	}, function errorCallback(response)
       {
         $scope.error = true;
