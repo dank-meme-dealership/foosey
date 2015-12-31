@@ -42,12 +42,12 @@
       <!-- Avg Score -->
       <ion-slide>
         <ion-item 
-            ng-repeat="player in elos" 
+            ng-repeat="player in avgs" 
             ng-class="{'last': $last}"
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
               <h2>{{player.name | capitalize}}</h2> 
-              <div><b>???</b></div>
+              <div><b>{{player.avg | number:2}}</b></div>
             </div>
           </ion-item>
       </ion-slide>

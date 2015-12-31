@@ -32,13 +32,16 @@ angular.module('leaderboard', [])
     {
       // load from local storage
       $scope.elos = localStorage.getObject('elos');
+      $scope.avgs = localStorage.getObject('avgs');
 
       // load from server
-      FooseyService.elo().then(function successCallback(response)
+      FooseyService.leaderboard().then(function successCallback(response)
       { 
         $scope.elos = response.data.elos;
+        $scope.avgs = response.data.avgs;
         $ionicSlideBoxDelegate.update();
         localStorage.setObject('elos', $scope.elos);
+        localStorage.setObject('avgs', $scope.avgs);
         $scope.error = false;
         
         done();

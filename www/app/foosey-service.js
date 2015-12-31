@@ -15,11 +15,11 @@ angular.module('foosey')
       },
 
       // gets a list of players and their elo ratings
-      elo: function()
+      leaderboard: function()
       {
         data = 
         {
-          text: "elo",
+          text: "leaderboard",
           device: "app"
         };
         return $http.post(url, data);

@@ -1,7 +1,8 @@
 angular.module('foosey')
 
 	// capitalize the first letter of a word
-	.filter('capitalize', function() {
+	.filter('capitalize', function() 
+	{
     return function(input) {
       return input.toLowerCase().replace( /\b\w/g, function (m) {
         return m.toUpperCase();
