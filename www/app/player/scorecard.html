@@ -1,7 +1,20 @@
 <ion-view view-title="{{playerName | capitalize}}'s Foosey Scorecard">
 	<ion-content class="background" has-bouncing="true">
+		
+		<!-- Player header -->
+		<ion-item class="background-foos">
+			<div class="player-title">{{player.name | capitalize}}</div>
+			<div class="spaced-out">
+				<div class="player-stat">{{player.elo}}<br>Elo Rating</div>
+				<div class="player-stat">{{player.avg | number:2}}<br>Avg Score</div>
+				<div class="player-stat">{{player.percent | number:1}}%<br>Win %</div>
+			</div>
+		</ion-item>
+
+		<!-- Placeholder text -->
 		<ion-item style="white-space: initial;">
 			This will soon be a place where you will see more information about {{playerName | capitalize}}'s play history and statistics.
 		</ion-item>
+
 	</ion-content>
 </ion-view>

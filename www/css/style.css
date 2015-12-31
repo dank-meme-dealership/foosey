@@ -14,6 +14,8 @@
 .background-foos
 {
   background: url(../img/foos.jpg) no-repeat center;
+  background-size: cover;
+  color: #FFFFFF;
 }
 
 .background-menu
