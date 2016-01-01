@@ -29,6 +29,10 @@ angular.module('chart', [])
     		            text: $scope.options.yAxis
     		        }
     		    },
+        		tooltip: {
+        		  crosshairs: false,
+        		  shared: true
+        		},
     		    plotOptions: {
     		        spline: {
     		            marker: {
