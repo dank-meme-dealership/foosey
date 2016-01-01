@@ -1,7 +1,7 @@
 angular.module('player')
 	.controller('ScorecardController', function($scope, $stateParams, localStorage)
 	{
-		// get player information
+		// set up the player
 		$scope.player = getPlayer($stateParams.player);
 
 		// mock data to be deleted
@@ -11,6 +11,7 @@ angular.module('player')
 		// set up charts
 		setUpCharts();
 
+		// get the player information
 		function getPlayer(name)
 		{
 			return {
@@ -21,6 +22,7 @@ angular.module('player')
 			}
 		}
 
+		// get the elo for this playe from local storage
 		function getElo(name)
 		{
 			// load from local storage
@@ -30,6 +32,7 @@ angular.module('player')
 			return elos[index].elo;
 		}
 
+		// get the average score for this player from local storage
 		function getAvg(name)
 		{
 			var avgs = localStorage.getObject('avgs');
@@ -38,6 +41,7 @@ angular.module('player')
 			return avgs[index].avg;
 		}
 
+		// get the win % for this player from local storage
 		function getPercent(name)
 		{
       var percent = localStorage.getObject('percent');
@@ -46,6 +50,7 @@ angular.module('player')
 			return percent[index].percent;
 		}
 
+		// set up the charts for the scorecard page
 		function setUpCharts()
 		{
 			$scope.charts = [];
@@ -60,6 +65,7 @@ angular.module('player')
 			$scope.charts.push(getPercentChartOptions());
 		}
 
+		// define options for the ELO Rating chart
 		function getEloChartOptions()
 		{
 			return {
@@ -72,6 +78,7 @@ angular.module('player')
 			};
 		}
 
+		// define options for the Average Score chart
 		function getAvgChartOptions()
 		{
 			return {
@@ -84,6 +91,7 @@ angular.module('player')
 			};
 		}
 
+		// define options for the Win Percentage chart
 		function getPercentChartOptions()
 		{
 			return {
