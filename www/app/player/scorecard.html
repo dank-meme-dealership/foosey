@@ -12,8 +12,23 @@
 		</div>
 
 		<!-- Placeholder text -->
-		<ion-item style="white-space: initial;">
-			This will soon be a place where you will see more information about {{playerName | capitalize}}'s play history and statistics.
+		<ion-item style="white-space: initial; text-align: center;">
+			<b>NOTE:</b> All of this data is placeholder for now.
+		</ion-item>
+
+		<!-- ELO Chart -->
+		<ion-item class="player-chart">
+			<div id="elos" style="height: 300px; margin: 0 auto"></div>
+		</ion-item>
+
+		<!-- Avg Score Chart -->
+		<ion-item class="player-chart">
+			<div id="avgs" style="height: 300px; margin: 0 auto"></div>
+		</ion-item>
+
+		<!-- Percent Games Won Chart -->
+		<ion-item class="player-chart">
+			<div id="percent" style="height: 300px; margin: 0 auto"></div>
 		</ion-item>
 
 	</ion-content>
