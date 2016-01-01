@@ -6,6 +6,7 @@ angular.module('foosey', [
     'ngIOS9UIWebViewPatch',
 
     'addGame',
+    'chart',
     'history',
     'leaderboard',
     'player',
