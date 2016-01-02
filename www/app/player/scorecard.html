@@ -11,11 +11,12 @@
 			</div>
 		</div>
 
-		<div style="height:10px;"></div>
-
 		<!-- show loading while waiting -->
-	  <ion-spinner ng-show="!dates" class="loading-dots" icon="lines"></ion-spinner>
-
+		<div ng-show="!dates">
+			<div style="height:10px;"></div>
+			<ion-spinner class="loading-dots" icon="lines"></ion-spinner>
+		</div>
+	  
 		<!-- Set up charts -->
 		<chart ng-repeat="chart in charts" options="chart"></chart>
 
