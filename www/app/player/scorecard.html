@@ -11,10 +11,10 @@
 			</div>
 		</div>
 
-		<!-- Placeholder text -->
-		<ion-item style="white-space: initial; text-align: center;">
-			<b>NOTE:</b> All of this data is placeholder for now.
-		</ion-item>
+		<div style="height:10px;"></div>
+
+		<!-- show loading while waiting -->
+	  <ion-spinner ng-show="!dates" class="loading-dots" icon="lines"></ion-spinner>
 
 		<!-- Set up charts -->
 		<chart ng-repeat="chart in charts" options="chart"></chart>

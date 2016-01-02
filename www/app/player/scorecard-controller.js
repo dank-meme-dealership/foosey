@@ -1,12 +1,8 @@
 angular.module('player')
-	.controller('ScorecardController', function($scope, $stateParams, localStorage)
+	.controller('ScorecardController', function($scope, $stateParams, localStorage, FooseyService)
 	{
 		// set up the player
 		$scope.player = getPlayer($stateParams.player);
-
-		// mock data to be deleted
-		var data = [1200, 1208, 1227, 1225, 1231, 1235, 1235, 1236, 1242, 1226, 1251, 1256, 1267, 1264, 1261, 1272];
-		var dates = ["7/12", "7/15", "7/15", "7/16", "7/23", "7/29", "8/2", "8/19", "8/21", "8/25", "9/13", "9/21", "9/23", "10/3", "10/4", "11/17"];
 
 		// set up charts
 		setUpCharts();
@@ -54,53 +50,62 @@ angular.module('player')
 		function setUpCharts()
 		{
 			$scope.charts = [];
+			$scope.subtitle = 'Data from All Time';
 
-			// Set up ELO Rating chart
-			$scope.charts.push(getEloChartOptions());
+			FooseyService.charts($scope.player.name).then(function successCallback(response)
+			{
+				// Get chart data
+				var chartData = response.data;
 
-			// Set up Avg Score chart
-			$scope.charts.push(getAvgChartOptions());
+				$scope.dates = _.pluck(chartData.charts, 'date');
 
-			// Set up Win Percent chart
-			$scope.charts.push(getPercentChartOptions());
+				// Set up ELO Rating chart
+				$scope.charts.push(getEloChartOptions(_.pluck(chartData.charts, 'elo')));
+	
+				// Set up Avg Score chart
+				$scope.charts.push(getAvgChartOptions(_.pluck(chartData.charts, 'avg')));
+	
+				// Set up Win Percent chart
+				$scope.charts.push(getPercentChartOptions(_.pluck(chartData.charts, 'percent')));
+			});
 		}
 
 		// define options for the ELO Rating chart
-		function getEloChartOptions()
+		function getEloChartOptions(data)
 		{
 			return {
 				title: 'ELO Rating',
-				subtitle: 'This is placeholder data for now',
+				subtitle: $scope.subtitle,
 				yAxis: 'ELO',
 				class: 'elo',
 				data: data,
-				dates: dates
+				dates: $scope.dates
 			};
 		}
 
 		// define options for the Average Score chart
-		function getAvgChartOptions()
+		function getAvgChartOptions(data)
 		{
 			return {
 				title: 'Average Score Per Game',
-				subtitle: 'This is placeholder data for now',
+				subtitle: $scope.subtitle,
 				yAxis: 'Score',
 				class: 'avg',
 				data: data,
-				dates: dates
+				dates: $scope.dates
 			};
 		}
 
 		// define options for the Win Percentage chart
-		function getPercentChartOptions()
+		function getPercentChartOptions(data)
 		{
 			return {
 				title: 'Percent Games Won',
-				subtitle: 'This is placeholder data for now',
+				subtitle: $scope.subtitle,
 				yAxis: 'Percent',
 				class: 'percent',
 				data: data,
-				dates: dates
+				dates: $scope.dates
 			};
 		}
 	});

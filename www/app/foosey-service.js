@@ -15,6 +15,17 @@ angular.module('foosey')
         return $http.post(url, data);
       },
 
+      // get chart data for a player
+      charts: function(name)
+      {
+        data =
+        {
+          text: "charts " + name,
+          device: "app"
+        }
+        return $http.post(url, data);
+      },
+
       // gets a list of players and their elo ratings
       leaderboard: function()
       {
