@@ -29,10 +29,14 @@ angular.module('chart', [])
     		                    text: $scope.options.yAxis
     		                }
     		            },
-        		        tooltip: {
-        		          crosshairs: false,
-        		          shared: true
-        		        },
+                        plotOptions: {
+                            line: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                enableMouseTracking: false
+                            }
+                        },
     		            plotOptions: {
     		                spline: {
     		                    marker: {

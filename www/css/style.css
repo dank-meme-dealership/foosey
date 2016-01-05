@@ -39,6 +39,13 @@
   border-color: #242A38;
 }
 
+.center
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .divider
 {
   height: 1px;
@@ -107,6 +114,12 @@ ion-item.item.last, ion-list.last ion-item.item
   margin: 0px calc((100% - 26px)/2);
 }
 
+.loading-dots.spinner svg 
+{
+  stroke: white;
+  fill: white;
+}
+
 .loading-text
 {
   text-align: center;
@@ -124,12 +137,6 @@ ion-item.item.last, ion-list.last ion-item.item
 {
   display: flex;
   justify-content: space-between;
-}
-
-.spinner svg 
-{
-  stroke: white;
-  fill: white;
 }
 
 .tab-item.active
