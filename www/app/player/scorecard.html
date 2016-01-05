@@ -11,13 +11,21 @@
 			</div>
 		</div>
 
+		<!-- link to other stats -->
+		<!-- Commenting out for now -->
+		<!-- <ion-item class="spaced-out">
+			<div class="ion-stats-bars space">See other stats</div>
+			<div class="ion-ios-arrow-forward"></div>
+		</ion-item> -->
+
 		<!-- show loading while waiting -->
 		<div ng-show="!dates">
-			<div style="height:10px;"></div>
-			<ion-spinner class="loading-dots" icon="lines"></ion-spinner>
+			<ion-item class="chart-container center">
+				<ion-spinner icon="lines"></ion-spinner>
+			</ion-item>
 		</div>
 	  
-		<!-- Set up charts -->
+		<!-- set up charts -->
 		<chart ng-repeat="chart in charts" options="chart"></chart>
 
 		<!-- 10 px divider from the bottom -->
