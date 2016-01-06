@@ -134,8 +134,8 @@ def calculate_elo_change(g, elo, total_games)
         p_b_p = g_a[t_b_p_a].to_i
         
         # then get team elos
-        r_a = ((elo[t_a_p_a] + elo[t_a_p_b]) / 2).ceil
-        r_b = ((elo[t_b_p_a] + elo[t_b_p_b]) / 2).ceil
+        r_a = ((elo[t_a_p_a] + elo[t_a_p_b]) / 2).round
+        r_b = ((elo[t_b_p_a] + elo[t_b_p_b]) / 2).round
     end
     
     # do shit
@@ -154,8 +154,8 @@ def calculate_elo_change(g, elo, total_games)
         s_b = (1 - s_a) ** win_weight
         s_a = 1 - s_b
     end
-    r_a_n = (k_factor * (s_a - e_a)).ceil
-    r_b_n = (k_factor * (s_b - e_b)).ceil
+    r_a_n = (k_factor * (s_a - e_a)).round
+    r_b_n = (k_factor * (s_b - e_b)).round
 
     # if 2 players
     if players_in_game(g) == 2
