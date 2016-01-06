@@ -14,10 +14,21 @@
 	
 		<!-- Selecting the game type -->
 		<div ng-show="state === 'game-select'">
-			<ion-item 
+			<ion-item
+				class="center title"
 				ng-repeat="type in gameTypes" 
 				ng-click="gameSelect(type)">
-				{{ type.name }}
+				{{type.name}}
+			</ion-item>
+		</div>
+
+		<!-- score at the top while selecting scores -->
+		<div ng-show="state !== 'game-select'">
+			<ion-item style="text-align: center">
+				<div class="title">{{type.name}}</div>
+				<div ng-repeat="team in game">
+					{{team.players | team | capitalize}}: {{team.score}}
+				</div>
 			</ion-item>
 		</div>
 	
@@ -50,13 +61,7 @@
 	
 		<!-- State to confirm the game -->
 		<div ng-show="state === 'confirm'">
-			<ion-item ng-repeat="team in game">
-				{{team.players | team | capitalize}}: {{team.score}}
-			</ion-item>
-			<div style="margin: 50px"></div>
-			<ion-item ng-click="reset()">Cancel</ion-item>
-			<ion-item ng-click="submit()">Save</ion-item>
-	
+			<ion-item class="center" ng-click="submit()">Save</ion-item>
 		</div>
 	
 	</ion-content>

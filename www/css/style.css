@@ -139,17 +139,8 @@ ion-item.item.last, ion-list.last ion-item.item
   justify-content: space-between;
 }
 
-.tab-item.active
+.title
 {
-  background: #E0E0E0;
-}
-
-.tab-title
-{
-  font-size: 13px;
-}
-
-.tabs
-{
-  padding-top: 1px;
+  font-weight: 500;
+  font-size: 17px;
 }
