@@ -33,7 +33,10 @@
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
               <h2>{{player.name | capitalize}}</h2> 
-              <div><b>{{player.elo}}</b></div>
+              <div class="spaced-out">
+                <b>{{player.elo}}</b>
+                <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
+              </div>
             </div>
           </ion-item>
         </ion-list>
@@ -46,8 +49,11 @@
             ng-class="{'last': $last}"
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
-              <h2>{{player.name | capitalize}}</h2> 
-              <div><b>{{player.avg | number:2}}</b></div>
+              <h2>{{player.name | capitalize}}</h2>
+              <div class="spaced-out">
+                <b>{{player.avg | number:2}}</b>
+                <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
+              </div>
             </div>
           </ion-item>
       </ion-slide>
@@ -59,8 +65,11 @@
             ng-class="{'last': $last}"
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
-              <h2>{{player.name | capitalize}}</h2> 
-              <div><b>{{player.percent | number:1}}%</b></div>
+              <h2>{{player.name | capitalize}}</h2>
+              <div class="spaced-out">
+                <b>{{player.percent | number:1}}%</b>
+                <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
+              </div>
             </div>
           </ion-item>
       </ion-slide>

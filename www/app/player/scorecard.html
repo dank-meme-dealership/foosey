@@ -12,16 +12,20 @@
 		</div>
 
 		<!-- link to other stats -->
-		<!-- Commenting out for now -->
-		<!-- <ion-item class="spaced-out">
-			<div class="ion-stats-bars space">See other stats</div>
-			<div class="ion-ios-arrow-forward"></div>
-		</ion-item> -->
+		<ion-item href="#/app/team-stats">
+			<div class="spaced-out">
+				<div class="ion-stats-bars space">See team statistics</div>
+				<div class="ion-ios-arrow-forward"></div>
+			</div>
+		</ion-item>
 
 		<!-- show loading while waiting -->
 		<div ng-show="!dates">
-			<ion-item class="chart-container center">
-				<ion-spinner icon="lines"></ion-spinner>
+			<ion-item class="center">
+				<div>
+					Loading charts<br>
+					<ion-spinner class="center" icon="lines"></ion-spinner>
+				</div>
 			</ion-item>
 		</div>
 	  

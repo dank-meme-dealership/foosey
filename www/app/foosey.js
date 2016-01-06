@@ -10,7 +10,8 @@ angular.module('foosey', [
     'history',
     'leaderboard',
     'player',
-    'settings'
+    'settings',
+    'teamStats'
   ])
 
     // This establishes a few settings for Ionic
