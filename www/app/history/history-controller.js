@@ -19,6 +19,7 @@ angular.module('history', [])
             $scope.dates = localStorage.getObject('history');
 
 		    // get most recent games and group by the date
+            $scope.loading = true;
             FooseyService.history(0, gamesToLoad)
             .then(function successCallback(result) 
             { 
@@ -82,6 +83,7 @@ angular.module('history', [])
             $scope.$broadcast('scroll.refreshComplete');
             $scope.$broadcast('scroll.infiniteScrollComplete');
             $scope.removing = false;
+            $scope.loading = false;
         }
 
         // show the action sheet for deleting games
@@ -138,6 +140,7 @@ angular.module('history', [])
 
             // remove from server
             $scope.removing = true;
+            $scope.loading = true;
             FooseyService.remove(game.id)
             .then(function()
             {

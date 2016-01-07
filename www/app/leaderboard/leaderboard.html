@@ -1,5 +1,12 @@
 <ion-view view-title="Leaderboard" cache-view="false">
   
+  <!-- show loading on the top right if loading -->
+  <ion-nav-buttons side="right">
+    <button class="button button-clear" ng-if="loading">
+      <ion-spinner icon="lines" class="dark"></ion-spinner>
+    </button>
+  </ion-nav-buttons>
+  
   <!-- Header bar for different leaderboards -->
   <div class="bar bar-subheader background">
     <div class="tabs">

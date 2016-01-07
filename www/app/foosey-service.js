@@ -10,7 +10,8 @@ angular.module('foosey')
       {
         data =
         {
-          text: game
+          text: game,
+          user_name: 'app'
         }
         return $http.post(url, data);
       },
