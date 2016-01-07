@@ -45,33 +45,33 @@
       <!-- Avg Score -->
       <ion-slide>
         <ion-item 
-            ng-repeat="player in avgs" 
-            ng-class="{'last': $last}"
-            href="#/app/player/{{player.name}}">
+          ng-repeat="player in avgs" 
+          ng-class="{'last': $last}"
+          href="#/app/player/{{player.name}}">
+          <div class="spaced-out">
+            <h2>{{player.name | capitalize}}</h2>
             <div class="spaced-out">
-              <h2>{{player.name | capitalize}}</h2>
-              <div class="spaced-out">
-                <b>{{player.avg | number:2}}</b>
-                <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
-              </div>
+              <b>{{player.avg | number:2}}</b>
+              <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
             </div>
-          </ion-item>
+          </div>
+        </ion-item>
       </ion-slide>
 
       <!-- % Games won -->
       <ion-slide>
         <ion-item 
-            ng-repeat="player in percent" 
-            ng-class="{'last': $last}"
-            href="#/app/player/{{player.name}}">
+          ng-repeat="player in percent" 
+          ng-class="{'last': $last}"
+          href="#/app/player/{{player.name}}">
+          <div class="spaced-out">
+            <h2>{{player.name | capitalize}}</h2>
             <div class="spaced-out">
-              <h2>{{player.name | capitalize}}</h2>
-              <div class="spaced-out">
-                <b>{{player.percent | number:1}}%</b>
-                <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
-              </div>
+              <b>{{player.percent | number:1}}%</b>
+              <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
             </div>
-          </ion-item>
+          </div>
+        </ion-item>
       </ion-slide>
 
     </ion-slide-box>

@@ -36,13 +36,13 @@ angular.module('teamStats')
         },
         series: [{
             name: 'Days',
-            colorByPoint: true,
+            colorByPoint: false,
             data: [{
                 name: 'M',
                 y: 127
             }, {
                 name: 'T',
-                y: 119
+                y: 58
             }, {
                 name: 'W',
                 y: 89
@@ -51,7 +51,7 @@ angular.module('teamStats')
                 y: 75
             }, {
                 name: 'F',
-                y: 58
+                y: 119
             }]
         }]
     });

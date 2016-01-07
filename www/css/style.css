@@ -166,6 +166,16 @@ ion-item.item.last, ion-list.last ion-item.item
   padding-top: 1px;
 }
 
+.icon-pulling
+{
+  color: white;
+}
+
+.text-pulling
+{
+  color: white;
+}
+
 .title
 {
   font-weight: 500;
