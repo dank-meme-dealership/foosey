@@ -4,7 +4,7 @@
 	<ion-nav-buttons side="right">
     <button 
     	class="button button-clear button-assertive"
-    	ng-if="state !== 'game-select'"
+    	ng-if="state !== 'game-select' && state !== 'saving'"
     	ng-click="reset()">
     	Cancel
 		</button>
@@ -28,6 +28,19 @@
 				<div class="title">{{type.name}}</div>
 				<div ng-repeat="team in game">
 					{{team.players | team | capitalize}}: {{team.score}}
+				</div>
+				<!-- <div class="center" ng-show="saveStatus === 'saving'">
+					<ion-spinner icon="lines" class="dark"></ion-spinner>
+					<div style="padding: 0 0 5px 5px;">Adding game...</div>
+				</div> -->
+				<div class="ion-load-d" ng-show="saveStatus === 'saving'">
+					Adding Game...
+				</div>
+				<div class="ion-checkmark" ng-show="saveStatus === 'success'">
+					Game Added!
+				</div>
+				<div class="ion-close" ng-show="saveStatus === 'failed'">
+					Couldn't Add Game!
 				</div>
 			</ion-item>
 		</div>
@@ -59,9 +72,14 @@
 			</div>
 		</div>
 	
-		<!-- State to confirm the game -->
+		<!-- Confirm the game -->
 		<div ng-show="state === 'confirm'">
 			<ion-item class="center" ng-click="submit()">Save</ion-item>
+		</div>
+
+		<!-- Saving the game -->
+		<div ng-show="state === 'saving'">
+			<ion-item class="center" ng-click="reset()">Done</ion-item>
 		</div>
 	
 	</ion-content>

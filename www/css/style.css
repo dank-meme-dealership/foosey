@@ -39,6 +39,12 @@
   border-color: #242A38;
 }
 
+.button.button-positive.activated
+{
+  background: #373E48;
+  border-color: #242A38;
+}
+
 .center
 {
   display: flex;
@@ -131,6 +137,12 @@ ion-item.item.last, ion-list.last ion-item.item
 {
   display: flex;
   justify-content: space-between;
+}
+
+.dark.spinner svg 
+{
+  stroke: gray;
+  fill: gray;
 }
 
 .spinner svg 

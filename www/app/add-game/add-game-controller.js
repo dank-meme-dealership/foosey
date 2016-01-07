@@ -85,9 +85,17 @@ angular.module('addGame', [])
 		// add the game
 		$scope.submit = function()
 		{
-			console.log($scope.command);
-			FooseyService.addGame($scope.command);
-			reset();
+			$scope.state = "saving";
+			$scope.saveStatus = "saving";
+			FooseyService.addGame($scope.command).then(function successCallback(response)
+			{
+				if ($scope.state === "saving")
+					$scope.saveStatus = "success";
+			}, function errorCallback(response)
+      {
+      	if ($scope.state === "saving")
+        	$scope.saveStatus = "failed";
+      });
 		}
 
 		// function to build the add command out for foosey
@@ -106,6 +114,7 @@ angular.module('addGame', [])
 			$scope.title = "Select the Type of Game";
 			$scope.command = "";
 			$scope.game = [];
+			$scope.saveStatus = "";
 			getPlayers();
 		}
 
@@ -116,7 +125,7 @@ angular.module('addGame', [])
 			$scope.players = localStorage.getObject('players');
 
 			// load from server
-			FooseyService.players().then(function successCallback(response)
+			FooseyService.players().then(function (response)
       { 
       	// only overwrite if they haven't selected one yet
       	if (noneSelected())
@@ -125,10 +134,7 @@ angular.module('addGame', [])
       	}
 
       	localStorage.setObject('players', response.data.players);
-    	}, function errorCallback(response)
-      {
-        $scope.error = true;
-      });
+    	});
 		}
 
 		// return true if none of the players have been selected yet
