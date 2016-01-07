@@ -527,10 +527,11 @@ end
 # function to remove specific game
 def remove(id, content, github_user, github_pass)
     games = content.split("\n")
-    puts games.at(id.to_i + 1)
+    toRemove = games.at(id.to_i + 1)
     games.delete_at(id.to_i + 1)
     content = games.join("\n")
     output = update_file_in_gist(github_user, github_pass, "Foosbot Data", "games.csv", content)
+    response = `curl --silent -X POST --data-urlencode 'payload={"channel": "@matttt", "username": "foosey", "text": "Someone used the app to remove:\n#{toRemove}", "icon_emoji": ":foosey:"}' https://hooks.slack.com/services/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`
     return "Removed"
 end
 
