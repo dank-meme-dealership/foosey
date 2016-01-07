@@ -9,8 +9,8 @@ angular.module('history', [])
         $scope.refresh = refresh;
 
         // initialize the page
+        $scope.removing = false;
         $scope.refresh();
-        $scope.loading = true;
 
         // refresh page function
         function refresh()
@@ -79,9 +79,9 @@ angular.module('history', [])
         // turns off spinner and notifies
         function done()
         {
-            $scope.loading = false;
             $scope.$broadcast('scroll.refreshComplete');
             $scope.$broadcast('scroll.infiniteScrollComplete');
+            $scope.removing = false;
         }
 
         // show the action sheet for deleting games
@@ -103,27 +103,54 @@ angular.module('history', [])
         // confirm that they actually want to remove
         function confirmRemove(game)
         {
-            var confirmPopup = $ionicPopup.confirm({
-              title: 'Remove This Game',
-              template: 'Are you sure you want to remove this game? This cannot be undone.'
-            });
-
-            // if yes, delete the last game
-            confirmPopup.then(function(positive) {
-              if(positive) {
-                remove(game);
-              }
-            });
+            if ($scope.removing)
+            {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Can\'t Remove Game',
+                    template: '<center>Another game is already being removed at this time. Try again later.</center>'
+                });
+            }
+            else
+            {
+                var confirmPopup = $ionicPopup.confirm({
+                  title: 'Remove This Game',
+                  template: 'Are you sure you want to remove this game? This cannot be undone.'
+                });
+    
+                // if yes, delete the last game
+                confirmPopup.then(function(positive) {
+                  if(positive) {
+                    remove(game);
+                  }
+                });
+            }
         }
 
         // Remove game
         function remove(game)
         {
-            $scope.loading = true;
+            // remove game from UI and re-sort by date
+            var index = _.indexOf(_.pluck($scope.games, 'id'), game.id);
+            decrementIds(index);
+            $scope.games.splice(index, 1);
+            $scope.dates = groupByDate($scope.games);
+            localStorage.setObject('history', $scope.dates)
+
+            // remove from server
+            $scope.removing = true;
             FooseyService.remove(game.id)
             .then(function()
             {
                 refresh();
             });
+        }
+
+        // Decrement ids after given index so removing will remove the correct one.
+        function decrementIds(index)
+        {
+            for (var i = index - 1; i >= 0; i--)
+            {
+                $scope.games[i].id--;
+            }
         }
 	});
