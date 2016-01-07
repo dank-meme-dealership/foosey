@@ -2,7 +2,7 @@ angular.module('teamStats')
 	.controller('TeamStatsController', function($scope, FooseyService)
 	{
 
-		// Create the chart
+	// Create the chart
     $('#container').highcharts({
         chart: {
             type: 'column'

@@ -2,10 +2,10 @@
 	
 	<!-- Cancel button to return to game select state -->
 	<ion-nav-buttons side="right">
-    <button class="button button-clear button-assertive">
-    	<div 
-    		ng-if="state !== 'game-select' && state !== 'saving'"
-    		ng-click="reset()">
+    <button 
+    	class="button button-clear button-assertive" 
+    	ng-click="reset()">
+    	<div ng-if="state !== 'game-select' && state !== 'saving'">
     		Cancel
     	</div>
     	<ion-spinner 

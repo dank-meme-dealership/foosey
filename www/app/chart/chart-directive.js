@@ -29,6 +29,9 @@ angular.module('chart', [])
     		                    text: $scope.options.yAxis
     		                }
     		            },
+                        legend: {
+                            enabled: false
+                        },
                         plotOptions: {
                             line: {
                                 dataLabels: {
