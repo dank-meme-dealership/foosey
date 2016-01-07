@@ -2,11 +2,17 @@
 	
 	<!-- Cancel button to return to game select state -->
 	<ion-nav-buttons side="right">
-    <button 
-    	class="button button-clear button-assertive"
-    	ng-if="state !== 'game-select' && state !== 'saving'"
-    	ng-click="reset()">
-    	Cancel
+    <button class="button button-clear button-assertive">
+    	<div 
+    		ng-if="state !== 'game-select' && state !== 'saving'"
+    		ng-click="reset()">
+    		Cancel
+    	</div>
+    	<ion-spinner 
+    		icon="lines" 
+    		class="dark"
+    		ng-if="saveStatus === 'saving'">
+    	</ion-spinner>
 		</button>
   </ion-nav-buttons>
 
@@ -29,10 +35,6 @@
 				<div ng-repeat="team in game">
 					{{team.players | team | capitalize}}: {{team.score}}
 				</div>
-				<!-- <div class="center" ng-show="saveStatus === 'saving'">
-					<ion-spinner icon="lines" class="dark"></ion-spinner>
-					<div style="padding: 0 0 5px 5px;">Adding game...</div>
-				</div> -->
 				<div class="ion-load-d" ng-show="saveStatus === 'saving'">
 					Adding Game...
 				</div>
