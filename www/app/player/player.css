@@ -1,3 +1,9 @@
+.chart-spinner.spinner svg 
+{
+  stroke: gray;
+  fill: gray;
+}
+
 .player-header
 {
 	padding: 20px;
