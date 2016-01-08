@@ -89,13 +89,19 @@ angular.module('addGame', [])
 			$scope.saveStatus = "saving";
 			FooseyService.addGame($scope.command).then(function successCallback(response)
 			{
-				if ($scope.state === "saving")
-					$scope.saveStatus = "success";
+				$scope.attachments = response.data.attachments;
+				$scope.saveStatus = "success";
 			}, function errorCallback(response)
       {
       	if ($scope.state === "saving")
         	$scope.saveStatus = "failed";
       });
+		}
+
+		// undo last game
+		$scope.undo = function()
+		{
+			console.log("Will undo eventually...");
 		}
 
 		// function to build the add command out for foosey
@@ -115,6 +121,7 @@ angular.module('addGame', [])
 			$scope.command = "";
 			$scope.game = [];
 			$scope.saveStatus = "";
+			$scope.attachments = undefined;
 			getPlayers();
 		}
 

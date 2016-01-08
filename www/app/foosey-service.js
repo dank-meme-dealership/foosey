@@ -60,7 +60,7 @@ angular.module('foosey')
         return $http.post(url, data);
       },
 
-      // undo last game
+      // remove specific game
       remove: function(id)
       {
         data = 
@@ -68,6 +68,16 @@ angular.module('foosey')
           text: "remove " + id,
           device: "app"
         };
+        return $http.post(url, data);
+      },
+
+      // undo last game
+      undo: function()
+      {
+        data =
+        {
+          text: "undo"
+        }
         return $http.post(url, data);
       }
     }

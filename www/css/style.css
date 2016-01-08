@@ -108,6 +108,7 @@ div.item
 ion-item.item
 {
   margin: 10px 10px 0;
+  white-space: initial;
 }
 
 ion-item.item.last, ion-list.last ion-item.item

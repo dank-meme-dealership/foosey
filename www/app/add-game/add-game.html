@@ -35,15 +35,6 @@
 				<div ng-repeat="team in game">
 					{{team.players | team | capitalize}}: {{team.score}}
 				</div>
-				<div class="ion-load-d" ng-show="saveStatus === 'saving'">
-					Adding Game...
-				</div>
-				<div class="ion-checkmark" ng-show="saveStatus === 'success'">
-					Game Added!
-				</div>
-				<div class="ion-close" ng-show="saveStatus === 'failed'">
-					Couldn't Add Game!
-				</div>
 			</ion-item>
 		</div>
 	
@@ -81,8 +72,39 @@
 
 		<!-- Saving the game -->
 		<div ng-show="state === 'saving'">
+
+			<!-- Progress -->
+			<ion-item class="center">	
+				<div ng-show="saveStatus === 'saving'">
+					Adding Game...
+				</div>
+				<div class="ion-checkmark" ng-show="saveStatus === 'success'">
+					Game Added!
+				</div>
+				<div class="ion-close" ng-show="saveStatus === 'failed'">
+					Couldn't Add Game!
+				</div>
+			</ion-item>
+
+			<!-- Attachments -->
+			<ion-item 
+				style="text-align: center" 
+				ng-repeat="attachment in attachments">
+				<div>{{attachment.pretext | and}}</div>
+				<div class="row">
+					<div class="col" ng-repeat="field in attachment.fields">
+						<div>{{field.title | and}}</div>
+						<div>{{field.value}}</div>
+					</div>
+				</div>
+			</ion-item>
+
+			<!-- Undo button -->
+			<!-- <ion-item class="center" ng-show="saveStatus === 'success'" ng-click="undo()">Undo</ion-item> -->
+
+			<!-- Done button -->
 			<ion-item class="center" ng-click="reset()">Done</ion-item>
 		</div>
-	
+
 	</ion-content>
 </ion-view>

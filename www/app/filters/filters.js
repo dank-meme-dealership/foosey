@@ -1,5 +1,14 @@
 angular.module('foosey')
 
+	// replace & with And
+	.filter('and', function()
+	{
+		return function(str)
+		{
+			return str.split('&').join(' & ');
+		}
+	})
+
 	// capitalize the first letter of a word
 	.filter('capitalize', function() 
 	{
