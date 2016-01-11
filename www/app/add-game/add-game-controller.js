@@ -23,10 +23,6 @@ angular.module('addGame', [])
 				teams: 3,
 				playersPerTeam: 1
 			}
-			// ,
-			// {
-			// 	name: "Other"
-			// }
 		];
 
 		// function to select game
