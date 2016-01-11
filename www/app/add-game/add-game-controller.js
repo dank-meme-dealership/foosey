@@ -85,7 +85,7 @@ angular.module('addGame', [])
 			$scope.saveStatus = "saving";
 			FooseyService.addGame($scope.command).then(function successCallback(response)
 			{
-				$scope.attachments = response.data.attachments;
+				$scope.response = response.data;
 				$scope.saveStatus = "success";
 			}, function errorCallback(response)
       {
@@ -117,7 +117,7 @@ angular.module('addGame', [])
 			$scope.command = "";
 			$scope.game = [];
 			$scope.saveStatus = "";
-			$scope.attachments = undefined;
+			$scope.response = undefined;
 			getPlayers();
 		}
 

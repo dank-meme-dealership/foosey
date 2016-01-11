@@ -801,7 +801,7 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     if (lastGame != thisGame)
         return make_response("Game added!", attach)
     else
-        return make_response("Game added!\n\nThis game has the same score as the last game, which #{lastGameUsername} logged. If you added this game in error you can undo this action with:\n`foosey undo`", attach)
+        return make_response("Game added!\n\nThis game has the same score as the last game that was added. If you added this game in error you can undo this action.", attach)
     end
 
 end 
