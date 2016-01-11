@@ -10,6 +10,7 @@ angular.module('history', [])
 
         // initialize the page
         $scope.removing = false;
+        $scope.loading = true;
         $scope.refresh();
 
         // refresh page function
@@ -19,7 +20,6 @@ angular.module('history', [])
             $scope.dates = localStorage.getObject('history');
 
 		    // get most recent games and group by the date
-            $scope.loading = true;
             FooseyService.history(0, gamesToLoad)
             .then(function successCallback(result) 
             { 
