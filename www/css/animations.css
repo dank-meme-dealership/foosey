@@ -1,0 +1,44 @@
+/*ion-item.ng-enter, 
+ion-item.ng-leave, 
+ion-item.ng-move {
+  -webkit-transition: 0.5s linear all;
+  transition: 0.5s linear all;
+  position:relative;
+}
+
+ion-item.ng-enter {
+  left:-200px;
+  opacity:0;
+}
+ion-item.ng-enter.ng-enter-active {
+  left:0;
+  opacity:1;
+}
+
+ion-item.ng-leave {
+  left:0;
+  opacity:1;
+}
+ion-item.ng-leave.ng-leave-active {
+  left:-200px;
+  opacity:0;
+}
+
+ion-item.ng-move {
+  opacity:0.5;
+}
+ion-item.ng-move.ng-move-active {
+  opacity:1;
+}*/
+
+/*.ng-hide-add,
+.ng-hide-remove {
+  -webkit-transition:0.5s linear all;
+  transition:0.5s linear all;
+
+  display:block!important;
+  opacity:1;
+}
+.ng-hide {
+  opacity:0;
+}*/

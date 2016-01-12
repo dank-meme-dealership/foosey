@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.app442332" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.matt.foosey" version="1.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Foosey</name>
   <description>
     A foosball score tracking app
@@ -16,8 +16,8 @@
   <preference name="BackupWebStorage" value="none"/>
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="0"/>
-  <preference name="StatusBarOverlaysWebview" value="false"/>
-  <preference name="StatusBarStyle" value="darkcontent" />
+  <preference name="StatusBarOverlaysWebview" value="true"/>
+  <!-- <preference name="StatusBarStyle" value="darkcontent" /> -->
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>

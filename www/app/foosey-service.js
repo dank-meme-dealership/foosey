@@ -11,7 +11,8 @@ angular.module('foosey')
         data =
         {
           text: game,
-          user_name: 'app'
+          user_name: "app",
+          device: "app"
         }
         return $http.post(url, data);
       },

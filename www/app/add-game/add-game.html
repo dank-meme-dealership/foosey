@@ -79,7 +79,7 @@
 					Adding Game...
 				</div>
 				<div class="ion-checkmark" ng-show="saveStatus === 'success'">
-					Game Added!
+					{{response.text}}
 				</div>
 				<div class="ion-close" ng-show="saveStatus === 'failed'">
 					Couldn't Add Game!
@@ -89,7 +89,7 @@
 			<!-- Attachments -->
 			<ion-item 
 				style="text-align: center" 
-				ng-repeat="attachment in attachments">
+				ng-repeat="attachment in response.attachments">
 				<div>{{attachment.pretext | and}}</div>
 				<div class="row">
 					<div class="col" ng-repeat="field in attachment.fields">
@@ -103,7 +103,9 @@
 			<!-- <ion-item class="center" ng-show="saveStatus === 'success'" ng-click="undo()">Undo</ion-item> -->
 
 			<!-- Done button -->
-			<ion-item class="center" ng-click="reset()">Done</ion-item>
+			<ion-item class="center" ng-click="reset()">
+				Add Another Game
+			</ion-item>
 		</div>
 
 	</ion-content>
