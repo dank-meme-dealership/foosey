@@ -487,9 +487,9 @@ def record(player1, player2, content, names)
 end
 
 # function to predict the score between two players
-def predict(names, content, cmd)
+def predict(names, gone, content, cmd)
     games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-    elo_ah = get_elos(names, games, "")
+    elo_ah = get_elos(names, gone, games, "")
     players = cmd.split(" ")
     return make_response("Please pass two different valid names to `foosey predict`") if
         players.length != 2 || elo_ah.index { |p| p[:name] == players[0]}.nil? || elo_ah.index { |p| p[:name] == players[1]}.nil? || players[0] == players[1]
@@ -715,7 +715,7 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     elsif text.start_with? "stats"
         return stats(names, gone, content, text["stats".length..text.length].strip)
     elsif text.start_with? "predict"
-        return predict(names, content, text["predict".length..text.length].strip)
+        return predict(names, gone, content, text["predict".length..text.length].strip)
     elsif text.start_with? "easter"
         return make_response($middle)
     elsif text.start_with? "undo"
