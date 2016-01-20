@@ -20,6 +20,9 @@ $admins = ["matttt", "brik"]
 $gone = ["daniel", "josh", "jody"]
 $interns = ["matt", "brik", "conner", "roger", "adam", "jon"]
 
+$internsURL = "https://hooks.slack.com/services/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"
+$devURL = "https://hooks.slack.com/services/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"
+
 # function to return a response object for slack
 def make_response(response, attachments = [])
     return {
@@ -31,8 +34,21 @@ def make_response(response, attachments = [])
     }
 end
 
-def message_slack(text, attach)
-    response = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' https://hooks.slack.com/services/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`
+def message_slack(thisGame, text, attach)
+    url = internOnly(thisGame) ? $internsURL : $devURL
+
+    response = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{url}`
+end
+
+def internOnly(thisGame)
+    for i in 0..thisGame.length-1
+        if !$interns.include? $names[i]
+            if thisGame[i].to_s != '-1'
+                return false 
+            end
+        end
+    end
+    return true
 end
 
 # function to make a help message
@@ -802,7 +818,7 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     # i think documentation_url only pops up on errors
     return make_response("Failed to add game @matttt @brik") if output.include? "documentation_url" 
 
-    message_slack(text, attach) if $app
+    message_slack(new_game[2..-1], text, attach) if $app
 
     if (lastGame != thisGame)
         return make_response("Game added!", attach)
