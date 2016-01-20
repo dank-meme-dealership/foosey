@@ -26,8 +26,8 @@ def make_response(response, attachments = [])
     }
 end
 
-def message_slack(text)
-    response = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:"}' https://hooks.slack.com/services/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`
+def message_slack(text, attach)
+    response = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' https://hooks.slack.com/services/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`
 end
 
 # function to make a help message
@@ -799,12 +799,12 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     # i think documentation_url only pops up on errors
     return make_response("Failed to add game @matttt @brik") if output.include? "documentation_url" 
 
-    message_slack(text) if $app
+    message_slack(text, attach) if $app
 
     if (lastGame != thisGame)
         return make_response("Game added!", attach)
     else
-        return make_response("Game added!\n\nThis game has the same score as the last game that was added. If you added this game in error you can undo this action.", attach)
+        return make_response("Game added!\nThis game has the same score as the last game that was added. If you added this game in error you can undo this action.", attach)
     end
 
 end 
