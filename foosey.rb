@@ -15,10 +15,10 @@ $middle = %{```....................../´¯/)
 
 $UTC = "-07:00"
 
+$names = []
 $admins = ["matttt", "brik"]
-$gone = ["daniel", "josh", "jody", "newdev"]
-$dev = []
-$interns = []
+$gone = ["daniel", "josh", "jody"]
+$interns = ["matt", "brik", "conner", "roger", "adam", "jon"]
 
 # function to return a response object for slack
 def make_response(response, attachments = [])
@@ -69,9 +69,9 @@ def succinct_help()
 end
 
 # function to calculate average scores
-def get_avg_scores(names, games)
-    total_scores = Array.new(names.length, 0)
-    total_games = Array.new(names.length, 0)
+def get_avg_scores(games)
+    total_scores = Array.new($names.length, 0)
+    total_games = Array.new($names.length, 0)
     for g in games.each # for each player
         g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
         for i in 0 .. g_a.length - 1 # for each player
@@ -84,11 +84,11 @@ def get_avg_scores(names, games)
     avg_score = Array.new()
     averages = ""
     # total_played = ""
-    for i in 0 ... names.length
-        if !$gone.include? names[i]
-            avg_score << { :name => names[i], :avg => total_scores[i] / (total_games[i] * 1.0) } unless total_games[i] == 0
+    for i in 0 ... $names.length
+        if !$gone.include? $names[i]
+            avg_score << { :name => $names[i], :avg => total_scores[i] / (total_games[i] * 1.0) } unless total_games[i] == 0
         end
-        # total_played += "#{names[i].capitalize}: #{total_games[i]}\n" unless total_games[i] == 0
+        # total_played += "#{$names[i].capitalize}: #{total_games[i]}\n" unless total_games[i] == 0
     end
 
     avg_score = avg_score.sort { |a,b| b[:avg] <=> a[:avg] } # cheeky sort
@@ -197,9 +197,9 @@ def calculate_elo_change(g, elo, total_games)
 end
 
 # calculates singles elo and returns array hash
-def get_elos(names, games, difference)
-    elo = Array.new(names.length, 1200)
-    total_games = Array.new(names.length, 0)
+def get_elos(games, difference)
+    elo = Array.new($names.length, 1200)
+    total_games = Array.new($names.length, 0)
 
     games_c = games.dup
     g_i = 0
@@ -217,9 +217,9 @@ def get_elos(names, games, difference)
     return both if difference != ""
         
     elo_ah = Array.new()
-    for i in 0 ... names.length
-        if !$gone.include? names[i]
-            elo_ah << { :name => names[i], :elo => elo[i] } unless total_games[i] == 0
+    for i in 0 ... $names.length
+        if !$gone.include? $names[i]
+            elo_ah << { :name => $names[i], :elo => elo[i] } unless total_games[i] == 0
         end
     end
     elo_ah = elo_ah.sort { |a,b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
@@ -227,8 +227,8 @@ def get_elos(names, games, difference)
 end
 
 # function to display elo
-def get_elo(names, games)
-    elo_ah = get_elos(names, games, "")
+def get_elo(games)
+    elo_ah = get_elos(games, "")
     elo_s = ""
     for i in 0 ... elo_ah.length
         elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" if !$gone.include? elo_ah[i][:name]
@@ -237,14 +237,14 @@ def get_elo(names, games)
     return elo_s
 end
 
-def get_charts(name, names, games)
+def get_charts(name, games)
     chart_data = []
-    elo = Array.new(names.length, 1200)
-    total_games = Array.new(names.length, 0)
+    elo = Array.new($names.length, 1200)
+    total_games = Array.new($names.length, 0)
     real_total_games = 0
     total_wins = 0
     total_score = 0
-    index = names.index(name)
+    index = $names.index(name)
     g_i = 0
     for g in games.each
         date, time = dateTime(g, "%m/%d", "%H:%M")
@@ -271,8 +271,8 @@ def get_charts(name, names, games)
     return chart_data
 end
 
-def get_difference(thisGame, names, games)
-    both = get_elos(names, games, "something")
+def get_difference(thisGame, games)
+    both = get_elos(games, "something")
     elo = both[0]
     elo_2nd2Last = both[1]
     g = thisGame.split(',')
@@ -291,7 +291,7 @@ def get_difference(thisGame, names, games)
         p = diff < 0 ? '' : '+'
         
         thisPlayer = {
-            title: "#{names[g_i].capitalize}",
+            title: "#{$names[g_i].capitalize}",
             value: "#{elo[g_i]} (#{p}#{diff})",
             short: true
         }
@@ -316,11 +316,11 @@ def players_in_game(game)
 end
 
 # function to calculate stats breh
-def stats(names, content, cmd)
+def stats(content, cmd)
     games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-    elo = get_elo(names, games)
-    avg = get_avg_scores(names, games)
-    percent = total(names, games)
+    elo = get_elo(games)
+    avg = get_avg_scores(games)
+    percent = total(games)
     
     return make_response(avg) if cmd.start_with? "average"
     
@@ -349,20 +349,20 @@ def stats(names, content, cmd)
     
 end
 
-def history(player1, player2, content, names)
+def history(player1, player2, content)
     if player1.include? "&"
         team1 = player1.split("&")
         team2 = player2.split("&")
-        p1Index = names.find_index(team1[0])
-        p2Index = names.find_index(team1[1])
-        p3Index = names.find_index(team2[0])
-        p4Index = names.find_index(team2[1])
+        p1Index = $names.find_index(team1[0])
+        p2Index = $names.find_index(team1[1])
+        p3Index = $names.find_index(team2[0])
+        p4Index = $names.find_index(team2[1])
         player1 = "#{team1[0].capitalize}&#{team1[1].capitalize}"
         player2 = "#{team2[0].capitalize}&#{team2[1].capitalize}"
         history4 = true
     else
-        p1Index = names.find_index(player1)
-        p2Index = names.find_index(player2)
+        p1Index = $names.find_index(player1)
+        p2Index = $names.find_index(player2)
     end
     games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
     text = ""
@@ -388,8 +388,8 @@ end
 # get a set number of games as json
 # start is the index to start at, starting with the most recent game
 # limit is the number of games to return from that starting point
-# allHistory(content, names, 0, 50) would return the 50 most recent games
-def allHistory(content, names, start, limit)
+# allHistory(content, 0, 50) would return the 50 most recent games
+def allHistory(content, start, limit)
     games = content.split("\n")[1..-1] # convert csv to all games
     start = games.length - start.to_i - 1
     start = -1 if start < 0 || start >= games.length
@@ -406,7 +406,7 @@ def allHistory(content, names, start, limit)
         for p in game.each
             if p != '-1'
                 players << {
-                    name: names[i].capitalize,
+                    name: $names[i].capitalize,
                     score: p
                 }
             end
@@ -423,10 +423,10 @@ def allHistory(content, names, start, limit)
     return allGames
 end
 
-def record_safe(player1, player2, content, names)
-    return make_response("Please pass two different valid names to `foosey history`") if player1 == player2 || !names.include?(player1) || !names.include?(player2)
-    record = record(player1, player2, content, names)
-    history = history(player1, player2, content, names)
+def record_safe(player1, player2, content)
+    return make_response("Please pass two different valid names to `foosey history`") if player1 == player2 || !$names.include?(player1) || !$names.include?(player2)
+    record = record(player1, player2, content)
+    history = history(player1, player2, content)
     for item in history.each
         record << item
     end
@@ -434,20 +434,20 @@ def record_safe(player1, player2, content, names)
 end
 
 # function to return the record between two players as an attachment
-def record(player1, player2, content, names)
+def record(player1, player2, content)
     if player1.include? "&"
         team1 = player1.split("&")
         team2 = player2.split("&")
-        p1Index = names.find_index(team1[0])
-        p2Index = names.find_index(team1[1])
-        p3Index = names.find_index(team2[0])
-        p4Index = names.find_index(team2[1])
+        p1Index = $names.find_index(team1[0])
+        p2Index = $names.find_index(team1[1])
+        p3Index = $names.find_index(team2[0])
+        p4Index = $names.find_index(team2[1])
         player1 = "#{team1[0].capitalize}&#{team1[1].capitalize}"
         player2 = "#{team2[0].capitalize}&#{team2[1].capitalize}"
         history4 = true
     else
-        p1Index = names.find_index(player1)
-        p2Index = names.find_index(player2)
+        p1Index = $names.find_index(player1)
+        p2Index = $names.find_index(player2)
         player1 = player1.capitalize
         player2 = player2.capitalize
         history2 = true
@@ -492,9 +492,9 @@ def record(player1, player2, content, names)
 end
 
 # function to predict the score between two players
-def predict(names, content, cmd)
+def predict(content, cmd)
     games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-    elo_ah = get_elos(names, games, "")
+    elo_ah = get_elos(games, "")
     players = cmd.split(" ")
     return make_response("Please pass two different valid names to `foosey predict`") if
         players.length != 2 || elo_ah.index { |p| p[:name] == players[0]}.nil? || elo_ah.index { |p| p[:name] == players[1]}.nil? || players[0] == players[1]
@@ -516,7 +516,7 @@ def predict(names, content, cmd)
 end
 
 # function to undo the last move
-def undo(names, content, github_user, github_pass)
+def undo(content, github_user, github_pass)
     games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
     last = games.pop.split(",")[1..-1]
     username = last.shift
@@ -524,7 +524,7 @@ def undo(names, content, github_user, github_pass)
     i = 0;
     content = content.split("\n")[0...-1].join("\n")
     for g in last.each
-        response += "\n#{names[i].capitalize}: #{g}" if g != '-1'
+        response += "\n#{$names[i].capitalize}: #{g}" if g != '-1'
         i += 1
     end
     output = update_file_in_gist(github_user, github_pass, "Foosbot Data", "games.csv", content)
@@ -545,7 +545,7 @@ def remove(id, content, github_user, github_pass)
 end
 
 # function to verify the input from slack
-def verify_input(text, names)
+def verify_input(text)
     game = text.split(' ')
     if game.length % 2 != 0 || game.length < 4 # at least two players
         return "help"
@@ -554,7 +554,7 @@ def verify_input(text, names)
     return "No duplicate players in a game!" if games_n.length > games_n.map{|g| g}.uniq.length
     for i in 0..game.length-1
         if i % 2 == 0 # names
-            return "No user named `#{game[i]}` being logged." unless names.include?(game[i])
+            return "No user named `#{game[i]}` being logged." unless $names.include?(game[i])
         else
         return "help" unless game[i].match(/^[-+]?[0-9]*$/)
         return "Please enter whole numbers between 0 and 10." unless game[i].to_i < 11 && game[i].to_i >= 0
@@ -589,9 +589,9 @@ def addUser(name, content)
     return newContent;
 end
 
-def total(names, games)
-    total_wins = Array.new(names.length, 0)
-    total_games = Array.new(names.length, 0)
+def total(games)
+    total_wins = Array.new($names.length, 0)
+    total_games = Array.new($names.length, 0)
     for g in games.each # for each player
         g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
         for i in 0 .. g_a.length - 1 # for each player
@@ -604,10 +604,10 @@ def total(names, games)
     totals = Array.new
     
     stats = ""
-    for i in 0..names.length - 1
-        if !$gone.include? names[i]
+    for i in 0..$names.length - 1
+        if !$gone.include? $names[i]
             wins = total_wins[i] == 0 ? 0 : (total_wins[i].to_f*100 / total_games[i].to_f)
-            totals << { :name => names[i], :percent => wins } unless total_games[i] == 0
+            totals << { :name => $names[i], :percent => wins } unless total_games[i] == 0
         end
     end
     
@@ -677,7 +677,7 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     
     # Get latest paste's content
     content = get_file_from_gist(github_user, github_pass, "Foosbot Data", "games.csv")
-    names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
+    $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
     games = content.split("\n")[1..-1]
     
     # Clean up text and set args
@@ -689,21 +689,21 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     if $app
         if text.start_with? "charts"
             return {
-                charts: get_charts(args[1], names, games)
+                charts: get_charts(args[1], games)
             }
         elsif text.start_with? "leaderboard"
             return {
-                elos: get_elos(names, games, ""),
-                avgs: get_avg_scores(names, games),
-                percent: total(names, games)
+                elos: get_elos(games, ""),
+                avgs: get_avg_scores(games),
+                percent: total(games)
             }
         elsif text.start_with? "history"
             return {
-                games: allHistory(content, names, args[1], args[2])
+                games: allHistory(content, args[1], args[2])
             }
         elsif text.start_with? "players"
             return {
-                players: getPlayers(names - $gone)
+                players: getPlayers($names - $gone)
             }
         elsif text.start_with? "remove"
             return {
@@ -716,15 +716,15 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     if text.start_with? "help"
         return help_message()
     elsif text.start_with? "stats"
-        return stats(names, content, text["stats".length..text.length].strip)
+        return stats(content, text["stats".length..text.length].strip)
     elsif text.start_with? "predict"
-        return predict(names, content, text["predict".length..text.length].strip)
+        return predict(content, text["predict".length..text.length].strip)
     elsif text.start_with? "easter"
         return make_response($middle)
     elsif text.start_with? "undo"
-        return undo(names, content, github_user, github_pass)
+        return undo(content, github_user, github_pass)
     elsif text.start_with? "history"
-        return record_safe(args[1], args[2], content, names)
+        return record_safe(args[1], args[2], content)
     elsif text.start_with? "record"
         return make_response("`foosey record` has been renamed `foosey history`")
     elsif text.start_with? "add"
@@ -735,7 +735,7 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     end
 
     # Verify data
-    result = verify_input(text, names);
+    result = verify_input(text);
     if result != "good"
         if result == "help"
             return succinct_help()
@@ -748,11 +748,11 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     now = Time.now.to_i
     game = text.split(' ') # get the game information
     i = 0
-    new_game = Array.new(names.length + 2, -1)
+    new_game = Array.new($names.length + 2, -1)
     new_game[0] = now # set first column to timestamp
     new_game[1] = "@#{user_name}" #set second column to slack username
     while i < game.length
-        name_column = names.find_index(game[i]) + 2 # get column of person's name
+        name_column = $names.find_index(game[i]) + 2 # get column of person's name
         new_game[name_column] = game[i + 1].to_i # to_i should be safe here since we've verified input earlier
         i += 2
     end
@@ -770,12 +770,12 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
         games = content.split("\n")[1..-1]
         
         # get elo change
-        elo_change = get_difference(thisGame, names, games)
+        elo_change = get_difference(thisGame, games)
         
         # if 2 players
         if players == 2
             # get record
-            record = record(game[0], game[2], content, names)
+            record = record(game[0], game[2], content)
         # if 4 players
         else
             # get record
@@ -790,7 +790,7 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
                 end
                 i += 2
             end
-            record = record("#{team1.join("&")}", "#{team2.join("&")}", content, names)
+            record = record("#{team1.join("&")}", "#{team2.join("&")}", content)
         end
         
         # add them to the attachments
