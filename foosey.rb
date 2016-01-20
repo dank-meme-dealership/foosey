@@ -15,6 +15,11 @@ $middle = %{```....................../´¯/)
 
 $UTC = "-07:00"
 
+$admins = ["matttt", "brik"]
+$gone = ["daniel", "josh", "jody", "newdev"]
+$dev = []
+$interns = []
+
 # function to return a response object for slack
 def make_response(response, attachments = [])
     return {
@@ -64,7 +69,7 @@ def succinct_help()
 end
 
 # function to calculate average scores
-def get_avg_scores(names, gone, games)
+def get_avg_scores(names, games)
     total_scores = Array.new(names.length, 0)
     total_games = Array.new(names.length, 0)
     for g in games.each # for each player
@@ -80,7 +85,7 @@ def get_avg_scores(names, gone, games)
     averages = ""
     # total_played = ""
     for i in 0 ... names.length
-        if !gone.include? names[i]
+        if !$gone.include? names[i]
             avg_score << { :name => names[i], :avg => total_scores[i] / (total_games[i] * 1.0) } unless total_games[i] == 0
         end
         # total_played += "#{names[i].capitalize}: #{total_games[i]}\n" unless total_games[i] == 0
@@ -192,7 +197,7 @@ def calculate_elo_change(g, elo, total_games)
 end
 
 # calculates singles elo and returns array hash
-def get_elos(names, gone, games, difference)
+def get_elos(names, games, difference)
     elo = Array.new(names.length, 1200)
     total_games = Array.new(names.length, 0)
 
@@ -213,7 +218,7 @@ def get_elos(names, gone, games, difference)
         
     elo_ah = Array.new()
     for i in 0 ... names.length
-        if !gone.include? names[i]
+        if !$gone.include? names[i]
             elo_ah << { :name => names[i], :elo => elo[i] } unless total_games[i] == 0
         end
     end
@@ -222,11 +227,11 @@ def get_elos(names, gone, games, difference)
 end
 
 # function to display elo
-def get_elo(names, gone, games)
-    elo_ah = get_elos(names, gone, games, "")
+def get_elo(names, games)
+    elo_ah = get_elos(names, games, "")
     elo_s = ""
     for i in 0 ... elo_ah.length
-        elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" if !gone.include? elo_ah[i][:name]
+        elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" if !$gone.include? elo_ah[i][:name]
     end
 
     return elo_s
@@ -266,8 +271,8 @@ def get_charts(name, names, games)
     return chart_data
 end
 
-def get_difference(thisGame, names, gone, games)
-    both = get_elos(names, gone, games, "something")
+def get_difference(thisGame, names, games)
+    both = get_elos(names, games, "something")
     elo = both[0]
     elo_2nd2Last = both[1]
     g = thisGame.split(',')
@@ -311,11 +316,11 @@ def players_in_game(game)
 end
 
 # function to calculate stats breh
-def stats(names, gone, content, cmd)
+def stats(names, content, cmd)
     games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-    elo = get_elo(names, gone, games)
-    avg = get_avg_scores(names, gone, games)
-    percent = total(names, gone, games)
+    elo = get_elo(names, games)
+    avg = get_avg_scores(names, games)
+    percent = total(names, games)
     
     return make_response(avg) if cmd.start_with? "average"
     
@@ -487,9 +492,9 @@ def record(player1, player2, content, names)
 end
 
 # function to predict the score between two players
-def predict(names, gone, content, cmd)
+def predict(names, content, cmd)
     games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-    elo_ah = get_elos(names, gone, games, "")
+    elo_ah = get_elos(names, games, "")
     players = cmd.split(" ")
     return make_response("Please pass two different valid names to `foosey predict`") if
         players.length != 2 || elo_ah.index { |p| p[:name] == players[0]}.nil? || elo_ah.index { |p| p[:name] == players[1]}.nil? || players[0] == players[1]
@@ -584,7 +589,7 @@ def addUser(name, content)
     return newContent;
 end
 
-def total(names, gone, games)
+def total(names, games)
     total_wins = Array.new(names.length, 0)
     total_games = Array.new(names.length, 0)
     for g in games.each # for each player
@@ -600,7 +605,7 @@ def total(names, gone, games)
     
     stats = ""
     for i in 0..names.length - 1
-        if !gone.include? names[i]
+        if !$gone.include? names[i]
             wins = total_wins[i] == 0 ? 0 : (total_wins[i].to_f*100 / total_games[i].to_f)
             totals << { :name => names[i], :percent => wins } unless total_games[i] == 0
         end
@@ -674,8 +679,6 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     content = get_file_from_gist(github_user, github_pass, "Foosbot Data", "games.csv")
     names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
     games = content.split("\n")[1..-1]
-    admins = ["matttt", "brik"]
-    gone = ["daniel", "josh", "jody", "newdev"]
     
     # Clean up text and set args
     text ||= ""
@@ -690,9 +693,9 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
             }
         elsif text.start_with? "leaderboard"
             return {
-                elos: get_elos(names, gone, games, ""),
-                avgs: get_avg_scores(names, gone, games),
-                percent: total(names, gone, games)
+                elos: get_elos(names, games, ""),
+                avgs: get_avg_scores(names, games),
+                percent: total(names, games)
             }
         elsif text.start_with? "history"
             return {
@@ -700,7 +703,7 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
             }
         elsif text.start_with? "players"
             return {
-                players: getPlayers(names - gone)
+                players: getPlayers(names - $gone)
             }
         elsif text.start_with? "remove"
             return {
@@ -713,9 +716,9 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     if text.start_with? "help"
         return help_message()
     elsif text.start_with? "stats"
-        return stats(names, gone, content, text["stats".length..text.length].strip)
+        return stats(names, content, text["stats".length..text.length].strip)
     elsif text.start_with? "predict"
-        return predict(names, gone, content, text["predict".length..text.length].strip)
+        return predict(names, content, text["predict".length..text.length].strip)
     elsif text.start_with? "easter"
         return make_response($middle)
     elsif text.start_with? "undo"
@@ -725,7 +728,7 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
     elsif text.start_with? "record"
         return make_response("`foosey record` has been renamed `foosey history`")
     elsif text.start_with? "add"
-        return succinct_help() unless admins.include? user_name
+        return succinct_help() unless $admins.include? user_name
         content = addUser(args[1], content)
         update_file_in_gist(github_user, github_pass, "Foosbot Data", "games.csv", content)
         return make_response("Player added!")
@@ -767,7 +770,7 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
         games = content.split("\n")[1..-1]
         
         # get elo change
-        elo_change = get_difference(thisGame, names, gone, games)
+        elo_change = get_difference(thisGame, names, games)
         
         # if 2 players
         if players == 2
