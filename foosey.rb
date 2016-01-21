@@ -18,6 +18,7 @@ $UTC = "-07:00"
 $names = []
 $admins = ["matttt", "brik"]
 $gone = ["daniel", "josh", "jody"]
+$dev = ["tim", "wade", "greg", "peter", "blake", "erich", "will", "jerame", "alberto", "ben", "justin", "randall"]
 $interns = ["matt", "brik", "conner", "roger", "adam", "jon"]
 
 $internsURL = "https://hooks.slack.com/services/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"
@@ -35,20 +36,19 @@ def make_response(response, attachments = [])
 end
 
 def message_slack(thisGame, text, attach)
-    url = internOnly(thisGame) ? $internsURL : $devURL
-
-    response = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{url}`
+    intern = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$internsURL}` if inGame(thisGame, $interns)
+    dev = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$internsURL}` if inGame(thisGame, $dev)
 end
 
-def internOnly(thisGame)
+def inGame(thisGame, group)
     for i in 0..thisGame.length-1
-        if !$interns.include? $names[i]
+        if group.include? $names[i]
             if thisGame[i].to_s != '-1'
-                return false 
+                return true 
             end
         end
     end
-    return true
+    return false
 end
 
 # function to make a help message
