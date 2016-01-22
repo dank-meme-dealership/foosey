@@ -1,5 +1,5 @@
 angular.module('history', [])
-	.controller('HistoryController', function($scope, $ionicPopup, $ionicActionSheet, localStorage, FooseyService)
+	.controller('HistoryController', function($scope, $ionicPopup, $ionicActionSheet, $filter, localStorage, FooseyService)
 	{
         // some variables
         var loaded = 0;
@@ -92,6 +92,7 @@ angular.module('history', [])
             // Show the action sheet
             $ionicActionSheet.show(
             {
+                titleText: 'Game played at ' + $filter('time')(game.time),
                 destructiveText: 'Remove Game',
                 cancelText: 'Cancel',
                 destructiveButtonClicked: function(index) 

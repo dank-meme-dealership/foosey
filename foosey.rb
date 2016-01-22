@@ -453,12 +453,12 @@ def getTeamNamesAndScores(g)
         p_b = game.rindex { |p| p != '-1' }
 
         teams << {
-            name: $names[p_a].capitalize,
+            players: [$names[p_a].capitalize],
             score: game[p_a].to_i
         }
 
         teams << {
-            name: $names[p_b].capitalize,
+            players: [$names[p_b].capitalize],
             score: game[p_b].to_i
         }
 
@@ -473,12 +473,12 @@ def getTeamNamesAndScores(g)
         t_b_p_b = game.rindex { |p| p != '-1' && p != '10' }
         
         teams << {
-            name: "#{$names[t_a_p_a].capitalize} & #{$names[t_a_p_b].capitalize}",
+            players: [$names[t_a_p_a].capitalize, $names[t_a_p_b].capitalize],
             score: game[t_a_p_a].to_i
         }
 
         teams << {
-            name: "#{$names[t_b_p_a].capitalize} & #{$names[t_b_p_b].capitalize}",
+            players: [$names[t_b_p_a].capitalize, $names[t_b_p_b].capitalize],
             score: game[t_b_p_a].to_i
         }
         
@@ -486,7 +486,7 @@ def getTeamNamesAndScores(g)
         for p in game.each
             if p != '-1'
                 teams << {
-                    name: $names[i].capitalize,
+                    players: [$names[i].capitalize],
                     score: p
                 }
             end
