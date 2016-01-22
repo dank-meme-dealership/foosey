@@ -19,6 +19,16 @@ angular.module('foosey')
     }
    })
 
+	// format the elo change for the day
+	.filter('eloChange', function()
+	{
+		return function(input)
+		{
+			plusOrMinus = input < 0 ? input : '+' + input
+			return '(' + plusOrMinus + ')';
+		}
+	})
+
 	// nice string for teams
 	.filter('team', function()
 	{

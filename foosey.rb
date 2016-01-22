@@ -214,8 +214,11 @@ end
 
 # calculates singles elo and returns array hash
 def get_elos(games, difference)
+    now = Time.at(Time.now.to_i).getlocal($UTC)
     elo = Array.new($names.length, 1200)
+    prev = elo.dup
     total_games = Array.new($names.length, 0)
+    all = []
 
     games_c = games.dup
     g_i = 0
@@ -223,6 +226,11 @@ def get_elos(games, difference)
         
         elo, total_games = calculate_elo_change(g, elo, total_games)
             
+        change = prev.zip(elo).map { |x, y| y - x }
+        gameTime = Time.at(g.split(",")[0].to_i).getlocal($UTC)
+        all.unshift(change) if Time.at(now).to_date === Time.at(gameTime).to_date
+
+        prev = elo.dup
         g_i += 1
         elo_2nd2Last = elo.dup if g_i == games_c.length - 1
     end
@@ -235,7 +243,7 @@ def get_elos(games, difference)
     elo_ah = Array.new()
     for i in 0 ... $names.length
         if !$gone.include? $names[i]
-            elo_ah << { :name => $names[i], :elo => elo[i] } unless total_games[i] == 0
+            elo_ah << { :name => $names[i], :elo => elo[i], :change => all.map{|a| a[i]}.inject(:+) } unless total_games[i] == 0
         end
     end
     elo_ah = elo_ah.sort { |a,b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style

@@ -39,9 +39,13 @@
             ng-class="{'last': $last}"
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
-              <h2>{{player.name | capitalize}}</h2> 
+              <h2>
+                <div class="rank">{{$index + 1}}</div> 
+                {{player.name | capitalize}}
+              </h2> 
               <div class="spaced-out">
-                <b>{{player.elo}}</b>
+                <div><b>{{player.elo}}</b></div>
+                <div class="elo-change" ng-class="{'green': player.change > 0, 'red': player.change < 0}">{{player.change | eloChange}}</div>
                 <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
               </div>
             </div>
