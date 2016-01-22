@@ -37,7 +37,7 @@ end
 
 def message_slack(thisGame, text, attach)
     intern = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$internsURL}` if inGame(thisGame, $interns)
-    dev = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$internsURL}` if inGame(thisGame, $dev)
+    dev = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$devURL}` if inGame(thisGame, $dev)
 end
 
 def inGame(thisGame, group)
