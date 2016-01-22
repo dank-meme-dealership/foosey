@@ -30,8 +30,8 @@
 					<div ng-repeat="game in day.games" ng-click="show(game)">
 						<div class="spaced-out">
 							<div>
-								<div ng-repeat="player in game.players">
-									{{player.name}} - {{player.score}}
+								<div ng-repeat="team in game.teams">
+									{{team.name}} - {{team.score}}
 								</div>
 							</div>
 							<div style="font-size: 14px">{{game.time | time}}</div>

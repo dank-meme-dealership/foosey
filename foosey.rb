@@ -424,27 +424,77 @@ def allHistory(content, start, limit)
     id = limit;
     for g in games.each
         date, time = dateTime(g, "%m/%d/%Y", "%H:%M")
-        players = []
+        teams = []
         game = g.split(",")[2..-1]
         i = 0
+
+        teams = getTeamNamesAndScores(g)
+
+        allGames.unshift({
+            id: id,
+            date: date,
+            time: time,
+            teams: teams
+        })
+        id += 1;
+    end
+    return allGames
+end
+
+def getTeamNamesAndScores(g)
+    teams = [] 
+    game = g.strip.split(',')[2..-1]
+    i = 0
+
+    # if 2 players
+    if players_in_game(g) == 2
+        # get indexes
+        p_a = game.index { |p| p != '-1' }
+        p_b = game.rindex { |p| p != '-1' }
+
+        teams << {
+            name: $names[p_a].capitalize,
+            score: game[p_a].to_i
+        }
+
+        teams << {
+            name: $names[p_b].capitalize,
+            score: game[p_b].to_i
+        }
+
+    # if 4 players
+    elsif players_in_game(g) == 4
+        # get indexes of winners
+        t_a_p_a = game.index { |p| p == '10' }
+        t_a_p_b = game.rindex { |p| p == '10' }
+        
+        # get indexes of losers
+        t_b_p_a = game.index { |p| p != '-1' && p != '10' }
+        t_b_p_b = game.rindex { |p| p != '-1' && p != '10' }
+        
+        teams << {
+            name: "#{$names[t_a_p_a].capitalize} & #{$names[t_a_p_b].capitalize}",
+            score: game[t_a_p_a].to_i
+        }
+
+        teams << {
+            name: "#{$names[t_b_p_a].capitalize} & #{$names[t_b_p_b].capitalize}",
+            score: game[t_b_p_a].to_i
+        }
+        
+    else
         for p in game.each
             if p != '-1'
-                players << {
+                teams << {
                     name: $names[i].capitalize,
                     score: p
                 }
             end
             i += 1
         end
-        allGames.unshift({
-            id: id,
-            date: date,
-            time: time,
-            players: players
-        })
-        id += 1;
     end
-    return allGames
+
+    return teams
 end
 
 def record_safe(player1, player2, content)
