@@ -17,13 +17,13 @@
 	
 	  <!-- no internet message -->
 	  <ion-item ng-show="error">No internet connection :(</ion-item>
-	
+
 		<!-- The full history of games -->
 		<div ng-show="dates">
 			<ion-list ng-repeat="day in dates" ng-class="{'last': $last}">
 				<ion-item>
 					<div class="spaced-out">
-						<div class="history-date">{{day.date}}</div>
+						<div class="history-date">{{day.date | date}}</div>
 						<div class="history-games">{{day.games.length}} game<span ng-if="day	.games.length > 1">s</span></div>
 					</div>
 					<div class="divider"></div>

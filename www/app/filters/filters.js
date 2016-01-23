@@ -19,6 +19,18 @@ angular.module('foosey')
     }
    })
 
+	// capitalize the first letter of a word
+	.filter('date', function() 
+	{
+    return function(input) {
+    	var date = new Date();
+		  var today = ("0" + (date.getMonth() + 1).toString()).substr(-2) + "/" + ("0" + date.getDate().toString()).substr(-2)  + "/" + (date.getFullYear().toString());
+		  
+      if (input === today) return 'Today';
+      return input;
+    }
+   })
+
 	// format the elo change for the day
 	.filter('eloChange', function()
 	{
