@@ -487,12 +487,14 @@ def getTeamNamesAndScores(g)
             if p != '-1'
                 teams << {
                     players: [$names[i].capitalize],
-                    score: p
+                    score: p.to_i
                 }
             end
             i += 1
         end
     end
+
+    teams.sort! { |a,b| b[:score] <=> a[:score] }
 
     return teams
 end

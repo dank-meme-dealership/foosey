@@ -45,7 +45,7 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 
 		// add player to this team
 		player.selected = true;
-		$scope.playersSelected.push(player);
+		$scope.playersSelected.push(player.name);
 
 		// if we have selected all players for the team, select the score
 		if ($scope.playersSelected.length === $scope.type.playersPerTeam)

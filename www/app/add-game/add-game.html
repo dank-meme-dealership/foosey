@@ -32,8 +32,13 @@
 		<div ng-show="state !== 'game-select'">
 			<ion-item style="text-align: center">
 				<div class="title">{{type.name}}</div>
-				<div ng-repeat="team in game">
-					{{team.players | team | capitalize}}: {{team.score}}
+				<div class="spaced-out">
+					<div ng-repeat="team in game" class="game-score">
+						<div ng-repeat="player in team.players">
+							{{player | capitalize}}
+						</div>
+						<div><strong>{{team.score}}</strong></div>
+					</div>
 				</div>
 			</ion-item>
 		</div>

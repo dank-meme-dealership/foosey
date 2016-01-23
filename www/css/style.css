@@ -59,6 +59,12 @@
   margin: 7px 0;
 }
 
+.game-score
+{
+  text-align: center;
+  width: 85px;
+}
+
 .grid-container
 {
   margin: 5px;
@@ -82,16 +88,6 @@
 {
   font-size: 16px;
   padding: 7px 5px;
-}
-
-.history-date
-{
-  font-size: 20px;
-}
-
-.history-games
-{
-  font-size: 18px;
 }
 
 div.item

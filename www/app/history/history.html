@@ -29,9 +29,9 @@
 					<div class="divider"></div>
 					<div ng-repeat="game in day.games" ng-click="show(game)">
 						<div class="spaced-out">
-							<div ng-repeat="team in game.teams" class="history-score">
+							<div ng-repeat="team in game.teams" class="game-score">
 								<div ng-repeat="player in team.players">
-									{{player}}
+									{{player | capitalize}}
 								</div>
 								<div><strong>{{team.score}}</strong></div>
 							</div>
