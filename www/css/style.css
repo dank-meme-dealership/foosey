@@ -125,6 +125,11 @@ ion-item.item.last, ion-list.last ion-item.item
   margin-top: 42px;
 }
 
+.platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button
+{
+  text-align: center;
+}
+
 .space:before
 {
   padding-right: 16px;
