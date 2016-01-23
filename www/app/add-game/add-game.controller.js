@@ -86,6 +86,7 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 	{
 		$scope.state = "saving";
 		$scope.saveStatus = "saving";
+		console.log($scope.command);
 		FooseyService.addGame($scope.command).then(function successCallback(response)
 		{
 			$scope.response = response.data;
@@ -108,7 +109,7 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 	{
 		for (var i = 0; i < $scope.type.playersPerTeam; i++)
 		{
-			$scope.command += players[i].name + " " + score + " ";
+			$scope.command += players[i] + " " + score + " ";
 		}
 	}
 
