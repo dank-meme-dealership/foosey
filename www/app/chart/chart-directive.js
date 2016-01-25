@@ -1,4 +1,5 @@
-angular.module('chart', [])
+angular
+    .module('chart', [])
 	.directive('chart', function()
 	{
 		return {

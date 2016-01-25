@@ -1,8 +1,11 @@
-angular.module('teamStats')
-	.controller('TeamStatsController', function($scope, FooseyService)
-	{
+angular
+    .module('teamStats')
+	.controller('TeamStatsController', TeamStatsController);
 
-	// Create the chart
+function TeamStatsController($scope, FooseyService)
+{
+
+    // Create the chart
     $('#container').highcharts({
         chart: {
             type: 'column'
@@ -56,39 +59,39 @@ angular.module('teamStats')
         }]
     });
 
-		// Remove link
-		$("text")[$("text").length -1].remove();
+    // Remove link
+    $("text")[$("text").length -1].remove();
 
-		// setUpCharts();	
+    // setUpCharts();   
 
-		// set up the charts for the scorecard page
-		function setUpCharts()
-		{
-			$scope.charts = [];
-			$scope.subtitle = 'Data from All Time';
+    // set up the charts for the scorecard page
+    function setUpCharts()
+    {
+        $scope.charts = [];
+        $scope.subtitle = 'Data from All Time';
 
-			FooseyService.charts('matt').then(function successCallback(response)
-			{
-				// Get chart data
-				var chartData = response.data;
+        FooseyService.charts('matt').then(function successCallback(response)
+        {
+            // Get chart data
+            var chartData = response.data;
 
-				$scope.dates = _.pluck(chartData.charts, 'date');
+            $scope.dates = _.pluck(chartData.charts, 'date');
 
-				// Set up ELO Rating chart
-				$scope.charts.push(getEloChartOptions(_.pluck(chartData.charts, 'elo')));
-			});
-		}
+            // Set up ELO Rating chart
+            $scope.charts.push(getEloChartOptions(_.pluck(chartData.charts, 'elo')));
+        });
+    }
 
-		// define options for the ELO Rating chart
-		function getEloChartOptions(data)
-		{
-			return {
-				title: 'ELO Rating',
-				subtitle: $scope.subtitle,
-				yAxis: 'ELO',
-				class: 'elo',
-				data: data,
-				dates: $scope.dates
-			};
-		}
-	});
+    // define options for the ELO Rating chart
+    function getEloChartOptions(data)
+    {
+        return {
+            title: 'ELO Rating',
+            subtitle: $scope.subtitle,
+            yAxis: 'ELO',
+            class: 'elo',
+            data: data,
+            dates: $scope.dates
+        };
+    }
+}
