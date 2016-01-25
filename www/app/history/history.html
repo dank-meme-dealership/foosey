@@ -48,7 +48,7 @@
 
 			<!-- Load more games if you reach the bottom -->
 			<ion-infinite-scroll
-				ng-if="!allLoaded"
+				ng-if="!allLoaded && games"
 				spinner="lines"
   		  on-infinite="loadMore()"
   		  distance="1%">
