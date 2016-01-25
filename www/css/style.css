@@ -59,10 +59,20 @@
   margin: 7px 0;
 }
 
+.elo-red
+{
+  color: red;
+}
+
+.elo-green
+{
+  color: green;
+}
+
 .game-score
 {
   text-align: center;
-  width: 85px;
+  width: 90px;
 }
 
 .grid-container

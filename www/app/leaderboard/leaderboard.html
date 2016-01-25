@@ -48,7 +48,7 @@
                 <div 
                   ng-show="player.change !== null"
                   class="elo-change" 
-                  ng-class="{'green': player.change > 0, 'red': player.change < 0}">
+                  ng-class="{'elo-green': player.change > 0, 'elo-red': player.change < 0}">
                   {{player.change | eloChange}}
                 </div>
                 <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
