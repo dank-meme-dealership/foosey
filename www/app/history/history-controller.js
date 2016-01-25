@@ -48,6 +48,9 @@ angular.module('history', [])
             FooseyService.history(loaded, loaded + gamesToLoad)
             .then(function successCallback(result)
             {
+                // if no games have been loaded yet, we can't do anything
+                if (!$scope.games) return;
+
                 // push new games to the end of the games list
                 $scope.games.push.apply($scope.games, result.data.games);
                 console.log("Loaded " + result.data.games.length);
