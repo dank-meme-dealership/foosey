@@ -31,7 +31,13 @@
 						<div class="spaced-out">
 							<div ng-repeat="team in game.teams" class="game-score">
 								<div ng-repeat="player in team.players">
-									{{player | capitalize}}
+									<span>{{player | capitalize}}</span>
+									<span 
+                  	ng-show="player.change !== null"
+                  	class="elo-change" 
+                  	ng-class="{'green': team.change > 0, 'red': team.change < 0}">
+                  	{{team.change | eloChange}}
+                	</span>
 								</div>
 								<div><strong>{{team.score}}</strong></div>
 							</div>

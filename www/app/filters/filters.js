@@ -36,7 +36,7 @@ angular.module('foosey')
 	{
 		return function(input)
 		{
-			if (input === null) return '';
+			if (input === undefined || input === null) return '';
 			plusOrMinus = input < 0 ? input : '+' + input
 			return '(' + plusOrMinus + ')';
 		}

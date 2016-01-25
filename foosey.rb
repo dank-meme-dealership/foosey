@@ -121,9 +121,13 @@ end
 
 def calculate_elo_change(g, elo, total_games)
     
+    change = Array.new($names.length, 0) # empty no change array
+
     # quit out unless a 2 or 4 person game
-    return elo, total_games if players_in_game(g) != 2 && players_in_game(g) != 4
+    return elo, total_games, change if players_in_game(g) != 2 && players_in_game(g) != 4
     
+    prev = elo.dup
+
     k_factor = 50 # we can play around with this, but chess uses 15 in most skill ranges
 
     g_a = g.strip.split(',')[2..-1]
@@ -209,14 +213,15 @@ def calculate_elo_change(g, elo, total_games)
         total_games[t_b_p_b] += 1
     end
 
-    return elo, total_games
+    change = prev.zip(elo).map { |x, y| y - x }
+
+    return elo, total_games, change
 end
 
 # calculates singles elo and returns array hash
 def get_elos(games, difference)
     now = Time.at(Time.now.to_i).getlocal($UTC)
     elo = Array.new($names.length, 1200)
-    prev = elo.dup
     total_games = Array.new($names.length, 0)
     all = []
 
@@ -224,13 +229,11 @@ def get_elos(games, difference)
     g_i = 0
     for g in games_c.each # adjust players elo game by game
         
-        elo, total_games = calculate_elo_change(g, elo, total_games)
+        elo, total_games, change = calculate_elo_change(g, elo, total_games)
             
-        change = prev.zip(elo).map { |x, y| y - x }
         gameTime = Time.at(g.split(",")[0].to_i).getlocal($UTC)
         all.unshift(change) if Time.at(now).to_date === Time.at(gameTime).to_date
 
-        prev = elo.dup
         g_i += 1
         elo_2nd2Last = elo.dup if g_i == games_c.length - 1
     end
@@ -272,7 +275,7 @@ def get_charts(name, games)
     g_i = 0
     for g in games.each
         date, time = dateTime(g, "%m/%d", "%H:%M")
-        elo, total_games = calculate_elo_change(g, elo, total_games)
+        elo, total_games, change = calculate_elo_change(g, elo, total_games)
         g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
         total_wins += 1 if g_a[index] == '10'
         if g_a[index] != '-1'
@@ -300,7 +303,6 @@ def get_difference(thisGame, games)
     elo = both[0]
     elo_2nd2Last = both[1]
     g = thisGame.split(',')
-    #puts g
     
     # make attachment
     elo_r = [
@@ -319,7 +321,6 @@ def get_difference(thisGame, games)
             value: "#{elo[g_i]} (#{p}#{diff})",
             short: true
         }
-        #puts g[g_i]
         elo_r[0][:fields] << thisPlayer if g[g_i] != '-1'
         
         g_i += 1
@@ -415,33 +416,43 @@ end
 # allHistory(content, 0, 50) would return the 50 most recent games
 def allHistory(content, start, limit)
     games = content.split("\n")[1..-1] # convert csv to all games
+    allGames = []
+    i = -1;
+
+    # limit the number of games returned
     start = games.length - start.to_i - 1
     start = -1 if start < 0 || start >= games.length
     limit = limit == '' ? 0 : games.length - limit.to_i
     limit = 0 if limit < 0 || limit > start
-    games = games[limit..start] # limit the number of games returned
-    allGames = []
-    id = limit;
+
+    # keep track of elo
+    elo = Array.new($names.length, 1200)
+    total_games = Array.new($names.length, 0)
+
     for g in games.each
+        elo, total_games, change = calculate_elo_change(g, elo, total_games)
+        i += 1;
+
+        # skip returning it if it's not in the range we're looking for
+        next if i < limit || i > start
+
         date, time = dateTime(g, "%m/%d/%Y", "%H:%M")
         teams = []
         game = g.split(",")[2..-1]
-        i = 0
 
-        teams = getTeamNamesAndScores(g)
+        teams = getTeamNamesAndScores(g, change)
 
         allGames.unshift({
-            id: id,
+            id: i,
             date: date,
             time: time,
             teams: teams
         })
-        id += 1;
     end
     return allGames
 end
 
-def getTeamNamesAndScores(g)
+def getTeamNamesAndScores(g, change)
     teams = [] 
     game = g.strip.split(',')[2..-1]
     i = 0
@@ -454,12 +465,14 @@ def getTeamNamesAndScores(g)
 
         teams << {
             players: [$names[p_a].capitalize],
-            score: game[p_a].to_i
+            score: game[p_a].to_i,
+            change: change[p_a]
         }
 
         teams << {
             players: [$names[p_b].capitalize],
-            score: game[p_b].to_i
+            score: game[p_b].to_i,
+            change: change[p_b]
         }
 
     # if 4 players
@@ -474,12 +487,14 @@ def getTeamNamesAndScores(g)
         
         teams << {
             players: [$names[t_a_p_a].capitalize, $names[t_a_p_b].capitalize],
-            score: game[t_a_p_a].to_i
+            score: game[t_a_p_a].to_i,
+            change: change[t_a_p_a]
         }
 
         teams << {
             players: [$names[t_b_p_a].capitalize, $names[t_b_p_b].capitalize],
-            score: game[t_b_p_a].to_i
+            score: game[t_b_p_a].to_i,
+            change: change[t_b_p_a]
         }
         
     else
