@@ -45,7 +45,12 @@
               </h2> 
               <div class="spaced-out">
                 <div><b>{{player.elo}}</b></div>
-                <div class="elo-change" ng-class="{'green': player.change > 0, 'red': player.change < 0}">{{player.change | eloChange}}</div>
+                <div 
+                  ng-show="player.change !== null"
+                  class="elo-change" 
+                  ng-class="{'green': player.change > 0, 'red': player.change < 0}">
+                  {{player.change | eloChange}}
+                </div>
                 <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
               </div>
             </div>
