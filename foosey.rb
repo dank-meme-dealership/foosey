@@ -246,7 +246,7 @@ def get_elos(games, difference)
     elo_ah = Array.new()
     for i in 0 ... $names.length
         if !$gone.include? $names[i]
-            elo_ah << { :name => $names[i], :elo => elo[i], :change => all.map{|a| a[i]}.inject(:+) } unless total_games[i] == 0
+            elo_ah << { :name => $names[i], :elo => elo[i], :change => all.map{|a| a[i]}.inject(:+), :games => total_games[i] } unless total_games[i] == 0
         end
     end
     elo_ah = elo_ah.sort { |a,b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
