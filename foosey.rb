@@ -22,7 +22,7 @@ $dev = ["tim", "wade", "greg", "peter", "blake", "erich", "will", "jerame", "alb
 $interns = ["matt", "brik", "conner", "roger", "adam", "jon"]
 
 $internsURL = "https://hooks.slack.com/services/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"
-$devURL = "https://hooks.slack.com/services/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"
+$devURL = "https://hooks.slack.com/services/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"
 
 # function to return a response object for slack
 def make_response(response, attachments = [])
