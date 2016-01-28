@@ -298,6 +298,27 @@ def get_charts(name, games)
     return chart_data
 end
 
+def get_team_charts(games)
+    chart_data = []
+    dow = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    count = Array.new(7, 0)
+    for g in games.each
+        day, hour = dateTime(g, "%w", "%H")
+        count[day.to_i] += 1
+    end
+    
+    i = 0
+    for c in count.each
+        chart_data << {
+            day: dow[i],
+            count: c
+        }
+        i += 1
+    end
+
+    return chart_data
+end
+
 def get_difference(thisGame, games)
     both = get_elos(games, "something")
     elo = both[0]
@@ -799,6 +820,10 @@ def webhook(team_domain, service_id, token, user_name, team_id, user_id, channel
         elsif text.start_with? "remove"
             return {
                 response: remove(args[1], content, github_user, github_pass)
+            }
+        elsif text.start_with? "team"
+            return {
+                charts: get_team_charts(games)
             }
         end
     end

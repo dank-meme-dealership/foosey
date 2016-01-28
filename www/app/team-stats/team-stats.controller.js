@@ -5,64 +5,7 @@ angular
 function TeamStatsController($scope, FooseyService)
 {
 
-    // Create the chart
-    $('#container').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Games Played Per Day'
-        },
-        subtitle: {
-            text: 'This is placeholder data for now'
-        },
-        xAxis: {
-            type: 'category'
-        },
-        yAxis: {
-            title: {
-                text: 'Games Played'
-            }
-
-        },
-        legend: {
-            enabled: false
-        },
-        plotOptions: {
-            series: {
-                borderWidth: 0,
-                dataLabels: {
-                    enabled: true
-                },
-                enableMouseTracking: false
-            }
-        },
-        series: [{
-            name: 'Days',
-            colorByPoint: false,
-            data: [{
-                name: 'M',
-                y: 127
-            }, {
-                name: 'T',
-                y: 58
-            }, {
-                name: 'W',
-                y: 89
-            }, {
-                name: 'T',
-                y: 75
-            }, {
-                name: 'F',
-                y: 119
-            }]
-        }]
-    });
-
-    // Remove link
-    $("text")[$("text").length -1].remove();
-
-    // setUpCharts();   
+    setUpCharts();   
 
     // set up the charts for the scorecard page
     function setUpCharts()
@@ -70,15 +13,19 @@ function TeamStatsController($scope, FooseyService)
         $scope.charts = [];
         $scope.subtitle = 'Data from All Time';
 
-        FooseyService.charts('matt').then(function successCallback(response)
+        FooseyService.teamCharts('matt').then(function successCallback(response)
         {
-            // Get chart data
-            var chartData = response.data;
+            $scope.days = response.data.charts;
 
-            $scope.dates = _.pluck(chartData.charts, 'date');
-
-            // Set up ELO Rating chart
-            $scope.charts.push(getEloChartOptions(_.pluck(chartData.charts, 'elo')));
+            $scope.data = [];
+            for (var i = 0; i < $scope.days.length; i++)
+            {
+                $scope.data.push({
+                    name: $scope.days[i].day,
+                    y: $scope.days[i].count
+                });
+            }
+            doChart();
         });
     }
 
@@ -93,5 +40,50 @@ function TeamStatsController($scope, FooseyService)
             data: data,
             dates: $scope.dates
         };
+    }
+
+    function doChart()
+    {
+        // Create the chart
+        $('#container').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Games Played Per Day'
+            },
+            subtitle: {
+                text: 'This is data for all time'
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Games Played'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [{
+                name: 'Days',
+                colorByPoint: false,
+                data: $scope.data
+            }]
+        });
+
+        // Remove link
+        $("text")[$("text").length -1].remove();
     }
 }

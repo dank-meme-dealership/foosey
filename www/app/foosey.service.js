@@ -72,6 +72,17 @@ angular.module('foosey')
         return $http.post(url, data);
       },
 
+      // get chart data for a player
+      teamCharts: function()
+      {
+        data =
+        {
+          text: "team",
+          device: "app"
+        }
+        return $http.post(url, data);
+      },
+
       // undo last game
       undo: function()
       {

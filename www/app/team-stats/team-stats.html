@@ -1,19 +1,19 @@
 <ion-view view-title="Team Statistics">
 	<ion-content class="background" has-bouncing="true">
-		
-		<!-- set up charts -->
-		<!-- <chart ng-repeat="chart in charts" options="chart"></chart> -->
 
-		<!-- Placeholder Data -->
-		<ion-item style="white-space: initial;">
-			<b>Note:</b> This is placeholder data and will soon be a place where you can view more interesting statistics about your team.
-		</ion-item>
+		<!-- show loading while waiting -->
+		<div ng-show="!data">
+			<ion-item class="center">
+				<div>
+					Loading chart<br>
+					<ion-spinner class="center dark" icon="lines"></ion-spinner>
+				</div>
+			</ion-item>
+		</div>
+
 		<ion-item style="padding: 5px 5px 0 5px;">
 			<div id="container" class="chart-container"></div>
 		</ion-item>
-
-		<!-- 10 px divider from the bottom -->
-		<!-- <div style="height: 10px"></div> -->
 
 	</ion-content>
 </ion-view>
