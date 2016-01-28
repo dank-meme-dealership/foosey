@@ -40,13 +40,14 @@
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
               <h2>
-                <div class="rank">{{$index + 1}}</div> 
+                <div class="rank">{{player.rank}}</div> 
                 {{player.name | capitalize}}
               </h2> 
               <div class="spaced-out">
-                <div><b>{{player.elo}}</b></div>
+                <div ng-show="!player.qualified">{{10 - player.games}} games left to play</div>
+                <div ng-show="player.qualified"><b>{{player.elo}}</b></div>
                 <div 
-                  ng-show="player.change !== null"
+                  ng-show="player.change !== null && player.qualified"
                   class="elo-change" 
                   ng-class="{'elo-green': player.change > 0, 'elo-red': player.change < 0}">
                   {{player.change | eloChange}}

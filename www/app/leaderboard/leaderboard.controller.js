@@ -41,7 +41,7 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
     // load from server
     FooseyService.leaderboard().then(function successCallback(response)
     { 
-      $scope.elos = response.data.elos;
+      $scope.elos = filterElos(response.data.elos);
       $scope.avgs = response.data.avgs;
       $scope.percent = response.data.percent;
       $ionicSlideBoxDelegate.update();
@@ -56,6 +56,47 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
       $scope.error = true;
       done();
     });
+  }
+
+  // filters ourt pleaople that have not yet played 10 games
+  function filterElos(elos)
+  {
+    var filteredElos = [];
+    var unranked = [];
+    var rank = 1;
+
+    // set rank and if they're qualified
+    for (var i = 0; i < elos.length; i++)
+    {
+      if (elos[i].games >= 10)
+      {
+        elos[i].rank = rank;
+        elos[i].qualified = true;
+        rank++;
+        filteredElos.push(elos[i]);
+      }
+      else
+      {
+        elos[i].rank = '-';
+        unranked.push(elos[i]);
+      }
+    }
+
+    // add unranked to bottom
+    for (var i = 0; i < unranked.length; i++)
+    {
+      filteredElos.push(unranked[i]);
+    }
+
+    return filteredElos;
+  }
+
+  function sortElos(a, b)
+  {
+    if (a.qualified && b.qualified)
+      return a.elo - b.elo;
+    else
+      return -1;
   }
 
   // turns off spinner and notifies
