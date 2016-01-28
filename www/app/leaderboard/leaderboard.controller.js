@@ -11,6 +11,7 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
   $scope.refresh();
   $scope.slide = 0;
   $scope.loading = true;
+  $scope.minimumQualified = 10;
 
   // function for swiping between views
   $scope.changeSlide = function(index)
@@ -58,7 +59,7 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
     });
   }
 
-  // filters ourt pleaople that have not yet played 10 games
+  // filters out people that have not yet played enough games
   function filterElos(elos)
   {
     var filteredElos = [];
@@ -68,7 +69,7 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
     // set rank and if they're qualified
     for (var i = 0; i < elos.length; i++)
     {
-      if (elos[i].games >= 10)
+      if (elos[i].games >= $scope.minimumQualified)
       {
         elos[i].rank = rank;
         elos[i].qualified = true;

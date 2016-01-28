@@ -31,10 +31,10 @@
     },
     "installed_plugins": {
         "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.ionicframework.app442332"
+            "PACKAGE_NAME": "com.matt.foosey"
         },
         "org.apache.cordova.statusbar": {
-            "PACKAGE_NAME": "com.ionicframework.app442332"
+            "PACKAGE_NAME": "com.matt.foosey"
         }
     },
     "dependent_plugins": {}

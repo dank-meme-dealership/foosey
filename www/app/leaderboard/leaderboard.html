@@ -44,7 +44,7 @@
                 {{player.name | capitalize}}
               </h2> 
               <div class="spaced-out">
-                <div ng-show="!player.qualified">{{10 - player.games}} games left to play</div>
+                <div ng-show="!player.qualified">{{minimumQualified - player.games}} games left to play</div>
                 <div ng-show="player.qualified"><b>{{player.elo}}</b></div>
                 <div 
                   ng-show="player.change !== null && player.qualified"
