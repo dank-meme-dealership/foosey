@@ -154,10 +154,10 @@ def get_change(content, newGame)
     end
   end
 
-  change = [
+  change = {
     pretext: "Elos change after that game:",
     fields: fields
-  ]
+  }
 
   change
 end
