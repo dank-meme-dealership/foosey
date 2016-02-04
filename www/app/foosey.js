@@ -15,6 +15,10 @@ angular
     'teamStats'
   ])
 
+  .config(function ( $httpProvider) {        
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+  })
+
   // This establishes a few settings for Ionic
   .run(function($ionicPlatform) 
   {

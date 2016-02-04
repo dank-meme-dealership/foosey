@@ -34,8 +34,8 @@ angular.module('foosey')
       {
         data = 
         {
-          text: "leaderboard",
-          device: "app"
+          text: 'leaderboard',
+          device: 'app'
         };
         return $http.post(url, data);
       },
