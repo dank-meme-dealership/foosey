@@ -207,7 +207,7 @@ def calculate_elo_change(g, elo, total_games)
 end
 
 # calculates singles elo and returns array hash
-def get_elos(games, difference)
+def get_elos(games)
     now = Time.at(Time.now.to_i).getlocal($UTC)
     elo = Array.new($names.length, 1200)
     total_games = Array.new($names.length, 0)
@@ -223,13 +223,7 @@ def get_elos(games, difference)
         all.unshift(change) if Time.at(now).to_date === Time.at(gameTime).to_date
 
         g_i += 1
-        elo_2nd2Last = elo.dup if g_i == games_c.length - 1
     end
-    
-    both = []
-    both << elo
-    both << elo_2nd2Last
-    return both if difference != ""
         
     elo_ah = Array.new()
     for i in 0 ... $names.length
@@ -243,7 +237,7 @@ end
 
 # function to display elo
 def get_elo(games)
-    elo_ah = get_elos(games, "")
+    elo_ah = get_elos(games)
     elo_s = ""
     for i in 0 ... elo_ah.length
         elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" if !$gone.include? elo_ah[i][:name]
@@ -305,37 +299,6 @@ def get_team_charts(games)
     end
 
     return chart_data
-end
-
-def get_difference(thisGame, games)
-    both = get_elos(games, "something")
-    elo = both[0]
-    elo_2nd2Last = both[1]
-    g = thisGame.split(',')
-    
-    # make attachment
-    elo_r = [
-        pretext: "Elos after that game:",
-        fields: []
-    ]
-    
-    # calculate the changes in elos
-    g_i = 0
-    for elo2 in elo_2nd2Last.each
-        diff = (elo[g_i].to_i - elo2.to_i)
-        p = diff < 0 ? '' : '+'
-        
-        thisPlayer = {
-            title: "#{$names[g_i].capitalize}",
-            value: "#{elo[g_i]} (#{p}#{diff})",
-            short: true
-        }
-        elo_r[0][:fields] << thisPlayer if g[g_i] != '-1'
-        
-        g_i += 1
-    end
-    
-    return elo_r
 end
 
 # returns the number of players in a specified game
@@ -594,7 +557,7 @@ end
 # function to predict the score between two players
 def predict(content, cmd)
     games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-    elo_ah = get_elos(games, "")
+    elo_ah = get_elos(games)
     players = cmd.split(" ")
     return make_response("Please pass two different valid names to `foosey predict`") if
         players.length != 2 || elo_ah.index { |p| p[:name] == players[0]}.nil? || elo_ah.index { |p| p[:name] == players[1]}.nil? || players[0] == players[1]
@@ -790,7 +753,7 @@ def log_game_from_slack(user_name, text)
             }
         elsif text.start_with? "leaderboard"
             return {
-                elos: get_elos(games, ""),
+                elos: get_elos(games),
                 avgs: get_avg_scores(games),
                 percent: total(games)
             }
@@ -870,9 +833,6 @@ def log_game_from_slack(user_name, text)
     if (players == 2 || players == 4)
         games = content.split("\n")[1..-1]
         
-        # get elo change
-        elo_change = get_difference(thisGame, games)
-        
         # if 2 players
         if players == 2
             # get record
@@ -895,7 +855,6 @@ def log_game_from_slack(user_name, text)
         end
         
         # add them to the attachments
-        attach << elo_change[0]
         attach << record[0]
     end
     # update game
