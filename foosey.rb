@@ -916,10 +916,10 @@ end
 # FOOS
 set :port, 4005
 
-post '/slack/' do
+post '/slack' do
   json log_game_from_slack(params['user_name'], params['text'])
 end
 
-post '/app/' do
+post '/app' do
   json log_game_from_app(params['user_name'], params['text'])
 end
