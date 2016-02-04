@@ -74,7 +74,7 @@ def succinct_help
   make_response(help)
 end
 
-def addGame(text, content, user_name)
+def add_game(text, content, user_name)
   # Add last game from slack input
   now = Time.now.to_i
   game = text.split(' ') # get the game information
@@ -123,7 +123,7 @@ def addGame(text, content, user_name)
     end
 
     # add them to the attachments
-    # attach << getChange(content)
+    attach << get_change(content, new_game[2..-1])
     attach << record[0]
   end
 
@@ -136,26 +136,26 @@ def addGame(text, content, user_name)
   end
 end
 
-def getChange(content)
+def get_change(content, newGame)
   games = content.split("\n")[1..-1]
 
-  elos = get_elos(games)
-  lastGame = allHistory(content, 0, 1)
+  elos, change = get_elos(games)
 
-  change = [
-    pretext: "Current record between #{player1} and #{player2}:",
-    fields: [
-      {
-        title: player1.to_s,
-        value: team1Score.to_s,
-        short: true
-      },
-      {
-        title: player2.to_s,
-        value: team2Score.to_s,
+  fields = []
+  newGame.each_index do |i|
+    if newGame[i] != -1
+      fields << {
+
+        title: $names[i].capitalize,
+        value: "Change: #{change[i]}",
         short: true
       }
-    ]
+    end
+  end
+
+  change = [
+    pretext: "Elos change after that game:",
+    fields: fields
   ]
 
   change
@@ -298,6 +298,7 @@ def get_elos(games)
   elo = Array.new($names.length, 1200)
   total_games = Array.new($names.length, 0)
   all = []
+  change = ''
 
   games_c = games.dup
   g_i = 0
@@ -318,12 +319,12 @@ def get_elos(games)
     end
   end
   elo_ah = elo_ah.sort { |a, b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
-  elo_ah
+  [elo_ah, change]
 end
 
 # function to display elo
 def get_elo(games)
-  elo_ah = get_elos(games)
+  elo_ah = get_elos(games)[0]
   elo_s = ''
   for i in 0...elo_ah.length
     elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" unless $gone.include? elo_ah[i][:name]
@@ -640,7 +641,7 @@ end
 # function to predict the score between two players
 def predict(content, cmd)
   games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-  elo_ah = get_elos(games)
+  elo_ah = get_elos(games)[0]
   players = cmd.split(' ')
   return make_response('Please pass two different valid names to `foosey predict`') if
       players.length != 2 || elo_ah.index { |p| p[:name] == players[0] }.nil? || elo_ah.index { |p| p[:name] == players[1] }.nil? || players[0] == players[1]
@@ -820,7 +821,7 @@ def log_game_from_slack(user_name, text)
   end
 
   # add game
-  addGame(text, content, user_name)
+  add_game(text, content, user_name)
 end
 
 def log_game_from_app(user_name, text)
@@ -844,7 +845,7 @@ def log_game_from_app(user_name, text)
     }
   elsif text.start_with? 'leaderboard'
     return {
-      elos: get_elos(games),
+      elos: get_elos(games)[0],
       avgs: get_avg_scores(games),
       percent: total(games)
     }
@@ -877,7 +878,7 @@ def log_game_from_app(user_name, text)
   end
 
   # add game
-  addGame(text, content, user_name)
+  add_game(text, content, user_name)
 end
 
 # FOOS
