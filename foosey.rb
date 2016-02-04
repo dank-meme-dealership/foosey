@@ -905,3 +905,7 @@ post '/app' do
   params = JSON.parse(request.body.read)
   json log_game_from_app(params['user_name'], params['text'])
 end
+
+get '/games.csv' do
+  return File.read('games.csv')
+end
