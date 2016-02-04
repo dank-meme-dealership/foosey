@@ -883,6 +883,10 @@ end
 # FOOS
 set :port, 4005
 
+configure do
+  enable :cross_origin
+end
+
 post '/slack' do
   json log_game_from_slack(params['user_name'], params['text'])
 end
