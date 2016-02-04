@@ -896,6 +896,12 @@ post '/slack' do
   json log_game_from_slack(params['user_name'], params['text'])
 end
 
+options '/app' do
+  response.headers["Allow"] = "HEAD,GET,PUT,POST,DELETE,OPTIONS"
+  response.headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept"
+  200
+end
+
 post '/app' do
   json log_game_from_app(params['user_name'], params['text'])
 end
