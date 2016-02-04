@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require 'json'
 require 'sinatra'
 require 'sinatra/json'
@@ -217,9 +215,8 @@ def get_elos(games, difference)
 
     games_c = games.dup
     g_i = 0
-    games_c.each do |g| # adjust players elo game by game
-        next if g.empty? # failsafe for blank last line
-
+    for g in games_c.each # adjust players elo game by game
+        
         elo, total_games, change = calculate_elo_change(g, elo, total_games)
             
         gameTime = Time.at(g.split(",")[0].to_i).getlocal($UTC)
