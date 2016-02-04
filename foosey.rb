@@ -810,6 +810,9 @@ def update_file_in_gist(github_user, github_pass, gist_name, file_name, content)
 end
 
 def log_game_from_slack(user_name, text)
+  # Remove 'foosey' from the beginning of the text
+  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
+
   # Get latest paste's content
   content = File.read('games.csv')
   $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
