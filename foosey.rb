@@ -165,9 +165,9 @@ end
 def get_avg_scores(games)
   total_scores = Array.new($names.length, 0)
   total_games = Array.new($names.length, 0)
-  for g in games.each # for each player
+  games.each do |g| # for each player
     g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
-    for i in 0..g_a.length - 1 # for each player
+    g_a.each_with_index do |v, i| # for each player
       # the +1s in here are to prevent off-by-ones because names starts at 0 and scores start at 2 because of timestamp and
       total_scores[i] += g_a[i].to_i unless g_a[i].to_i == -1 # if they played, increment score
       total_games[i] += 1 unless g_a[i].to_i == -1 # and total num games
