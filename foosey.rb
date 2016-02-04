@@ -74,6 +74,68 @@ def succinct_help()
     return make_response(help)
 end
 
+def addGame(text, content, user_name)
+        # Add last game from slack input
+    now = Time.now.to_i
+    game = text.split(' ') # get the game information
+    i = 0
+    new_game = Array.new($names.length + 2, -1)
+    new_game[0] = now # set first column to timestamp
+    new_game[1] = "@#{user_name}" #set second column to slack username
+    while i < game.length
+        name_column = $names.find_index(game[i]) + 2 # get column of person's name
+        new_game[name_column] = game[i + 1].to_i # to_i should be safe here since we've verified input earlier
+        i += 2
+    end
+    lastGame = content.split("\n").pop.split(",")[2..-1].join(",")
+    lastGameUsername = content.split("\n").pop.split(",")[1]
+    thisGame = new_game[2..-1].join(',') # complicated way to join
+    thisGameJoined = new_game.join(',')
+    
+    content += "\n" + thisGameJoined # add this game to the paste content
+
+    # set up attachments
+    attach = []
+    players = players_in_game(thisGameJoined)
+    if (players == 2 || players == 4)
+        games = content.split("\n")[1..-1]
+        
+        # if 2 players
+        if players == 2
+            # get record
+            record = record(game[0], game[2], content)
+        # if 4 players
+        else
+            # get record
+            team1 = []
+            team2 = []
+            i = 0
+            while i < game.length do
+                if game[i+1] == '10'
+                team1 << game[i]
+                else
+                    team2 << game[i]
+                end
+                i += 2
+            end
+            record = record("#{team1.join("&")}", "#{team2.join("&")}", content)
+        end
+        
+        # add them to the attachments
+        attach << record[0]
+    end
+    # update game
+    File.write('games.csv', content)
+
+    message_slack(new_game[2..-1], text, attach) if $app
+
+    if (lastGame != thisGame)
+        make_response("Game added!", attach)
+    else
+        make_response("Game added!\nThis game has the same score as the last game that was added. If you added this game in error you can undo this action.", attach)
+    end
+end
+
 # function to calculate average scores
 def get_avg_scores(games)
     total_scores = Array.new($names.length, 0)
@@ -732,11 +794,6 @@ end
 
 def log_game_from_slack(user_name, text)
     
-    #if (channel_name != "foosey" && channel_name != "robothouse")
-    #    insult = getInsult()
-    #    return make_response("#{user_name}, please stop bothering me. #{insult}")
-    #end
-    
     # Get latest paste's content
     content = File.read('games.csv')
     $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
@@ -801,7 +858,7 @@ def log_game_from_slack(user_name, text)
     end
 
     # Verify data
-    result = verify_input(text);
+    result = verify_input(text)
     if result != "good"
         if result == "help"
             return succinct_help()
@@ -810,65 +867,8 @@ def log_game_from_slack(user_name, text)
         end
     end
     
-    # Add last game from slack input
-    now = Time.now.to_i
-    game = text.split(' ') # get the game information
-    i = 0
-    new_game = Array.new($names.length + 2, -1)
-    new_game[0] = now # set first column to timestamp
-    new_game[1] = "@#{user_name}" #set second column to slack username
-    while i < game.length
-        name_column = $names.find_index(game[i]) + 2 # get column of person's name
-        new_game[name_column] = game[i + 1].to_i # to_i should be safe here since we've verified input earlier
-        i += 2
-    end
-    lastGame = content.split("\n").pop.split(",")[2..-1].join(",")
-    lastGameUsername = content.split("\n").pop.split(",")[1]
-    thisGame = new_game[2..-1].join(',') # complicated way to join
-    thisGameJoined = new_game.join(',')
-    
-    content += "\n" + thisGameJoined # add this game to the paste content
-
-    # set up attachments
-    attach = []
-    players = players_in_game(thisGameJoined)
-    if (players == 2 || players == 4)
-        games = content.split("\n")[1..-1]
-        
-        # if 2 players
-        if players == 2
-            # get record
-            record = record(game[0], game[2], content)
-        # if 4 players
-        else
-            # get record
-            team1 = []
-            team2 = []
-            i = 0
-            while i < game.length do
-                if game[i+1] == '10'
-                team1 << game[i]
-                else
-                    team2 << game[i]
-                end
-                i += 2
-            end
-            record = record("#{team1.join("&")}", "#{team2.join("&")}", content)
-        end
-        
-        # add them to the attachments
-        attach << record[0]
-    end
-    # update game
-    File.write('games.csv', content)
-
-    message_slack(new_game[2..-1], text, attach) if $app
-
-    if (lastGame != thisGame)
-        make_response("Game added!", attach)
-    else
-        make_response("Game added!\nThis game has the same score as the last game that was added. If you added this game in error you can undo this action.", attach)
-    end
+    # add game
+    addGame(text, content, user_name)
 
 end
 
