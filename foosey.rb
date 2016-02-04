@@ -94,12 +94,13 @@ def addGame(text, content, user_name)
     
     content += "\n" + thisGameJoined # add this game to the paste content
 
+    # update game
+    File.write('games.csv', content)
+
     # set up attachments
     attach = []
     players = players_in_game(thisGameJoined)
     if (players == 2 || players == 4)
-        games = content.split("\n")[1..-1]
-        
         # if 2 players
         if players == 2
             # get record
@@ -120,12 +121,11 @@ def addGame(text, content, user_name)
             end
             record = record("#{team1.join("&")}", "#{team2.join("&")}", content)
         end
-        
+
         # add them to the attachments
+        # attach << getChange(content)
         attach << record[0]
     end
-    # update game
-    File.write('games.csv', content)
 
     message_slack(new_game[2..-1], text, attach) if $app
 
@@ -134,6 +134,31 @@ def addGame(text, content, user_name)
     else
         make_response("Game added!\nThis game has the same score as the last game that was added. If you added this game in error you can undo this action.", attach)
     end
+end
+
+def getChange(content)
+    games = content.split("\n")[1..-1]
+
+    elos = get_elos(games)
+    lastGame = allHistory(content, 0, 1)
+
+    change = [
+        pretext: "Current record between #{player1} and #{player2}:",
+        fields: [
+            {
+                title: "#{player1}",
+                value: "#{team1Score}",
+                short: true
+            },
+            {
+                title: "#{player2}",
+                value: "#{team2Score}",
+                short: true
+            }
+        ]
+    ]
+
+    return change;
 end
 
 # function to calculate average scores
@@ -905,6 +930,6 @@ post '/slack/' do
     json log_game_from_slack(params['user_name'], params['text'])
 end
 
-post '/app' do
+post '/app/' do
     json log_game_from_app(params['user_name'], params['text'])
 end
