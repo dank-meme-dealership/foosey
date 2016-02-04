@@ -662,7 +662,7 @@ def predict(content, cmd)
 end
 
 # function to undo the last move
-def undo(content, _github_user, _github_pass)
+def undo(content)
   games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
   last = games.pop.split(',')[1..-1]
   username = last.shift
@@ -677,7 +677,7 @@ def undo(content, _github_user, _github_pass)
 end
 
 # function to remove specific game
-def remove(id, content, _github_user, _github_pass)
+def remove(id, content)
   games = content.split("\n")
   toRemove = games.at(id.to_i + 1)
   games.delete_at(id.to_i + 1)
@@ -773,42 +773,6 @@ def dateTime(g, dateFormat, timeFormat)
   [date, time]
 end
 
-# Returns the contents of the specified file in the specified gist as a string
-def get_file_from_gist(github_user, github_pass, gist_name, file_name)
-  json = `curl --silent --user "#{github_user}:#{github_pass}" https://api.github.com/users/#{github_user}/gists`
-  parsed = JSON.parse(json)
-
-  # find the specified gist
-  raw_url = ''
-  i = 0
-  while i < parsed.length && raw_url == ''
-    raw_url = parsed[i]['files'][file_name.to_s]['raw_url'] if parsed[i]['description'] == gist_name
-    i += 1
-  end
-
-  return '' if raw_url == ''
-
-  `curl --silent --user "#{github_user}:#{github_pass}" #{raw_url}`
-end
-
-# changes the contents of a file in a gist to the specified string
-def update_file_in_gist(github_user, github_pass, gist_name, file_name, content)
-  json = `curl --silent --user "#{github_user}:#{github_pass}" https://api.github.com/users/#{github_user}/gists`
-  parsed = JSON.parse(json)
-
-  gist_url = ''
-  i = 0
-  while i < parsed.length && gist_url == ''
-    gist_url = parsed[i]['url'] if parsed[i]['description'] == gist_name
-    i += 1
-  end
-
-  # very confusing mess of characters that makes new json for the patch
-  # TODO: use JSON gem to build this (I'm sure it's possible)
-  data = '{"description":"' + gist_name + '","files":{"' + file_name + '":{"content":"' + content.gsub("\n", '\n') + '"}}}'
-  `curl --silent --user "#{github_user}:#{github_pass}" -X PATCH --data \'#{data}\' #{gist_url}`
-end
-
 def log_game_from_slack(user_name, text)
   # Remove 'foosey' from the beginning of the text
   text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
@@ -833,7 +797,7 @@ def log_game_from_slack(user_name, text)
   elsif text.start_with? 'easter'
     return make_response($middle)
   elsif text.start_with? 'undo'
-    return undo(content, github_user, github_pass)
+    return undo(content)
   elsif text.start_with? 'history'
     return record_safe(args[1], args[2], content)
   elsif text.start_with? 'record'
@@ -841,7 +805,7 @@ def log_game_from_slack(user_name, text)
   elsif text.start_with? 'add'
     return succinct_help unless $admins.include? user_name
     content = addUser(args[1], content)
-    update_file_in_gist(github_user, github_pass, 'Foosbot Data', 'games.csv', content)
+    File.write('games.csv', content)
     return make_response('Player added!')
   end
 
@@ -894,7 +858,7 @@ def log_game_from_app(user_name, text)
     }
   elsif text.start_with? 'remove'
     return {
-      response: remove(args[1], content, github_user, github_pass)
+      response: remove(args[1], content)
     }
   elsif text.start_with? 'team'
     return {
