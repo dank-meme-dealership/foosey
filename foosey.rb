@@ -803,37 +803,6 @@ def log_game_from_slack(user_name, text)
     text ||= ""
     text = text.downcase.gsub(":", "")
     args = text.split(" ")
-    
-    # App specific cases
-    if $app
-        if text.start_with? "charts"
-            return {
-                charts: get_charts(args[1], games)
-            }
-        elsif text.start_with? "leaderboard"
-            return {
-                elos: get_elos(games),
-                avgs: get_avg_scores(games),
-                percent: total(games)
-            }
-        elsif text.start_with? "history"
-            return {
-                games: allHistory(content, args[1], args[2])
-            }
-        elsif text.start_with? "players"
-            return {
-                players: getPlayers($names - $gone)
-            }
-        elsif text.start_with? "remove"
-            return {
-                response: remove(args[1], content, github_user, github_pass)
-            }
-        elsif text.start_with? "team"
-            return {
-                charts: get_team_charts(games)
-            }
-        end
-    end
         
     # Cases other than adding a game
     if text.start_with? "help"
@@ -868,8 +837,65 @@ def log_game_from_slack(user_name, text)
     end
     
     # add game
-    addGame(text, content, user_name)
+    return addGame(text, content, user_name)
+end
 
+def log_game_from_app(user_name, text)
+    
+    $app = true
+
+    # Get latest paste's content
+    content = File.read('games.csv')
+    $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
+    games = content.split("\n")[1..-1]
+    
+    # Clean up text and set args
+    text ||= ""
+    text = text.downcase.gsub(":", "")
+    args = text.split(" ")
+    
+    # App specific cases
+
+    if text.start_with? "charts"
+        return {
+            charts: get_charts(args[1], games)
+        }
+    elsif text.start_with? "leaderboard"
+        return {
+            elos: get_elos(games),
+            avgs: get_avg_scores(games),
+            percent: total(games)
+        }
+    elsif text.start_with? "history"
+        return {
+            games: allHistory(content, args[1], args[2])
+        }
+    elsif text.start_with? "players"
+        return {
+            players: getPlayers($names - $gone)
+        }
+    elsif text.start_with? "remove"
+        return {
+            response: remove(args[1], content, github_user, github_pass)
+        }
+    elsif text.start_with? "team"
+        return {
+            charts: get_team_charts(games)
+        }
+    end
+
+    # Verify data
+    result = verify_input(text)
+    if result != "good"
+        if result == "help"
+            return succinct_help()
+        else
+            return make_response(result)
+        end
+    end
+    
+    # add game
+    return addGame(text, content, user_name)
 end
 
 # FOOS
@@ -880,5 +906,5 @@ post '/slack/' do
 end
 
 post '/app' do
-    # matt help
+    json log_game_from_app(params['user_name'], params['text'])
 end
