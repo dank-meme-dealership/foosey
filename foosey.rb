@@ -827,6 +827,9 @@ end
 def log_game_from_app(user_name, text)
   $app = true
 
+  # Remove 'foosey' from the beginning of the text
+  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
+  
   # Get latest paste's content
   content = File.read('games.csv')
   $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
@@ -884,14 +887,16 @@ end
 # FOOS
 set :port, 4005
 
-configure do
-  enable :cross_origin
-end
-
 post '/slack' do
   json log_game_from_slack(params['user_name'], params['text'])
 end
 
+options '/app' do
+  headers 'Access-Control-Allow-Headers' => '*,Content-Type'
+  headers 'Access-Control-Allow-Origin' => '*'
+end
+
 post '/app' do
+  headers 'Access-Control-Allow-Headers' => '*,Content-Type'
   json log_game_from_app(params['user_name'], params['text'])
 end
