@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'json'
 require 'sinatra'
 require 'sinatra/json'
@@ -910,6 +912,9 @@ def log_game_from_slack(user_name, text)
     end
 
 end
+
+# FOOS
+set :port, 4005
 
 post '/slack/' do
     json log_game_from_slack(params['user_name'], params['text'])
