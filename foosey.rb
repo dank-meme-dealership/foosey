@@ -778,6 +778,7 @@ end
 def log_game_from_slack(user_name, text)
   # Remove 'foosey' from the beginning of the text
   text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
+  $app = false
 
   # Get latest paste's content
   content = File.read('games.csv')
