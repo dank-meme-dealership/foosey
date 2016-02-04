@@ -167,20 +167,18 @@ def get_avg_scores(games)
   total_games = Array.new($names.length, 0)
   games.each do |g| # for each player
     g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
-    g_a.each_with_index do |v, i| # for each player
+    g_a.each_with_index do |value, idx| # for each player
       # the +1s in here are to prevent off-by-ones because names starts at 0 and scores start at 2 because of timestamp and
-      total_scores[i] += g_a[i].to_i unless g_a[i].to_i == -1 # if they played, increment score
-      total_games[i] += 1 unless g_a[i].to_i == -1 # and total num games
+      total_scores[idx] += value.to_i unless value.to_i == -1 # if they played, increment score
+      total_games[idx] += 1 unless value.to_i == -1 # and total num games
     end
   end
 
   avg_score = []
   averages = ''
   # total_played = ""
-  for i in 0...$names.length
-    unless $gone.include? $names[i]
-      avg_score << { name: $names[i], avg: total_scores[i] / (total_games[i] * 1.0) } unless total_games[i] == 0
-    end
+  $names.each_with_index do |n, idx|
+    avg_score << { name: n, avg: total_scores[idx] / (total_games[idx] * 1.0) } unless total_games[idx] == 0 or $gone.include? n
     # total_played += "#{$names[i].capitalize}: #{total_games[i]}\n" unless total_games[i] == 0
   end
 
@@ -188,8 +186,8 @@ def get_avg_scores(games)
 
   return avg_score if $app
 
-  for i in 0...avg_score.length
-    averages += "#{avg_score[i][:name].capitalize}: #{'%.2f' % avg_score[i][:avg]}\n"
+  avg_score.each do |s|
+    averages += "#{s[:name].capitalize}: #{'%.2f' % s[:avg]}\n"
   end
 
   averages
