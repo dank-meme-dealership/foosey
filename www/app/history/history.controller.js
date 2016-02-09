@@ -15,6 +15,8 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
   $scope.removing = false;
   $scope.loading = true;
   $scope.refresh();
+  // toggleFilter('Peter');
+  // clearFilters();
 
   // refresh page function
   function refresh()
@@ -30,8 +32,11 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
       $scope.games = result.data.games;
       loaded += result.data.games.length;
 
+      // filter by name
+      applyFilters();
+
       // sort the games by date
-      $scope.dates = groupByDate($scope.games);
+      $scope.dates = groupByDate($scope.filteredGames);
 
       // store them to local storage
       localStorage.setObject('history', $scope.dates);
@@ -63,8 +68,11 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
       // see if we can load more games or not
       $scope.allLoaded = $scope.games[$scope.games.length - 1].id === 0;
 
+      // filter by name
+      applyFilters();
+
       // sort the games by date
-      $scope.dates = groupByDate($scope.games);
+      $scope.dates = groupByDate($scope.filteredGames);
 
       // broadcast
       $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -163,5 +171,52 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
     {
       $scope.games[i].id--;
     }
+  }
+
+  function toggleFilter(name)
+  {
+    var filters = localStorage.getObject('filters');
+    filters     = _.xor(filters, [name]);
+    localStorage.setObject('filters', filters);
+  }
+
+  function clearFilters()
+  {
+    localStorage.setObject('filters', []);
+  }
+
+  function applyFilters()
+  {
+    $scope.filteredGames = [];
+    var filters = localStorage.getObject('filters');
+    console.log(filters)
+    if (filters && filters.length > 0)
+    {
+      _.forEach($scope.games, function(game)
+      {
+        var include = true
+        _.forEach(filters, function(name)
+        {
+          if (!gameIncludes(game, name)) 
+            include = false;
+        });
+        if (include) $scope.filteredGames.push(game);
+      });
+    }
+    else
+    {
+      $scope.filteredGames = $scope.games
+    }
+  }
+
+  function gameIncludes(game, name)
+  {
+    var include = false;
+    _.forEach(game.teams, function(team)
+    {
+      if (_.includes(team.players, name)) 
+        include = true;
+    })
+    return include;
   }
 }
