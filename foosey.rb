@@ -677,7 +677,7 @@ def undo(content)
     i += 1
   end
   File.write('games.csv', content)
-  response
+  make_response(response)
 end
 
 # function to remove specific game
