@@ -776,7 +776,7 @@ def dateTime(g, dateFormat, timeFormat)
   [date, time]
 end
 
-def log_game_from_slack(user_name, text)
+def log_game_from_slack(user_name, text, trigger_word)
   $app = false
 
   # Get latest paste's content
@@ -786,11 +786,10 @@ def log_game_from_slack(user_name, text)
 
   # Clean up text and set args
   text ||= ''
-  text = text.downcase.delete(':')
   args = text.split(' ')
 
   # Remove 'foosey' from the beginning of the text
-  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
+  text = text[trigger_word.length..text.length].strip if text.start_with? trigger_word
 
   # Cases other than adding a game
   if text.start_with? 'help'
@@ -895,7 +894,7 @@ configure do
 end
 
 post '/slack' do
-  json log_game_from_slack(params['user_name'], params['text'])
+  json log_game_from_slack(params['user_name'], params['text'], params['trigger_word'])
 end
 
 options '/app' do
