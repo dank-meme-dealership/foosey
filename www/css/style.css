@@ -5,76 +5,63 @@
   font-size: 28px;
   padding: 10px 0 5px;
 }
-
 .background
 {
   background: #45526D;
 }
-
 .background-foos
 {
   background: url(../img/foos.jpg) no-repeat center;
   background-size: cover;
   color: #FFFFFF;
 }
-
 .background-menu
 {
   background: #333B44;
 }
-
 .bar.bar-stable
 {
    background-color : #ffffff;
 }
-
 .bar-subheader
 {
   padding: 0;
 }
-
 .button.button-positive
 {
   background: #3D485F;
   border-color: #242A38;
 }
-
 .button.button-positive.activated
 {
   background: #373E48;
   border-color: #242A38;
 }
-
 .center
 {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .divider
 {
   height: 1px;
   background: #ddd;
   margin: 7px 0;
 }
-
 .elo-red
 {
   color: red;
 }
-
 .elo-green
 {
   color: green;
 }
-
 .game-score
 {
   text-align: center;
   width: 95px;
 }
-
 .grid-container
 {
   margin: 5px;
@@ -82,18 +69,15 @@
   flex-wrap: wrap;
   display: flex;
 }
-
 .grid-item
 {
   float: left;
   width: 90px;
 }
-
 .grid-item.selected
 {
   background: #CCCCCC;
 }
-
 .header-text
 {
   font-size: 16px;
@@ -105,7 +89,6 @@ div.item
   margin: 5px;
   text-align: center;
 }
-
 .item-complex .item-content, .item-radio .item-content
 {
   padding: 16px;
@@ -121,12 +104,10 @@ ion-item.item.last, ion-list.last ion-item.item
 {
   margin-bottom: 10px;
 }
-
 .loading-dots
 {
   margin: 0px calc((100% - 26px)/2);
 }
-
 .loading-text
 {
   text-align: center;
@@ -134,60 +115,50 @@ ion-item.item.last, ion-list.last ion-item.item
   font-size: 28px;
   margin-top: 42px;
 }
-
 .platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button
 {
   text-align: center;
 }
-
 .space:before
 {
   padding-right: 16px;
 }
-
 .spaced-out
 {
   display: flex;
   justify-content: space-between;
 }
-
 .dark.spinner svg 
 {
   stroke: gray;
   fill: gray;
 }
-
 .spinner svg 
 {
   stroke: white;
   fill: white;
 }
-
 .tab-item.active
 {
-  background: #E0E0E0;
+  font-weight: 500;
+  border-bottom: 3px solid;
 }
-
 .tab-title
 {
   font-size: 13px;
 }
-
 .tabs
 {
-  padding-top: 1px;
+  padding-top: 1px 0;
 }
-
 .icon-pulling
 {
   color: white;
 }
-
 .text-pulling
 {
   color: white;
 }
-
 .title
 {
   font-weight: 500;
