@@ -676,7 +676,7 @@ def undo(content)
     response += "\n#{$names[i].capitalize}: #{g}" if g != '-1'
     i += 1
   end
-  File.write('games.csv', contents)
+  File.write('games.csv', content)
 end
 
 # function to remove specific game
