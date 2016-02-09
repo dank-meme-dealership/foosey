@@ -776,8 +776,6 @@ def dateTime(g, dateFormat, timeFormat)
 end
 
 def log_game_from_slack(user_name, text)
-  # Remove 'foosey' from the beginning of the text
-  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
   $app = false
 
   # Get latest paste's content
@@ -789,6 +787,9 @@ def log_game_from_slack(user_name, text)
   text ||= ''
   text = text.downcase.delete(':')
   args = text.split(' ')
+
+  # Remove 'foosey' from the beginning of the text
+  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
 
   # Cases other than adding a game
   if text.start_with? 'help'
@@ -829,9 +830,6 @@ end
 def log_game_from_app(user_name, text)
   $app = true
 
-  # Remove 'foosey' from the beginning of the text
-  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
-
   # Get latest paste's content
   content = File.read('games.csv')
   $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
@@ -842,8 +840,10 @@ def log_game_from_app(user_name, text)
   text = text.downcase.delete(':')
   args = text.split(' ')
 
-  # App specific cases
+  # Remove 'foosey' from the beginning of the text
+  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
 
+  # App specific cases
   if text.start_with? 'charts'
     return {
       charts: get_charts(args[1], games)
