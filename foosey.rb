@@ -140,22 +140,23 @@ end
 def get_change(content, newGame)
   games = content.split("\n")[1..-1]
 
-  elos, change = get_elos(games)
+  sorted_elos, elos, change = get_elos(games)
 
   fields = []
   newGame.each_index do |i|
     if newGame[i] != -1
+      elo = elos[i][:elo] 
+      elo_change = change[i].to_i >= 0 ? "+#{change[i]}" : change[i]
       fields << {
-
         title: $names[i].capitalize,
-        value: "Change: #{change[i]}",
+        value: "#{elo} (#{elo_change})",
         short: true
       }
     end
   end
 
   change = {
-    pretext: "Elos change after that game:",
+    pretext: "Elos after that game:",
     fields: fields
   }
 
@@ -319,8 +320,8 @@ def get_elos(games)
       elo_ah << { name: $names[i], elo: elo[i], change: all.map { |a| a[i] }.inject(:+), games: total_games[i] } unless total_games[i] == 0
     end
   end
-  elo_ah = elo_ah.sort { |a, b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
-  [elo_ah, change]
+  sorted = elo_ah.sort { |a, b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
+  [sorted, elo_ah, change]
 end
 
 # function to display elo
