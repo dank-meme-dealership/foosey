@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# foosey update stuff
+sleep 5 if ARGV.include? 'wait'
+
 require 'inifile'
 require 'json'
 require 'sinatra'
@@ -770,6 +773,13 @@ def total(games)
   stats
 end
 
+# this function will only work on linux
+# a better update function will be implemented in the future
+def update
+  exec "git pull"
+  IO.popen("kill #{Process.pid} && ruby #{__FILE__} wait &")
+end
+
 # function to return date and time
 def dateTime(g, dateFormat, timeFormat)
   thisGame = g.split(',')
@@ -815,6 +825,8 @@ def log_game_from_slack(user_name, text, trigger_word)
     content = addUser(args[1], content)
     File.write('games.csv', content)
     return make_response('Player added!')
+  elsif text.start_with? 'update' and $admins.include? user_name
+    update
   end
 
   # Verify data
