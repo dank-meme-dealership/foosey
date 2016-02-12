@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 
+require 'inifile'
 require 'json'
 require 'sinatra'
-require 'sinatra/json'
 require 'sinatra/cross_origin'
+require 'sinatra/json'
 
 # fuck off
 $middle = %{```....................../´¯/)
@@ -20,11 +21,13 @@ $middle = %{```....................../´¯/)
 $UTC = '-07:00'
 
 $names = []
-# TODO: move these to a separate file
-$admins = %w(matttt brik)
-$gone = %w(daniel josh jody)
+
+ini = IniFile.load('foosey.ini')
+
+$admins = ini['settings']['admins'].split(',')
+$ignore = ini['settings']['ignore'].split(',')
 # slackurl contains the url that you can send HTTP POST to to send messages
-$slackurl = File.read('slackurl')
+$slack_url = ini['settings']['slack_url']
 
 # function to return a response object for slack
 def make_response(response, attachments = [])
@@ -39,7 +42,7 @@ end
 
 def message_slack(_thisGame, text, attach)
   # TODO: Use Net::HTTP.Post here
-  dev = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$slackurl}`
+  dev = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$slack_url}`
 end
 
 # function to make a help message
@@ -179,7 +182,7 @@ def get_avg_scores(games)
   averages = ''
   # total_played = ""
   $names.each_with_index do |n, idx|
-    avg_score << { name: n, avg: total_scores[idx] / (total_games[idx] * 1.0) } unless total_games[idx] == 0 or $gone.include? n
+    avg_score << { name: n, avg: total_scores[idx] / (total_games[idx] * 1.0) } unless total_games[idx] == 0 or $ignore.include? n
     # total_played += "#{$names[i].capitalize}: #{total_games[i]}\n" unless total_games[i] == 0
   end
 
@@ -315,7 +318,7 @@ def get_elos(games)
 
   elo_ah = []
   for i in 0...$names.length
-    unless $gone.include? $names[i]
+    unless $ignore.include? $names[i]
       elo_ah << { name: $names[i], elo: elo[i], change: all.map { |a| a[i] }.inject(:+), games: total_games[i] } unless total_games[i] == 0
     end
   end
@@ -328,7 +331,7 @@ def get_elo(games)
   elo_ah = get_elos(games)[0]
   elo_s = ''
   for i in 0...elo_ah.length
-    elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" unless $gone.include? elo_ah[i][:name]
+    elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" unless $ignore.include? elo_ah[i][:name]
   end
 
   elo_s
@@ -685,7 +688,7 @@ def remove(id, content)
   games.delete_at(id.to_i + 1)
   content = games.join("\n")
   File.write('games.csv', content)
-  response = `curl --silent -X POST --data-urlencode 'payload={"channel": "@matttt", "username": "foosey", "text": "Someone used the app to remove:\n#{toRemove}", "icon_emoji": ":foosey:"}' #{$slackurl}`
+  response = `curl --silent -X POST --data-urlencode 'payload={"channel": "@matttt", "username": "foosey", "text": "Someone used the app to remove:\n#{toRemove}", "icon_emoji": ":foosey:"}' #{$slack_url}`
   'Removed'
 end
 
@@ -748,7 +751,7 @@ def total(games)
 
   stats = ''
   for i in 0..$names.length - 1
-    unless $gone.include? $names[i]
+    unless $ignore.include? $names[i]
       wins = total_wins[i] == 0 ? 0 : (total_wins[i].to_f * 100 / total_games[i].to_f)
       totals << { name: $names[i], percent: wins } unless total_games[i] == 0
     end
@@ -859,7 +862,7 @@ def log_game_from_app(user_name, text)
     }
   elsif text.start_with? 'players'
     return {
-      players: getPlayers($names - $gone)
+      players: getPlayers($names - $ignore)
     }
   elsif text.start_with? 'remove'
     return {
