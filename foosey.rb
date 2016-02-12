@@ -800,7 +800,7 @@ def log_game_from_slack(user_name, text, trigger_word)
   args = text.split(' ')
 
   # Remove 'foosey' from the beginning of the text
-  text = text[trigger_word.length..text.length].strip if text.start_with? trigger_word
+  text = text[trigger_word.length..text.length].strip if trigger_word
 
   # Cases other than adding a game
   if text.start_with? 'help'
