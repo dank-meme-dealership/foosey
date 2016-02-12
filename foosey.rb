@@ -143,24 +143,25 @@ end
 def get_change(content, newGame)
   games = content.split("\n")[1..-1]
 
-  elos, change = get_elos(games)
+  sorted_elos, elos, change = get_elos(games)
 
   fields = []
   newGame.each_index do |i|
     if newGame[i] != -1
+      elo = elos[i][:elo] 
+      elo_change = change[i].to_i >= 0 ? "+#{change[i]}" : change[i]
       fields << {
-
         title: $names[i].capitalize,
-        value: "Change: #{change[i]}",
+        value: "#{elo} (#{elo_change})",
         short: true
       }
     end
   end
 
-  change = [
-    pretext: "Elos change after that game:",
+  change = {
+    pretext: "Elos after that game:",
     fields: fields
-  ]
+  }
 
   change
 end
@@ -322,8 +323,8 @@ def get_elos(games)
       elo_ah << { name: $names[i], elo: elo[i], change: all.map { |a| a[i] }.inject(:+), games: total_games[i] } unless total_games[i] == 0
     end
   end
-  elo_ah = elo_ah.sort { |a, b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
-  [elo_ah, change]
+  sorted = elo_ah.sort { |a, b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
+  [sorted, elo_ah, change]
 end
 
 # function to display elo
@@ -678,7 +679,8 @@ def undo(content)
     response += "\n#{$names[i].capitalize}: #{g}" if g != '-1'
     i += 1
   end
-  File.write('games.csv', contents)
+  File.write('games.csv', content)
+  make_response(response)
 end
 
 # function to remove specific game
@@ -778,9 +780,8 @@ def dateTime(g, dateFormat, timeFormat)
   [date, time]
 end
 
-def log_game_from_slack(user_name, text)
-  # Remove 'foosey' from the beginning of the text
-  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
+def log_game_from_slack(user_name, text, trigger_word)
+  $app = false
 
   # Get latest paste's content
   content = File.read('games.csv')
@@ -789,8 +790,10 @@ def log_game_from_slack(user_name, text)
 
   # Clean up text and set args
   text ||= ''
-  text = text.downcase.delete(':')
   args = text.split(' ')
+
+  # Remove 'foosey' from the beginning of the text
+  text = text[trigger_word.length..text.length].strip if text.start_with? trigger_word
 
   # Cases other than adding a game
   if text.start_with? 'help'
@@ -831,9 +834,6 @@ end
 def log_game_from_app(user_name, text)
   $app = true
 
-  # Remove 'foosey' from the beginning of the text
-  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
-
   # Get latest paste's content
   content = File.read('games.csv')
   $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
@@ -844,8 +844,10 @@ def log_game_from_app(user_name, text)
   text = text.downcase.delete(':')
   args = text.split(' ')
 
-  # App specific cases
+  # Remove 'foosey' from the beginning of the text
+  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
 
+  # App specific cases
   if text.start_with? 'charts'
     return {
       charts: get_charts(args[1], games)
@@ -896,7 +898,7 @@ configure do
 end
 
 post '/slack' do
-  json log_game_from_slack(params['user_name'], params['text'])
+  json log_game_from_slack(params['user_name'], params['text'], params['trigger_word'])
 end
 
 options '/app' do
@@ -907,4 +909,8 @@ post '/app' do
   # parse json from angular
   params = JSON.parse(request.body.read)
   json log_game_from_app(params['user_name'], params['text'])
+end
+
+get '/games.csv' do
+  return File.read('games.csv')
 end
