@@ -26,6 +26,7 @@ ini = IniFile.load('foosey.ini')
 
 $admins = ini['settings']['admins'].split(',')
 $ignore = ini['settings']['ignore'].split(',')
+$app_dir = ini['settings']['app_dir']
 # slackurl contains the url that you can send HTTP POST to to send messages
 $slack_url = ini['settings']['slack_url']
 
@@ -773,6 +774,7 @@ end
 # this function will only work on linux
 # a better update function will be implemented in the future
 def update
+  exec "cd #{$app_dir} && git pull"
   IO.popen("#{File.dirname(__FILE__)}/refresh.sh")
   sleep 5
 end
