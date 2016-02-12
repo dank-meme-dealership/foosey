@@ -1,8 +1,5 @@
 #!/usr/bin/env ruby
 
-# foosey update stuff
-sleep 5 if ARGV.include? 'wait'
-
 require 'inifile'
 require 'json'
 require 'sinatra'
@@ -776,8 +773,8 @@ end
 # this function will only work on linux
 # a better update function will be implemented in the future
 def update
-  exec "git pull"
-  IO.popen("kill #{Process.pid} && ruby #{__FILE__} wait &")
+  IO.popen("#{File.dirname(__FILE__)}/refresh.sh")
+  sleep 5
 end
 
 # function to return date and time
