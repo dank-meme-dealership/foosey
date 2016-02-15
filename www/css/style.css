@@ -1,10 +1,3 @@
-.action
-{
-  color: white;
-  text-align: center;
-  font-size: 28px;
-  padding: 10px 0 5px;
-}
 .background
 {
   background: #45526D;
@@ -57,33 +50,11 @@
 {
   color: green;
 }
-.game-score
-{
-  text-align: center;
-  width: 95px;
-}
-.grid-container
-{
-  margin: 5px;
-  justify-content: center;
-  flex-wrap: wrap;
-  display: flex;
-}
-.grid-item
-{
-  float: left;
-  width: 90px;
-}
-.grid-item.selected
-{
-  background: #CCCCCC;
-}
 .header-text
 {
   font-size: 16px;
   padding: 7px 5px;
 }
-
 div.item
 {
   margin: 5px;
@@ -93,13 +64,11 @@ div.item
 {
   padding: 16px;
 }
-
 ion-item.item
 {
   margin: 10px 10px 0;
   white-space: initial;
 }
-
 ion-item.item.last, ion-list.last ion-item.item
 {
   margin-bottom: 10px;
