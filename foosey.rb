@@ -406,13 +406,10 @@ def players_in_game(game)
 end
 
 # function to calculate stats breh
-def stats(content, cmd)
+def stats(content)
   games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
   elo = get_elo(games)
   avg = get_avg_scores(games)
-  percent = total(games)
-
-  return make_response(avg) if cmd.start_with? 'average'
 
   stats = [
     fields:
@@ -425,11 +422,6 @@ def stats(content, cmd)
       {
         title: 'Average Score:',
         value: avg,
-        short: true
-      },
-      {
-        title: 'Percent games won:',
-        value: percent,
         short: true
       }
     ]
@@ -808,7 +800,7 @@ def log_game_from_slack(user_name, text, trigger_word)
   if text.start_with? 'help'
     return help_message
   elsif text.start_with? 'stats'
-    return stats(content, text['stats'.length..text.length].strip)
+    return stats(content)
   elsif text.start_with? 'predict'
     return predict(content, text['predict'.length..text.length].strip)
   elsif text.start_with? 'easter'
