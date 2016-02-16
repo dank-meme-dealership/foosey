@@ -92,6 +92,19 @@ def add_game(text, content, user_name)
     new_game[name_column] = game[i + 1].to_i # to_i should be safe here since we've verified input earlier
     i += 2
   end
+
+  # hack in for tornado games
+  # if the highest score is 5, double all of the values
+  if new_game[2..-1].max == 5
+    new_game[2..-1] = new_game[2..-1].map do |x|
+      if x != -1
+        x * 2
+      else
+        x
+      end
+    end
+  end
+
   lastGame = content.split("\n").pop.split(',')[2..-1].join(',')
   lastGameUsername = content.split("\n").pop.split(',')[1]
   thisGame = new_game[2..-1].join(',') # complicated way to join
