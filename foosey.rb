@@ -851,7 +851,7 @@ def log_game_from_slack(user_name, text, trigger_word)
   add_game(text, content, user_name)
 end
 
-def log_game_from_app(user_name, text)
+def log_game_from_app(user_name, text, trigger_word)
   $app = true
 
   # Get latest paste's content
@@ -863,9 +863,6 @@ def log_game_from_app(user_name, text)
   text ||= ''
   text = text.downcase.delete(':')
   args = text.split(' ')
-
-  # Remove 'foosey' from the beginning of the text
-  text = text[trigger_word.length..text.length].strip if trigger_word
 
   # App specific cases
   if text.start_with? 'charts'
