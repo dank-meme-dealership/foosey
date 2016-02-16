@@ -340,7 +340,7 @@ def get_elo(games)
   elo_s
 end
 
-def get_charts(name, games)
+def get_charts(name, limit, games)
   chart_data = []
   elo = Array.new($names.length, 1200)
   total_games = Array.new($names.length, 0)
@@ -371,7 +371,13 @@ def get_charts(name, games)
     g_i += 1
   end
 
-  chart_data
+  if limit == "all" || chart_data.length <= limit.to_i
+    return chart_data
+  else
+    limit = chart_data.length - limit.to_i
+  end
+
+  chart_data[limit..-1]
 end
 
 def get_team_charts(games)
@@ -854,7 +860,7 @@ def log_game_from_app(user_name, text)
   # App specific cases
   if text.start_with? 'charts'
     return {
-      charts: get_charts(args[1], games)
+      charts: get_charts(args[1], args[2], games)
     }
   elsif text.start_with? 'leaderboard'
     return {
