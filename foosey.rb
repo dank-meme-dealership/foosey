@@ -144,12 +144,13 @@ end
 def get_change(content, newGame)
   games = content.split("\n")[1..-1]
 
-  sorted_elos, elos, change = get_elos(games)
+  elos, change = get_elos(games)
 
   fields = []
   newGame.each_index do |i|
     if newGame[i] != -1
-      elo = elos[i][:elo] 
+      person = elos.select { |person| person[:name].downcase == $names[i] }[0]
+      elo = person[:elo]
       elo_change = change[i].to_i >= 0 ? "+#{change[i]}" : change[i]
       fields << {
         title: $names[i].capitalize,
@@ -325,7 +326,7 @@ def get_elos(games)
     end
   end
   sorted = elo_ah.sort { |a, b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
-  [sorted, elo_ah, change]
+  [sorted, change]
 end
 
 # function to display elo
