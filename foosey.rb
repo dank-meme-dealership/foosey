@@ -851,7 +851,7 @@ def log_game_from_slack(user_name, text, trigger_word)
   add_game(text, content, user_name)
 end
 
-def log_game_from_app(user_name, text, trigger_word)
+def log_game_from_app(user_name, text)
   $app = true
 
   # Get latest paste's content
