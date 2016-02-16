@@ -805,6 +805,7 @@ def log_game_from_slack(user_name, text, trigger_word)
 
   # Clean up text and set args
   text ||= ''
+  text = text.downcase.delete(':')
   args = text.split(' ')
 
   # Remove 'foosey' from the beginning of the text
@@ -862,7 +863,7 @@ def log_game_from_app(user_name, text)
   args = text.split(' ')
 
   # Remove 'foosey' from the beginning of the text
-  text = text['foosey'.length..text.length].strip if text.start_with? 'foosey'
+  text = text[trigger_word.length..text.length].strip if trigger_word
 
   # App specific cases
   if text.start_with? 'charts'
