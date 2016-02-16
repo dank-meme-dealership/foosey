@@ -95,7 +95,9 @@ def add_game(text, content, user_name)
 
   # hack in for tornado games
   # if the highest score is 5, double all of the values
+  max = '10'
   if new_game[2..-1].max == 5
+    max = '5'
     new_game[2..-1] = new_game[2..-1].map do |x|
       if x != -1
         x * 2
@@ -130,7 +132,7 @@ def add_game(text, content, user_name)
       team2 = []
       i = 0
       while i < game.length
-        if game[i + 1] == '10'
+        if game[i + 1] == max
           team1 << game[i]
         else
           team2 << game[i]
