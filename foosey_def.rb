@@ -224,8 +224,8 @@ def calculate_elo_change(g, elo, total_games)
   end
 
   # do shit
-  e_a = 1 / (1 + max.to_i**((r_b - r_a) / 800.to_f))
-  e_b = 1 / (1 + max.to_i**((r_a - r_b) / 800.to_f))
+  e_a = 1 / (1 + 10**((r_b - r_a) / 800.to_f))
+  e_b = 1 / (1 + 10**((r_a - r_b) / 800.to_f))
   # method 1: winner gets all
   # s_a = p_a_p > p_b_p ? 1 : 0
   # s_b = 1 - s_a
