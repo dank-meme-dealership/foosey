@@ -242,6 +242,11 @@ def calculate_elo_change(g, elo, total_games)
   r_a_n = (k_factor * (s_a - e_a)).round
   r_b_n = (k_factor * (s_b - e_b)).round
 
+  # divide elo change to be smaller if it wasn't a full game to 10
+  ratio = 10 / max.to_i
+  r_a_n /= ratio
+  r_b_n /= ratio
+
   # if 2 players
   if players_in_game(g) == 2
     # add back to elos
