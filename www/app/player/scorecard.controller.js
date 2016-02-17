@@ -60,10 +60,10 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 			var chartData = response.data;
 
 			// mock out filtering the charts by something
-			chartData.charts = _.filter(chartData.charts, function(chart)
-			{
-				return true;
-			})
+			// chartData.charts = _.filter(chartData.charts, function(chart)
+			// {
+			// 	return true;
+			// })
 
 			$scope.dates = _.pluck(chartData.charts, 'date');
 
