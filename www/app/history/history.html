@@ -15,8 +15,8 @@
 		<!-- show loading while waiting -->
 	  <ion-spinner ng-show="!dates && !error" class="loading-dots" icon="lines"></ion-spinner>
 	
-	  <!-- no internet message -->
-	  <ion-item ng-show="error">No internet connection :(</ion-item>
+	  <!-- Show if error -->
+    <ion-item ng-show="error">Can't connect to server :(</ion-item>
 
 		<!-- The full history of games -->
 		<div ng-show="dates">
