@@ -91,7 +91,7 @@ def add_game(text, content, user_name)
       team2 = []
       i = 0
       while i < game.length
-        if game[i + 1] == max
+        if game[i + 1].to_i == max
           team1 << game[i]
         else
           team2 << game[i]
