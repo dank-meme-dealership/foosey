@@ -92,20 +92,7 @@ def add_game(text, content, user_name)
     new_game[name_column] = game[i + 1].to_i # to_i should be safe here since we've verified input earlier
     i += 2
   end
-
-  # hack in for tornado games
-  # if the highest score is 5, double all of the values
-  max = '10'
-  if new_game[2..-1].max == 5
-    max = '5'
-    new_game[2..-1] = new_game[2..-1].map do |x|
-      if x != -1
-        x * 2
-      else
-        x
-      end
-    end
-  end
+  max = new_game[2..-1].max
 
   lastGame = content.split("\n").pop.split(',')[2..-1].join(',')
   lastGameUsername = content.split("\n").pop.split(',')[1]
@@ -227,6 +214,7 @@ def calculate_elo_change(g, elo, total_games)
   k_factor = 50 # we can play around with this, but chess uses 15 in most skill ranges
 
   g_a = g.strip.split(',')[2..-1]
+  max = g_a.max
   # variable names from here out are going to be named after those mentioned here:
   # http://www.chess.com/blog/wizzy232/how-to-calculate-the-elo-system-of-rating
 
@@ -247,12 +235,12 @@ def calculate_elo_change(g, elo, total_games)
   # if 4 players
   else
     # get indexes of winners
-    t_a_p_a = g_a.index { |p| p == '10' }
-    t_a_p_b = g_a.rindex { |p| p == '10' }
+    t_a_p_a = g_a.index { |p| p == max }
+    t_a_p_b = g_a.rindex { |p| p == max }
 
     # get indexes of losers
-    t_b_p_a = g_a.index { |p| p != '-1' && p != '10' }
-    t_b_p_b = g_a.rindex { |p| p != '-1' && p != '10' }
+    t_b_p_a = g_a.index { |p| p != '-1' && p != max }
+    t_b_p_b = g_a.rindex { |p| p != '-1' && p != max }
 
     # then get points
     p_a_p = g_a[t_a_p_a].to_i
@@ -264,8 +252,8 @@ def calculate_elo_change(g, elo, total_games)
   end
 
   # do shit
-  e_a = 1 / (1 + 10**((r_b - r_a) / 800.to_f))
-  e_b = 1 / (1 + 10**((r_a - r_b) / 800.to_f))
+  e_a = 1 / (1 + max.to_i**((r_b - r_a) / 800.to_f))
+  e_b = 1 / (1 + max.to_i**((r_a - r_b) / 800.to_f))
   # method 1: winner gets all
   # s_a = p_a_p > p_b_p ? 1 : 0
   # s_b = 1 - s_a
@@ -368,7 +356,8 @@ def get_charts(name, games)
     date, time = dateTime(g, '%m/%d', '%H:%M')
     elo, total_games, change = calculate_elo_change(g, elo, total_games)
     g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
-    total_wins += 1 if g_a[index] == '10'
+    max = g_a.max
+    total_wins += 1 if g_a[index] == max
     if g_a[index] != '-1'
       total_score += g_a[index].to_i
       real_total_games += 1
@@ -525,6 +514,7 @@ end
 def getTeamNamesAndScores(g, change)
   teams = []
   game = g.strip.split(',')[2..-1]
+  max = game.max
   i = 0
 
   # if 2 players
@@ -548,12 +538,12 @@ def getTeamNamesAndScores(g, change)
   # if 4 players
   elsif players_in_game(g) == 4
     # get indexes of winners
-    t_a_p_a = game.index { |p| p == '10' }
-    t_a_p_b = game.rindex { |p| p == '10' }
+    t_a_p_a = game.index { |p| p == max }
+    t_a_p_b = game.rindex { |p| p == max }
 
     # get indexes of losers
-    t_b_p_a = game.index { |p| p != '-1' && p != '10' }
-    t_b_p_b = game.rindex { |p| p != '-1' && p != '10' }
+    t_b_p_a = game.index { |p| p != '-1' && p != max }
+    t_b_p_b = game.rindex { |p| p != '-1' && p != max }
 
     teams << {
       players: [$names[t_a_p_a].capitalize, $names[t_a_p_b].capitalize],
@@ -714,7 +704,7 @@ def verify_input(text)
       return "No user named `#{game[i]}` being logged." unless $names.include?(game[i])
     else
       return 'help' unless game[i] =~ /^[-+]?[0-9]*$/
-      return 'Please enter whole numbers between 0 and 10.' unless game[i].to_i < 11 && game[i].to_i >= 0
+      return 'Please enter whole numbers greater than 0.' unless game[i].to_i >= 0
     end
   end
   'good'
@@ -751,9 +741,10 @@ def total(games)
   total_games = Array.new($names.length, 0)
   for g in games.each # for each player
     g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
+    max = g_a.max
     for i in 0..g_a.length - 1 # for each player
       # the +1s in here are to prevent off-by-ones because names starts at 0 and scores start at 1 because of timestamp
-      total_wins[i] += 1 if g_a[i].to_i == 10 # if they won, increment wins
+      total_wins[i] += 1 if g_a[i].to_i == max # if they won, increment wins
       total_games[i] += 1 unless g_a[i].to_i == -1 # increment total games
     end
   end
