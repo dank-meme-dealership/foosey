@@ -39,11 +39,13 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 
 	// initialize page
 	reset();
+	changeTable($scope.tables[0]);
 
 	function changeTable(table)
 	{
 		$scope.selectedTable = table;
 		$scope.scores = new Array(table.maxScore + 1);
+		reset();
 	}
 
 	// function to select game
@@ -140,7 +142,6 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 		$scope.game = [];
 		$scope.saveStatus = "";
 		$scope.response = undefined;
-		changeTable($scope.tables[0]);
 		getPlayers();
 	}
 
