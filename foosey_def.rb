@@ -64,7 +64,7 @@ def add_game(text, content, user_name)
     new_game[name_column] = game[i + 1].to_i # to_i should be safe here since we've verified input earlier
     i += 2
   end
-  max = new_game[2..-1].max
+  max = new_game[2..-1].max # this is okay because new_game is an int[]
 
   lastGame = content.split("\n").pop.split(',')[2..-1].join(',')
   lastGameUsername = content.split("\n").pop.split(',')[1]
@@ -186,7 +186,7 @@ def calculate_elo_change(g, elo, total_games)
   k_factor = 50 # we can play around with this, but chess uses 15 in most skill ranges
 
   g_a = g.strip.split(',')[2..-1]
-  max = g_a.max
+  max = g_a.max {|a,b| a.to_i <=> b.to_i }
   # variable names from here out are going to be named after those mentioned here:
   # http://www.chess.com/blog/wizzy232/how-to-calculate-the-elo-system-of-rating
 
@@ -328,7 +328,7 @@ def get_charts(name, games)
     date, time = dateTime(g, '%m/%d', '%H:%M')
     elo, total_games, change = calculate_elo_change(g, elo, total_games)
     g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
-    max = g_a.max
+    max = g_a.max {|a,b| a.to_i <=> b.to_i }
     total_wins += 1 if g_a[index] == max
     if g_a[index] != '-1'
       total_score += g_a[index].to_i
@@ -486,7 +486,7 @@ end
 def getTeamNamesAndScores(g, change)
   teams = []
   game = g.strip.split(',')[2..-1]
-  max = game.max
+  max = game.max {|a,b| a.to_i <=> b.to_i }
   i = 0
 
   # if 2 players
@@ -713,10 +713,10 @@ def total(games)
   total_games = Array.new($names.length, 0)
   for g in games.each # for each player
     g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
-    max = g_a.max
+    max = g_a.max {|a,b| a.to_i <=> b.to_i }
     for i in 0..g_a.length - 1 # for each player
       # the +1s in here are to prevent off-by-ones because names starts at 0 and scores start at 1 because of timestamp
-      total_wins[i] += 1 if g_a[i].to_i == max # if they won, increment wins
+      total_wins[i] += 1 if g_a[i].to_i == max.to_i # if they won, increment wins
       total_games[i] += 1 unless g_a[i].to_i == -1 # increment total games
     end
   end
