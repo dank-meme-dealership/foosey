@@ -280,7 +280,11 @@ def get_elo(games)
   elo_ah = get_elos(games)[0]
   elo_s = ''
   for i in 0...elo_ah.length
-    elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" unless $ignore.include? elo_ah[i][:name]
+    elo_change = elo_ah[i][:change] == nil ? "" : elo_ah[i][:change].to_i >= 0 ? "(+#{elo_ah[i][:change]})" : "(#{elo_ah[i][:change]})"
+    elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]} #{elo_change}\n" unless $ignore.include?(elo_ah[i][:name]) || elo_ah[i][:games].to_i < 10
+  end
+  for i in 0...elo_ah.length
+    elo_s += "#{elo_ah[i][:name].capitalize}: #{10 - elo_ah[i][:games].to_i} games left to play\n" unless $ignore.include?(elo_ah[i][:name]) || elo_ah[i][:games].to_i >= 10
   end
 
   elo_s
@@ -710,7 +714,7 @@ def total(games)
   return totals if $app
 
   for i in 0..totals.length - 1
-    stats += "#{totals[i][:name].capitalize}: #{format("%.2f", totals[i][:percent])}%\n"
+    stats += "#{totals[i][:name].capitalize}: #{format("%.1f", totals[i][:percent])}%\n"
   end
 
   stats
