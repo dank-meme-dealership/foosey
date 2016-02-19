@@ -102,6 +102,9 @@
 				<div class="ion-close" ng-show="saveStatus === 'failed'">
 					Something went wrong on the server, talk to Matt or Brik.
 				</div>
+				<div ng-show="saveStatus === 'removed'">
+					Game Removed!
+				</div>
 			</ion-item>
 
 			<!-- Attachments -->
@@ -118,7 +121,7 @@
 			</ion-item>
 
 			<!-- Undo button -->
-			<!-- <ion-item class="center" ng-show="saveStatus === 'success'" ng-click="undo()">Undo</ion-item> -->
+			<ion-item class="center" ng-show="saveStatus === 'success'" ng-click="undo()">Undo</ion-item>
 
 			<!-- Done button -->
 			<ion-item class="center" ng-click="reset()">

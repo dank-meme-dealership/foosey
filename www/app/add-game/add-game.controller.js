@@ -121,7 +121,9 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 	// undo last game
 	$scope.undo = function()
 	{
-		console.log("Will undo eventually...");
+		FooseyService.undo();
+		$scope.saveStatus = "removed";
+		$scope.response = [];
 	}
 
 	// function to build the add command out for foosey
