@@ -36,18 +36,15 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
   {
     // load from local storage
     $scope.elos = localStorage.getObject('elos');
-    $scope.avgs = localStorage.getObject('avgs');
     $scope.percent = localStorage.getObject('percent');
 
     // load from server
     FooseyService.leaderboard().then(function successCallback(response)
     { 
       $scope.elos = filterElos(response.data.elos);
-      $scope.avgs = response.data.avgs;
       $scope.percent = response.data.percent;
       $ionicSlideBoxDelegate.update();
       localStorage.setObject('elos', $scope.elos);
-      localStorage.setObject('avgs', $scope.avgs);
       localStorage.setObject('percent', $scope.percent);
       $scope.error = false;
       

@@ -11,11 +11,9 @@
   <div class="bar bar-subheader background">
     <div class="tabs">
       <a class="tab-item" ng-click="slideTo(0)"
-        ng-class="{active: slide === 0}">ELO Rating</a>     
+        ng-class="{active: slide === 0}">ELO Rating</a>    
       <a class="tab-item" ng-click="slideTo(1)"
-        ng-class="{active: slide === 1}">Average Score</a>      
-      <a class="tab-item" ng-click="slideTo(2)"
-        ng-class="{active: slide === 2}">Win Percentage</a>
+        ng-class="{active: slide === 1}">Win Percentage</a>
     </div>      
   </div>
 
@@ -57,25 +55,6 @@
             </div>
           </ion-item>
         </ion-list>
-      </ion-slide>
-
-      <!-- Avg Score -->
-      <ion-slide>
-        <ion-item 
-          ng-repeat="player in avgs" 
-          ng-class="{'last': $last}"
-          href="#/app/player/{{player.name}}">
-          <div class="spaced-out">
-            <h2>
-              <div class="rank">{{$index + 1}}</div> 
-              {{player.name | capitalize}}
-            </h2> 
-            <div class="spaced-out">
-              <b>{{player.avg | number:2}}</b>
-              <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
-            </div>
-          </div>
-        </ion-item>
       </ion-slide>
 
       <!-- % Games won -->

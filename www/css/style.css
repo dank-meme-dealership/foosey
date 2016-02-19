@@ -97,6 +97,11 @@ ion-item.item.last, ion-list.last ion-item.item
 {
   padding-right: 16px;
 }
+.space-around
+{
+  display: flex;
+  justify-content: space-around;
+}
 .spaced-out
 {
   display: flex;

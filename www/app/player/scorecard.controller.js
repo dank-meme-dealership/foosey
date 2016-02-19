@@ -15,7 +15,6 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 		return {
 			name: name,
 			elo: getElo(name),
-			avg: getAvg(name),
 			percent: getPercent(name)
 		}
 	}
@@ -28,15 +27,6 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
     var index = _.indexOf(_.pluck(elos, 'name'), name);
     
 		return elos[index].elo;
-	}
-
-	// get the average score for this player from local storage
-	function getAvg(name)
-	{
-		var avgs = localStorage.getObject('avgs');
-		var index = _.indexOf(_.pluck(avgs, 'name'), name);
-
-		return avgs[index].avg;
 	}
 
 	// get the win % for this player from local storage
@@ -70,9 +60,6 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 			// Set up ELO Rating chart
 			$scope.charts.push(getEloChartOptions(_.pluck(chartData.charts, 'elo')));
 
-			// Set up Avg Score chart
-			$scope.charts.push(getAvgChartOptions(_.pluck(chartData.charts, 'avg')));
-
 			// Set up Win Percent chart
 			$scope.charts.push(getPercentChartOptions(_.pluck(chartData.charts, 'percent')));
 		});
@@ -86,19 +73,6 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 			subtitle: $scope.subtitle,
 			yAxis: 'ELO',
 			class: 'elo',
-			data: data,
-			dates: $scope.dates
-		};
-	}
-
-	// define options for the Average Score chart
-	function getAvgChartOptions(data)
-	{
-		return {
-			title: 'Average Score Per Game',
-			subtitle: $scope.subtitle,
-			yAxis: 'Score',
-			class: 'avg',
 			data: data,
 			dates: $scope.dates
 		};
