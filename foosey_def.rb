@@ -142,39 +142,6 @@ def get_change(content, newGame)
   change
 end
 
-# function to calculate average scores
-def get_avg_scores(games)
-  total_scores = Array.new($names.length, 0)
-  total_games = Array.new($names.length, 0)
-  games.each do |g| # for each player
-    g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
-    g_a.each_with_index do |value, idx| # for each player
-      # the +1s in here are to prevent off-by-ones because names starts at 0 and scores start at 2 because of timestamp and
-      total_scores[idx] += value.to_i unless value.to_i == -1 # if they played, increment score
-      total_games[idx] += 1 unless value.to_i == -1 # and total num games
-    end
-  end
-
-  avg_score = []
-  averages = ''
-  # total_played = ""
-  $names.each_with_index do |n, idx|
-    avg_score << { name: n, avg: total_scores[idx] / (total_games[idx] * 1.0) } unless total_games[idx] == 0 or $ignore.include? n
-    # total_played += "#{$names[i].capitalize}: #{total_games[i]}\n" unless total_games[i] == 0
-  end
-
-  avg_score = avg_score.sort { |a, b| b[:avg] <=> a[:avg] } # cheeky sort
-
-  return avg_score if $app
-
-  avg_score.each do |s|
-    averages += "#{s[:name].capitalize}: #{'%.2f' % s[:avg]}\n"
-  end
-
-  averages
-  # return make_response("*Here are all of the statistics for your team:*", statistics)
-end
-
 def calculate_elo_change(g, elo, total_games)
   change = Array.new($names.length, 0) # empty no change array
 
@@ -325,7 +292,6 @@ def get_charts(name, games)
   total_games = Array.new($names.length, 0)
   real_total_games = 0
   total_wins = 0
-  total_score = 0
   index = $names.index(name)
   g_i = 0
   for g in games.each
@@ -335,15 +301,12 @@ def get_charts(name, games)
     max = g_a.max {|a,b| a.to_i <=> b.to_i }
     total_wins += 1 if g_a[index] == max
     if g_a[index] != '-1'
-      total_score += g_a[index].to_i
       real_total_games += 1
-      avg = total_score.to_f / real_total_games.to_f
       percent = total_wins == 0 ? 0 : total_wins.to_f * 100 / real_total_games.to_f
       entry = {
         date: date,
         id: g_i,
         elo: elo[index],
-        avg: avg,
         percent: percent
       }
       chart_data << entry
@@ -390,7 +353,7 @@ end
 def stats(content)
   games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
   elo = get_elo(games)
-  avg = get_avg_scores(games)
+  percent = total(games)
 
   stats = [
     fields:
@@ -401,8 +364,8 @@ def stats(content)
         short: true
       },
       {
-        title: 'Average Score:',
-        value: avg,
+        title: 'Percent games won:',
+        value: percent,
         short: true
       }
     ]
@@ -747,7 +710,7 @@ def total(games)
   return totals if $app
 
   for i in 0..totals.length - 1
-    stats += "#{totals[i][:name].capitalize}: #{totals[i][:percent].to_i}%\n"
+    stats += "#{totals[i][:name].capitalize}: #{format("%.2f", totals[i][:percent])}%\n"
   end
 
   stats
@@ -839,7 +802,6 @@ def log_game_from_app(user_name, text)
   elsif text.start_with? 'leaderboard'
     return {
       elos: get_elos(games)[0],
-      avgs: get_avg_scores(games),
       percent: total(games)
     }
   elsif text.start_with? 'history'
