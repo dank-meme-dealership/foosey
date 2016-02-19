@@ -62,7 +62,8 @@
 		<div ng-show="state === 'score-select'">
 			<div class="grid-container">
 				<div 
-					class="grid-item item" 
+					class="grid-item item"
+					ng-class="{'bold': $index === 5 || $index === 0}"
 					ng-repeat="score in scores track by $index"
 	  		  ng-click="scoreSelect(scores.length - 1 - $index)">
 	  		  {{scores.length - 1 - $index}}
