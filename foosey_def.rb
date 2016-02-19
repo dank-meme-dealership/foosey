@@ -851,6 +851,10 @@ def log_game_from_app(user_name, text)
     return {
       charts: get_team_charts(games)
     }
+  elsif text.start_with? 'undo'
+    return {
+      response: undo(content)
+    }
   end
 
   # Verify data
