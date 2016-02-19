@@ -16,20 +16,7 @@
 		</button>
   </ion-nav-buttons>
 
-    <!-- Header bar for different leaderboards -->
-  <div class="bar bar-subheader background">
-    <div class="tabs">
-      <a 
-      	class="tab-item" 
-      	ng-click="changeTable(table)" 
-      	ng-repeat="table in tables"
-        ng-class="{active: table.name === selectedTable.name}">
-        {{table.name}}
-      </a>
-    </div>      
-  </div>
-
-	<ion-content class="background has-subheader" has-bouncing="true">
+	<ion-content class="background" has-bouncing="true">
 	
 		<!-- Selecting the game type -->
 		<div ng-show="state === 'game-select'">

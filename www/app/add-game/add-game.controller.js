@@ -4,17 +4,6 @@ angular
 
 function AddGameController($scope, $rootScope, localStorage, FooseyService)
 {
-	// Set up tables you can play on
-	$scope.tables = [
-		{
-			name: "Tornado Table",
-			maxScore: 5
-		},
-		{
-			name: "Other Table",
-			maxScore: 10
-		}
-	];
 	// Set up the types of games you can play
 	$scope.gameTypes = [
 		{
@@ -35,18 +24,10 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 	];
 
 	$scope.reset = reset;
-	$scope.changeTable = changeTable;
 
 	// initialize page
 	reset();
-	changeTable($scope.tables[0]);
-
-	function changeTable(table)
-	{
-		$scope.selectedTable = table;
-		$scope.scores = new Array(table.maxScore + 1);
-		reset();
-	}
+	$scope.scores = new Array(11);
 
 	// function to select game
 	$scope.gameSelect = function(type)
