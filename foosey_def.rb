@@ -13,9 +13,9 @@ def make_response(response, attachments = [])
   }
 end
 
-def message_slack(_thisGame, text, attach)
+def message_slack(text, attach)
   # TODO: Use Net::HTTP.Post here
-  # dev = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$slack_url}`
+  dev = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "#{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$slack_url}`
 end
 
 # function to make a help message
@@ -106,7 +106,7 @@ def add_game(text, content, user_name)
     attach << record[0]
   end
 
-  message_slack(new_game[2..-1], text, attach) if $app
+  message_slack("Game added: #{text}", attach) if $app
 
   if lastGame != thisGame
     make_response('Game added!', attach)
@@ -645,16 +645,16 @@ end
 # function to undo the last move
 def undo(content)
   games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-  last = games.pop.split(',')[1..-1]
-  username = last.shift
-  response = "Removed the game added by #{username}:"
-  i = 0
+  last = games.pop.split(',')[2..-1]
   content = content.split("\n")[0...-1].join("\n")
+  response = "Game removed:"
+  i = 0
   for g in last.each
-    response += "\n#{$names[i].capitalize}: #{g}" if g != '-1'
+    response += " #{$names[i]} #{g}" if g != '-1'
     i += 1
   end
   File.write('games.csv', content)
+  message_slack(response, []) if $app
   make_response(response)
 end
 
@@ -664,8 +664,15 @@ def remove(id, content)
   toRemove = games.at(id.to_i + 1)
   games.delete_at(id.to_i + 1)
   content = games.join("\n")
+  response = "Game removed:"
+  i = 0
+  g = toRemove.split(',')[2..-1]
+  for g in g.each
+    response += " #{$names[i]} #{g}" if g != '-1'
+    i += 1
+  end
   File.write('games.csv', content)
-  response = `curl --silent -X POST --data-urlencode 'payload={"channel": "@matttt", "username": "foosey", "text": "Someone used the app to remove:\n#{toRemove}", "icon_emoji": ":foosey:"}' #{$slack_url}`
+  message_slack(response, []) if $app
   'Removed'
 end
 
