@@ -1,0 +1,71 @@
+/* 
+ * This script is intended to be ran once to initialize a new Foosey database
+ */
+
+-- Create the games table
+CREATE TABLE IF NOT EXISTS
+Game(
+  GameID INTEGER,
+  PlayerID INTEGER,
+  Score INTEGER,
+  Timestamp DATETIME,
+  PRIMARY KEY (GameID, PlayerID)
+);
+
+-- Create the players table
+CREATE TABLE IF NOT EXISTS
+Player(
+  PlayerID INTEGER PRIMARY KEY,
+  DisplayName TEXT,
+  SlackName TEXT,
+  Admin INTEGER DEFAULT 0,
+  Active INTEGER DEFAULT 1,
+  Elo INTEGER DEFAULT 1200,
+  WinRate REAL,
+  GamesPlayed INTEGER DEFAULT 0
+);
+
+-- Create a historic table for each major statistic
+
+-- Create the Elo table
+CREATE TABLE IF NOT EXISTS
+EloHistory(
+  GameID INTEGER,
+  PlayerID INTEGER,
+  Elo INTEGER,
+  PRIMARY KEY (GameID, PlayerID)
+);
+
+-- Create the WinRate table
+CREATE TABLE IF NOT EXISTS
+WinRateHistory(
+  GameID INTEGER,
+  PlayerID INTEGER,
+  WinRate INTEGER,
+  PRIMARY KEY (GameID, PlayerID)
+);
+
+/*
+ * These settings are used by the online Foosey app
+ * If you don't run the app, you can leave them blank
+ */
+
+-- Create the settings table and initialize with the default settings
+CREATE TABLE IF NOT EXISTS
+Config(
+  Setting TEXT PRIMARY KEY,
+  Value BLOB
+);
+
+INSERT INTO Config
+VALUES ("SlackUrl", "");
+INSERT INTO Config
+VALUES ("AppDirectory", "");
+INSERT INTO Config
+VALUES ("MinimumQualified", 10);
+INSERT INTO Config
+VALUES ("WinWeight", 1.2);
+INSERT INTO Config
+VALUES ("KFactor", 50);
+INSERT INTO Config
+VALUES ("MaxScore", 10);

@@ -20,8 +20,7 @@ end
 
 # function to make a help message
 def help_message
-  help =
-    %{*Usage:*
+  %{*Usage:*
 
     To record a singles game:
     `foosey Matt 10 Conner 1`
@@ -43,7 +42,6 @@ def help_message
 
     To get this help message:
     `foosey help`}
-  make_response(help)
 end
 
 def succinct_help
@@ -143,181 +141,181 @@ def get_change(content, newGame)
 end
 
 # function to calculate average scores
-def get_avg_scores(games)
-  total_scores = Array.new($names.length, 0)
-  total_games = Array.new($names.length, 0)
-  games.each do |g| # for each player
-    g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
-    g_a.each_with_index do |value, idx| # for each player
-      # the +1s in here are to prevent off-by-ones because names starts at 0 and scores start at 2 because of timestamp and
-      total_scores[idx] += value.to_i unless value.to_i == -1 # if they played, increment score
-      total_games[idx] += 1 unless value.to_i == -1 # and total num games
-    end
-  end
+# def get_avg_scores(games)
+#   total_scores = Array.new($names.length, 0)
+#   total_games = Array.new($names.length, 0)
+#   games.each do |g| # for each player
+#     g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
+#     g_a.each_with_index do |value, idx| # for each player
+#       # the +1s in here are to prevent off-by-ones because names starts at 0 and scores start at 2 because of timestamp and
+#       total_scores[idx] += value.to_i unless value.to_i == -1 # if they played, increment score
+#       total_games[idx] += 1 unless value.to_i == -1 # and total num games
+#     end
+#   end
 
-  avg_score = []
-  averages = ''
-  # total_played = ""
-  $names.each_with_index do |n, idx|
-    avg_score << { name: n, avg: total_scores[idx] / (total_games[idx] * 1.0) } unless total_games[idx] == 0 or $ignore.include? n
-    # total_played += "#{$names[i].capitalize}: #{total_games[i]}\n" unless total_games[i] == 0
-  end
+#   avg_score = []
+#   averages = ''
+#   # total_played = ""
+#   $names.each_with_index do |n, idx|
+#     avg_score << { name: n, avg: total_scores[idx] / (total_games[idx] * 1.0) } unless total_games[idx] == 0 or $ignore.include? n
+#     # total_played += "#{$names[i].capitalize}: #{total_games[i]}\n" unless total_games[i] == 0
+#   end
 
-  avg_score = avg_score.sort { |a, b| b[:avg] <=> a[:avg] } # cheeky sort
+#   avg_score = avg_score.sort { |a, b| b[:avg] <=> a[:avg] } # cheeky sort
 
-  return avg_score if $app
+#   return avg_score if $app
 
-  avg_score.each do |s|
-    averages += "#{s[:name].capitalize}: #{'%.2f' % s[:avg]}\n"
-  end
+#   avg_score.each do |s|
+#     averages += "#{s[:name].capitalize}: #{'%.2f' % s[:avg]}\n"
+#   end
 
-  averages
-  # return make_response("*Here are all of the statistics for your team:*", statistics)
-end
+#   averages
+#   # return make_response("*Here are all of the statistics for your team:*", statistics)
+# end
 
-def calculate_elo_change(g, elo, total_games)
-  change = Array.new($names.length, 0) # empty no change array
+# def calculate_elo_change(g, elo, total_games)
+#   change = Array.new($names.length, 0) # empty no change array
 
-  # quit out unless a 2 or 4 person game
-  return elo, total_games, change if players_in_game(g) != 2 && players_in_game(g) != 4
+#   # quit out unless a 2 or 4 person game
+#   return elo, total_games, change if players_in_game(g) != 2 && players_in_game(g) != 4
 
-  prev = elo.dup
+#   prev = elo.dup
 
-  k_factor = 50 # we can play around with this, but chess uses 15 in most skill ranges
+#   k_factor = 50 # we can play around with this, but chess uses 15 in most skill ranges
 
-  g_a = g.strip.split(',')[2..-1]
-  max = g_a.max {|a,b| a.to_i <=> b.to_i }
-  # variable names from here out are going to be named after those mentioned here:
-  # http://www.chess.com/blog/wizzy232/how-to-calculate-the-elo-system-of-rating
+#   g_a = g.strip.split(',')[2..-1]
+#   max = g_a.max {|a,b| a.to_i <=> b.to_i }
+#   # variable names from here out are going to be named after those mentioned here:
+#   # http://www.chess.com/blog/wizzy232/how-to-calculate-the-elo-system-of-rating
 
-  # if 2 players
-  if players_in_game(g) == 2
-    # get indexes
-    p_a = g_a.index { |p| p != '-1' }
-    p_b = g_a.rindex { |p| p != '-1' }
+#   # if 2 players
+#   if players_in_game(g) == 2
+#     # get indexes
+#     p_a = g_a.index { |p| p != '-1' }
+#     p_b = g_a.rindex { |p| p != '-1' }
 
-    # then get points
-    p_a_p = g_a[p_a].to_i
-    p_b_p = g_a[p_b].to_i
+#     # then get points
+#     p_a_p = g_a[p_a].to_i
+#     p_b_p = g_a[p_b].to_i
 
-    # then get previous elos
-    r_a = elo[p_a]
-    r_b = elo[p_b]
+#     # then get previous elos
+#     r_a = elo[p_a]
+#     r_b = elo[p_b]
 
-  # if 4 players
-  else
-    # get indexes of winners
-    t_a_p_a = g_a.index { |p| p == max }
-    t_a_p_b = g_a.rindex { |p| p == max }
+#   # if 4 players
+#   else
+#     # get indexes of winners
+#     t_a_p_a = g_a.index { |p| p == max }
+#     t_a_p_b = g_a.rindex { |p| p == max }
 
-    # get indexes of losers
-    t_b_p_a = g_a.index { |p| p != '-1' && p != max }
-    t_b_p_b = g_a.rindex { |p| p != '-1' && p != max }
+#     # get indexes of losers
+#     t_b_p_a = g_a.index { |p| p != '-1' && p != max }
+#     t_b_p_b = g_a.rindex { |p| p != '-1' && p != max }
 
-    # then get points
-    p_a_p = g_a[t_a_p_a].to_i
-    p_b_p = g_a[t_b_p_a].to_i
+#     # then get points
+#     p_a_p = g_a[t_a_p_a].to_i
+#     p_b_p = g_a[t_b_p_a].to_i
 
-    # then get team elos
-    r_a = ((elo[t_a_p_a] + elo[t_a_p_b]) / 2).round
-    r_b = ((elo[t_b_p_a] + elo[t_b_p_b]) / 2).round
-  end
+#     # then get team elos
+#     r_a = ((elo[t_a_p_a] + elo[t_a_p_b]) / 2).round
+#     r_b = ((elo[t_b_p_a] + elo[t_b_p_b]) / 2).round
+#   end
 
-  # do shit
-  e_a = 1 / (1 + 10**((r_b - r_a) / 800.to_f))
-  e_b = 1 / (1 + 10**((r_a - r_b) / 800.to_f))
-  # method 1: winner gets all
-  # s_a = p_a_p > p_b_p ? 1 : 0
-  # s_b = 1 - s_a
-  # method 2: add a weight to winner
-  win_weight = 1.2
-  s_a = p_a_p / (p_a_p + p_b_p).to_f
-  if s_a < 0.5
-    s_a **= win_weight
-    s_b = 1 - s_a
-  else
-    s_b = (1 - s_a)**win_weight
-    s_a = 1 - s_b
-  end
+#   # do shit
+#   e_a = 1 / (1 + 10**((r_b - r_a) / 800.to_f))
+#   e_b = 1 / (1 + 10**((r_a - r_b) / 800.to_f))
+#   # method 1: winner gets all
+#   # s_a = p_a_p > p_b_p ? 1 : 0
+#   # s_b = 1 - s_a
+#   # method 2: add a weight to winner
+#   win_weight = 1.2
+#   s_a = p_a_p / (p_a_p + p_b_p).to_f
+#   if s_a < 0.5
+#     s_a **= win_weight
+#     s_b = 1 - s_a
+#   else
+#     s_b = (1 - s_a)**win_weight
+#     s_a = 1 - s_b
+#   end
 
-  # divide elo change to be smaller if it wasn't a full game to 10
-  ratio = 10 / max.to_i
+#   # divide elo change to be smaller if it wasn't a full game to 10
+#   ratio = 10 / max.to_i
 
-  r_a_n = (k_factor * (s_a - e_a) / ratio).round
-  r_b_n = (k_factor * (s_b - e_b) / ratio).round
+#   r_a_n = (k_factor * (s_a - e_a) / ratio).round
+#   r_b_n = (k_factor * (s_b - e_b) / ratio).round
 
-  # if 2 players
-  if players_in_game(g) == 2
-    # add back to elos
-    elo[p_a] += r_a_n
-    elo[p_b] += r_b_n
+#   # if 2 players
+#   if players_in_game(g) == 2
+#     # add back to elos
+#     elo[p_a] += r_a_n
+#     elo[p_b] += r_b_n
 
-    # add to player total games
-    total_games[p_a] += 1
-    total_games[p_b] += 1
+#     # add to player total games
+#     total_games[p_a] += 1
+#     total_games[p_b] += 1
 
-  # if 4 players
-  else
-    # add winner elos
-    elo[t_a_p_a] += r_a_n
-    elo[t_a_p_b] += r_a_n
+#   # if 4 players
+#   else
+#     # add winner elos
+#     elo[t_a_p_a] += r_a_n
+#     elo[t_a_p_b] += r_a_n
 
-    # subtract loser elos
-    elo[t_b_p_a] += r_b_n
-    elo[t_b_p_b] += r_b_n
+#     # subtract loser elos
+#     elo[t_b_p_a] += r_b_n
+#     elo[t_b_p_b] += r_b_n
 
-    # add to player total games
-    total_games[t_a_p_a] += 1
-    total_games[t_a_p_b] += 1
-    total_games[t_b_p_a] += 1
-    total_games[t_b_p_b] += 1
-  end
+#     # add to player total games
+#     total_games[t_a_p_a] += 1
+#     total_games[t_a_p_b] += 1
+#     total_games[t_b_p_a] += 1
+#     total_games[t_b_p_b] += 1
+#   end
 
-  change = prev.zip(elo).map { |x, y| y - x }
+#   change = prev.zip(elo).map { |x, y| y - x }
 
-  [elo, total_games, change]
-end
+#   [elo, total_games, change]
+# end
 
 # calculates singles elo and returns array hash
-def get_elos(games)
-  now = Time.at(Time.now.to_i).getlocal($UTC)
-  elo = Array.new($names.length, 1200)
-  total_games = Array.new($names.length, 0)
-  all = []
-  change = ''
+# def get_elos(games)
+#   now = Time.at(Time.now.to_i).getlocal($UTC)
+#   elo = Array.new($names.length, 1200)
+#   total_games = Array.new($names.length, 0)
+#   all = []
+#   change = ''
 
-  games_c = games.dup
-  g_i = 0
-  for g in games_c.each # adjust players elo game by game
+#   games_c = games.dup
+#   g_i = 0
+#   for g in games_c.each # adjust players elo game by game
 
-    elo, total_games, change = calculate_elo_change(g, elo, total_games)
+#     elo, total_games, change = calculate_elo_change(g, elo, total_games)
 
-    gameTime = Time.at(g.split(',')[0].to_i).getlocal($UTC)
-    all.unshift(change) if Time.at(now).to_date === Time.at(gameTime).to_date
+#     gameTime = Time.at(g.split(',')[0].to_i).getlocal($UTC)
+#     all.unshift(change) if Time.at(now).to_date === Time.at(gameTime).to_date
 
-    g_i += 1
-  end
+#     g_i += 1
+#   end
 
-  elo_ah = []
-  for i in 0...$names.length
-    unless $ignore.include? $names[i]
-      elo_ah << { name: $names[i], elo: elo[i], change: all.map { |a| a[i] }.inject(:+), games: total_games[i] } unless total_games[i] == 0
-    end
-  end
-  sorted = elo_ah.sort { |a, b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
-  [sorted, change]
-end
+#   elo_ah = []
+#   for i in 0...$names.length
+#     unless $ignore.include? $names[i]
+#       elo_ah << { name: $names[i], elo: elo[i], change: all.map { |a| a[i] }.inject(:+), games: total_games[i] } unless total_games[i] == 0
+#     end
+#   end
+#   sorted = elo_ah.sort { |a, b| b[:elo] <=> a[:elo] } # sort the shit out of it, ruby style
+#   [sorted, change]
+# end
 
-# function to display elo
-def get_elo(games)
-  elo_ah = get_elos(games)[0]
-  elo_s = ''
-  for i in 0...elo_ah.length
-    elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" unless $ignore.include? elo_ah[i][:name]
-  end
+# # function to display elo
+# def get_elo(games)
+#   elo_ah = get_elos(games)[0]
+#   elo_s = ''
+#   for i in 0...elo_ah.length
+#     elo_s += "#{elo_ah[i][:name].capitalize}: #{elo_ah[i][:elo]}\n" unless $ignore.include? elo_ah[i][:name]
+#   end
 
-  elo_s
-end
+#   elo_s
+# end
 
 def get_charts(name, games)
   chart_data = []
@@ -386,29 +384,252 @@ def players_in_game(game)
   players
 end
 
-# function to calculate stats breh
-def stats(content)
-  games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-  elo = get_elo(games)
-  avg = get_avg_scores(games)
+# dank helper function that returns an array of hashes from execute2 output
+def create_query_hash(array)
+  names = array.shift
+  rval = []
+  array.each do |r|
+    row = {}
+    names.each_with_index { |column, idx| row[column] = r[idx] }
+    rval << row
+  end
+  rval
+end
+
+# recalculate all the stats and populate the history stat tables
+def recalc
+  puts 'Calculating games played'
+  recalc_games_played
+  puts 'Calculating Elo'
+  recalc_elo
+  puts 'Calculating win rate'
+  recalc_win_rate
+end
+
+def recalc_games_played
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.execute 'SELECT DISTINCT PlayerID FROM Player' do |player_id|
+    db.execute 'UPDATE Player SET GamesPlayed = (
+                  SELECT COUNT(*) FROM Game
+                  WHERE PlayerID = :player_id
+                ) WHERE PlayerID = :player_id', player_id
+  end
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+def recalc_elo
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.execute 'UPDATE Player SET Elo = 1200'
+
+  db.execute 'DELETE FROM EloHistory'
+
+  win_weight = db.get_first_value 'SELECT Value FROM Config
+                                   WHERE Setting = "WinWeight"'
+  max_score = db.get_first_value 'SELECT Value FROM Config
+                                  WHERE Setting = "MaxScore"'
+  k_factor = db.get_first_value 'SELECT Value FROM Config
+                                 WHERE Setting = "KFactor"'
+
+  # temporary array of hashes to keep track of player elo
+  player_count = db.get_first_value 'SELECT COUNT(*) FROM Player'
+  elos = Array.new(player_count, 1200)
+
+  db.execute 'SELECT DISTINCT GameID FROM Game ORDER BY Timestamp' do |game_id|
+    game = create_query_hash(db.execute2('SELECT PlayerID, Score
+                                          FROM Game
+                                          WHERE GameID = :game_id
+                                          ORDER BY Score', game_id))
+
+    # calculate the elo change
+    if game.length == 2
+      rating_a = elos[game[0]['PlayerID'] - 1]
+      rating_b = elos[game[1]['PlayerID'] - 1]
+      team_a_score = game[0]['Score']
+      team_b_score = game[1]['Score']
+    elsif game.length == 4
+      rating_a = ((elos[game[0]['PlayerID'] - 1] + elos[game[1]['PlayerID'] - 1]) / 2).round
+      rating_b = ((elos[game[2]['PlayerID'] - 1] + elos[game[3]['PlayerID'] - 1]) / 2).round
+      team_a_score = game[0]['Score']
+      team_b_score = game[2]['Score']
+    else
+      # fuck trips
+      next
+    end
+
+    # elo math please never quiz me on this
+    expected_a = 1 / (1 + 10**((rating_b - rating_a) / 800.to_f))
+    expected_b = 1 / (1 + 10**((rating_a - rating_b) / 800.to_f))
+
+    outcome_a = team_a_score / (team_a_score + team_b_score).to_f
+    if outcome_a < 0.5
+      outcome_a **= win_weight
+      outcome_b = 1 - outcome_a
+    else
+      outcome_b = (1 - outcome_a)**win_weight
+      outcome_a = 1 - outcome_b
+    end
+
+    # divide elo change to be smaller if it wasn't a full game to 10
+    ratio = team_b_score / max_score.to_f
+
+    # calculate elo change
+    delta_a = (k_factor * (outcome_a - expected_a) * ratio).round
+    delta_b = (k_factor * (outcome_b - expected_b) * ratio).round
+
+    # insert into history table
+    game.each_with_index do |player, idx|
+      if game.length == 2
+        elos[player['PlayerID'] - 1] += idx < 1 ? delta_a : delta_b
+      elsif game.length == 4
+        elos[player['PlayerID'] - 1] += idx < 2 ? delta_a : delta_b
+      end
+      db.execute 'INSERT INTO EloHistory
+                  VALUES (:game_id, :player_id, :elo)',
+                 game_id, player['PlayerID'], elos[player['PlayerID'] - 1]
+    end
+  end
+
+  elos.each_with_index do |e, idx|
+    db.execute 'UPDATE Player SET Elo = :elo
+                WHERE PlayerID = :player_id;',
+               e, idx + 1
+  end
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+def recalc_win_rate
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.execute 'DELETE FROM WinRateHistory'
+
+  # temporary array of hashes to keep track of player games/wins
+  player_count = db.get_first_value 'SELECT COUNT(*) FROM Player'
+  players = Array.new(player_count, Hash.new)
+  players.map! do |h|
+    { :games => 0, :wins => 0 }
+  end
+
+  db.execute 'SELECT DISTINCT GameID FROM Game ORDER BY Timestamp' do |game_id|
+    game = create_query_hash(db.execute2('SELECT PlayerID, Score
+                                          FROM Game
+                                          WHERE GameID = :game_id
+                                          ORDER BY Score', game_id))
+
+    winning_score = game.max_by { |p| p['Score'] }['Score']
+
+    game.each do |player|
+      # PlayerID starts 1, so we are subtracting 1 to offset
+      players[player['PlayerID'] - 1][:games] += 1
+      if player['Score'] == winning_score
+        players[player['PlayerID'] - 1][:wins] += 1
+      end
+
+      win_rate = players[player['PlayerID'] - 1][:wins] /
+                 players[player['PlayerID'] - 1][:games].to_f
+      db.execute 'INSERT INTO WinRateHistory
+                  VALUES (:game_id, :player_id, :win_rate)',
+                 game_id, player['PlayerID'], win_rate
+    end
+  end
+
+  db.execute 'SELECT DISTINCT PlayerID FROM Player' do |player_id|
+    db.execute 'UPDATE Player SET WinRate = (
+                  SELECT w.WinRate FROM WinRateHistory w
+                  JOIN Game g USING (GameID)
+                  WHERE w.PlayerID = :player_id
+                  ORDER BY g.Timestamp DESC LIMIT 1
+                ) WHERE PlayerID = :player_id;', player_id
+  end
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# returns an array of active players
+# sorted by PlayerID
+# NOTE: index != PlayerID
+def get_names
+  db = SQLite3::Database.new 'foosey.db'
+  db.execute('SELECT DisplayName FROM Player
+              WHERE ACTIVE = 1').flatten
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# returns an array of elo/names
+def get_elos
+  db = SQLite3::Database.new 'foosey.db'
+  db.execute('SELECT DisplayName, Elo from Player
+              WHERE ACTIVE = 1 AND GamesPlayed != 0
+              ORDER BY Elo DESC')
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# returns an array of win rates
+# sorted by PlayerID
+# NOTE: index != PlayerID
+def get_win_rates
+  db = SQLite3::Database.new 'foosey.db'
+  db.execute('SELECT DisplayName, WinRate from Player
+              WHERE ACTIVE = 1 AND GamesPlayed != 0
+              ORDER BY WinRate DESC')
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# Return Slack-friendly stats output
+def slack_stats
+  elos = get_elos.map { |x| x.join(', ') }
+  win_rates = get_win_rates.map do |x|
+    name = x[0]
+    win_rate = format('%.1f%%', x[1] ? x[1] * 100 : 0)
+    "#{name}: #{win_rate}"
+  end
 
   stats = [
     fields:
     [
       {
-        title: 'Elo Rating:',
-        value: elo,
+        title: 'Elo Rating',
+        value: elos.join("\n"),
         short: true
       },
       {
-        title: 'Average Score:',
-        value: avg,
+        title: 'Win Rate',
+        value: win_rates.join("\n"),
         short: true
       }
     ]
   ]
 
-  make_response('*Here are all of the stats for your team:*', stats)
+  make_response('*Here are all the stats for your team:*', stats)
+end
+
+def admin?(slack_name)
+  db = SQLite3::Database.new 'foosey.db'
+  admin = db.get_first_value 'SELECT Admin from Player
+                      WHERE SlackName = :slack_name', slack_name
+  admin == 1
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
 end
 
 def history(player1, player2, content)
@@ -756,13 +977,8 @@ def dateTime(g, dateFormat, timeFormat)
   [date, time]
 end
 
-def log_game_from_slack(user_name, text, trigger_word)
+def slack(user_name, text, trigger_word)
   $app = false
-
-  # Get latest paste's content
-  content = File.read('games.csv')
-  $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
-  games = content.split("\n")[1..-1]
 
   # Clean up text and set args
   text ||= ''
@@ -776,11 +992,9 @@ def log_game_from_slack(user_name, text, trigger_word)
   if text.start_with? 'help'
     return help_message
   elsif text.start_with? 'stats'
-    return stats(content)
+    return slack_stats
   elsif text.start_with? 'predict'
     return predict(content, text['predict'.length..text.length].strip)
-  elsif text.start_with? 'easter'
-    return make_response($middle)
   elsif text.start_with? 'undo'
     return undo(content)
   elsif text.start_with? 'history'
@@ -788,13 +1002,17 @@ def log_game_from_slack(user_name, text, trigger_word)
   elsif text.start_with? 'record'
     return make_response('`foosey record` has been renamed `foosey history`')
   elsif text.start_with? 'add'
-    return succinct_help unless $admins.include? user_name
+    return succinct_help unless admin? user_name
     content = addUser(args[1], content)
     File.write('games.csv', content)
     return make_response('Player added!')
-  elsif text.start_with? 'update' and $admins.include? user_name
+  elsif text.start_with?('update') && admin?(user_name)
     update
-    return make_response("My name is foosey. You killed my father. Prepare to die.\nJust kidding, but that new code is too :dank:")
+    return make_response('My name is foosey. You killed my father. Prepare to die.\nJust kidding, but that new code is too :dank:')
+  elsif text.start_with?('recalc') && admin?(user_name)
+    puts 'Starting recalc...'
+    recalc
+    return slack_stats
   end
 
   # Verify data

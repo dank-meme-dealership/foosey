@@ -1,6 +1,5 @@
 # foosey files
-games.csv
-foosey.ini
+foosey.db
 
 *.gem
 *.rbc
