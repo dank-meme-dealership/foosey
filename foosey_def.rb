@@ -49,96 +49,216 @@ def succinct_help
   make_response(help)
 end
 
-def add_game(text, content, user_name)
-  # Add last game from slack input
-  now = Time.now.to_i
-  game = text.split(' ') # get the game information
-  i = 0
-  new_game = Array.new($names.length + 2, -1)
-  new_game[0] = now # set first column to timestamp
-  new_game[1] = "@#{user_name}" # set second column to slack username
-  while i < game.length
-    name_column = $names.find_index(game[i]) + 2 # get column of person's name
-    new_game[name_column] = game[i + 1].to_i # to_i should be safe here since we've verified input earlier
-    i += 2
-  end
-  max = new_game[2..-1].max # this is okay because new_game is an int[]
+# add a game to the database and update the history tables
+# outcome is hash containing key/value pairs where
+# key = player display name (what they'd be added as via slack/app)
+# value = score
+# it's a little wonky but we need to support games of any number of
+# players/score combinations, so i think it's best
+def add_game(outcome)
+  db = SQLite3::Database.new 'foosey.db'
 
-  lastGame = content.split("\n").pop.split(',')[2..-1].join(',')
-  lastGameUsername = content.split("\n").pop.split(',')[1]
-  thisGame = new_game[2..-1].join(',') # complicated way to join
-  thisGameJoined = new_game.join(',')
+  win_weight = db.get_first_value 'SELECT Value FROM Config
+                                   WHERE Setting = "WinWeight"'
+  max_score = db.get_first_value 'SELECT Value FROM Config
+                                  WHERE Setting = "MaxScore"'
+  k_factor = db.get_first_value 'SELECT Value FROM Config
+                                 WHERE Setting = "KFactor"'
 
-  content += "\n" + thisGameJoined # add this game to the paste content
+  # get unix time
+  timestamp = Time.now.to_i
+  # get next game id
+  game_id = 1 + db.get_first_value('SELECT GameID FROM Game
+                                    ORDER BY GameID DESC LIMIT 1')
 
-  # update game
-  File.write('games.csv', content)
-
-  # set up attachments
-  attach = []
-  players = players_in_game(thisGameJoined)
-  if players == 2 || players == 4
-    # if 2 players
-    if players == 2
-      # get record
-      record = record(game[0], game[2], content)
-    # if 4 players
-    else
-      # get record
-      team1 = []
-      team2 = []
-      i = 0
-      while i < game.length
-        if game[i + 1].to_i == max
-          team1 << game[i]
-        else
-          team2 << game[i]
-        end
-        i += 2
-      end
-      record = record(team1.join('&').to_s, team2.join('&').to_s, content)
-    end
-
-    # add them to the attachments
-    attach << get_change(content, new_game[2..-1])
-    attach << record[0]
+  # insert new game into Game table
+  outcome.each do |name, score|
+    player_id = db.get_first_value 'SELECT PlayerID FROM Player
+                                    WHERE DisplayName = :name
+                                    COLLATE NOCASE', name
+    db.execute 'INSERT INTO Game
+                VALUES (:game_id, :player_id, :score, :timestamp)',
+               game_id, player_id, score, timestamp
   end
 
-  message_slack(new_game[2..-1], text, attach) if $app
+  # at this point we are done if the game was not 2 or 4 people
+  return unless outcome.length == 2 || outcome.length == 4
 
-  if lastGame != thisGame
-    make_response('Game added!', attach)
+  # calculate elo change
+  # this code is mostly copied from recalc_elo
+  # we could have another method, but i'm not really sure what the purpose
+  # of that method would be apart from preventing copied code
+  # maybe update_elo_by_game(game_id) ?
+  game = create_query_hash(db.execute2('SELECT p.PlayerID, g.Score, p.Elo
+                                        FROM Game g
+                                        JOIN Player p
+                                        USING (PlayerID)
+                                        WHERE g.GameID = :game_id
+                                        ORDER BY g.Score;', game_id))
+
+  # calculate the elo change
+  if game.length == 2
+    rating_a = game[0]['Elo']
+    rating_b = game[1]['Elo']
+    score_a = game[0]['Score']
+    score_b = game[1]['Score']
+  elsif game.length == 4
+    rating_a = ((game[0]['Elo'] + game[1]['Elo']) / 2).round
+    rating_b = ((game[2]['Elo'] + game[3]['Elo']) / 2).round
+    score_a = game[0]['Score']
+    score_b = game[2]['Score']
   else
-    make_response("Game added!\nThis game has the same score as the last game that was added. If you added this game in error you can undo this action.", attach)
+    return
   end
-end
 
-def get_change(content, newGame)
-  games = content.split("\n")[1..-1]
+  delta_a, delta_b = calc_elo_delta(rating_a, score_a, rating_b, score_b,
+                                    k_factor, win_weight, max_score)
 
-  elos, change = get_elos(games)
-
-  fields = []
-  newGame.each_index do |i|
-    if newGame[i] != -1
-      person = elos.select { |person| person[:name].downcase == $names[i] }[0]
-      elo = person[:elo]
-      elo_change = change[i].to_i >= 0 ? "+#{change[i]}" : change[i]
-      fields << {
-        title: $names[i].capitalize,
-        value: "#{elo} (#{elo_change})",
-        short: true
-      }
+  # update history and player tables
+  game.each_with_index do |player, idx|
+    # elohistory
+    if game.length == 2
+      player['Elo'] += idx < 1 ? delta_a : delta_b
+    elsif game.length == 4
+      player['Elo'] += idx < 2 ? delta_a : delta_b
     end
+    db.execute 'INSERT INTO EloHistory
+                VALUES (:game_id, :player_id, :elo)',
+               game_id, player['PlayerID'], player['Elo']
+
+    games_played = db.get_first_value 'SELECT COUNT(*) FROM Game
+                                       WHERE PlayerID = :player_id',
+                                      player['PlayerID']
+    wins = db.get_first_value 'SELECT COUNT(*) FROM (
+                                 SELECT PlayerID, MAX(Score)
+                                 FROM Game
+                                 GROUP BY GameID
+                               ) WHERE PlayerID = :player_id',
+                              player['PlayerID']
+
+    # player
+    db.execute 'UPDATE Player
+                SET Elo = :elo, GamesPlayed = :games_played,
+                WinRate = :win_rate
+                WHERE PlayerID = :player_id',
+               player['Elo'], games_played, wins / games_played.to_f,
+               player['PlayerID']
   end
-
-  change = {
-    pretext: "Elos after that game:",
-    fields: fields
-  }
-
-  change
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
 end
+
+# returns the last elo change player with id player_id has seen over n games
+# that is, the delta from their last n played games
+def get_last_elo_change(player_id, n = 1)
+  db = SQLite3::Database.new 'foosey.db'
+
+  elos = db.execute('SELECT e.Elo FROM EloHistory e
+                     JOIN Game g
+                     USING (GameID, PlayerID)
+                     WHERE e.PlayerID = :player_id
+                     ORDER BY g.Timestamp DESC
+                     LIMIT :n', player_id, n + 1).flatten
+
+  elos.last - elos.first
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# def add_game(text, content, user_name)
+#   # Add last game from slack input
+#   now = Time.now.to_i
+#   game = text.split(' ') # get the game information
+#   i = 0
+#   new_game = Array.new($names.length + 2, -1)
+#   new_game[0] = now # set first column to timestamp
+#   new_game[1] = "@#{user_name}" # set second column to slack username
+#   while i < game.length
+#     name_column = $names.find_index(game[i]) + 2 # get column of person's name
+#     new_game[name_column] = game[i + 1].to_i # to_i should be safe here since we've verified input earlier
+#     i += 2
+#   end
+#   max = new_game[2..-1].max # this is okay because new_game is an int[]
+
+#   lastGame = content.split("\n").pop.split(',')[2..-1].join(',')
+#   lastGameUsername = content.split("\n").pop.split(',')[1]
+#   thisGame = new_game[2..-1].join(',') # complicated way to join
+#   thisGameJoined = new_game.join(',')
+
+#   content += "\n" + thisGameJoined # add this game to the paste content
+
+#   # update game
+#   File.write('games.csv', content)
+
+#   # set up attachments
+#   attach = []
+#   players = players_in_game(thisGameJoined)
+#   if players == 2 || players == 4
+#     # if 2 players
+#     if players == 2
+#       # get record
+#       record = record(game[0], game[2], content)
+#     # if 4 players
+#     else
+#       # get record
+#       team1 = []
+#       team2 = []
+#       i = 0
+#       while i < game.length
+#         if game[i + 1].to_i == max
+#           team1 << game[i]
+#         else
+#           team2 << game[i]
+#         end
+#         i += 2
+#       end
+#       record = record(team1.join('&').to_s, team2.join('&').to_s, content)
+#     end
+
+#     # add them to the attachments
+#     attach << get_change(content, new_game[2..-1])
+#     attach << record[0]
+#   end
+
+#   message_slack(new_game[2..-1], text, attach) if $app
+
+#   if lastGame != thisGame
+#     make_response('Game added!', attach)
+#   else
+#     make_response("Game added!\nThis game has the same score as the last game that was added. If you added this game in error you can undo this action.", attach)
+#   end
+# end
+
+# def get_change(content, newGame)
+#   games = content.split("\n")[1..-1]
+
+#   elos, change = get_elos(games)
+
+#   fields = []
+#   newGame.each_index do |i|
+#     if newGame[i] != -1
+#       person = elos.select { |person| person[:name].downcase == $names[i] }[0]
+#       elo = person[:elo]
+#       elo_change = change[i].to_i >= 0 ? "+#{change[i]}" : change[i]
+#       fields << {
+#         title: $names[i].capitalize,
+#         value: "#{elo} (#{elo_change})",
+#         short: true
+#       }
+#     end
+#   end
+
+#   change = {
+#     pretext: "Elos after that game:",
+#     fields: fields
+#   }
+
+#   change
+# end
 
 # function to calculate average scores
 # def get_avg_scores(games)
@@ -330,7 +450,7 @@ def get_charts(name, games)
     date, time = dateTime(g, '%m/%d', '%H:%M')
     elo, total_games, change = calculate_elo_change(g, elo, total_games)
     g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
-    max = g_a.max {|a,b| a.to_i <=> b.to_i }
+    max = g_a.max { |a, b| a.to_i <=> b.to_i }
     total_wins += 1 if g_a[index] == max
     if g_a[index] != '-1'
       total_score += g_a[index].to_i
@@ -439,6 +559,7 @@ def recalc_elo
   player_count = db.get_first_value 'SELECT COUNT(*) FROM Player'
   elos = Array.new(player_count, 1200)
 
+  # for each game
   db.execute 'SELECT DISTINCT GameID FROM Game ORDER BY Timestamp' do |game_id|
     game = create_query_hash(db.execute2('SELECT PlayerID, Score
                                           FROM Game
@@ -449,37 +570,20 @@ def recalc_elo
     if game.length == 2
       rating_a = elos[game[0]['PlayerID'] - 1]
       rating_b = elos[game[1]['PlayerID'] - 1]
-      team_a_score = game[0]['Score']
-      team_b_score = game[1]['Score']
+      score_a = game[0]['Score']
+      score_b = game[1]['Score']
     elsif game.length == 4
       rating_a = ((elos[game[0]['PlayerID'] - 1] + elos[game[1]['PlayerID'] - 1]) / 2).round
       rating_b = ((elos[game[2]['PlayerID'] - 1] + elos[game[3]['PlayerID'] - 1]) / 2).round
-      team_a_score = game[0]['Score']
-      team_b_score = game[2]['Score']
+      score_a = game[0]['Score']
+      score_b = game[2]['Score']
     else
       # fuck trips
       next
     end
 
-    # elo math please never quiz me on this
-    expected_a = 1 / (1 + 10**((rating_b - rating_a) / 800.to_f))
-    expected_b = 1 / (1 + 10**((rating_a - rating_b) / 800.to_f))
-
-    outcome_a = team_a_score / (team_a_score + team_b_score).to_f
-    if outcome_a < 0.5
-      outcome_a **= win_weight
-      outcome_b = 1 - outcome_a
-    else
-      outcome_b = (1 - outcome_a)**win_weight
-      outcome_a = 1 - outcome_b
-    end
-
-    # divide elo change to be smaller if it wasn't a full game to 10
-    ratio = team_b_score / max_score.to_f
-
-    # calculate elo change
-    delta_a = (k_factor * (outcome_a - expected_a) * ratio).round
-    delta_b = (k_factor * (outcome_b - expected_b) * ratio).round
+    delta_a, delta_b = calc_elo_delta(rating_a, score_a, rating_b, score_b,
+                                      k_factor, win_weight, max_score)
 
     # insert into history table
     game.each_with_index do |player, idx|
@@ -505,6 +609,33 @@ ensure
   db.close if db
 end
 
+# returns the respective elo deltas given two ratings and two scores
+def calc_elo_delta(rating_a, score_a, rating_b, score_b,
+                   k_factor, win_weight, max_score)
+  # elo math please never quiz me on this
+  expected_a = 1 / (1 + 10**((rating_b - rating_a) / 800.to_f))
+  expected_b = 1 / (1 + 10**((rating_a - rating_b) / 800.to_f))
+
+  outcome_a = score_a / (score_a + score_b).to_f
+  if outcome_a < 0.5
+    # a won
+    outcome_a **= win_weight
+    outcome_b = 1 - outcome_a
+  else
+    # b won
+    outcome_b = (1 - outcome_a)**win_weight
+    outcome_a = 1 - outcome_b
+  end
+
+  # divide elo change to be smaller if it wasn't a full game to 10
+  ratio = [score_a, score_b].max / max_score.to_f
+
+  # calculate elo change
+  delta_a = (k_factor * (outcome_a - expected_a) * ratio).round
+  delta_b = (k_factor * (outcome_b - expected_b) * ratio).round
+  [delta_a, delta_b]
+end
+
 def recalc_win_rate
   db = SQLite3::Database.new 'foosey.db'
 
@@ -512,9 +643,9 @@ def recalc_win_rate
 
   # temporary array of hashes to keep track of player games/wins
   player_count = db.get_first_value 'SELECT COUNT(*) FROM Player'
-  players = Array.new(player_count, Hash.new)
-  players.map! do |h|
-    { :games => 0, :wins => 0 }
+  players = Array.new(player_count, {})
+  players.map! do |_h|
+    { games: 0, wins: 0 }
   end
 
   db.execute 'SELECT DISTINCT GameID FROM Game ORDER BY Timestamp' do |game_id|
@@ -621,10 +752,75 @@ def slack_stats
   make_response('*Here are all the stats for your team:*', stats)
 end
 
+def slack_add_game(text)
+  # nice regex to match basic score input
+  return help_message unless text =~ /\A(\s*\w+\s+\d+\s*){2,}\z/
+
+  # grittier checking
+  db = SQLite3::Database.new 'foosey.db'
+
+  max_score = db.get_first_value 'SELECT Value FROM Config
+                               WHERE Setting = "MaxScore"'
+
+  players = db.execute('SELECT DisplayName FROM Player').flatten
+
+  players.map!(&:downcase)
+
+  text_split = text.split(' ').each_slice(2).to_a
+
+  # verify and build outcome hash
+  outcome = {}
+  text_split.each do |p|
+    unless players.include? p.first.downcase
+      return make_response("Unknown player: #{p.first}")
+    end
+
+    unless p.last.to_i >= 0 && p.last.to_i <= max_score
+      return make_response("Invalid score: #{p.last}")
+    end
+
+    outcome[p.first] = p.last.to_i
+  end
+
+  # add the game to the database
+  add_game(outcome)
+
+  unless text_split.length == 2 || text_split.length == 4
+    return make_response('Game added!')
+  end
+
+  # calculate deltas for each player and generate slack-friendly field hashes
+  elo_deltas = []
+  text_split.each do |p|
+    player_id = db.get_first_value 'SELECT PlayerID FROM Player
+                                    WHERE DisplayName = :name
+                                    COLLATE NOCASE', p.first
+    elo = db.get_first_value 'SELECT Elo FROM Player
+                              WHERE PlayerID = :player_id', player_id
+    delta = get_last_elo_change(player_id)
+
+    elo_deltas << {
+      title: p.first,
+      value: "#{elo} (#{'+' if delta > 0}#{delta})",
+      short: true
+    }
+  end
+  attachments = [
+    pretext: 'Elo change after that game:',
+    fields: elo_deltas
+  ]
+  make_response('Game added!', attachments)
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
 def admin?(slack_name)
   db = SQLite3::Database.new 'foosey.db'
   admin = db.get_first_value 'SELECT Admin from Player
-                      WHERE SlackName = :slack_name', slack_name
+                              WHERE SlackName = :slack_name
+                              COLLATE NOCASE', slack_name
   admin == 1
 rescue SQLite3::Exception => e
   puts e
@@ -711,7 +907,7 @@ end
 def getTeamNamesAndScores(g, change)
   teams = []
   game = g.strip.split(',')[2..-1]
-  max = game.max {|a,b| a.to_i <=> b.to_i }
+  max = game.max { |a, b| a.to_i <=> b.to_i }
   i = 0
 
   # if 2 players
@@ -938,7 +1134,7 @@ def total(games)
   total_games = Array.new($names.length, 0)
   for g in games.each # for each player
     g_a = g.strip.split(',')[2..-1] # turn the game into an array of scores
-    max = g_a.max {|a,b| a.to_i <=> b.to_i }
+    max = g_a.max { |a, b| a.to_i <=> b.to_i }
     for i in 0..g_a.length - 1 # for each player
       # the +1s in here are to prevent off-by-ones because names starts at 0 and scores start at 1 because of timestamp
       total_wins[i] += 1 if g_a[i].to_i == max.to_i # if they won, increment wins
@@ -990,43 +1186,33 @@ def slack(user_name, text, trigger_word)
 
   # Cases other than adding a game
   if text.start_with? 'help'
-    return help_message
+    help_message
   elsif text.start_with? 'stats'
-    return slack_stats
+    slack_stats
   elsif text.start_with? 'predict'
-    return predict(content, text['predict'.length..text.length].strip)
+    predict(content, text['predict'.length..text.length].strip)
   elsif text.start_with? 'undo'
-    return undo(content)
+    undo(content)
   elsif text.start_with? 'history'
-    return record_safe(args[1], args[2], content)
+    record_safe(args[1], args[2], content)
   elsif text.start_with? 'record'
-    return make_response('`foosey record` has been renamed `foosey history`')
+    make_response('`foosey record` has been renamed `foosey history`')
   elsif text.start_with? 'add'
     return succinct_help unless admin? user_name
     content = addUser(args[1], content)
     File.write('games.csv', content)
-    return make_response('Player added!')
+    make_response('Player added!')
   elsif text.start_with?('update') && admin?(user_name)
     update
-    return make_response('My name is foosey. You killed my father. Prepare to die.\nJust kidding, but that new code is too :dank:')
+    make_response('My name is foosey. You killed my father. Prepare to die.\nJust kidding, but that new code is too :dank:')
   elsif text.start_with?('recalc') && admin?(user_name)
     puts 'Starting recalc...'
     recalc
-    return slack_stats
+    slack_stats
+  else
+    # add game
+    slack_add_game(text)
   end
-
-  # Verify data
-  result = verify_input(text)
-  if result != 'good'
-    if result == 'help'
-      return succinct_help
-    else
-      return make_response(result)
-    end
-  end
-
-  # add game
-  add_game(text, content, user_name)
 end
 
 def log_game_from_app(user_name, text)

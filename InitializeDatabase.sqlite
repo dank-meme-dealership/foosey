@@ -16,7 +16,7 @@ Game(
 CREATE TABLE IF NOT EXISTS
 Player(
   PlayerID INTEGER PRIMARY KEY,
-  DisplayName TEXT,
+  DisplayName TEXT UNIQUE,
   SlackName TEXT,
   Admin INTEGER DEFAULT 0,
   Active INTEGER DEFAULT 1,
