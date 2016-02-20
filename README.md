@@ -27,3 +27,6 @@ admins = brik,matttt
 # these players don't show up on leaderboards but their history is still known
 ignore = daniel,jody,josh
 ```
+
+## API
+API documentation can be found [here](API.md).
