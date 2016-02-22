@@ -758,7 +758,7 @@ def log_game_from_slack(user_name, text, trigger_word)
   elsif text.start_with? 'undo'
     return undo(content)
   elsif text.start_with? 'history'
-    return record_safe(args[1], args[2], content)
+    return record_safe(args[2], args[3], content)
   elsif text.start_with? 'record'
     return make_response('`foosey record` has been renamed `foosey history`')
   elsif text.start_with? 'add'
