@@ -94,7 +94,7 @@ def add_game(outcome)
                                         JOIN Player p
                                         USING (PlayerID)
                                         WHERE g.GameID = :game_id
-                                        ORDER BY g.Score;', game_id))
+                                        ORDER BY g.Score', game_id))
 
   # calculate the elo change
   if game.length == 2
@@ -1059,20 +1059,99 @@ def predict(content, cmd)
   make_response('Predicted score: To close to tell!')
 end
 
-# function to undo the last move
-def undo(content)
-  games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-  last = games.pop.split(',')[1..-1]
-  username = last.shift
-  response = "Removed the game added by #{username}:"
-  i = 0
-  content = content.split("\n")[0...-1].join("\n")
-  for g in last.each
-    response += "\n#{$names[i].capitalize}: #{g}" if g != '-1'
-    i += 1
+# takes a game_id and produces a nice string of the game results
+# useful for slack
+def game_to_s(game_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  game = create_query_hash(db.execute2('SELECT p.DisplayName, g.Score
+                                        FROM Game g
+                                        JOIN Player p
+                                        USING (PlayerID)
+                                        WHERE g.GameID = :game_id
+                                        ORDER BY g.Score DESC', game_id))
+
+  s = ""
+  game.each do |player|
+    s << "#{player['DisplayName']} #{player['Score']} "
   end
-  File.write('games.csv', content)
-  make_response(response)
+
+  s.strip
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# remove a game by game_id
+def remove_game(game_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  # get players from game
+  players = db.execute('SELECT PlayerID FROM Game
+                        WHERE GameID = :game_id', game_id).flatten
+
+  # remove the game
+  db.execute 'DELETE FROM Game
+              WHERE GameID = :game_id', game_id
+
+  db.execute 'DELETE FROM EloHistory
+              WHERE GameID = :game_id', game_id
+
+  db.execute 'DELETE FROM WinRateHistory
+              WHERE GameID = :game_id', game_id
+
+
+  # update respective player entries
+  players.each do |p|
+    db.execute 'UPDATE Player SET Elo = (
+                  SELECT Elo FROM EloHistory e
+                  JOIN Game g
+                  USING (GameID)
+                  WHERE g.PlayerID = :player_id
+                  ORDER BY g.Timestamp DESC
+                  LIMIT 1
+                ) WHERE PlayerID = :player_id', p
+
+    db.execute 'UPDATE Player SET WinRate = (
+                  SELECT WinRate FROM WinRateHistory w
+                  JOIN Game g
+                  USING (GameID)
+                  WHERE g.PlayerID = :player_id
+                  ORDER BY g.Timestamp DESC
+                  LIMIT 1
+                ) WHERE PlayerID = :player_id', p
+
+    db.execute 'UPDATE Player SET GamesPlayer = (
+                  SELECT COUNT(*) FROM Game
+                  WHERE PlayerID = :player_id
+                ) WHERE PlayerID = :player_id', p
+  end
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# undo the last game via slack
+def slack_undo
+  db = SQLite3::Database.new 'foosey.db'
+
+  game_id = db.get_first_value 'SELECT GameID FROM Game
+                                ORDER BY Timestamp DESC
+                                LIMIT 1'
+
+  # get the game string
+  s = game_to_s game_id
+
+  # remove the game
+  remove_game game_id
+
+  make_response("Game removed: #{s}")
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
 end
 
 # function to remove specific game
@@ -1192,7 +1271,7 @@ def slack(user_name, text, trigger_word)
   elsif text.start_with? 'predict'
     predict(content, text['predict'.length..text.length].strip)
   elsif text.start_with? 'undo'
-    undo(content)
+    slack_undo
   elsif text.start_with? 'history'
     record_safe(args[1], args[2], content)
   elsif text.start_with? 'record'
