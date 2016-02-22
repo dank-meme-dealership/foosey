@@ -763,7 +763,7 @@ def log_game_from_slack(user_name, text, trigger_word)
     return make_response('`foosey record` has been renamed `foosey history`')
   elsif text.start_with? 'add'
     return succinct_help unless $admins.include? user_name
-    content = addUser(args[1], content)
+    content = addUser(args[2], content)
     File.write('games.csv', content)
     return make_response('Player added!')
   elsif text.start_with? 'update' and $admins.include? user_name
