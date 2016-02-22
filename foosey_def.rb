@@ -162,7 +162,7 @@ def get_last_elo_change(player_id, n = 1)
                      ORDER BY g.Timestamp DESC
                      LIMIT :n', player_id, n + 1).flatten
 
-  elos.last - elos.first
+  elos.first - elos.last
 rescue SQLite3::Exception => e
   puts e
 ensure
@@ -715,9 +715,9 @@ end
 # NOTE: index != PlayerID
 def get_win_rates
   db = SQLite3::Database.new 'foosey.db'
-  db.execute('SELECT DisplayName, WinRate from Player
+  db.execute 'SELECT DisplayName, WinRate from Player
               WHERE ACTIVE = 1 AND GamesPlayed != 0
-              ORDER BY WinRate DESC')
+              ORDER BY WinRate DESC'
 rescue SQLite3::Exception => e
   puts e
 ensure

@@ -24,7 +24,15 @@ load 'foosey_def.rb'
 
 # initialize the foosey database if it doesn't exist
 unless File.exist?('foosey.db')
-  system 'sqlite3 foosey.db < InitializeDatabase.sqlite'
+  begin
+    sql = File.read('InitializeDatabase.sqlite')
+    db = SQLite3::Database.new 'foosey.db'
+    db.execute_batch sql
+  rescue SQLite3::Exception => e
+    puts e
+  ensure
+    db.close if db
+  end
 end
 
 # FOOS
