@@ -169,6 +169,18 @@ ensure
   db.close if db
 end
 
+# adds a player to the database
+def add_player(name, slack_name = '')
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.execute 'INSERT INTO Player (DisplayName, SlackName)
+              VALUES (:name, :slack_name)', name, slack_name
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
 # def add_game(text, content, user_name)
 #   # Add last game from slack input
 #   now = Time.now.to_i
@@ -1084,7 +1096,7 @@ ensure
 end
 
 # remove a game by game_id
-def remove_game(game_id)
+def remove_game(game_id, recalc = true)
   db = SQLite3::Database.new 'foosey.db'
 
   # get players from game
@@ -1101,31 +1113,7 @@ def remove_game(game_id)
   db.execute 'DELETE FROM WinRateHistory
               WHERE GameID = :game_id', game_id
 
-
-  # update respective player entries
-  players.each do |p|
-    db.execute 'UPDATE Player SET Elo = (
-                  SELECT Elo FROM EloHistory e
-                  JOIN Game g
-                  USING (GameID)
-                  WHERE g.PlayerID = :player_id
-                  ORDER BY g.Timestamp DESC
-                  LIMIT 1
-                ) WHERE PlayerID = :player_id', p
-
-    db.execute 'UPDATE Player SET WinRate = (
-                  SELECT WinRate FROM WinRateHistory w
-                  JOIN Game g
-                  USING (GameID)
-                  WHERE g.PlayerID = :player_id
-                  ORDER BY g.Timestamp DESC
-                  LIMIT 1
-                ) WHERE PlayerID = :player_id', p
-
-    db.execute 'UPDATE Player SET GamesPlayer = (
-                  SELECT COUNT(*) FROM Game
-                  WHERE PlayerID = :player_id
-                ) WHERE PlayerID = :player_id', p
+  recalc if recalc
   end
 rescue SQLite3::Exception => e
   puts e
@@ -1145,7 +1133,34 @@ def slack_undo
   s = game_to_s game_id
 
   # remove the game
-  remove_game game_id
+  # don't recalc
+  remove_game game_id, false
+
+  # update respective player entries
+  # this is faster than recalc since we just have to set to the last thing
+  players.each do |p|
+    db.execute 'UPDATE Player SET Elo = (
+                  SELECT Elo FROM EloHistory e
+                  JOIN Game g
+                  USING (GameID)
+                  WHERE g.PlayerID = :player_id
+                  ORDER BY g.Timestamp DESC
+                  LIMIT 1
+                ) WHERE PlayerID = :player_id', p
+
+    db.execute 'UPDATE Player SET WinRate = (
+                  SELECT WinRate FROM WinRateHistory w
+                  JOIN Game g
+                  USING (GameID)
+                  WHERE g.PlayerID = :player_id
+                  ORDER BY g.Timestamp DESC
+                  LIMIT 1
+                ) WHERE PlayerID = :player_id', p
+
+    db.execute 'UPDATE Player SET GamesPlayed = (
+                  SELECT COUNT(*) FROM Game
+                  WHERE PlayerID = :player_id
+                ) WHERE PlayerID = :player_id', p
 
   make_response("Game removed: #{s}")
 rescue SQLite3::Exception => e
@@ -1255,36 +1270,38 @@ end
 def slack(user_name, text, trigger_word)
   $app = false
 
-  # Clean up text and set args
+  # Clean up text
   text ||= ''
-  text = text.downcase.delete(':')
-  args = text.split(' ')
+  text = text.downcase.delete ':' # emoji support
 
   # Remove 'foosey' from the beginning of the text
   text = text[trigger_word.length..text.length].strip if trigger_word
 
-  # Cases other than adding a game
-  if text.start_with? 'help'
+  # set args
+  args = text.split(' ')
+
+  # case for command
+  case args[0]
+  when 'help'
     help_message
-  elsif text.start_with? 'stats'
+  when 'stats'
     slack_stats
-  elsif text.start_with? 'predict'
-    predict(content, text['predict'.length..text.length].strip)
-  elsif text.start_with? 'undo'
+  when 'predict'
+    # NYI
+  when 'undo'
     slack_undo
-  elsif text.start_with? 'history'
-    record_safe(args[1], args[2], content)
-  elsif text.start_with? 'record'
-    make_response('`foosey record` has been renamed `foosey history`')
-  elsif text.start_with? 'add'
+  when 'history'
+    # NYI
+  when 'add'
     return succinct_help unless admin? user_name
-    content = addUser(args[1], content)
-    File.write('games.csv', content)
+    add_player(args[1], args[2])
     make_response('Player added!')
-  elsif text.start_with?('update') && admin?(user_name)
+  when 'update'
+    return succinct_help unless admin? user_name
     update
     make_response('My name is foosey. You killed my father. Prepare to die.\nJust kidding, but that new code is too :dank:')
-  elsif text.start_with?('recalc') && admin?(user_name)
+  when 'recalc'
+    return succinct_help unless admin?(user_name)
     puts 'Starting recalc...'
     recalc
     slack_stats
