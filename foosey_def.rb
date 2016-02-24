@@ -856,41 +856,85 @@ ensure
   db.close if db
 end
 
-def history(player1, player2, content)
-  if player1.include? '&'
-    team1 = player1.split('&')
-    team2 = player2.split('&')
-    p1Index = $names.find_index(team1[0])
-    p2Index = $names.find_index(team1[1])
-    p3Index = $names.find_index(team2[0])
-    p4Index = $names.find_index(team2[1])
-    player1 = "#{team1[0].capitalize}&#{team1[1].capitalize}"
-    player2 = "#{team2[0].capitalize}&#{team2[1].capitalize}"
-    history4 = true
-  else
-    p1Index = $names.find_index(player1)
-    p2Index = $names.find_index(player2)
-  end
-  games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
-  text = ''
-  for g in games.each
-    thisGame = g.split(',')
-    local = Time.at(thisGame.shift.to_i).getlocal($UTC)
-    date = local.strftime('%m/%d/%Y')
-    name = thisGame.shift
-    numPlayers = players_in_game(g)
-    if numPlayers == 2 && thisGame[p1Index] != '-1' && thisGame[p2Index] != '-1'
-      text = "#{date} -\t#{player1.capitalize}: #{thisGame[p1Index]}\t#{player2.capitalize}: #{thisGame[p2Index]}\n" + text
-    elsif history4 && numPlayers == 4 && thisGame[p1Index] != '-1' && thisGame[p2Index] != '-1' && thisGame[p3Index] != '-1' && thisGame[p4Index] != '-1'
-      text = "#{date} -\t#{player1}: #{thisGame[p1Index]}\t#{player2}: #{thisGame[p3Index]}\n" + text
-    end
-  end
-  history = [{
-    pretext: "Full game history between #{player1.capitalize} and #{player2.capitalize}:",
-    text: text
-  }]
-  history
+def slack_history(player1, player2)
+  # check the players
+  return make_response("Invalid player: #{player1}") unless player_exists? player1
+  return make_response("Invalid player: #{player2}") unless player_exists? player2
+
+  
 end
+
+# returns the id of a player, given their display name
+def id(name)
+  db = SQLite3::Database.new 'foosey.db'
+
+  # return id
+  db.get_first_value 'SELECT PlayerID FROM Player
+                      WHERE DisplayName = :name', name
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# returns an array of game_ids involving both only players
+def games(player1_id, player2_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  # iterate through all game_ids
+  db.execute('SELECT GameID
+              FROM (
+                  SELECT GameID FROM Game 
+                  WHERE PlayerID IN (:player1_id, :player2_id)
+                  GROUP BY GameID HAVING COUNT(*) = 2
+              ) AS T1
+              JOIN (
+                  SELECT GameID FROM Game
+                  GROUP BY GameID
+                  HAVING COUNT(*) = 2
+              ) AS T2
+              USING (GameID);', player1_id, player2_id).flatten
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# def history(player1, player2, content)
+#   if player1.include? '&'
+#     team1 = player1.split('&')
+#     team2 = player2.split('&')
+#     p1Index = $names.find_index(team1[0])
+#     p2Index = $names.find_index(team1[1])
+#     p3Index = $names.find_index(team2[0])
+#     p4Index = $names.find_index(team2[1])
+#     player1 = "#{team1[0].capitalize}&#{team1[1].capitalize}"
+#     player2 = "#{team2[0].capitalize}&#{team2[1].capitalize}"
+#     history4 = true
+#   else
+#     p1Index = $names.find_index(player1)
+#     p2Index = $names.find_index(player2)
+#   end
+#   games = content.split("\n")[1..-1] # convert all games in csv to array, one game per index
+#   text = ''
+#   for g in games.each
+#     thisGame = g.split(',')
+#     local = Time.at(thisGame.shift.to_i).getlocal($UTC)
+#     date = local.strftime('%m/%d/%Y')
+#     name = thisGame.shift
+#     numPlayers = players_in_game(g)
+#     if numPlayers == 2 && thisGame[p1Index] != '-1' && thisGame[p2Index] != '-1'
+#       text = "#{date} -\t#{player1.capitalize}: #{thisGame[p1Index]}\t#{player2.capitalize}: #{thisGame[p2Index]}\n" + text
+#     elsif history4 && numPlayers == 4 && thisGame[p1Index] != '-1' && thisGame[p2Index] != '-1' && thisGame[p3Index] != '-1' && thisGame[p4Index] != '-1'
+#       text = "#{date} -\t#{player1}: #{thisGame[p1Index]}\t#{player2}: #{thisGame[p3Index]}\n" + text
+#     end
+#   end
+#   history = [{
+#     pretext: "Full game history between #{player1.capitalize} and #{player2.capitalize}:",
+#     text: text
+#   }]
+#   history
+# end
 
 # get a set number of games as json
 # start is the index to start at, starting with the most recent game
