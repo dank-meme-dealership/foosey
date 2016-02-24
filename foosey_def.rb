@@ -740,11 +740,13 @@ def log_game_from_slack(user_name, text, trigger_word)
 
   # Clean up text and set args
   text ||= ''
-  text = text.downcase.delete(':')
-  args = text.split(' ')
+  text = text.downcase.delete ':' # emoji support
 
   # Remove 'foosey' from the beginning of the text
   text = text[trigger_word.length..text.length].strip if trigger_word
+
+  # set args
+  args = text.split ' '
 
   # Cases other than adding a game
   if text.start_with? 'help'
@@ -758,12 +760,12 @@ def log_game_from_slack(user_name, text, trigger_word)
   elsif text.start_with? 'undo'
     return undo(content)
   elsif text.start_with? 'history'
-    return record_safe(args[2], args[3], content)
+    return record_safe(args[1], args[2], content)
   elsif text.start_with? 'record'
     return make_response('`foosey record` has been renamed `foosey history`')
   elsif text.start_with? 'add'
     return succinct_help unless $admins.include? user_name
-    content = addUser(args[2], content)
+    content = addUser(args[1], content)
     File.write('games.csv', content)
     return make_response('Player added!')
   elsif text.start_with? 'update' and $admins.include? user_name
