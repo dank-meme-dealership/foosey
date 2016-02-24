@@ -840,6 +840,22 @@ ensure
   db.close if db
 end
 
+# returns true if a player with DisplayName name is in the database
+# false otherwise
+def player_exists?(name)
+  db = SQLite3::Database.new 'foosey.db'
+
+  player = db.get_first_value 'SELECT * from Player
+                               WHERE DisplayName = :name
+                               COLLATE NOCASE', name
+
+  true if player
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
 def history(player1, player2, content)
   if player1.include? '&'
     team1 = player1.split('&')
