@@ -136,15 +136,18 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 
 		// load from server
 		FooseyService.players().then(function (response)
-    { 
-    	// only overwrite if they haven't selected one yet
-    	if (noneSelected())
-    	{
-    		$scope.players = response.data.players;
-    	}
+    	{ 
+	    	// only overwrite if they haven't selected one yet
+	    	if (noneSelected())
+	    	{
+	    		$scope.players = response.data.players;
+	    		$scope.players.sort(function(a, b){
+	    			return a.name.localeCompare(b.name);
+	    		});
+	    	}
 
-    	localStorage.setObject('players', response.data.players);
-  	});
+	    	localStorage.setObject('players', response.data.players);
+	  	});
 	}
 
 	// return true if none of the players have been selected yet
