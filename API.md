@@ -25,13 +25,13 @@ This will return information about player with ID `{id}`.
 
 ```
 {
-    playerID: 1,
-    displayName: "Matt"
-    elo: 1200,
-    winrate: .8792,
-    totalGames: 273
-    isAdmin: true,
-    isActive: false
+    "playerID": 1,
+    "displayName": "Matt",
+    "elo": 1200,
+    "winrate": 0.8792,
+    "totalGames": 273,
+    "isAdmin": true,
+    "isActive": false
 }
 ```
 
@@ -87,28 +87,34 @@ This will return information about a game with ID `{id}`. There are currently tw
 ```
 // option 1
 {
-    gameID: 1,
-    timestamp: 1456430558
+    "gameID": 1,
+    "timestamp": 1456430558
     [
-        { playerID: 2, score: 4 },
-        { playerID: 4, score: 5 }
+        { 
+            "playerID": 2, 
+            "score": 4 
+        },
+        { 
+            "playerID": 4, 
+            "score": 5 
+        }
     ]
 }
 
 // option 2
 {
-    gameID: 1,
-    timestamp: 1456430558
-    teams: [
+    "gameID": 1,
+    "timestamp": 1456430558
+    "teams": [
         {
             // actual player object, will be small
-            players: [ ... ],
-            change: 3
+            "players": [ ... ],
+            "change": 3
         },
         {
             // actual player object, will be small
-            players: [ ... ],
-            change: -3
+            "players": [ ... ],
+            "change": -3
         }
     ]
 }
@@ -152,14 +158,14 @@ This will return an array of player with ID `{player_id}`'s Elo after every game
 ```
 [
     {
-        gameID: 1,
-        timestamp: 1456430558,
-        elo: 1800
+        "gameID": 1,
+        "timestamp": 1456430558,
+        "elo": 1800
     },
     {
-        gameID: 2,
-        timestamp: 1456430558,
-        elo: 6
+        "gameID": 2,
+        "timestamp": 1456430558,
+        "elo": 6
     },
     ... // there is a lot of data in these stats calls
     // maybe require API key or something?)
@@ -176,14 +182,14 @@ This will return an array of player with ID `{player_id}`'s win rate after every
 ```
 [
     {
-        gameID: 1,
-        timestamp: 1456430558,
-        winrate: 0.8
+        "gameID": 1,
+        "timestamp": 1456430558,
+        "winrate": 0.8
     },
     {
-        gameID: 2,
-        timestamp: 1456430558,
-        winrate: 0.7
+        "gameID": 2,
+        "timestamp": 1456430558,
+        "winrate": 0.7
     },
     ...
 ]
@@ -198,15 +204,15 @@ POST /v1/add/game
 Sample body:
 ```
 {
-    timestamp: 
-    teams: [
+    "timestamp": 
+    "teams": [
         {
-            players: [2, 1],
-            score: 10
+            "players": [2, 1],
+            "score": 10
         },
         {
-            players: [6, 3],
-            score: 0
+            "players": [6, 3],
+            "score": 0
         }
     ]
 }
@@ -215,15 +221,15 @@ Sample body:
 The game will be added to the database and the response will look similar to:
 ```
 {
-    error: false,
-    message: "Game added."
+    "error": false,
+    "message": "Game added."
 }
 ```
 or
 ```
 {
-    error: true,
-    message: "Player 'Tanya' does not exist."
+    "error": true,
+    "message": "Player 'Tanya' does not exist."
 }
 ```
 
@@ -234,25 +240,25 @@ POST /v1/add/player
 Sample body:
 ```
 {
-    displayName: "Tanya",
-    slackName: "@tanya",
-    admin: false,
-    active: true
+    "displayName": "Tanya",
+    "slackName": "@tanya",
+    "admin": false,
+    "active": true
 }
 ```
 `admin` and `active` will default to the values shown above, and do not need to be present in the body.  
 The player will be added to the team and the response will look similar to:
 ```
 {
-    error: false,
-    message: "Player added."
+    "error": false,
+    "message": "Player added."
 }
 ```
 or
 ```
 {
-    error: true,
-    message: "Player 'Tanya' already exists."
+    "error": true,
+    "message": "Player 'Tanya' already exists."
 }
 ```
 
@@ -265,16 +271,16 @@ POST /v1/edit/game
 Sample body:
 ```
 {
-    id: 3,
-    timestamp: 1456430558,
-    teams: [
+    "id": 3,
+    "timestamp": 1456430558,
+    "teams": [
         {
-            players: [2, 1],
-            score: 10
+            "players": [2, 1],
+            "score": 10
         },
         {
-            players: [6, 3],
-            score: 0
+            "players": [6, 3],
+            "score": 0
         }
     ]
 }
@@ -283,15 +289,15 @@ The game with ID `id` will be replaced with the new data. This follows the same 
 The response will look similar to the following:
 ```
 {
-    error: false,
-    message: "Game edited."
+    "error": false,
+    "message": "Game edited."
 }
 ```
 or
 ```
 {
-    error: true,
-    message: "Game 3 does not exist."
+    "error": true,
+    "message": "Game 3 does not exist."
 }
 ```
 
@@ -302,26 +308,26 @@ POST /v1/edit/player
 Sample body:
 ```
 {
-    id: 4,
-    displayName: "Tanya",
-    slackName: "@tanya",
-    admin: false,
-    active: true
+    "id": 4,
+    "displayName": "Tanya",
+    "slackName": "@tanya",
+    "admin": false,
+    "active": true
 }
 ```
 Player with ID `id` will be updated with the new data. Any fields other than `id` that are left out will be unchanged in the database.  
 The response will look similar to the following:
 ```
 {
-    error: false,
-    message: "Player updated."
+    "error": false,
+    "message": "Player updated."
 }
 ```
 or
 ```
 {
-    error: true,
-    message: "Player with ID 4 does not exist."
+    "error": true,
+    "message": "Player with ID 4 does not exist."
 }
 ```
 
@@ -334,21 +340,21 @@ DELETE /v1/remove/game
 Sample body:
 ```
 {
-    games: [150, 455, 2]
+    "games": [150, 455, 2]
 }
 ```
 All games with ID in `games` will be removed from the database. The response will look similar to:
 ```
 {
-    error: false,
-    message: "Game(s) removed."
+    "error": false,
+    "message": "Game(s) removed."
 }
 ```
 or
 ```
 {
-    error: true,
-    message: "Game 455 does not exist."
+    "error": true,
+    "message": "Game 455 does not exist."
 }
 ```
 
@@ -359,20 +365,20 @@ DELETE /v1/remove/player
 Sample body:
 ```
 {
-    players: [2]
+    "players": [2]
 }
 ```
 All players with id in `players` will be removed from the database, as well as any games they were involved in. The response will look similar to:
 ```
 {
-    error: false,
-    message: "Player(s) removed."
+    "error": false,
+    "message": "Player(s) removed."
 }
 ```
 or
 ```
 {
-    error: true,
-    message: "Player with ID 10 does not exist."
+    "error": true,
+    "message": "Player with ID 10 does not exist."
 }
 ```
