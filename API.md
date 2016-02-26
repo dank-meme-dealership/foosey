@@ -87,14 +87,16 @@ This will return information about a game with ID `{id}`.
 ```
 {
     "gameID": 1,
-    "timestamp": 1456430558
+    "timestamp": 1456430558,
     "teams": [
         {
-            "players": [ 1, 8 ],
+            "players": [ "Matt", "Brik" ],
+            "score": 10,
             "delta": 3
         },
         {
-            "players": [ 3, 5 ],
+            "players": [ "Conner", "Roger" ],
+            "score": 6,
             "delta": -3
         }
     ]
@@ -185,7 +187,7 @@ POST /v1/add/game
 Sample body:
 ```
 {
-    "timestamp": 
+    "timestamp": 1456430558,
     "teams": [
         {
             "players": [2, 1],
