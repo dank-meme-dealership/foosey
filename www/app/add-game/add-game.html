@@ -53,7 +53,7 @@
 					ng-class="{'selected': player.selected}"
 					ng-repeat="player in players"
 	  		  ng-click="playerSelect(player)">
-	  		  {{player.name | capitalize}}
+	  		  {{player.displayName | capitalize}}
 	  		</div>
 			</div>
 		</div>
@@ -109,7 +109,7 @@
 			</ion-item>
 
 			<!-- Undo button -->
-			<ion-item class="center" ng-show="saveStatus === 'success'" ng-click="undo()">Undo</ion-item>
+			<!-- <ion-item class="center" ng-show="saveStatus === 'success'" ng-click="undo()">Undo</ion-item> -->
 
 			<!-- Done button -->
 			<ion-item class="center" ng-click="reset()">

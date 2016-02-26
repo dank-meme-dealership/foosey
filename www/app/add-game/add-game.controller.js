@@ -46,7 +46,7 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 
 		// add player to this team
 		player.selected = true;
-		$scope.playersSelected.push(player.name);
+		$scope.playersSelected.push(player.displayName);
 
 		// if we have selected all players for the team, select the score
 		if ($scope.playersSelected.length === $scope.type.playersPerTeam)
@@ -135,14 +135,14 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 		$scope.players = localStorage.getObject('players');
 
 		// load from server
-		FooseyService.players().then(function (response)
+		FooseyService.getAllPlayers().then(function (response)
     	{ 
 	    	// only overwrite if they haven't selected one yet
 	    	if (noneSelected())
 	    	{
-	    		$scope.players = response.data.players;
+	    		$scope.players = response.data;
 	    		$scope.players.sort(function(a, b){
-	    			return a.name.localeCompare(b.name);
+	    			return a.displayName.localeCompare(b.displayName);
 	    		});
 	    	}
 

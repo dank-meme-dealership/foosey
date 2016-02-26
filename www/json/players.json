@@ -1,0 +1,47 @@
+[
+	{
+	    "playerID": 1,
+	    "displayName": "Matt",
+	    "elo": 1244,
+	    "winrate": 0.95,
+	    "totalGames": 13,
+	    "isAdmin": true,
+	    "isActive": true
+	},
+	{
+	    "playerID": 2,
+	    "displayName": "Brik",
+	    "elo": 1194,
+	    "winrate": 0.31,
+	    "totalGames": 73,
+	    "isAdmin": true,
+	    "isActive": true
+	},
+	{
+	    "playerID": 3,
+	    "displayName": "Conner",
+	    "elo": 1328,
+	    "winrate": 0.27,
+	    "totalGames": 27,
+	    "isAdmin": false,
+	    "isActive": true
+	},
+	{
+	    "playerID": 4,
+	    "displayName": "Roger",
+	    "elo": 1204,
+	    "winrate": 0.53,
+	    "totalGames": 94,
+	    "isAdmin": false,
+	    "isActive": true
+	},
+	{
+	    "playerID": 5,
+	    "displayName": "Adam",
+	    "elo": 1073,
+	    "winrate": 0.32,
+	    "totalGames": 132,
+	    "isAdmin": false,
+	    "isActive": true
+	}
+]
