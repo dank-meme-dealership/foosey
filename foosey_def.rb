@@ -746,19 +746,21 @@ def slack_stats
   end
 
   stats = [
-    fields:
-    [
-      {
-        title: 'Elo Rating',
-        value: elos.join("\n"),
-        short: true
-      },
-      {
-        title: 'Win Rate',
-        value: win_rates.join("\n"),
-        short: true
-      }
-    ]
+    {
+      fields:
+      [
+        {
+          title: 'Elo Rating',
+          value: elos.join("\n"),
+          short: true
+        },
+        {
+          title: 'Win Rate',
+          value: win_rates.join("\n"),
+          short: true
+        }
+      ]
+    }
   ]
 
   make_response('*Here are all the stats for your team:*', stats)
@@ -818,8 +820,10 @@ def slack_add_game(text)
     }
   end
   attachments = [
-    pretext: 'Elo change after that game:',
-    fields: elo_deltas
+    {
+      pretext: 'Elo change after that game:',
+      fields: elo_deltas
+    }
   ]
   make_response('Game added!', attachments)
 rescue SQLite3::Exception => e
@@ -856,12 +860,81 @@ ensure
   db.close if db
 end
 
+# returns the id of the winning player (or players) in game with id id
+def winner(game_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  # get max score
+  winner = db.execute('SELECT PlayerID FROM Game
+                       WHERE GameID = :game_id AND Score = (
+                         SELECT MAX(Score) FROM Game
+                         WHERE GameID = :game_id
+                         GROUP BY GameID
+                       )', game_id).flatten
+
+  winner = winner.first if winner.length == 1
+
+  # return the winner(s)
+  winner
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
 def slack_history(player1, player2)
   # check the players
   return make_response("Invalid player: #{player1}") unless player_exists? player1
   return make_response("Invalid player: #{player2}") unless player_exists? player2
 
-  
+  # start trackin'
+  player1_wins, player2_wins = 0, 0
+  player1_id, player2_id = id(player1), id(player2)
+  history_s = ''
+  games(id(player1), id(player2)).each do |game|
+    history_s.prepend(game_to_s(game, true) + "\n") # game with date
+    if winner(game) == player1_id
+      player1_wins += 1
+    else
+      player2_wins += 1
+    end
+  end
+
+  attachments = [
+    {
+      pretext: "Current record between #{player1.capitalize} and #{player2.capitalize}:",
+      fields:
+      [
+        {
+          title: "*#{player1.capitalize}*",
+          value: player1_wins,
+          short: true
+        },
+        {
+          title: "*#{player2.capitalize}*",
+          value: player2_wins,
+          short: true
+        }
+      ]
+    },
+    {
+      pretext: "Full game history between #{player1.capitalize} and #{player2.capitalize}:",
+      text: history_s.strip
+    }
+  ]
+  make_response('', attachments)
+end
+
+def get_app_dir
+  db = SQLite3::Database.new 'foosey.db'
+
+  # return dir
+  db.get_first_value 'SELECT Value FROM Config
+                      WHERE Setting = "AppDirectory"'
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
 end
 
 # returns the id of a player, given their display name
@@ -870,7 +943,8 @@ def id(name)
 
   # return id
   db.get_first_value 'SELECT PlayerID FROM Player
-                      WHERE DisplayName = :name', name
+                      WHERE DisplayName = :name
+                      COLLATE NOCASE', name
 rescue SQLite3::Exception => e
   puts e
 ensure
@@ -881,7 +955,6 @@ end
 def games(player1_id, player2_id)
   db = SQLite3::Database.new 'foosey.db'
 
-  # iterate through all game_ids
   db.execute('SELECT GameID
               FROM (
                   SELECT GameID FROM Game 
@@ -893,7 +966,7 @@ def games(player1_id, player2_id)
                   GROUP BY GameID
                   HAVING COUNT(*) = 2
               ) AS T2
-              USING (GameID);', player1_id, player2_id).flatten
+              USING (GameID)', player1_id, player2_id).flatten
 rescue SQLite3::Exception => e
   puts e
 ensure
@@ -1131,19 +1204,24 @@ def predict(content, cmd)
   make_response('Predicted score: To close to tell!')
 end
 
-# takes a game_id and produces a nice string of the game results
-# useful for slack
-def game_to_s(game_id)
+# takes a game_id and returns a string of the game results useful for slack
+# if date = true, it will be prepended with a nicely formatted date
+def game_to_s(game_id, date = false)
   db = SQLite3::Database.new 'foosey.db'
 
-  game = create_query_hash(db.execute2('SELECT p.DisplayName, g.Score
+  game = create_query_hash(db.execute2('SELECT p.DisplayName, g.Score, g.Timestamp
                                         FROM Game g
                                         JOIN Player p
                                         USING (PlayerID)
                                         WHERE g.GameID = :game_id
                                         ORDER BY g.Score DESC', game_id))
 
-  s = ""
+  s = if date
+    Time.at(game.first['Timestamp']).strftime '%b %d, %Y - '
+  else
+    ''
+  end
+
   game.each do |player|
     s << "#{player['DisplayName']} #{player['Score']} "
   end
@@ -1174,7 +1252,6 @@ def remove_game(game_id, recalc = true)
               WHERE GameID = :game_id', game_id
 
   recalc if recalc
-  end
 rescue SQLite3::Exception => e
   puts e
 ensure
@@ -1222,7 +1299,8 @@ def slack_undo
                   WHERE PlayerID = :player_id
                 ) WHERE PlayerID = :player_id', p
 
-  make_response("Game removed: #{s}")
+    make_response("Game removed: #{s}")
+  end
 rescue SQLite3::Exception => e
   puts e
 ensure
@@ -1351,7 +1429,7 @@ def slack(user_name, text, trigger_word)
   when 'undo'
     slack_undo
   when 'history'
-    # NYI
+    slack_history(args[1], args[2])
   when 'add'
     return succinct_help unless admin? user_name
     add_player(args[1], args[2])

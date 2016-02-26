@@ -14,7 +14,7 @@ require 'sqlite3'
 def update
   app_dir = get_app_dir
   # there's probably a git gem we could use here
-  system "cd #{app_dir} && git pull" unless app_dir.empty?
+  system "cd #{app_dir} && git pull" unless app_dir.nil?
   system "cd #{File.dirname(__FILE__)} && git pull"
   load 'foosey_def.rb'
 end
