@@ -4,6 +4,7 @@ require 'json'
 require 'sinatra'
 require 'sinatra/cross_origin'
 require 'sinatra/json'
+require 'sinatra/reloader'
 require 'sqlite3'
 
 # Only put stuff in here that should not be reloaded when running foosey update
@@ -11,6 +12,7 @@ require 'sqlite3'
 
 # pull and load
 # hot hot hot deploys
+also_reload 'foosey_def.rb'
 def update
   app_dir = get_app_dir
   # there's probably a git gem we could use here

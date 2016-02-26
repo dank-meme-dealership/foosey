@@ -5,7 +5,7 @@ The ultimate all-in-one foosball ranking Slack Bot
 This bot has some work to be done before it's useful to anyone other than the individuals at WhiteCloud Analytics. Stay tuned!
 
 ## Hot Deploys
-Because `foosey` is generally up for several days at a time and SSHing into servers to restart it is a pain, it takes advantage of Ruby's `Kernel#load` functionality to be able to reload most of its code using the `update` command. When an update is ran, `foosey` will run a `git pull` on both the application directory as well as its own, then reload `foosey_def.rb`, which contains method definitions for most of the things `foosey` does.
+`foosey` utilizes the `sinatra/reloader` gem to reload all source whenever a file in its source changes. It also has a built-in update function that will run `git pull`, so that deploys and updates are very easy.  
 
 ## Required Gems
 Foosey uses the following gems:  
