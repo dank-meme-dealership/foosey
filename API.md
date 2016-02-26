@@ -82,39 +82,20 @@ This will return information about all games, sorted by timestamp.
 GET /v1/games/{id}
 ```
 
-This will return information about a game with ID `{id}`. There are currently two things this could return and we haven't decided which will be best yet.
+This will return information about a game with ID `{id}`.
 
 ```
-// option 1
-{
-    "gameID": 1,
-    "timestamp": 1456430558
-    [
-        { 
-            "playerID": 2, 
-            "score": 4 
-        },
-        { 
-            "playerID": 4, 
-            "score": 5 
-        }
-    ]
-}
-
-// option 2
 {
     "gameID": 1,
     "timestamp": 1456430558
     "teams": [
         {
-            // actual player object, will be small
-            "players": [ ... ],
-            "change": 3
+            "players": [ 1, 8 ],
+            "delta": 3
         },
         {
-            // actual player object, will be small
-            "players": [ ... ],
-            "change": -3
+            "players": [ 3, 5 ],
+            "delta": -3
         }
     ]
 }
