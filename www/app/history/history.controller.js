@@ -25,7 +25,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
     $scope.dates = localStorage.getObject('history');
 
     // get most recent games and group by the date
-    FooseyService.history(0, gamesToLoad)
+    FooseyService.getGames(gamesToLoad, 0)
     .then(function successCallback(result) 
     { 
       // get games from server
@@ -54,7 +54,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
   $scope.loadMore = function()
   {
     console.log("Loading new games starting from " + loaded + " to " + (loaded + gamesToLoad));
-    FooseyService.history(loaded, loaded + gamesToLoad)
+    FooseyService.getGames(gamesToLoad, loaded + gamesToLoad)
     .then(function successCallback(result)
     {
       // if no games have been loaded yet, we can't do anything
