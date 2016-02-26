@@ -28,10 +28,7 @@ def help_message
     To record a doubles game:
     `foosey Greg 10 Erich 10 Blake 9 Daniel 9`
 
-    To predict the score of a singles game (based on Elo):
-    `foosey predict Matt Brik`
-
-    To see the full history between you and another player:
+    To see the full history between two players:
     `foosey history Will Erich`
 
     To get stats about all players:
@@ -1412,8 +1409,6 @@ def slack(user_name, args)
     help_message
   when 'stats'
     slack_stats
-  when 'predict'
-    # NYI
   when 'undo'
     slack_undo
   when 'history'
