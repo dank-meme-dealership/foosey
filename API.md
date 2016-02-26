@@ -318,19 +318,13 @@ or
 
 ### Remove Game
 ```
-DELETE /v1/remove/game
+DELETE /v1/remove/game/{id}
 ```
-Sample body:
-```
-{
-    "games": [150, 455, 2]
-}
-```
-All games with ID in `games` will be removed from the database. The response will look similar to:
+The game with id matching `id` will be removed from the database. The response will look similar to:
 ```
 {
     "error": false,
-    "message": "Game(s) removed."
+    "message": "Game removed."
 }
 ```
 or
@@ -343,19 +337,13 @@ or
 
 ### Remove Player
 ```
-DELETE /v1/remove/player
+DELETE /v1/remove/player/{id}
 ```
-Sample body:
-```
-{
-    "players": [2]
-}
-```
-All players with id in `players` will be removed from the database, as well as any games they were involved in. The response will look similar to:
+The player with id matching `id` will be removed from the database, as well as any games they were involved in. The response will look similar to:
 ```
 {
     "error": false,
-    "message": "Player(s) removed."
+    "message": "Player removed."
 }
 ```
 or
