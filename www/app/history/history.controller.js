@@ -29,11 +29,11 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
     .then(function successCallback(result) 
     { 
       // get games from server
-      $scope.games = result.data.games;
-      loaded += result.data.games.length;
+      $scope.games = result;
+      loaded += result.length;
 
       // filter by name
-      applyFilters();
+      // applyFilters();
 
       // sort the games by date
       $scope.dates = groupByDate($scope.filteredGames);
@@ -61,15 +61,15 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
       if (!$scope.games) return;
 
       // push new games to the end of the games list
-      $scope.games.push.apply($scope.games, result.data.games);
-      console.log("Loaded " + result.data.games.length);
-      loaded += result.data.games.length;
+      $scope.games.push.apply($scope.games, result);
+      console.log("Loaded " + result.length);
+      loaded += result.length;
 
       // see if we can load more games or not
       $scope.allLoaded = $scope.games[$scope.games.length - 1].id === 0;
 
       // filter by name
-      applyFilters();
+      // applyFilters();
 
       // sort the games by date
       $scope.dates = groupByDate($scope.filteredGames);
@@ -107,7 +107,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
     // Show the action sheet
     $ionicActionSheet.show(
     {
-      titleText: 'Game played at ' + $filter('time')(game.time),
+      titleText: 'Game played at ' + game.time,
       destructiveText: 'Remove Game',
       cancelText: 'Cancel',
       destructiveButtonClicked: function(index) 
@@ -157,20 +157,11 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
     // remove from server
     $scope.removing = true;
     $scope.loading = true;
-    FooseyService.remove(game.id)
+    FooseyService.removeGame(game.id)
     .then(function()
     {
       refresh();
     });
-  }
-
-  // Decrement ids after given index so removing will remove the correct one.
-  function decrementIds(index)
-  {
-    for (var i = index - 1; i >= 0; i--)
-    {
-      $scope.games[i].id--;
-    }
   }
 
   function toggleFilter(name)

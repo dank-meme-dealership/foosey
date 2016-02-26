@@ -34,8 +34,8 @@
 									<span>{{player | capitalize}}</span>
 									<span 
                   	ng-show="player.change !== null"
-                  	ng-class="{'elo-green': team.change > 0, 'elo-red': team.change < 0}">
-                  	{{team.change | eloChange}}
+                  	ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
+                  	{{team.delta | eloChange}}
                 	</span>
 								</div>
 								<div><strong>{{team.score}}</strong></div>

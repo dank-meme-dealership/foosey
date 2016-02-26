@@ -20,8 +20,8 @@ angular
       addPlayer         : addPlayer,
       editGame          : editGame, 
       editPlayer        : editPlayer,
-      removeGames       : removeGames,
-      removePlayers     : removePlayers,
+      removeGame        : removeGame,
+      removePlayer      : removePlayer,
       undo              : undo
     }
 
@@ -63,7 +63,21 @@ angular
 
     function getGames(limit, offset)
     {
+      return $http.get('json/games.json').then(
+        function (response)
+        {
+          return _.map(response.data, addDateInfo);
+        });
       // return $http.get(url + 'games?limit=' + limit + '&offest=' + offest);
+    }
+
+    function addDateInfo(game)
+    {
+      var unix = moment.unix(game.timestamp)
+
+      game.date = unix.format("MM/DD/YYYY");
+      game.time = unix.format("h:mma");
+      return game;
     }
 
     function getEloHistory(playerID)
@@ -103,19 +117,19 @@ angular
       // return $http.post(url + 'edit/player', player);
     }
 
-    function removeGames(games)
+    function removeGame(gameID)
     {
-      // return $http.delete(url + 'remove/game' + games);
+      // return $http.delete(url + 'remove/game/' + gameID);
     }
 
-    function removePlayers(players)
+    function removePlayer(playerID)
     {
-      // return $http.delete(url + 'remove/player' + players);
+      // return $http.delete(url + 'remove/player/' + playerID);
     }
 
     function undo()
     {
-      console.log("Will maybe implement again");
+      // Will maybe implement again
     }
 
   });
