@@ -768,7 +768,7 @@ end
 
 def slack_add_game(text)
   # nice regex to match basic score input
-  return help_message unless text =~ /\A(\s*\w+\s+\d+\s*){2,}\z/
+  return succinct_help unless text =~ /\A(\s*\w+\s+\d+\s*){2,}\z/
 
   # grittier checking
   db = SQLite3::Database.new 'foosey.db'
@@ -1405,19 +1405,7 @@ def dateTime(g, dateFormat, timeFormat)
   [date, time]
 end
 
-def slack(user_name, text, trigger_word)
-  $app = false
-
-  # Clean up text
-  text ||= ''
-  text = text.downcase.delete ':' # emoji support
-
-  # Remove 'foosey' from the beginning of the text
-  text = text[trigger_word.length..text.length].strip if trigger_word
-
-  # set args
-  args = text.split(' ')
-
+def slack(user_name, args)
   # case for command
   case args[0]
   when 'help'

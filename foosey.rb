@@ -43,7 +43,13 @@ configure do
 end
 
 post '/slack' do
-  json slack(params['user_name'], params['text'], params['trigger_word'])
+  text = params['text'] || ''
+  if params['trigger_word']
+    text = text[params['trigger_word'].length..text.length].strip
+  end
+  args = text.split ' '
+
+  json slack(params['user_name'], args)
 end
 
 options '/app' do
