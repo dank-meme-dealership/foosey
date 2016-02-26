@@ -33,7 +33,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
       loaded += result.length;
 
       // filter by name
-      // applyFilters();
+      applyFilters();
 
       // sort the games by date
       $scope.dates = groupByDate($scope.filteredGames);
@@ -69,7 +69,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
       $scope.allLoaded = $scope.games[$scope.games.length - 1].id === 0;
 
       // filter by name
-      // applyFilters();
+      applyFilters();
 
       // sort the games by date
       $scope.dates = groupByDate($scope.filteredGames);
@@ -180,7 +180,6 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
   {
     $scope.filteredGames = [];
     var filters = localStorage.getObject('filters');
-    console.log(filters)
     if (filters && filters.length > 0)
     {
       _.forEach($scope.games, function(game)
