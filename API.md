@@ -1,7 +1,7 @@
 # Foosey API Specification
 This is the tentative specification for the Foosey API. It's subject to change before release
 
-## Getting Player Information
+## Player Information
 
 ### All Players
 ```
