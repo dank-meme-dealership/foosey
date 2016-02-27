@@ -5,17 +5,73 @@ namespace '/v1' do
   # Player Information
   # All Players / Multiple Players
   get '/players' do
-    # if ids is set, we have a filter
-    ids = params['ids'].split ',' if params['ids']
+    begin
+      # if ids is set, we have a filter
+      ids = params['ids'].split ',' if params['ids']
 
-    501 # Not yet implemented
+      db = SQLite3::Database.new 'foosey.db'
+
+      db.results_as_hash = true
+      stmt = 'SELECT * FROM Player'
+      # add conditional if ids is defined
+      stmt << ' WHERE PlayerID IN (' + ids.join(',') + ')' if ids
+
+      response = []
+
+      # i don't like making an actual string for the statement rather than
+      # doing parameters, but it seems like we have to when doing IN
+      db.execute stmt do |player|
+        response << {
+          playerID: player['PlayerID'],
+          displayName: player['DisplayName'],
+          elo: player['Elo'],
+          winRate: player['WinRate'],
+          gamesPlayed: player['GamesPlayed'],
+          admin: player['Admin'] == 1,
+          active: player['Active'] == 1
+        }
+      end
+
+      json response
+    rescue SQLite3::Exception => e
+      puts e
+      500 # Internal server error
+    ensure
+      db.close if db
+    end
   end
 
   # One Player
   get '/players/:id' do
-    id = params['id'].to_i
+    begin
+      id = params['id'].to_i
 
-    501 # Not yet implemented
+      db = SQLite3::Database.new 'foosey.db'
+
+      db.results_as_hash = true
+      player = db.execute('SELECT * FROM Player
+                              WHERE PlayerID = :id', id).first
+
+      return json(
+        error: true,
+        message: 'Invalid player ID.'
+      ) if player.nil?
+
+      json(
+        playerID: player['PlayerID'],
+        displayName: player['DisplayName'],
+        elo: player['Elo'],
+        winRate: player['WinRate'],
+        gamesPlayed: player['GamesPlayed'],
+        admin: player['Admin'] == 1,
+        active: player['Active'] == 1
+      )
+    rescue SQLite3::Exception => e
+      puts e
+      500 # Internal server error
+    ensure
+      db.close if db
+    end
   end
 
   # Game Information
