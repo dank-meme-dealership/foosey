@@ -89,8 +89,8 @@ def slack_undo
     db.execute 'UPDATE Player SET Elo = (
                   SELECT Elo FROM EloHistory e
                   JOIN Game g
-                  USING (GameID)
-                  WHERE g.PlayerID = :player_id
+                  USING (PlayerID, GameID)
+                  WHERE e.PlayerID = :player_id
                   ORDER BY g.Timestamp DESC
                   LIMIT 1
                 ) WHERE PlayerID = :player_id', player_id
@@ -98,8 +98,8 @@ def slack_undo
     db.execute 'UPDATE Player SET WinRate = (
                   SELECT WinRate FROM WinRateHistory w
                   JOIN Game g
-                  USING (GameID)
-                  WHERE g.PlayerID = :player_id
+                  USING (PlayerID, GameID)
+                  WHERE w.PlayerID = :player_id
                   ORDER BY g.Timestamp DESC
                   LIMIT 1
                 ) WHERE PlayerID = :player_id', player_id
