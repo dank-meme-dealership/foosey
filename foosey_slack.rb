@@ -41,7 +41,7 @@ end
 
 # Return Slack-friendly stats output
 def slack_stats
-  elos_s = elos.map { |x| x.join(': ') }
+  elos_s = player_elos.map { |x| x.join(': ') }
   win_rates_s = win_rates.map do |x|
     name = x[0]
     win_rate = format('%.1f%%', x[1] ? x[1] * 100 : 0)
