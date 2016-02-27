@@ -129,16 +129,62 @@ namespace '/v1' do
   # Statistics
   # Player Elo History
   get '/stats/elo/:id' do
-    id = params['id'].to_i
+    begin
+      id = params['id'].to_i
+      db = SQLite3::Database.new 'foosey.db'
 
-    501 # Not yet implemented
+      db.results_as_hash = true
+      games = db.execute 'SELECT * FROM EloHistory
+                          JOIN (
+                            SELECT PlayerID, GameID, Timestamp FROM Game
+                          )
+                          USING (PlayerID, GameID)
+                          WHERE PlayerID = :player_id
+                          ORDER BY Timestamp;', id
+
+      json(games.collect do |game|
+        {
+          gameID: game['GameID'],
+          timestamp: game['Timestamp'],
+          elo: game['Elo']
+        }
+      end)
+    rescue SQLite3::Exception => e
+      puts e
+      500 # Internal server error
+    ensure
+      db.close if db
+    end
   end
 
   # Player Win Rate History
   get '/stats/winrate/:id' do
-    id = params['id'].to_i
+    begin
+      id = params['id'].to_i
+      db = SQLite3::Database.new 'foosey.db'
 
-    501 # Not yet implemented
+      db.results_as_hash = true
+      games = db.execute 'SELECT * FROM WinRateHistory
+                          JOIN (
+                            SELECT PlayerID, GameID, Timestamp FROM Game
+                          )
+                          USING (PlayerID, GameID)
+                          WHERE PlayerID = :player_id
+                          ORDER BY Timestamp;', id
+
+      json(games.collect do |game|
+        {
+          gameID: game['GameID'],
+          timestamp: game['Timestamp'],
+          winRate: game['WinRate']
+        }
+      end)
+    rescue SQLite3::Exception => e
+      puts e
+      500 # Internal server error
+    ensure
+      db.close if db
+    end
   end
 
   # Adding Objects
