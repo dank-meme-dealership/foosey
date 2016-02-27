@@ -22,7 +22,8 @@ unless File.exist?('foosey.db')
 end
 
 # FOOS
-set :port, 4005
+# beta port, change back to 4005 before merging to master
+set :port, 4006
 
 configure do
   enable :cross_origin

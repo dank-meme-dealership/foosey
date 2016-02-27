@@ -86,7 +86,7 @@ def slack_undo
 
   # update respective player entries
   # this is faster than recalc since we just have to set to the last thing
-  ids.each do |player_id|
+  player_ids.each do |player_id|
     db.execute 'UPDATE Player SET Elo = (
                   SELECT Elo FROM EloHistory e
                   JOIN Game g

@@ -1,77 +1,96 @@
 # foosey API calls
 # for more information see API.md
 
+# returns an api object for game with id game_id
+def api_game(game_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.results_as_hash = true
+  game = db.execute 'SELECT * FROM Game
+                     JOIN (
+                       SELECT DisplayName, PlayerID FROM Player
+                     )
+                     USING (PlayerID)
+                     WHERE GameID = :id
+                     ORDER BY Score;', game_id
+
+  return {
+    error: true,
+    message: "Invalid game ID: #{game_id}"
+  } if game.nil?
+
+  response = {
+    gameID: game.first['GameID'],
+    timestamp: game.first['Timestamp'],
+    teams: []
+  }
+
+  game.each do |player|
+    i = response[:teams].index { |t| t[:score] == player['Score'] }
+    if i
+      # team exists in hash
+      response[:teams][i][:players] << player['DisplayName']
+    else
+      # team doesn't exist in hash
+      response[:teams] << {
+        players: [player['DisplayName']],
+        score: player['Score'],
+        delta: elo_change(player['PlayerID'], game_id)
+      }
+    end
+  end
+
+  response
+rescue SQLite3::Exception => e
+  puts e
+  500 # Internal server error
+ensure
+  db.close if db
+end
+
+# returns an api object for player with id player_id
+def api_player(player_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.results_as_hash = true
+  player = db.execute('SELECT * FROM Player
+                       WHERE PlayerID = :id', player_id).first
+
+  return {
+    error: true,
+    message: "Invalid player ID: #{player_id}"
+  } if player.nil?
+
+  {
+    playerID: player['PlayerID'],
+    displayName: player['DisplayName'],
+    elo: player['Elo'],
+    winRate: player['WinRate'],
+    gamesPlayed: player['GamesPlayed'],
+    admin: player['Admin'] == 1,
+    active: player['Active'] == 1
+  }
+rescue SQLite3::Exception => e
+  puts e
+  500 # Internal server error
+ensure
+  db.close if db
+end
+
 namespace '/v1' do
   # Player Information
   # All Players / Multiple Players
   get '/players' do
-    begin
-      # if ids is set, we have a filter
-      ids = params['ids'].split ',' if params['ids']
-
-      db = SQLite3::Database.new 'foosey.db'
-
-      db.results_as_hash = true
-      stmt = 'SELECT * FROM Player'
-      # add conditional if ids is defined
-      stmt << ' WHERE PlayerID IN (' + ids.join(',') + ')' if ids
-
-      response = []
-
-      # i don't like making an actual string for the statement rather than
-      # doing parameters, but it seems like we have to when doing IN
-      db.execute stmt do |player|
-        response << {
-          playerID: player['PlayerID'],
-          displayName: player['DisplayName'],
-          elo: player['Elo'],
-          winRate: player['WinRate'],
-          gamesPlayed: player['GamesPlayed'],
-          admin: player['Admin'] == 1,
-          active: player['Active'] == 1
-        }
-      end
-
-      json response
-    rescue SQLite3::Exception => e
-      puts e
-      500 # Internal server error
-    ensure
-      db.close if db
-    end
+    # set ids to params, or all player ids
+    ids = params['ids'].split ',' if params['ids']
+    ids ||= player_ids
+    json ids.collect { |id| api_player id }
   end
 
   # One Player
   get '/players/:id' do
-    begin
-      id = params['id'].to_i
-
-      db = SQLite3::Database.new 'foosey.db'
-
-      db.results_as_hash = true
-      player = db.execute('SELECT * FROM Player
-                              WHERE PlayerID = :id', id).first
-
-      return json(
-        error: true,
-        message: 'Invalid player ID.'
-      ) if player.nil?
-
-      json(
-        playerID: player['PlayerID'],
-        displayName: player['DisplayName'],
-        elo: player['Elo'],
-        winRate: player['WinRate'],
-        gamesPlayed: player['GamesPlayed'],
-        admin: player['Admin'] == 1,
-        active: player['Active'] == 1
-      )
-    rescue SQLite3::Exception => e
-      puts e
-      500 # Internal server error
-    ensure
-      db.close if db
-    end
+    id = params['id'].to_i
+    json api_player id
   end
 
   # Game Information
@@ -79,26 +98,32 @@ namespace '/v1' do
   get '/players/:id/games' do
     id = params['id'].to_i
 
-    501 # Not yet implemented
+    ids = games_with_player id
+
+    json ids.collect { |i| api_game i }
   end
 
   # All Games / Multiple Games
   get '/games' do
-    # if ids is set, we have a filter
+    # set params and their defaults1
     ids = params['ids'].split ',' if params['ids']
-
-    # set limit and offset if they were defined
     limit = params['limit'].to_i if params['limit']
     offset = params['offset'].to_i if params['offset']
+    ids ||= game_ids
+    limit ||= ids.length
+    offset ||= 0
 
-    501 # Not yet implemented
+    ids = ids[offset, limit]
+    # fix if offset is too high, return empty array
+    ids ||= []
+
+    json ids.collect { |id| api_game id }
   end
 
   # One Game
   get '/games/:id' do
     id = params['id'].to_i
-
-    501 # Not yet implemented
+    json api_game id
   end
 
   # Statistics

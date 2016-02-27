@@ -106,25 +106,39 @@ def elo_delta(rating_a, score_a, rating_b, score_b,
   [delta_a, delta_b]
 end
 
-# returns an array of elo/names
-def elos
+# returns an array of all game ids
+def game_ids
   db = SQLite3::Database.new 'foosey.db'
-  db.execute('SELECT DisplayName, Elo from Player
-              WHERE ACTIVE = 1 AND GamesPlayed != 0
-              ORDER BY Elo DESC')
+
+  # return id
+  db.execute('SELECT DISTINCT GameID FROM Game
+              ORDER BY Timestamp').flatten
 rescue SQLite3::Exception => e
   puts e
 ensure
   db.close if db
 end
 
-# returns an array of game_ids involving both only players
+# returns an array of game ids involving player with id player_id
+def games_with_player(player_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.execute('SELECT GameID From Game
+              WHERE PlayerID = :player_id
+              ORDER BY Timestamp', player_id).flatten
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# returns an array of game ids involving only both player1 and player2
 def games(player1_id, player2_id)
   db = SQLite3::Database.new 'foosey.db'
 
   db.execute('SELECT GameID
               FROM (
-                  SELECT GameID FROM Game 
+                  SELECT GameID FROM Game
                   WHERE PlayerID IN (:player1_id, :player2_id)
                   GROUP BY GameID HAVING COUNT(*) = 2
               ) AS T1
@@ -154,18 +168,6 @@ ensure
   db.close if db
 end
 
-# returns an array of all player ids
-def ids
-  db = SQLite3::Database.new 'foosey.db'
-
-  # return id
-  db.execute('SELECT PlayerID FROM Player').flatten
-rescue SQLite3::Exception => e
-  puts e
-ensure
-  db.close if db
-end
-
 # returns the last elo change player with id player_id has seen over n games
 # that is, the delta from their last n played games
 def last_elo_change(player_id, n = 1)
@@ -177,6 +179,37 @@ def last_elo_change(player_id, n = 1)
                      WHERE e.PlayerID = :player_id
                      ORDER BY g.Timestamp DESC
                      LIMIT :n', player_id, n + 1).flatten
+
+  elos.first - elos.last
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# returns the elo change for player with id player_id from game with id game_id
+# if the player was not involved in the game, the delta of their last game
+# before game with id game_id will be returned
+# if the player doesn't exist or has no games, 0 will be returned
+def elo_change(player_id, game_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  # get game timestamp
+  timestamp = db.get_first_value 'SELECT Timestamp FROM Game
+                                  WHERE GameID = :game_id', game_id
+
+  elos = db.execute('SELECT e.Elo FROM EloHistory e
+                     JOIN Game g
+                     USING (GameID, PlayerID)
+                     WHERE e.PlayerID = :player_id
+                     AND g.Timestamp <= :timestamp
+                     ORDER BY g.Timestamp DESC
+                     LIMIT 2', player_id, timestamp).flatten
+
+  # safety if player doesn't have any games
+  return 0 if elos.empty?
+  # safety if there is only one game, so we should delta from 1200
+  return elos.first - 1200 if elos.length == 1
 
   elos.first - elos.last
 rescue SQLite3::Exception => e
@@ -198,6 +231,18 @@ ensure
   db.close if db
 end
 
+# returns an array of elo/names
+def player_elos
+  db = SQLite3::Database.new 'foosey.db'
+  db.execute('SELECT DisplayName, Elo from Player
+              WHERE ACTIVE = 1 AND GamesPlayed != 0
+              ORDER BY Elo DESC')
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
 # returns true if a player with DisplayName name is in the database
 # false otherwise
 def player_exists?(name)
@@ -208,6 +253,19 @@ def player_exists?(name)
                                COLLATE NOCASE', name
 
   true if player
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
+# returns an array of all player ids
+def player_ids
+  db = SQLite3::Database.new 'foosey.db'
+
+  # return id
+  db.execute('SELECT PlayerID FROM Player
+              ORDER BY PlayerID').flatten
 rescue SQLite3::Exception => e
   puts e
 ensure
