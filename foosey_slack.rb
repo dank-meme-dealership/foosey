@@ -108,7 +108,6 @@ def slack_undo
                   SELECT COUNT(*) FROM Game
                   WHERE PlayerID = :player_id
                 ) WHERE PlayerID = :player_id', player_id
-
   end
   make_response("Game removed: #{s}")
 rescue SQLite3::Exception => e
@@ -123,8 +122,10 @@ def slack_history(player1, player2)
   return make_response("Invalid player: #{player2}") unless player_exists? player2
 
   # start trackin'
-  player1_wins, player2_wins = 0, 0
-  player1_id, player2_id = id(player1), id(player2)
+  player1_wins = 0
+  player2_wins = 0
+  player1_id = id(player1)
+  player2_id = id(player2)
   history_s = ''
   games(id(player1), id(player2)).each do |game|
     history_s.prepend(game_to_s(game, true) + "\n") # game with date

@@ -26,6 +26,6 @@ games.each_with_index do |ge, game_id|
     score = g.strip.to_i
     db.execute 'INSERT INTO Game (GameID, PlayerID, Score, Timestamp)
                 VALUES (:game_id, :player_id, :score, :timestamp)',
-                game_id, player_id, score, timestamp
+               game_id, player_id, score, timestamp
   end
 end

@@ -25,9 +25,9 @@ def game_to_s(game_id, date = false)
                                         ORDER BY g.Score DESC', game_id))
 
   s = if date
-    Time.at(game.first['Timestamp']).strftime '%b %d, %Y - '
-  else
-    ''
+        Time.at(game.first['Timestamp']).strftime '%b %d, %Y - '
+      else
+        ''
   end
 
   game.each do |player|
@@ -382,7 +382,7 @@ def add_game(outcome)
   end
 
   delta_a, delta_b = elo_delta(rating_a, score_a, rating_b, score_b,
-                                    k_factor, win_weight, max_score)
+                               k_factor, win_weight, max_score)
 
   # update history and player tables
   game.each_with_index do |player, idx|
@@ -484,7 +484,7 @@ def recalc_elo
     end
 
     delta_a, delta_b = elo_delta(rating_a, score_a, rating_b, score_b,
-                                      k_factor, win_weight, max_score)
+                                 k_factor, win_weight, max_score)
 
     # insert into history table
     game.each_with_index do |player, idx|
