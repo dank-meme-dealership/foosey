@@ -12,13 +12,12 @@ def make_response(response, attachments = [])
 end
 
 def succinct_help
-  help = "I couldn't figure out what you were trying to do, to see what I can do try `foosey help`"
-  make_response(help)
+  make_response "I couldn't figure out what you were trying to do; to see what I can do try `foosey help`"
 end
 
 # function to make a help message
 def help_message
-  %{*Usage:*
+  make_response %(*Usage:*
 
     To record a singles game:
     `foosey Matt 10 Conner 1`
@@ -36,7 +35,7 @@ def help_message
     `foosey undo`
 
     To get this help message:
-    `foosey help`}
+    `foosey help`)
 end
 
 # Return Slack-friendly stats output
