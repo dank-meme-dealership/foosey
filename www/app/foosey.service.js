@@ -3,6 +3,7 @@ angular
   .factory('FooseyService', function($http) 
   {
     var oldUrl = "http://api.foosey.futbol/app";
+    var tempUrl = "http://beta.foosey.futbol/v1/";
     var url = "http://api.foosey.futbol/v1/";
 
 	  return {
@@ -27,8 +28,16 @@ angular
 
     function getAllPlayers()
     {
-      return $http.get('json/players.json');
-      // return $http.get(url + 'players');
+      // return $http.get('json/players.json');
+      return $http.get(tempUrl + 'players').then(
+        function(response)
+        {
+          response = _.filter(response.data, function(player)
+          {
+            return player.active;
+          });
+          return response;
+        });
     }
 
     function getPlayer(playerID)

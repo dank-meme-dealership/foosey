@@ -25,7 +25,7 @@
     <ion-item ng-show="error">Can't connect to server :(</ion-item>
 
     <!-- show loading while waiting -->
-    <ion-spinner ng-show="!elos && !error" class="loading-dots" icon="lines"></ion-spinner>
+    <ion-spinner ng-show="!players && !error" class="loading-dots" icon="lines"></ion-spinner>
 
     <ion-slide-box on-slide-changed="changeSlide($index)" show-pager="false">
 
@@ -33,22 +33,22 @@
       <ion-slide>
         <ion-list>
           <ion-item 
-            ng-repeat="player in elos" 
+            ng-repeat="player in players" 
             ng-class="{'last': $last}"
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
               <h2>
                 <div class="rank">{{player.rank}}</div> 
-                {{player.name | capitalize}}
+                {{player.displayName | capitalize}}
               </h2> 
               <div class="spaced-out">
-                <div ng-show="!player.qualified">{{minimumQualified - player.games}} games left to play</div>
+                <div ng-show="!player.qualified">{{minimumQualified - player.gamesPlayed}} games left to play</div>
                 <div ng-show="player.qualified"><b>{{player.elo}}</b></div>
                 <div 
-                  ng-show="player.change !== null && player.qualified"
+                  ng-show="player.qualified"
                   class="elo-change" 
                   ng-class="{'elo-green': player.change > 0, 'elo-red': player.change < 0}">
-                  {{player.change | eloChange}}
+                  {{0 | eloChange}}
                 </div>
                 <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
               </div>
@@ -60,16 +60,16 @@
       <!-- % Games won -->
       <ion-slide>
         <ion-item 
-          ng-repeat="player in percent" 
+          ng-repeat="player in players" 
           ng-class="{'last': $last}"
           href="#/app/player/{{player.name}}">
           <div class="spaced-out">
             <h2>
               <div class="rank">{{$index + 1}}</div> 
-              {{player.name | capitalize}}
+              {{player.displayName | capitalize}}
             </h2> 
             <div class="spaced-out">
-              <b>{{player.percent | number:1}}%</b>
+              <b>{{player.winRate * 100 | number:1}}%</b>
               <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
             </div>
           </div>

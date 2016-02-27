@@ -13,6 +13,9 @@ angular
 	// format the elo change for the day
 	.filter('eloChange', eloChange)
 
+	// format 0.9857 into 98.6%
+	.filter('percent', percent)
+
 	// nice string for teams
 	.filter('team', team)
 
@@ -54,6 +57,14 @@ function eloChange()
 		if (input === undefined || input === null) return '';
 		plusOrMinus = input < 0 ? input : '+' + input
 		return '(' + plusOrMinus + ')';
+	}
+}
+
+function percent()
+{
+	return function(decimal)
+	{
+		return (demical * 100) + '%';
 	}
 }
 

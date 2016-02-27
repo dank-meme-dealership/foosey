@@ -35,48 +35,52 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
   function getStats()
   {
     // load from local storage
-    $scope.elos = localStorage.getObject('elos');
-    $scope.percent = localStorage.getObject('percent');
+    $scope.players = localStorage.getObject('players');
 
     // load from server
-    FooseyService.leaderboard().then(function successCallback(response)
-    { 
-      $scope.elos = filterElos(response.data.elos);
-      $scope.percent = response.data.percent;
-      $ionicSlideBoxDelegate.update();
-      localStorage.setObject('elos', $scope.elos);
-      localStorage.setObject('percent', $scope.percent);
-      $scope.error = false;
-      
-      done();
-    }, function errorCallback(response)
-    {
-      $scope.error = true;
-      done();
-    });
+    FooseyService.getAllPlayers().then(
+      function successCallback(players)
+      { 
+        $scope.players = filterPlayers(players);
+        $ionicSlideBoxDelegate.update();
+        localStorage.setObject('players', $scope.players);
+        $scope.error = false;
+        
+        done();
+      }, 
+      function errorCallback(response)
+      {
+        $scope.error = true;
+        done();
+      });
   }
 
   // filters out people that have not yet played enough games
-  function filterElos(elos)
+  function filterPlayers(players)
   {
     var filteredElos = [];
     var unranked = [];
     var rank = 1;
 
+    players.sort(sortElos);
+
     // set rank and if they're qualified
-    for (var i = 0; i < elos.length; i++)
+    for (var i = 0; i < players.length; i++)
     {
-      if (elos[i].games >= $scope.minimumQualified)
+      // Remove people from the leaderboard who haven't played or are inactive
+      if (players[i].gamesPlayed == 0 || !players[i].active) continue;
+
+      if (players[i].gamesPlayed >= $scope.minimumQualified)
       {
-        elos[i].rank = rank;
-        elos[i].qualified = true;
+        players[i].rank = rank;
+        players[i].qualified = true;
         rank++;
-        filteredElos.push(elos[i]);
+        filteredElos.push(players[i]);
       }
       else
       {
-        elos[i].rank = '-';
-        unranked.push(elos[i]);
+        players[i].rank = '-';
+        unranked.push(players[i]);
       }
     }
 
@@ -91,10 +95,7 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
 
   function sortElos(a, b)
   {
-    if (a.qualified && b.qualified)
-      return a.elo - b.elo;
-    else
-      return -1;
+    return b.elo - a.elo;
   }
 
   // turns off spinner and notifies
