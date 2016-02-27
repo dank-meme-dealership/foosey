@@ -35,16 +35,6 @@ also_reload 'foosey_def.rb'
 also_reload 'foosey_slack.rb'
 also_reload 'foosey_api.rb'
 
-options '/app' do
-  200
-end
-
-post '/app' do
-  # parse json from angular
-  params = JSON.parse(request.body.read)
-  json log_game_from_app(params['user_name'], params['text'])
-end
-
 get '/foosey.db' do
   return File.read('foosey.db')
 end
