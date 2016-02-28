@@ -1,4 +1,4 @@
-<ion-view view-title="{{player.name | capitalize}}'s Foosey Scorecard">
+<ion-view view-title="{{player.displayName}}'s Foosey Scorecard">
 	<ion-content class="background" has-bouncing="true">
 		
 		<!-- Player header -->
@@ -6,7 +6,7 @@
 			<!-- <div class="player-title">{{player.name | capitalize}}</div> -->
 			<div class="space-around">
 				<div class="player-stat">{{player.elo}}<br>Elo Rating</div>
-				<div class="player-stat">{{player.percent | number:1}}%<br>Win %</div>
+				<div class="player-stat">{{player.winRate * 100 | number:1}}%<br>Win %</div>
 			</div>
 		</div>
 

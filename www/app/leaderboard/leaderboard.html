@@ -35,7 +35,7 @@
           <ion-item 
             ng-repeat="player in players" 
             ng-class="{'last': $last}"
-            href="#/app/player/{{player.name}}">
+            href="#/app/player/{{player.playerID}}">
             <div class="spaced-out">
               <h2>
                 <div class="rank">{{player.rank}}</div> 
@@ -62,7 +62,7 @@
         <ion-item 
           ng-repeat="player in players" 
           ng-class="{'last': $last}"
-          href="#/app/player/{{player.name}}">
+          href="#/app/player/{{player.playerId}}">
           <div class="spaced-out">
             <h2>
               <div class="rank">{{$index + 1}}</div> 

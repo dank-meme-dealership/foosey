@@ -3,8 +3,7 @@ angular
   .factory('FooseyService', function($http) 
   {
     var oldUrl = "http://api.foosey.futbol/app";
-    var tempUrl = "http://beta.foosey.futbol/v1/";
-    var url = "http://api.foosey.futbol/v1/";
+    var url = "http://beta.foosey.futbol/v1/";
 
 	  return {
       getAllPlayers     : getAllPlayers,
@@ -29,7 +28,7 @@ angular
     function getAllPlayers()
     {
       // return $http.get('json/players.json');
-      return $http.get(tempUrl + 'players').then(
+      return $http.get(url + 'players').then(
         function(response)
         {
           response = _.filter(response.data, function(player)
@@ -42,7 +41,7 @@ angular
 
     function getPlayer(playerID)
     {
-      // return $http.get(url + 'players/' + playerID);
+      return $http.get(url + 'players/' + playerID);
     }
 
     function getPlayersByID(playerIDs)
@@ -82,21 +81,29 @@ angular
 
     function addDateInfo(game)
     {
-      var unix = moment.unix(game.timestamp)
+      var gameMoment = moment.unix(game.timestamp)
 
-      game.date = unix.format("MM/DD/YYYY");
-      game.time = unix.format("h:mma");
+      game.date = gameMoment.format("MM/DD/YYYY");
+      game.time = gameMoment.format("h:mma");
       return game;
     }
 
     function getEloHistory(playerID)
     {
-      // return $http.get(url + 'stats/elo/' + playerID);
+      return $http.get(url + 'stats/elo/' + playerID).then(
+        function(response)
+        {
+          _.each(response.data, function(point)
+          {
+            point.date = moment.unix(point.timestamp).format("MM/DD");
+          })
+          return response;
+        });
     }
 
     function getWinRateHistory(playerID)
     {
-      // return $http.get(url + 'stats/winrate/' + playerID);
+      return $http.get(url + 'stats/winrate/' + playerID);
     }
 
     function addGame(game)

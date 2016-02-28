@@ -7,7 +7,7 @@ function config($stateProvider)
   $stateProvider
     .state('app.scorecard',
     {
-      url: '/player/:player',
+      url: '/player/:playerID',
       views: {
         menuContent: {
           controller: 'ScorecardController',

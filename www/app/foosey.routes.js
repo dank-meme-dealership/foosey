@@ -35,16 +35,6 @@ function config($stateProvider, $urlRouterProvider)
         }
       }
     })
-    .state('app.player', 
-    {
-      url: '/player/{player}',
-      views: {
-        menuContent: {
-          controller: 'ScorecardController',
-          templateUrl: 'app/player/scorecard.html'
-        }
-      }
-    })
     .state('app.settings',
     {
       url: '/settings',
