@@ -1,6 +1,33 @@
 # foosey API calls
 # for more information see API.md
 
+# returns an api object for player elo history
+def api_stats_elo(player_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.results_as_hash = true
+  games = db.execute 'SELECT * FROM EloHistory
+                      JOIN (
+                        SELECT PlayerID, GameID, Timestamp FROM Game
+                      )
+                      USING (PlayerID, GameID)
+                      WHERE PlayerID = :player_id
+                      ORDER BY Timestamp;', player_id
+
+  games.collect do |game|
+    {
+      gameID: game['GameID'],
+      timestamp: game['Timestamp'],
+      elo: game['Elo']
+    }
+  end
+rescue SQLite3::Exception => e
+  puts e
+  500 # Internal server error
+ensure
+  db.close if db
+end
+
 # returns an api object for game with id game_id
 def api_game(game_id)
   db = SQLite3::Database.new 'foosey.db'
@@ -129,32 +156,20 @@ namespace '/v1' do
   # Statistics
   # Player Elo History
   get '/stats/elo/:id' do
-    begin
-      id = params['id'].to_i
-      db = SQLite3::Database.new 'foosey.db'
+    id = params['id'].to_i
+    json api_stats_elo id
+  end
 
-      db.results_as_hash = true
-      games = db.execute 'SELECT * FROM EloHistory
-                          JOIN (
-                            SELECT PlayerID, GameID, Timestamp FROM Game
-                          )
-                          USING (PlayerID, GameID)
-                          WHERE PlayerID = :player_id
-                          ORDER BY Timestamp;', id
+  get '/stats/elo' do
+    ids = params['ids'].split ',' if params['ids']
+    ids ||= player_ids
 
-      json(games.collect do |game|
-        {
-          gameID: game['GameID'],
-          timestamp: game['Timestamp'],
-          elo: game['Elo']
-        }
-      end)
-    rescue SQLite3::Exception => e
-      puts e
-      500 # Internal server error
-    ensure
-      db.close if db
-    end
+    json(ids.collect do |id|
+      {
+        playerID: id,
+        elos: api_stats_elo(id)
+      }
+    end)
   end
 
   # Player Win Rate History
