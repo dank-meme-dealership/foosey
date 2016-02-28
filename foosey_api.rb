@@ -241,7 +241,18 @@ namespace '/v1' do
   post '/add/player' do
     body = JSON.parse request.body.read
 
-    501 # Not yet implemented
+    # set some default values
+    admin = body['admin']
+    admin = false if admin.nil?
+    active = body['active']
+    active = true if active.nil?
+
+    add_player(body['displayName'], body['slackName'], admin, active)
+
+    json(
+      error: false,
+      message: "Player added."
+    )
   end
 
   # Editing Objects

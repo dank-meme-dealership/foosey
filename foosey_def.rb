@@ -429,11 +429,12 @@ ensure
 end
 
 # adds a player to the database
-def add_player(name, slack_name = '')
+def add_player(name, slack_name = '', admin = false, active = true)
   db = SQLite3::Database.new 'foosey.db'
 
-  db.execute 'INSERT INTO Player (DisplayName, SlackName)
-              VALUES (:name, :slack_name)', name, slack_name
+  db.execute 'INSERT INTO Player (DisplayName, SlackName, Admin, Active)
+              VALUES (:name, :slack_name, :admin, :active)',
+             name, slack_name, admin ? 1 : 0, active ? 1 : 0
 rescue SQLite3::Exception => e
   puts e
 ensure
