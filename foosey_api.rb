@@ -1,33 +1,6 @@
 # foosey API calls
 # for more information see API.md
 
-# returns an api object for player elo history
-def api_stats_elo(player_id)
-  db = SQLite3::Database.new 'foosey.db'
-
-  db.results_as_hash = true
-  games = db.execute 'SELECT * FROM EloHistory
-                      JOIN (
-                        SELECT PlayerID, GameID, Timestamp FROM Game
-                      )
-                      USING (PlayerID, GameID)
-                      WHERE PlayerID = :player_id
-                      ORDER BY Timestamp;', player_id
-
-  games.collect do |game|
-    {
-      gameID: game['GameID'],
-      timestamp: game['Timestamp'],
-      elo: game['Elo']
-    }
-  end
-rescue SQLite3::Exception => e
-  puts e
-  500 # Internal server error
-ensure
-  db.close if db
-end
-
 # returns an api object for game with id game_id
 def api_game(game_id)
   db = SQLite3::Database.new 'foosey.db'
@@ -104,6 +77,60 @@ ensure
   db.close if db
 end
 
+# returns an api object for player elo history
+def api_stats_elo(player_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.results_as_hash = true
+  games = db.execute 'SELECT * FROM EloHistory
+                      JOIN (
+                        SELECT PlayerID, GameID, Timestamp FROM Game
+                      )
+                      USING (PlayerID, GameID)
+                      WHERE PlayerID = :player_id
+                      ORDER BY Timestamp;', player_id
+
+  games.collect do |game|
+    {
+      gameID: game['GameID'],
+      timestamp: game['Timestamp'],
+      elo: game['Elo']
+    }
+  end
+rescue SQLite3::Exception => e
+  puts e
+  500 # Internal server error
+ensure
+  db.close if db
+end
+
+# returns an api object for player winrate history
+def api_stats_winrate(player_id)
+  db = SQLite3::Database.new 'foosey.db'
+
+  db.results_as_hash = true
+  games = db.execute 'SELECT * FROM WinRateHistory
+                      JOIN (
+                        SELECT PlayerID, GameID, Timestamp FROM Game
+                      )
+                      USING (PlayerID, GameID)
+                      WHERE PlayerID = :player_id
+                      ORDER BY Timestamp;', player_id
+
+  games.collect do |game|
+    {
+      gameID: game['GameID'],
+      timestamp: game['Timestamp'],
+      winRate: game['WinRate']
+    }
+  end
+rescue SQLite3::Exception => e
+  puts e
+  500 # Internal server error
+ensure
+  db.close if db
+end
+
 namespace '/v1' do
   # Player Information
   # All Players / Multiple Players
@@ -160,6 +187,7 @@ namespace '/v1' do
     json api_stats_elo id
   end
 
+  # Players Elo History
   get '/stats/elo' do
     ids = params['ids'].split ',' if params['ids']
     ids ||= player_ids
@@ -174,32 +202,21 @@ namespace '/v1' do
 
   # Player Win Rate History
   get '/stats/winrate/:id' do
-    begin
-      id = params['id'].to_i
-      db = SQLite3::Database.new 'foosey.db'
+    id = params['id'].to_i
+    json api_stats_winrate id
+  end  
 
-      db.results_as_hash = true
-      games = db.execute 'SELECT * FROM WinRateHistory
-                          JOIN (
-                            SELECT PlayerID, GameID, Timestamp FROM Game
-                          )
-                          USING (PlayerID, GameID)
-                          WHERE PlayerID = :player_id
-                          ORDER BY Timestamp;', id
+  # Player Win Rate History
+  get '/stats/winrate' do
+    ids = params['ids'].split ',' if params['ids']
+    ids ||= player_ids
 
-      json(games.collect do |game|
-        {
-          gameID: game['GameID'],
-          timestamp: game['Timestamp'],
-          winRate: game['WinRate']
-        }
-      end)
-    rescue SQLite3::Exception => e
-      puts e
-      500 # Internal server error
-    ensure
-      db.close if db
-    end
+    json(ids.collect do |id|
+      {
+        playerID: id,
+        winrates: api_stats_winrate(id)
+      }
+    end)
   end
 
   # Adding Objects
