@@ -188,7 +188,7 @@ def slack_add_game(text)
       return make_response("Invalid score: #{p.last}")
     end
 
-    outcome[p.first] = p.last.to_i
+    outcome[id(p.first)] = p.last.to_i
   end
 
   # add the game to the database

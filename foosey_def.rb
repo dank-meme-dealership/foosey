@@ -218,6 +218,17 @@ ensure
   db.close if db
 end
 
+# returns a player's display name, given id
+def name(player_id)
+  db = SQLite3::Database.new 'foosey.db'
+  db.get_first_value 'SELECT DisplayName FROM Player
+                      WHERE PlayerID = :player_id', player_id
+rescue SQLite3::Exception => e
+  puts e
+ensure
+  db.close if db
+end
+
 # returns an array of active players
 # sorted by PlayerID
 # NOTE: index != PlayerID
@@ -321,11 +332,11 @@ end
 
 # add a game to the database and update the history tables
 # outcome is hash containing key/value pairs where
-# key = player display name (what they'd be added as via slack/app)
+# key = player id
 # value = score
 # it's a little wonky but we need to support games of any number of
 # players/score combinations, so i think it's best
-def add_game(outcome)
+def add_game(outcome, timestamp = nil)
   db = SQLite3::Database.new 'foosey.db'
 
   win_weight = db.get_first_value 'SELECT Value FROM Config
@@ -336,16 +347,13 @@ def add_game(outcome)
                                  WHERE Setting = "KFactor"'
 
   # get unix time
-  timestamp = Time.now.to_i
+  timestamp ||= Time.now.to_i
   # get next game id
   game_id = 1 + db.get_first_value('SELECT GameID FROM Game
                                     ORDER BY GameID DESC LIMIT 1')
 
   # insert new game into Game table
-  outcome.each do |name, score|
-    player_id = db.get_first_value 'SELECT PlayerID FROM Player
-                                    WHERE DisplayName = :name
-                                    COLLATE NOCASE', name
+  outcome.each do |player_id, score|
     db.execute 'INSERT INTO Game
                 VALUES (:game_id, :player_id, :score, :timestamp)',
                game_id, player_id, score, timestamp

@@ -204,7 +204,7 @@ namespace '/v1' do
   get '/stats/winrate/:id' do
     id = params['id'].to_i
     json api_stats_winrate id
-  end  
+  end
 
   # Player Win Rate History
   get '/stats/winrate' do
@@ -224,7 +224,17 @@ namespace '/v1' do
   post '/add/game' do
     body = JSON.parse request.body.read
 
-    501 # Not yet implemented
+    outcome = {}
+    body['teams'].each do |team|
+      team['players'].each { |p| outcome[p] = team['score'] }
+    end
+
+    add_game(outcome, body['timestamp'])
+
+    json(
+      error: false,
+      message: 'Game added.'
+    )
   end
 
   # Add Player
