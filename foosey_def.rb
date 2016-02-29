@@ -733,18 +733,21 @@ end
 def log_game_from_slack(user_name, text, trigger_word)
   $app = false
 
+  puts text, trigger_word
+
   # Get latest paste's content
   content = File.read('games.csv')
   $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
   games = content.split("\n")[1..-1]
 
-  # Clean up text and set args
-  text ||= ''
-  trigger_word ||= 'foosey'
-  text = text.downcase.delete ':' # emoji support
-
   # Remove 'foosey' from the beginning of the text
   text = text[trigger_word.length..text.length].strip if trigger_word
+
+  # Clean up text and set args
+  text ||= ''
+  text = text.downcase.delete ':' # emoji support
+
+  puts text, trigger_word
 
   # set args
   args = text.split ' '
