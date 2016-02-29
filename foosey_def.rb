@@ -740,6 +740,7 @@ def log_game_from_slack(user_name, text, trigger_word)
 
   # Clean up text and set args
   text ||= ''
+  trigger_word ||= 'foosey'
   text = text.downcase.delete ':' # emoji support
 
   # Remove 'foosey' from the beginning of the text
