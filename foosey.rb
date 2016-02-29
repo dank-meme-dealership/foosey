@@ -37,6 +37,10 @@ also_reload 'foosey_def.rb'
 also_reload 'foosey_slack.rb'
 also_reload 'foosey_api.rb'
 
+get '/' do
+  redirect 'https://github.com/brikr/foosey/blob/master/API.md'
+end
+
 get '/foosey.db' do
   return File.read('foosey.db')
 end
