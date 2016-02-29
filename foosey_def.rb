@@ -733,8 +733,6 @@ end
 def log_game_from_slack(user_name, text, trigger_word)
   $app = false
 
-  puts text, trigger_word
-
   # Get latest paste's content
   content = File.read('games.csv')
   $names = content.lines.first.strip.split(',')[2..-1] # drop the first two items, because they're "time" and "who"
@@ -746,8 +744,6 @@ def log_game_from_slack(user_name, text, trigger_word)
   # Clean up text and set args
   text ||= ''
   text = text.downcase.delete ':' # emoji support
-
-  puts text, trigger_word
 
   # set args
   args = text.split ' '
