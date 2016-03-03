@@ -46,37 +46,36 @@ angular
 
     function getPlayersByID(playerIDs)
     {
-      // return $http.get(url + 'players?ids=' + playerIDs);
+      return $http.get(url + 'players?ids=' + playerIDs);
     }
 
     function getPlayerGames(playerID)
     {
-      // return $http.get(url + 'players/' + playerID + '/games');
+      return $http.get(url + 'players/' + playerID + '/games');
     }
 
     function getAllGames()
     {
-      // return $http.get(url + 'games');
+      return $http.get(url + 'games');
     }
 
     function getGame(gameID)
     {
-      // return $http.get(url + 'games/' + gameID);
+      return $http.get(url + 'games/' + gameID);
     }
 
     function getGamesByID(gameIDs)
     {
-      // return $http.get(url + 'games?ids=' + gameIDs);
+      return $http.get(url + 'games?ids=' + gameIDs);
     }
 
     function getGames(limit, offset)
     {
-      return $http.get('json/games.json').then(
+      return $http.get(url + 'games?limit=' + limit + '&offset=' + offset).then(
         function (response)
         {
           return _.map(response.data, addDateInfo);
-        });
-      // return $http.get(url + 'games?limit=' + limit + '&offest=' + offest);
+        });;
     }
 
     function addDateInfo(game)
@@ -108,39 +107,39 @@ angular
 
     function addGame(game)
     {
-      data =
-      {
-        text: game,
-        user_name: "app",
-        device: "app"
-      }
-      return $http.post(oldUrl, data)
-      // return $http.post(url + 'add/game', game);
+      // data =
+      // {
+      //   text: game,
+      //   user_name: "app",
+      //   device: "app"
+      // }
+      // return $http.post(oldUrl, data)
+      return $http.post(url + 'add/game', game);
     }
 
     function addPlayer(player)
     {
-      // return $http.post(url + 'add/player', player);
+      return $http.post(url + 'add/player', player);
     }
 
     function editGame(game)
     {
-      // return $http.post(url + 'edit/game', game);
+      return $http.post(url + 'edit/game', game);
     }
 
     function editPlayer(player)
     {
-      // return $http.post(url + 'edit/player', player);
+      return $http.post(url + 'edit/player', player);
     }
 
     function removeGame(gameID)
     {
-      // return $http.delete(url + 'remove/game/' + gameID);
+      return $http.delete(url + 'remove/game/' + gameID);
     }
 
     function removePlayer(playerID)
     {
-      // return $http.delete(url + 'remove/player/' + playerID);
+      return $http.delete(url + 'remove/player/' + playerID);
     }
 
     function undo()
