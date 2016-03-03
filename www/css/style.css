@@ -1,6 +1,15 @@
+.app-container
+{
+  max-width: 1024px;
+  margin: auto;
+}
 .background
 {
   background: #45526D;
+}
+.background-alt
+{
+  background-color: #0E181D;
 }
 .background-foos
 {
