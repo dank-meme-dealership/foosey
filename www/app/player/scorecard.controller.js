@@ -69,9 +69,9 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 	function getEloChartOptions(data)
 	{
 		return {
-			title: 'ELO Rating',
+			title: 'Elo Rating',
 			subtitle: $scope.subtitle,
-			yAxis: 'ELO',
+			yAxis: 'Elo',
 			class: 'elo',
 			data: data,
 			dates: $scope.dates
