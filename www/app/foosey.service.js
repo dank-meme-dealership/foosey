@@ -119,13 +119,6 @@ angular
 
     function addGame(game)
     {
-      // data =
-      // {
-      //   text: game,
-      //   user_name: "app",
-      //   device: "app"
-      // }
-      // return $http.post(oldUrl, data)
       return $http.post(url + 'add/game', game);
     }
 

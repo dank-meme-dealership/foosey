@@ -2,28 +2,11 @@ angular
 	.module('addGame')
 	.controller('AddGameController', AddGameController);
 
-function AddGameController($scope, $rootScope, localStorage, FooseyService)
+function AddGameController($scope, $rootScope, gameTypes, localStorage, FooseyService)
 {
-	// Set up the types of games you can play
-	$scope.gameTypes = [
-		{
-			name: "1 vs. 1",
-			teams: 2,
-			playersPerTeam: 1
-		},
-		{
-			name: "2 vs. 2",
-			teams: 2,
-			playersPerTeam: 2
-		},
-		{
-			name: "Trips",
-			teams: 3,
-			playersPerTeam: 1
-		}
-	];
-
+	$scope.gameTypes = gameTypes
 	$scope.reset = reset;
+	$scope.playerName = playerName;
 
 	// initialize page
 	reset();
@@ -46,7 +29,7 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 
 		// add player to this team
 		player.selected = true;
-		$scope.playersSelected.push(player.displayName);
+		$scope.playersSelected.push(player.playerID);
 
 		// if we have selected all players for the team, select the score
 		if ($scope.playersSelected.length === $scope.type.playersPerTeam)
@@ -59,8 +42,6 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 	// function to select score
 	$scope.scoreSelect = function(score)
 	{
-		appendToCommand($scope.playersSelected, score);
-
 		$scope.game.push({
 			players: $scope.playersSelected,
 			score: score
@@ -87,8 +68,13 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 	{
 		$scope.state = "saving";
 		$scope.saveStatus = "saving";
-		console.log($scope.command);
-		FooseyService.addGame($scope.command).then(function successCallback(response)
+
+		// set up game object
+		var game = {
+			teams: $scope.game
+		}
+
+		FooseyService.addGame(game).then(function successCallback(response)
 		{
 			$scope.response = response.data;
 			$scope.saveStatus = "success";
@@ -107,21 +93,11 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 		$scope.response = [];
 	}
 
-	// function to build the add command out for foosey
-	function appendToCommand(players, score)
-	{
-		for (var i = 0; i < $scope.type.playersPerTeam; i++)
-		{
-			$scope.command += players[i] + " " + score + " ";
-		}
-	}
-
 	// reset the game
 	function reset()
 	{
 		$scope.state = "game-select";
 		$scope.title = "Select the Type of Game";
-		$scope.command = "";
 		$scope.game = [];
 		$scope.saveStatus = "";
 		$scope.response = undefined;
@@ -159,6 +135,16 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 			if ($scope.players[i].selected) return false;
 		}
 		return true;
+	}
+
+	function playerName(id)
+	{
+		var name = '';
+		_.each($scope.players, function(player)
+		{
+			if (player.playerID === id) name = player.displayName;
+		});
+		return name;
 	}
 
 	$rootScope.$on("$stateChangeSuccess", function() {

@@ -34,8 +34,8 @@
 				<div class="title">{{type.name}}</div>
 				<div class="spaced-out">
 					<div ng-repeat="team in game" class="game-score">
-						<div ng-repeat="player in team.players">
-							{{player | capitalize}}
+						<div ng-repeat="playerID in team.players">
+							{{playerName(playerID)}}
 						</div>
 						<div><strong>{{team.score}}</strong></div>
 					</div>
