@@ -31,7 +31,7 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 				var chartData = response.data;
 
 				// Set up ELO Rating chart
-				$scope.charts.push(getEloChartOptions(_.pluck(chartData, 'elo'), _.pluck(chartData, 'date')));
+				$scope.charts.unshift(getEloChartOptions(_.pluck(chartData, 'elo'), _.pluck(chartData, 'date')));
 			});
 
 		FooseyService.getWinRateHistory($stateParams.playerID).then(
