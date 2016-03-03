@@ -79,6 +79,7 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
       }
       else
       {
+        players[i].disqualified = true;
         players[i].rank = '-';
         unranked.push(players[i]);
       }

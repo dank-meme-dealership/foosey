@@ -22,7 +22,7 @@
     <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
 
     <!-- Show if error -->
-    <ion-item ng-show="error">Can't connect to server :(</ion-item>
+    <ion-item ng-show="error === true">Can't connect to server :(</ion-item>
 
     <!-- show loading while waiting -->
     <ion-spinner ng-show="!players && !error" class="loading-dots" icon="lines"></ion-spinner>
@@ -42,7 +42,7 @@
                 {{player.displayName | capitalize}}
               </h2> 
               <div class="spaced-out">
-                <div ng-show="!player.qualified">{{minimumQualified - player.gamesPlayed}} games left to play</div>
+                <div ng-show="player.disqualified">{{minimumQualified - player.gamesPlayed}} games left to play</div>
                 <div ng-show="player.qualified"><b>{{player.elo}}</b></div>
                 <div 
                   ng-show="player.qualified"
@@ -51,6 +51,11 @@
                   {{0 | eloChange}}
                 </div>
                 <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
+              </div>
+            </div>
+            <div class="progress" ng-show="player.qualified">
+              <div class="progress-bar" style="width: {{player.winRate *  100 | number}}%">
+                <div style="text-shadow: 1px 1px #000000;">{{player.winRate * 100 | number:1}}%</div>
               </div>
             </div>
           </ion-item>
