@@ -27,7 +27,6 @@ angular
 
     function getAllPlayers()
     {
-      // return $http.get('json/players.json');
       return $http.get(url + 'players').then(
         function(response)
         {
