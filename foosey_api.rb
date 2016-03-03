@@ -12,7 +12,7 @@ def api_game(game_id)
                      )
                      USING (PlayerID)
                      WHERE GameID = :id
-                     ORDER BY Score;', game_id
+                     ORDER BY Score DESC', game_id
 
   return {
     error: true,
