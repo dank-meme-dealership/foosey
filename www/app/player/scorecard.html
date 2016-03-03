@@ -1,4 +1,4 @@
-<ion-view view-title="{{player.displayName}}">
+<ion-view view-title="{{name}}'s Personal Scorecard">
 	<ion-content class="background" has-bouncing="true">
 		
 		<!-- Player header -->
@@ -19,7 +19,7 @@
 		</ion-item> -->
 
 		<!-- show loading while waiting -->
-		<div ng-show="!dates">
+		<div ng-show="charts.length < 2">
 			<ion-item class="center">
 				<div>
 					Loading charts<br>

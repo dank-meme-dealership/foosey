@@ -86,6 +86,11 @@ angular
       return game;
     }
 
+    function getAllEloHistory()
+    {
+      return $http.get(url + 'stats/elo');
+    }
+
     function getEloHistory(playerID)
     {
       return $http.get(url + 'stats/elo/' + playerID).then(
@@ -101,7 +106,15 @@ angular
 
     function getWinRateHistory(playerID)
     {
-      return $http.get(url + 'stats/winrate/' + playerID);
+      return $http.get(url + 'stats/winrate/' + playerID).then(
+        function(response)
+        {
+          _.each(response.data, function(point)
+          {
+            point.date = moment.unix(point.timestamp).format("MM/DD");
+          })
+          return response;
+        });
     }
 
     function addGame(game)

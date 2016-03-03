@@ -3,6 +3,12 @@ angular.module('player')
 
 function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 {
+	_.each(localStorage.getObject('players'), function(player){
+		if(player.playerID == $stateParams.playerID)
+			$scope.name = player.displayName;
+	});
+
+
 	// set up the player
 	FooseyService.getPlayer($stateParams.playerID).then(
 		function(response){
@@ -24,15 +30,23 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 				// Get chart data
 				var chartData = response.data;
 
-				$scope.dates = _.pluck(chartData, 'date');
-
 				// Set up ELO Rating chart
-				$scope.charts.push(getEloChartOptions(_.pluck(chartData, 'elo')));
+				$scope.charts.push(getEloChartOptions(_.pluck(chartData, 'elo'), _.pluck(chartData, 'date')));
+			});
+
+		FooseyService.getWinRateHistory($stateParams.playerID).then(
+			function successCallback(response)
+			{
+				// Get chart data
+				var chartData = response.data;
+
+				// Set up Win Rate chart
+				$scope.charts.push(getPercentChartOptions(_.pluck(chartData, 'winRate'), _.pluck(chartData, 'date')));
 			});
 	}
 
 	// define options for the ELO Rating chart
-	function getEloChartOptions(data)
+	function getEloChartOptions(data, dates)
 	{
 		return {
 			title: 'ELO Rating',
@@ -40,12 +54,12 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 			yAxis: 'ELO',
 			class: 'elo',
 			data: data,
-			dates: $scope.dates
+			dates: dates
 		};
 	}
 
 	// define options for the Win Percentage chart
-	function getPercentChartOptions(data)
+	function getPercentChartOptions(data, dates)
 	{
 		return {
 			title: 'Percent Games Won',
@@ -53,7 +67,7 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 			yAxis: 'Percent',
 			class: 'percent',
 			data: data,
-			dates: $scope.dates
+			dates: dates
 		};
 	}
 }
