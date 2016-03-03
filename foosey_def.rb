@@ -112,7 +112,7 @@ def game_ids
 
   # return id
   db.execute('SELECT DISTINCT GameID FROM Game
-              ORDER BY Timestamp').flatten
+              ORDER BY Timestamp DESC').flatten
 rescue SQLite3::Exception => e
   puts e
 ensure
