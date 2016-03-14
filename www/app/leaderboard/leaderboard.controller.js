@@ -35,7 +35,7 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
   function getStats()
   {
     // load from local storage
-    $scope.players = localStorage.getObject('players');
+    $scope.players = localStorage.getObject('leaderboard');
 
     // load from server
     FooseyService.getAllPlayers().then(
@@ -43,7 +43,7 @@ function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, Foo
       { 
         $scope.players = filterPlayers(players);
         $ionicSlideBoxDelegate.update();
-        localStorage.setObject('players', $scope.players);
+        localStorage.setObject('leaderboard', $scope.players);
         $scope.error = false;
         
         done();
