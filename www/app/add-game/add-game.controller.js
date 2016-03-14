@@ -4,7 +4,7 @@ angular
 
 function AddGameController($scope, $rootScope, gameTypes, localStorage, FooseyService)
 {
-	$scope.gameTypes = gameTypes
+	$scope.gameTypes = gameTypes;
 	$scope.reset = reset;
 	$scope.playerName = playerName;
 
