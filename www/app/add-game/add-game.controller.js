@@ -6,12 +6,10 @@ function AddGameController($scope, $rootScope, gameTypes, localStorage, FooseySe
 {
 	$scope.gameTypes = gameTypes;
 	$scope.game = [];
-	$scope.gameType = [];
 	$scope.reset = reset;
 
 	// initialize page
 	reset();
-	$scope.scores = new Array(11);
 
 	$scope.$watch('game.type', function(newVal)
 	{
@@ -56,18 +54,9 @@ function AddGameController($scope, $rootScope, gameTypes, localStorage, FooseySe
     });
 	}
 
-	$scope.getNumber = function(num) {
-    return new Array(num);   
-	}
-
 	// reset the game
 	function reset()
 	{
-		$scope.state = "game-select";
-		$scope.title = "Select the Type of Game";
-		$scope.game = [];
-		$scope.saveStatus = "";
-		$scope.response = undefined;
 		getPlayers();
 	}
 

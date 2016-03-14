@@ -1,21 +1,4 @@
 <ion-view view-title="Add Game">
-	
-	<!-- Cancel button to return to game select state -->
-	<ion-nav-buttons side="right">
-    <button 
-    	class="button button-clear button-assertive" 
-    	ng-click="reset()">
-    	<div ng-if="state !== 'game-select' && state !== 'saving'">
-    		Cancel
-    	</div>
-    	<ion-spinner 
-    		icon="lines" 
-    		class="dark"
-    		ng-if="saveStatus === 'saving'">
-    	</ion-spinner>
-		</button>
-  </ion-nav-buttons>
-
 	<ion-content class="background" has-bouncing="true">
 	
 		<!-- Selecting the game type -->
