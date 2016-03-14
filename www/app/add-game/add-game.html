@@ -1,4 +1,4 @@
-<ion-view view-title="{{title}}">
+<ion-view view-title="Add Game">
 	
 	<!-- Cancel button to return to game select state -->
 	<ion-nav-buttons side="right">
@@ -19,101 +19,35 @@
 	<ion-content class="background" has-bouncing="true">
 	
 		<!-- Selecting the game type -->
-		<div ng-show="state === 'game-select'">
-			<ion-item
-				class="center title"
-				ng-repeat="type in gameTypes" 
-				ng-click="gameSelect(type)">
-				{{type.name}}
+		<label class="card item item-input item-select">
+		  <div class="input-label">
+		    Game Type
+		  </div>
+		  <select ng-model="game.type" ng-options="type.name for type in gameTypes">
+		  </select>
+		</label>
+
+		<!-- Team -->
+		<div class="card" ng-repeat="team in teams">
+			<ion-item class="item item-divider">
+				Team {{$index + 1}}
 			</ion-item>
+			<!-- Input score -->
+			<label class="item item-input">
+			  <span class="input-label">Score</span>
+			  <input type="tel" ng-model="team.score" style="text-align: right">
+			</label>
+			<!-- Input players -->
+			<label class="item item-input item-select" ng-repeat="player in team.players track by $index">
+			  <span class="input-label">Player {{$index + 1}}</span>
+			  <select ng-model="player" ng-options="player.displayName for player in players">
+			  </select>
+			</label>
 		</div>
 
-		<!-- score at the top while selecting scores -->
-		<div ng-show="state !== 'game-select'">
-			<ion-item style="text-align: center">
-				<div class="title">{{type.name}}</div>
-				<div class="spaced-out">
-					<div ng-repeat="team in game" class="game-score">
-						<div ng-repeat="playerID in team.players">
-							{{playerName(playerID)}}
-						</div>
-						<div><strong>{{team.score}}</strong></div>
-					</div>
-				</div>
-			</ion-item>
-		</div>
-	
-		<!-- Player select -->
-		<div ng-show="state === 'player-select'">
-			<!-- show loading while waiting -->
-	  	<ion-spinner ng-show="!players" class="loading-dots" icon="lines"></ion-spinner>
-			<div class="grid-container">
-				<div 
-					class="grid-item item" 
-					ng-class="{'selected': player.selected}"
-					ng-repeat="player in players"
-	  		  ng-click="playerSelect(player)">
-	  		  {{player.displayName | capitalize}}
-	  		</div>
-			</div>
-		</div>
-		
-		<!-- Score select -->
-		<div ng-show="state === 'score-select'">
-			<div class="grid-container">
-				<div 
-					class="grid-item item"
-					ng-class="{'bold': $index === 5 || $index === 0}"
-					ng-repeat="score in scores track by $index"
-	  		  ng-click="scoreSelect(scores.length - 1 - $index)">
-	  		  {{scores.length - 1 - $index}}
-	  		</div>
-			</div>
-		</div>
-	
-		<!-- Confirm the game -->
-		<div ng-show="state === 'confirm'">
-			<ion-item class="center" ng-click="submit()">Save</ion-item>
-		</div>
-
-		<!-- Saving the game -->
-		<div ng-show="state === 'saving'">
-
-			<!-- Progress -->
-			<ion-item class="center">	
-				<div ng-show="saveStatus === 'saving'">
-					Adding Game...
-				</div>
-				<div ng-show="saveStatus === 'success'">
-					{{response.text}}
-				</div>
-				<div class="ion-close" ng-show="saveStatus === 'failed'">
-					Something went wrong on the server, talk to Matt or Brik.
-				</div>
-				<div ng-show="saveStatus === 'removed'">
-					Game Removed!
-				</div>
-			</ion-item>
-
-			<!-- Attachments -->
-			<ion-item 
-				style="text-align: center" 
-				ng-repeat="attachment in response.attachments">
-				<div>{{attachment.pretext | and}}</div>
-				<div class="row">
-					<div class="col" ng-repeat="field in attachment.fields">
-						<div>{{field.title | and}}</div>
-						<div>{{field.value}}</div>
-					</div>
-				</div>
-			</ion-item>
-
-			<!-- Undo button -->
-			<!-- <ion-item class="center" ng-show="saveStatus === 'success'" ng-click="undo()">Undo</ion-item> -->
-
-			<!-- Done button -->
-			<ion-item class="center" ng-click="reset()">
-				Add Another Game
+		<div class="card">
+			<ion-item class="center">
+				Save
 			</ion-item>
 		</div>
 
