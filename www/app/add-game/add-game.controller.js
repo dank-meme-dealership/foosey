@@ -22,7 +22,7 @@ function AddGameController($scope, $rootScope, gameTypes, localStorage, FooseySe
 		for (var i = 0; i < newVal.teams; i++)
 		{
 			var team = {
-				score: undefined,
+				score: '',
 				players: []
 			}
 			for (var j = 0; j < newVal.playersPerTeam; j++)

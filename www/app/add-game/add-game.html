@@ -32,16 +32,16 @@
 			<ion-item class="item item-divider">
 				Team {{$index + 1}}
 			</ion-item>
-			<!-- Input score -->
-			<label class="item item-input">
-			  <span class="input-label">Score</span>
-			  <input type="tel" ng-model="team.score" style="text-align: right">
-			</label>
 			<!-- Input players -->
 			<label class="item item-input item-select" ng-repeat="player in team.players track by $index">
 			  <span class="input-label">Player {{$index + 1}}</span>
 			  <select ng-model="player" ng-options="player.displayName for player in players">
 			  </select>
+			</label>
+			<!-- Input score -->
+			<label class="item item-input">
+			  <span class="input-label">Score</span>
+			  <input type="tel" ng-model="team.score" style="text-align: right">
 			</label>
 		</div>
 
