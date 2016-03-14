@@ -1,4 +1,4 @@
-<ion-view view-title="{{name}}'s Foosey Scorecard">
+<ion-view view-title="{{name}}">
 	<ion-content class="background" has-bouncing="true">
 		
 		<!-- Player header -->
@@ -11,7 +11,7 @@
 		</div>
 
 		<!-- link to other stats -->
-		<!-- <ion-item href="#/app/team-stats">
+		<!-- <ion-item class="card" href="#/app/team-stats">
 			<div class="spaced-out">
 				<div class="ion-stats-bars space">See team statistics</div>
 				<div class="ion-ios-arrow-forward"></div>
@@ -19,7 +19,7 @@
 		</ion-item> -->
 
 		<!-- show loading while waiting -->
-		<div ng-show="charts.length < 2">
+		<div class="card" ng-show="charts.length < 2">
 			<ion-item class="center">
 				<div>
 					Loading charts<br>
@@ -30,9 +30,6 @@
 	  
 		<!-- set up charts -->
 		<chart ng-repeat="chart in charts" options="chart"></chart>
-
-		<!-- 10 px divider from the bottom -->
-		<div style="height: 10px"></div>
 
 	</ion-content>
 </ion-view>

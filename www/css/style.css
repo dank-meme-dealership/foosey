@@ -44,6 +44,10 @@
   background: #373E48;
   border-color: #242A38;
 }
+.card, .list-inset
+{
+  margin: 10px;
+}
 .center
 {
   display: flex;
@@ -77,15 +81,6 @@ div.item
 .item-complex .item-content, .item-radio .item-content
 {
   padding: 16px;
-}
-ion-item.item
-{
-  margin: 10px 10px 0;
-  white-space: initial;
-}
-ion-item.item.last, ion-list.last ion-item.item
-{
-  margin-bottom: 10px;
 }
 .loading-dots
 {
