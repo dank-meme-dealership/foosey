@@ -33,8 +33,8 @@
       <ion-slide>
         <ion-list>
           <ion-item 
-            ng-repeat="player in elos" 
-            ng-class="{'last': $last}"
+            class="card"
+            ng-repeat="player in elos"
             href="#/app/player/{{player.name}}">
             <div class="spaced-out">
               <h2>
@@ -59,9 +59,9 @@
 
       <!-- % Games won -->
       <ion-slide>
-        <ion-item 
-          ng-repeat="player in percent" 
-          ng-class="{'last': $last}"
+        <ion-item
+          class="card" 
+          ng-repeat="player in percent"
           href="#/app/player/{{player.name}}">
           <div class="spaced-out">
             <h2>

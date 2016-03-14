@@ -19,8 +19,8 @@
     <ion-item ng-show="error">Can't connect to server :(</ion-item>
 
 		<!-- The full history of games -->
-		<div ng-show="dates">
-			<ion-list ng-repeat="day in dates" ng-class="{'last': $last}">
+		<div ng-show="dates" class="card" ng-repeat="day in dates">
+			<ion-list>
 				<ion-item>
 					<div class="spaced-out">
 						<div class="history-date">{{day.date | date}}</div>
@@ -45,14 +45,13 @@
 					</div>
 				</ion-item>
 			</ion-list>
-
-			<!-- Load more games if you reach the bottom -->
-			<ion-infinite-scroll
-				ng-if="!allLoaded && games"
-				spinner="lines"
-  		  on-infinite="loadMore()"
-  		  distance="1%">
-  		</ion-infinite-scroll>
 		</div>
+		<!-- Load more games if you reach the bottom -->
+		<ion-infinite-scroll
+			ng-if="!allLoaded && games"
+			spinner="lines"
+		  on-infinite="loadMore()"
+		  distance="1%">
+		</ion-infinite-scroll>
 	</ion-content>
 </ion-view>

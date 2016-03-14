@@ -2,7 +2,7 @@
 	<ion-content class="background" has-bouncing="true">
 
 		<!-- show loading while waiting -->
-		<div ng-show="!data">
+		<div class="card" ng-show="!data">
 			<ion-item class="center">
 				<div>
 					Loading chart<br>
@@ -11,7 +11,7 @@
 			</ion-item>
 		</div>
 
-		<ion-item style="padding: 5px 5px 0 5px;">
+		<ion-item class="card" style="padding: 5px 5px 0 5px;">
 			<div id="container" class="chart-container"></div>
 		</ion-item>
 
