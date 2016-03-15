@@ -19,9 +19,8 @@
 	<ion-content class="background" has-bouncing="true">
 	
 		<!-- Selecting the game type -->
-		<div class="card center title" ng-repeat="type in gameTypes" ng-show="state === 'game-select'">
-			<ion-item
-				ng-click="gameSelect(type)">
+		<div ng-click="gameSelect(type)" class="card center title" ng-repeat="type in gameTypes" ng-show="state === 'game-select'">
+			<ion-item>
 				{{type.name}}
 			</ion-item>
 		</div>
@@ -70,8 +69,8 @@
 		</div>
 	
 		<!-- Confirm the game -->
-		<div class="card" ng-show="state === 'confirm'">
-			<ion-item class="center" ng-click="submit()">Save</ion-item>
+		<div ng-click="submit()" class="card" ng-show="state === 'confirm'">
+			<ion-item class="center">Save</ion-item>
 		</div>
 
 		<!-- Saving the game -->
@@ -109,12 +108,12 @@
 			</div>
 
 			<!-- Undo button -->
-			<div class="card" ng-show="saveStatus === 'success'" >
-				<ion-item class="center" ng-click="undo()">Undo</ion-item>
+			<div ng-click="undo()" class="card" ng-show="saveStatus === 'success'" >
+				<ion-item class="center">Undo</ion-item>
 			</div>
 
 			<!-- Done button -->
-			<div class="card">
+			<div ng-click="reset()" class="card">
 				<ion-item class="center" ng-click="reset()">
 					Add Another Game
 				</ion-item>
