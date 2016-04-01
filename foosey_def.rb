@@ -216,8 +216,8 @@ def calculate_elo_change(g, elo, total_games)
   # if 2 players
   if players_in_game(g) == 2
     # add back to elos
-    elo[p_a] += r_a_n + rand(-5..5)
-    elo[p_b] += r_b_n + rand(-5..5)
+    elo[p_a] += rand(-15..15)
+    elo[p_b] += rand(-15..15)
 
     # add to player total games
     total_games[p_a] += 1
@@ -226,12 +226,12 @@ def calculate_elo_change(g, elo, total_games)
   # if 4 players
   else
     # add winner elos
-    elo[t_a_p_a] += r_a_n + rand(-5..5)
-    elo[t_a_p_b] += r_a_n + rand(-5..5)
+    elo[t_a_p_a] += rand(-15..15)
+    elo[t_a_p_b] += rand(-15..15)
 
     # subtract loser elos
-    elo[t_b_p_a] += r_b_n + rand(-5..5)
-    elo[t_b_p_b] += r_b_n + rand(-5..5)
+    elo[t_b_p_a] += rand(-15..15)
+    elo[t_b_p_b] += rand(-15..15)
 
     # add to player total games
     total_games[t_a_p_a] += 1
