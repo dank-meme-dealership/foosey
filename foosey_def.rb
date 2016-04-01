@@ -150,7 +150,7 @@ def calculate_elo_change(g, elo, total_games)
 
   prev = elo.dup
 
-  k_factor = 50 # we can play around with this, but chess uses 15 in most skill ranges
+  k_factor = rand(25..40) # we can play around with this, but chess uses 15 in most skill ranges
 
   g_a = g.strip.split(',')[2..-1]
   max = g_a.max {|a,b| a.to_i <=> b.to_i }
@@ -187,12 +187,12 @@ def calculate_elo_change(g, elo, total_games)
 
     # then get team elos
     r_a = ((elo[t_a_p_a] + elo[t_a_p_b]) / 2).round
-    r_b = ((elo[t_b_p_a] + elo[t_b_p_b]) / 2).round
+    r_b = ((elo[t_b_p_a] + elo[t_b_p_b]) / rand(1..2)).round
   end
 
   # do shit
-  e_a = 1 / (1 + 10**((r_b - r_a) / 800.to_f))
-  e_b = 1 / (1 + 10**((r_a - r_b) / 800.to_f))
+  e_a = 1 / (1 + rand(1..20)**((r_b - r_a) / 800.to_f))
+  e_b = 1 / (1 + 10**((r_a - r_b) / rand(750..850).to_f))
   # method 1: winner gets all
   # s_a = p_a_p > p_b_p ? 1 : 0
   # s_b = 1 - s_a
@@ -208,10 +208,10 @@ def calculate_elo_change(g, elo, total_games)
   end
 
   # divide elo change to be smaller if it wasn't a full game to 10
-  ratio = 10 / max.to_i
+  ratio = rand(5..15) / max.to_i
 
-  r_a_n = (k_factor * (s_a - e_a) / rand(1..20)).round
-  r_b_n = (k_factor * (s_b - e_b) / rand(1..20)).round
+  r_a_n = (k_factor * (s_a - e_a) / ratio).round
+  r_b_n = (k_factor * (s_b - e_b) / ratio).round
 
   # if 2 players
   if players_in_game(g) == 2
