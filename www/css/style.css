@@ -78,6 +78,11 @@ div.item
   margin: 5px;
   text-align: center;
 }
+ion-item.item.wrap 
+{
+  white-space: normal;
+  text-align: center;
+}
 .item-complex .item-content, .item-radio .item-content
 {
   padding: 16px;

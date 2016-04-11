@@ -78,7 +78,7 @@
 
 			<!-- Progress -->
 			<div class="card">
-				<ion-item class="center">	
+				<ion-item class="wrap">	
 					<div ng-show="saveStatus === 'saving'">
 						Adding Game...
 					</div>
@@ -96,7 +96,7 @@
 
 			<!-- Attachments -->
 			<div class="card" ng-repeat="attachment in response.attachments">
-				<ion-item style="text-align: center">
+				<ion-item class="wrap">
 					<div>{{attachment.pretext | and}}</div>
 					<div class="row">
 						<div class="col" ng-repeat="field in attachment.fields">
