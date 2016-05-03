@@ -19,17 +19,14 @@
 	<ion-content class="background" has-bouncing="true">
 	
 		<!-- Selecting the game type -->
-		<div ng-show="state === 'game-select'">
-			<ion-item
-				class="center title"
-				ng-repeat="type in gameTypes" 
-				ng-click="gameSelect(type)">
+		<div ng-click="gameSelect(type)" class="card center title" ng-repeat="type in gameTypes" ng-show="state === 'game-select'">
+			<ion-item>
 				{{type.name}}
 			</ion-item>
 		</div>
 
 		<!-- score at the top while selecting scores -->
-		<div ng-show="state !== 'game-select'">
+		<div class="card" ng-show="state !== 'game-select'">
 			<ion-item style="text-align: center">
 				<div class="title">{{type.name}}</div>
 				<div class="spaced-out">
@@ -72,49 +69,55 @@
 		</div>
 	
 		<!-- Confirm the game -->
-		<div ng-show="state === 'confirm'">
-			<ion-item class="center" ng-click="submit()">Save</ion-item>
+		<div ng-click="submit()" class="card" ng-show="state === 'confirm'">
+			<ion-item class="center">Save</ion-item>
 		</div>
 
 		<!-- Saving the game -->
 		<div ng-show="state === 'saving'">
 
 			<!-- Progress -->
-			<ion-item class="center">	
-				<div ng-show="saveStatus === 'saving'">
-					Adding Game...
-				</div>
-				<div ng-show="saveStatus === 'success'">
-					{{response.text}}
-				</div>
-				<div class="ion-close" ng-show="saveStatus === 'failed'">
-					Something went wrong on the server, talk to Matt or Brik.
-				</div>
-				<div ng-show="saveStatus === 'removed'">
-					Game Removed!
-				</div>
-			</ion-item>
+			<div class="card">
+				<ion-item class="wrap">	
+					<div ng-show="saveStatus === 'saving'">
+						Adding Game...
+					</div>
+					<div ng-show="saveStatus === 'success'">
+						{{response.text}}
+					</div>
+					<div class="ion-close" ng-show="saveStatus === 'failed'">
+						Something went wrong on the server, talk to Matt or Brik.
+					</div>
+					<div ng-show="saveStatus === 'removed'">
+						Game Removed!
+					</div>
+				</ion-item>
+			</div>
 
 			<!-- Attachments -->
-			<ion-item 
-				style="text-align: center" 
-				ng-repeat="attachment in response.attachments">
-				<div>{{attachment.pretext | and}}</div>
-				<div class="row">
-					<div class="col" ng-repeat="field in attachment.fields">
-						<div>{{field.title | and}}</div>
-						<div>{{field.value}}</div>
+			<div class="card" ng-repeat="attachment in response.attachments">
+				<ion-item class="wrap">
+					<div>{{attachment.pretext | and}}</div>
+					<div class="row">
+						<div class="col" ng-repeat="field in attachment.fields">
+							<div>{{field.title | and}}</div>
+							<div>{{field.value}}</div>
+						</div>
 					</div>
-				</div>
-			</ion-item>
+				</ion-item>
+			</div>
 
 			<!-- Undo button -->
-			<!-- <ion-item class="center" ng-show="saveStatus === 'success'" ng-click="undo()">Undo</ion-item> -->
+			<!-- <div ng-click="undo()" class="card" ng-show="saveStatus === 'success'" >
+				<ion-item class="center">Undo</ion-item>
+			</div> -->
 
 			<!-- Done button -->
-			<ion-item class="center" ng-click="reset()">
-				Add Another Game
-			</ion-item>
+			<div ng-click="reset()" class="card">
+				<ion-item class="center" ng-click="reset()">
+					Add Another Game
+				</ion-item>
+			</div>
 		</div>
 
 	</ion-content>
