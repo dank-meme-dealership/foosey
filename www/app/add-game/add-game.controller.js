@@ -2,7 +2,7 @@ angular
 	.module('addGame')
 	.controller('AddGameController', AddGameController);
 
-function AddGameController($scope, $rootScope, localStorage, FooseyService)
+function AddGameController($scope, $rootScope, $ionicScrollDelegate, localStorage, FooseyService)
 {
 	// Set up the types of games you can play
 	$scope.gameTypes = [
@@ -34,8 +34,7 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 	{
 		$scope.type = _.clone(type);
 		$scope.playersSelected = [];
-		$scope.state = "player-select";
-		$scope.title = "Select Players";
+		changeState("player-select", "Select Players");
 	};
 
 	// function to select player
@@ -51,8 +50,7 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 		// if we have selected all players for the team, select the score
 		if ($scope.playersSelected.length === $scope.type.playersPerTeam)
 		{
-			$scope.state = "score-select";
-			$scope.title = "Select Score";
+			changeState("score-select", "Select Score");
 		}
 	};
 
@@ -72,13 +70,11 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 		// if we have scores for every team, go to confirm
 		if ($scope.type.teams === 0)
 		{
-			$scope.state = "confirm";
-			$scope.title = "Confirm";
+			changeState("confirm", "Confirm");
 		}
 		else
 		{
-			$scope.state = "player-select";
-			$scope.title = "Select Players";
+			changeState("player-select", "Select Players");
 		}
 	};
 
@@ -86,6 +82,7 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 	$scope.submit = function()
 	{
 		$scope.state = "saving";
+		changeState("saving", null);
 		$scope.saveStatus = "saving";
 		console.log($scope.command);
 		FooseyService.addGame($scope.command).then(function successCallback(response)
@@ -119,8 +116,7 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 	// reset the game
 	function reset()
 	{
-		$scope.state = "game-select";
-		$scope.title = "Select the Type of Game";
+		changeState("game-select", "Select the Type of Game");
 		$scope.command = "";
 		$scope.game = [];
 		$scope.saveStatus = "";
@@ -158,6 +154,13 @@ function AddGameController($scope, $rootScope, localStorage, FooseyService)
 			if ($scope.players[i].selected) return false;
 		}
 		return true;
+	}
+
+	function changeState(state, title)
+	{
+		if (state) $scope.state = state;
+		if (title) $scope.title = title;
+		$ionicScrollDelegate.scrollTop();
 	}
 
 	$rootScope.$on("$stateChangeSuccess", function() {
