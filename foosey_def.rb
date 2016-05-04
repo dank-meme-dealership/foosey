@@ -666,6 +666,71 @@ def getInsult
   insult
 end
 
+def getScorecard(name, games)
+  pIndex = $names.find_index(name)
+  t = 0
+  st = 0
+  dt = 0
+  sw = 0
+  dw = 0
+  ally = Array.new($names.length, 0)
+  nemesis = Array.new($names.length, 0)
+  for g in games.each
+    g_a = g.split(',')[2..-1]
+
+    # Skip if they're not in the game
+    if g_a[pIndex] == '-1'
+      next
+    end
+
+    t += 1 # increment total games
+    players = players_in_game(g)
+    max = g_a.max {|a,b| a.to_i <=> b.to_i }
+    
+    if players == 2
+      st += 1 # increment totals
+      if max == g_a[pIndex] 
+        sw += 1 # increment wins 
+      else
+        nIndex = g_a.index(max)
+        nemesis[nIndex] += 1
+      end
+    elsif players == 4
+      dt += 1 # increment totals
+      if max == g_a[pIndex] 
+        dw += 1 # increment wins
+        
+        # find winner indexes
+        w1 = g_a.index { |p| p == max }
+        w2 = g_a.rindex { |p| p == max }
+
+        #ally is not you
+        aIndex = w1 != pIndex ? w1 : w2
+        
+        ally[aIndex] += 1
+      end
+    end
+
+  end
+
+  aCount = ally.max
+  aIndex = ally.index(aCount)
+  nCount = nemesis.max
+  nIndex = nemesis.index(nCount)
+
+  return {
+    totalGames: t,
+    singlesPercent: st == 0 ? 0 : sw.to_f / st,
+    doublesPercent: dt == 0 ? 0 : dw.to_f / dt,
+    singlesTotal: st,
+    doublesTotal: dt,
+    ally: $names[aIndex],
+    allyCount: aCount,
+    nemesis: $names[nIndex],
+    nemesisCount: nCount
+  }
+end
+
 def getPlayers(names)
   players = []
   for p in names.each
@@ -805,6 +870,8 @@ def log_game_from_app(user_name, text)
     return {
       charts: get_charts(args[1], games)
     }
+  elsif text.start_with? 'scorecard'
+    return getScorecard(args[1], games)
   elsif text.start_with? 'leaderboard'
     return {
       elos: get_elos(games)[0],
