@@ -27,6 +27,35 @@
 				</div>
 			</ion-item>
 		</div>
+
+		<div class="card" ng-show="scorecardStats">
+			<!-- Total Games -->
+			<ion-item class="stat-card">
+				<div>Total Games</div>
+				<div>{{scorecardStats.totalGames}} games</div>
+			</ion-item>
+			<!-- Total Singles -->
+			<ion-item class="stat-card">
+				<div>Singles</div>
+				<div>{{scorecardStats.singlesTotal}} ({{scorecardStats.singlesPercent | percentage:1}} wins)</div>
+			</ion-item>
+			<!-- Total Doubles -->
+			<ion-item class="stat-card">
+				<div>Doubles</div>
+				<div>{{scorecardStats.doublesTotal}} ({{scorecardStats.doublesPercent | percentage:1}} wins)</div>
+			</ion-item>
+			<!-- Ally -->
+			<ion-item class="stat-card">
+				<div>Ally</div>
+				<div>{{scorecardStats.ally | capitalize}} ({{scorecardStats.allyCount}} games)</div>
+			</ion-item>
+			<!-- Nemesis -->
+			<ion-item class="stat-card">
+				<div>Nemesis</div>
+				<div>{{scorecardStats.nemesis | capitalize}} ({{scorecardStats.nemesisCount}} games)</div>
+			</ion-item>
+
+		</div>
 	  
 		<!-- set up charts -->
 		<chart ng-repeat="chart in charts" options="chart"></chart>

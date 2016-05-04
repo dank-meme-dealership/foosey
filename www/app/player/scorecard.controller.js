@@ -6,8 +6,21 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 	// set up the player
 	$scope.player = getPlayer($stateParams.player);
 
+	// get additional stats
+	getScorecard();
+
 	// set up charts
 	setUpCharts();
+
+	// get additional stats about player
+	function getScorecard()
+	{
+		FooseyService.scorecard($scope.player.name).then(
+			function successCallback(response)
+			{
+				$scope.scorecardStats = response.data;
+			});
+	}
 
 	// get the player information
 	function getPlayer(name)
@@ -44,25 +57,26 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 		$scope.charts = [];
 		$scope.subtitle = 'Data from All Time';
 
-		FooseyService.charts($scope.player.name).then(function successCallback(response)
-		{
-			// Get chart data
-			var chartData = response.data;
+		FooseyService.charts($scope.player.name).then(
+			function successCallback(response)
+			{
+				// Get chart data
+				var chartData = response.data;
 
-			// mock out filtering the charts by something
-			// chartData.charts = _.filter(chartData.charts, function(chart)
-			// {
-			// 	return true;
-			// })
+				// mock out filtering the charts by something
+				// chartData.charts = _.filter(chartData.charts, function(chart)
+				// {
+				// 	return true;
+				// })
 
-			$scope.dates = _.pluck(chartData.charts, 'date');
+				$scope.dates = _.pluck(chartData.charts, 'date');
 
-			// Set up ELO Rating chart
-			$scope.charts.push(getEloChartOptions(_.pluck(chartData.charts, 'elo')));
+				// Set up ELO Rating chart
+				$scope.charts.push(getEloChartOptions(_.pluck(chartData.charts, 'elo')));
 
-			// Set up Win Percent chart
-			$scope.charts.push(getPercentChartOptions(_.pluck(chartData.charts, 'percent')));
-		});
+				// Set up Win Percent chart
+				$scope.charts.push(getPercentChartOptions(_.pluck(chartData.charts, 'percent')));
+			});
 	}
 
 	// define options for the ELO Rating chart

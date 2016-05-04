@@ -17,7 +17,9 @@ angular
 	.filter('team', team)
 
 	// convert from 24-hour to am/pm
-	.filter('time', time);
+	.filter('time', time)
+
+	.filter('percentage', percentage);
 
 function and()
 {
@@ -30,7 +32,7 @@ function and()
 function capitalize() 
 {
   return function(input) {
-    return input.toLowerCase().replace( /\b\w/g, function (m) {
+    return !input ? '' : input.toLowerCase().replace( /\b\w/g, function (m) {
       return m.toUpperCase();
     });
   }
@@ -92,4 +94,11 @@ function time()
 
 		return hours + ":" + mins + ampm;
 	}
+}
+
+function percentage($filter) {
+  return function (input, decimals) 
+  {
+    return $filter('number')(input * 100, decimals) + '%';
+  }
 }

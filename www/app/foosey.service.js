@@ -10,6 +10,7 @@ angular.module('foosey')
       history: history,
       players: players,
       remove: remove,
+      scorecard: scorecard,
       teamCharts: teamCharts,
       undo: undo
     }
@@ -80,6 +81,17 @@ angular.module('foosey')
         text: "remove " + id,
         device: "app"
       };
+      return $http.post(url, data);
+    }
+
+    // get additional scorecard statistics
+    function scorecard(name)
+    {
+      data =
+      {
+        text: "scorecard " + name,
+        device: "app"
+      }
       return $http.post(url, data);
     }
 
