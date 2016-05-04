@@ -1,26 +1,14 @@
 angular
 	.module('foosey')
-
-	// replace & with And
 	.filter('and', and)
-
-	// capitalize the first letter of a word
 	.filter('capitalize', capitalize)
-
-	// capitalize the first letter of a word
 	.filter('date', date)
-
-	// format the elo change for the day
 	.filter('eloChange', eloChange)
-
-	// nice string for teams
 	.filter('team', team)
-
-	// convert from 24-hour to am/pm
 	.filter('time', time)
-
 	.filter('percentage', percentage);
 
+// replace & with And
 function and()
 {
 	return function(str)
@@ -29,6 +17,7 @@ function and()
 	}
 }
 
+// capitalize the first letter of a word
 function capitalize() 
 {
   return function(input) {
@@ -38,17 +27,23 @@ function capitalize()
   }
 }
 
+// format date
 function date() 
 {
   return function(input) {
-  	var date = new Date();
-	  var today = ("0" + (date.getMonth() + 1).toString()).substr(-2) + "/" + ("0" + date.getDate().toString()).substr(-2)  + "/" + (date.getFullYear().toString());
+    var day = moment(input);
+  	var daysFromToday = moment().diff(day, 'days');
 	  
-    if (input === today) return 'Today';
+    // Special cases
+    if (daysFromToday === 0) return 'Today';
+    if (daysFromToday === 1) return 'Yesterday';
+    if (daysFromToday < 7) return day.format('dddd');
+
     return input;
   }
 }
 
+// format the elo change for the day
 function eloChange()
 {
 	return function(input)
@@ -59,6 +54,7 @@ function eloChange()
 	}
 }
 
+// nice string for teams
 function team()
 {
 	return function(players)
@@ -83,6 +79,7 @@ function team()
 	}
 }
 
+// convert from 24-hour to am/pm
 function time()
 {
 	return function(time)
