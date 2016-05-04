@@ -673,8 +673,10 @@ def getScorecard(name, games)
   dt = 0
   sw = 0
   dw = 0
-  ally = Array.new($names.length, 0)
-  nemesis = Array.new($names.length, 0)
+  allyTotal = Array.new($names.length, 0)
+  allyWins = Array.new($names.length, 0)
+  nemesisTotal = Array.new($names.length, 0)
+  nemesisWins = Array.new($names.length, 0)
   for g in games.each
     g_a = g.split(',')[2..-1]
 
@@ -688,35 +690,53 @@ def getScorecard(name, games)
     max = g_a.max {|a,b| a.to_i <=> b.to_i }
     
     if players == 2
-      st += 1 # increment totals
+
+      p_a = g_a.index { |p| p != '-1' }
+      p_b = g_a.rindex { |p| p != '-1' }
+
+      st += 1 # increment singles totals
+      nIndex = p_a != pIndex ? p_a : p_b # nemesis is not you
+      nemesisTotal[nIndex] += 1
+
       if max == g_a[pIndex] 
-        sw += 1 # increment wins 
+        sw += 1 # increment singles wins 
       else
-        nIndex = g_a.index(max)
-        nemesis[nIndex] += 1
+        nemesisWins[nIndex] += 1
       end
     elsif players == 4
-      dt += 1 # increment totals
-      if max == g_a[pIndex] 
-        dw += 1 # increment wins
-        
-        # find winner indexes
-        w1 = g_a.index { |p| p == max }
-        w2 = g_a.rindex { |p| p == max }
 
-        #ally is not you
-        aIndex = w1 != pIndex ? w1 : w2
-        
-        ally[aIndex] += 1
+      # get indexes of winners
+      t_a_p_a = g_a.index { |p| p == max }
+      t_a_p_b = g_a.rindex { |p| p == max }
+
+      # get indexes of losers
+      t_b_p_a = g_a.index { |p| p != '-1' && p != max }
+      t_b_p_b = g_a.rindex { |p| p != '-1' && p != max }
+
+      dt += 1 # increment doubles totals
+
+      if max == g_a[pIndex] 
+        dw += 1 # increment doubles wins
+        aIndex = t_a_p_a != pIndex ? t_a_p_a : t_a_p_b # ally is not you
+        allyWins[aIndex] += 1
+      else
+        aIndex = t_b_p_a != pIndex ? t_b_p_a : t_b_p_b # ally is not you
       end
+
+      allyTotal[aIndex] += 1
     end
 
   end
 
-  aCount = ally.max
-  aIndex = ally.index(aCount)
-  nCount = nemesis.max
-  nIndex = nemesis.index(nCount)
+  nemesisTotal.each_with_index do |total, i|
+    percent = total == 0 ? 0 : nemesisWins[i].to_f / total
+    puts "#{$names[i]}: #{percent}"
+  end 
+
+  aCount = allyWins.max
+  aIndex = allyWins.index(aCount)
+  nCount = nemesisWins.max
+  nIndex = nemesisWins.index(nCount)
 
   return {
     totalGames: t,
@@ -724,9 +744,9 @@ def getScorecard(name, games)
     doublesPercent: dt == 0 ? 0 : dw.to_f / dt,
     singlesTotal: st,
     doublesTotal: dt,
-    ally: $names[aIndex],
+    ally: aCount == 0 ? "N/A" : $names[aIndex],
     allyCount: aCount,
-    nemesis: $names[nIndex],
+    nemesis: nCount == 0 ? "N/A" : $names[nIndex],
     nemesisCount: nCount
   }
 end
