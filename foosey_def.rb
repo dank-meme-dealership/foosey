@@ -442,6 +442,7 @@ def allHistory(content, start, limit)
 
     date, time = dateTime(g, '%m/%d/%Y', '%H:%M')
     teams = []
+    timestamp = g.split(',')[0].to_i
     game = g.split(',')[2..-1]
 
     teams = getTeamNamesAndScores(g, change)
@@ -449,7 +450,8 @@ def allHistory(content, start, limit)
     allGames.unshift(id: i,
                      date: date,
                      time: time,
-                     teams: teams)
+                     teams: teams,
+                     timestamp: timestamp)
   end
   allGames
 end
