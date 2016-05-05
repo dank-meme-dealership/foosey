@@ -87,7 +87,6 @@ function time()
 		var day = moment.unix(input);
     var daysFromToday = moment().diff(day, 'days');
 
-		return daysFromToday === 0 ? day.fromNow() : day.format('h:mma');
 	}
 }
 
