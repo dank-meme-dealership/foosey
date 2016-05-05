@@ -82,14 +82,12 @@ function team()
 // convert from 24-hour to am/pm
 function time()
 {
-	return function(time)
+	return function(input)
 	{
-		var hours = time.split(":")[0];
-		var mins = time.split(":")[1];
-		var ampm = hours < 12 ? "am" : "pm";
-		hours = hours == 0 || hours == 12 ? 12 : hours % 12;
+		var day = moment.unix(input);
+    var daysFromToday = moment().diff(day, 'days');
 
-		return hours + ":" + mins + ampm;
+		return daysFromToday === 0 ? day.fromNow() : day.format('h:mma');
 	}
 }
 
