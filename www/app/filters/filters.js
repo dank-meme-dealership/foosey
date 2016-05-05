@@ -64,7 +64,7 @@ function team()
 		if (players.length === 2) return players[0].name + " and " + players[1].name;
 
 		// else, comma seperated list
-		var teamName = "";
+		var teamName = "";.
 		var i = 0;
 		while(i < players.length)
 		{
@@ -86,7 +86,9 @@ function time()
 	{
 		var day = moment.unix(input);
     var daysFromToday = moment().diff(day, 'days');
+    var absolutelyToday = daysFromToday === 0 && day.dayOfYear() === moment().dayOfYear();
 
+		return absolutelyToday ? day.fromNow() : day.format('h:mma');
 	}
 }
 
