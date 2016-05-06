@@ -1,0 +1,11 @@
+Metrics/AbcSize:
+  Max: 1000 # no max
+
+Metrics/MethodLength:
+  Max: 1000 # no max
+
+Metrics/ParameterLists:
+  Max: 1000 # no max
+
+Metrics/PerceivedComplexity:
+  Max: 1000 # no max
