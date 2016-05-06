@@ -26,7 +26,8 @@ end
 # if date = true, it will be prepended with a nicely formatted date
 def game_to_s(game_id, date = false)
   database do |db|
-    game = create_query_hash(db.execute2('SELECT p.DisplayName, g.Score, g.Timestamp
+    game = create_query_hash(db.execute2('SELECT
+                                            p.DisplayName, g.Score, g.Timestamp
                                           FROM Game g
                                           JOIN Player p
                                           USING (PlayerID)
@@ -37,7 +38,7 @@ def game_to_s(game_id, date = false)
           Time.at(game.first['Timestamp']).strftime '%b %d, %Y - '
         else
           ''
-    end
+        end
 
     game.each do |player|
       s << "#{player['DisplayName']} #{player['Score']} "
@@ -47,9 +48,27 @@ def game_to_s(game_id, date = false)
   end
 end
 
-def message_slack(_thisGame, text, attach)
-  # TODO: Use Net::HTTP.Post here
-  dev = `curl --silent -X POST --data-urlencode 'payload={"channel": "#foosey", "username": "foosey-app", "text": "Game added: #{text}", "icon_emoji": ":foosey:", "attachments": #{attach.to_json}}' #{$slack_url}`
+def message_slack(_this_game, text, attach)
+  data = {
+    username: 'foosey-app',
+    channel: '#foosey',
+    text: text,
+    attachments: attach,
+    icon_emoji: ':foosey:'
+  }
+
+  uri = URI.parse(url)
+
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  http.ssl_version = :TLSv1
+  http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+
+  req = Net::HTTP::Post.new(uri.request_uri)
+  req.body = data.to_json
+  req['Content-Type'] = 'application/json'
+
+  http.request(req)
 end
 
 # pull and load
@@ -241,17 +260,6 @@ def player_ids
   end
 end
 
-# returns the number of players in a specified game
-# pass a line from games.csv to this
-def players_in_game(game)
-  g_a = game.strip.split(',')[2..-1]
-  players = 0
-  for g in g_a.each
-    players += 1 if g != '-1'
-  end
-  players
-end
-
 # returns an array of win rates
 # sorted by PlayerID
 # NOTE: index != PlayerID
@@ -412,7 +420,9 @@ def recalc_elo
     elos = Array.new(player_count, 1200)
 
     # for each game
-    db.execute 'SELECT DISTINCT GameID FROM Game ORDER BY Timestamp' do |game_id|
+    db.execute 'SELECT DISTINCT GameID
+                FROM Game
+                ORDER BY Timestamp' do |game_id|
       game = create_query_hash(db.execute2('SELECT PlayerID, Score
                                             FROM Game
                                             WHERE GameID = :game_id
@@ -425,8 +435,10 @@ def recalc_elo
         score_a = game[0]['Score']
         score_b = game[1]['Score']
       elsif game.length == 4
-        rating_a = ((elos[game[0]['PlayerID'] - 1] + elos[game[1]['PlayerID'] - 1]) / 2).round
-        rating_b = ((elos[game[2]['PlayerID'] - 1] + elos[game[3]['PlayerID'] - 1]) / 2).round
+        rating_a = ((elos[game[0]['PlayerID'] - 1] +
+                     elos[game[1]['PlayerID'] - 1]) / 2).round
+        rating_b = ((elos[game[2]['PlayerID'] - 1] +
+                     elos[game[3]['PlayerID'] - 1]) / 2).round
         score_a = game[0]['Score']
         score_b = game[2]['Score']
       else
@@ -480,7 +492,9 @@ def recalc_win_rate
       { games: 0, wins: 0 }
     end
 
-    db.execute 'SELECT DISTINCT GameID FROM Game ORDER BY Timestamp' do |game_id|
+    db.execute 'SELECT DISTINCT GameID
+                FROM Game
+                ORDER BY Timestamp' do |game_id|
       game = create_query_hash(db.execute2('SELECT PlayerID, Score
                                             FROM Game
                                             WHERE GameID = :game_id
@@ -517,10 +531,6 @@ end
 # remove a game by game_id
 def remove_game(game_id, recalc = true)
   database do |db|
-    # get players from game
-    players = db.execute('SELECT PlayerID FROM Game
-                          WHERE GameID = :game_id', game_id).flatten
-
     # remove the game
     db.execute 'DELETE FROM Game
                 WHERE GameID = :game_id', game_id

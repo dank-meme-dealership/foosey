@@ -251,21 +251,21 @@ namespace '/v1' do
 
     json(
       error: false,
-      message: "Player added."
+      message: 'Player added.'
     )
   end
 
   # Editing Objects
   # Edit Game
   post '/edit/game' do
-    body = JSON.parse request.body.read
+    _body = JSON.parse request.body.read
 
     501 # Not yet implemented
   end
 
   # Edit Player
   post '/edit/player' do
-    body = JSON.parse request.body.read
+    _body = JSON.parse request.body.read
 
     501 # Not yet implemented
   end
@@ -273,14 +273,14 @@ namespace '/v1' do
   # Removing Objects
   # Remove Game
   delete '/remove/game/:id' do
-    id = params['id'].to_i
+    _id = params['id'].to_i
 
     501 # Not yet implemented
   end
 
   # Remove Player
   delete '/remove/player/:id' do
-    id = params['id'].to_i
+    _id = params['id'].to_i
 
     501 # Not yet implemented
   end

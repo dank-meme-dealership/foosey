@@ -6,13 +6,14 @@ def make_response(response, attachments = [])
     text: response, # send a text response (replies to channel if not blank)
     attachments: attachments,
     link_names: '1',
-    username: 'foosey', # overwrite configured username (ex: MyCoolBot)
-    icon_url: 'http://i.imgur.com/MyGxqRM.jpg', # overwrite configured icon (ex: https://mydomain.com/some/image.png
+    username: 'foosey',
+    icon_url: 'http://i.imgur.com/MyGxqRM.jpg'
   }
 end
 
 def succinct_help
-  make_response "I couldn't figure out what you were trying to do; to see what I can do try `foosey help`"
+  make_response 'I couldn\'t figure out what you were trying to do; ' \
+                'to see what I can do try `foosey help`'
 end
 
 # function to make a help message
@@ -118,15 +119,20 @@ end
 
 def slack_history(player1, player2)
   # check the players
-  return make_response("Invalid player: #{player1}") unless player_exists? player1
-  return make_response("Invalid player: #{player2}") unless player_exists? player2
+  unless player_exists? player1
+    return make_response("Invalid player: #{player1}")
+  end
+
+  unless player_exists? player2
+    return make_response("Invalid player: #{player2}")
+  end
 
   # start trackin'
   player1_wins = 0
   player2_wins = 0
   player1_id = id(player1)
-  player2_id = id(player2)
   history_s = ''
+  # TODO: we might be able to use Array.count here
   games(id(player1), id(player2)).each do |game|
     history_s.prepend(game_to_s(game, true) + "\n") # game with date
     if winner(game) == player1_id
@@ -138,7 +144,8 @@ def slack_history(player1, player2)
 
   attachments = [
     {
-      pretext: "Current record between #{player1.capitalize} and #{player2.capitalize}:",
+      pretext: "Current record between #{player1.capitalize} " \
+               "and #{player2.capitalize}:",
       fields:
       [
         {
@@ -154,7 +161,8 @@ def slack_history(player1, player2)
       ]
     },
     {
-      pretext: "Full game history between #{player1.capitalize} and #{player2.capitalize}:",
+      pretext: "Full game history between #{player1.capitalize} " \
+               "and #{player2.capitalize}:",
       text: history_s.strip
     }
   ]
@@ -245,7 +253,7 @@ def slack(user_name, args)
   when 'update'
     return succinct_help unless admin? user_name
     update
-    make_response('My name is foosey. You killed my father. Prepare to die.\nJust kidding, but that new code is too :dank:')
+    make_response('Foosey has been updated.')
   when 'recalc'
     return succinct_help unless admin?(user_name)
     puts 'Starting recalc...'
@@ -253,7 +261,7 @@ def slack(user_name, args)
     slack_stats
   else
     # add game
-    slack_add_game(args.join ' ')
+    slack_add_game(args.join(' '))
   end
 end
 

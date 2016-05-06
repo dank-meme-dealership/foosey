@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
-# i hope to never put another individual through the turmoil i endured to convert our csv to a new database
-# im sorry
+# converts old shitty foosey csv to new less shitty foosey sqlite db
 
 require 'sqlite3'
 
