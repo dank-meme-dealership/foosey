@@ -258,9 +258,19 @@ namespace '/v1' do
   # Editing Objects
   # Edit Game
   post '/edit/game' do
-    _body = JSON.parse request.body.read
+    body = JSON.parse request.body.read
 
-    501 # Not yet implemented
+    outcome = {}
+    body['teams'].each do |team|
+      team['players'].each { |p| outcome[p] = team['score'] }
+    end
+
+    edit_game(body['id'], outcome, body['timestamp'])
+
+    json(
+      error: false,
+      message: 'Game edited.'
+    )
   end
 
   # Edit Player

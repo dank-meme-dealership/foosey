@@ -392,6 +392,28 @@ def add_player(name, slack_name = '', admin = false, active = true)
   end
 end
 
+# changes properties of game with id game_id
+def edit_game(game_id, outcome, timestamp = nil, recalc = true)
+  database do |db|
+    # get timestamp if we need to keep it unchanged
+    timestamp ||= db.get_first_value 'SELECT Timestamp FROM Game
+                                      WHERE GameId = :game_id', game_id
+
+    # delete game with id game_id
+    db.execute 'DELETE FROM Game
+                WHERE GameId = :game_id', game_id
+
+    # insert new game into Game table
+    outcome.each do |player_id, score|
+      db.execute 'INSERT INTO Game
+                  VALUES (:game_id, :player_id, :score, :timestamp)',
+                 game_id, player_id, score, timestamp
+    end
+  end
+
+  recalc if recalc
+end
+
 # recalculate all the stats and populate the history stat tables
 def recalc
   puts 'Calculating games played'
