@@ -414,7 +414,8 @@ def edit_game(game_id, outcome, timestamp = nil, recalc = true)
   recalc if recalc
 end
 
-def edit_player(player_id, display_name = nil, slack_name = nil, admin = nil, active = nil)
+def edit_player(player_id, display_name = nil, slack_name = nil, admin = nil,
+                active = nil)
   database do |db|
     # update the defined fields
     unless display_name.nil?
