@@ -269,15 +269,21 @@ namespace '/v1' do
 
     json(
       error: false,
-      message: 'Game edited.'
+      message: 'Game updated.'
     )
   end
 
   # Edit Player
   post '/edit/player' do
-    _body = JSON.parse request.body.read
+    body = JSON.parse request.body.read
 
-    501 # Not yet implemented
+    edit_player(body['id'], body['displayName'], body['slackName'],
+                body['admin'], body['active'])
+
+    json(
+      error: false,
+      message: 'Player updated.'
+    )
   end
 
   # Removing Objects

@@ -414,6 +414,31 @@ def edit_game(game_id, outcome, timestamp = nil, recalc = true)
   recalc if recalc
 end
 
+def edit_player(player_id, display_name = nil, slack_name = nil, admin = nil, active = nil)
+  database do |db|
+    # update the defined fields
+    unless display_name.nil?
+      db.execute 'UPDATE Player SET DisplayName = :display_name
+                  WHERE PlayerID = :player_id', display_name, player_id
+    end
+
+    unless slack_name.nil?
+      db.execute 'UPDATE Player SET SlackName = :slack_name
+                  WHERE PlayerID = :player_id', slack_name, player_id
+    end
+
+    unless admin.nil?
+      db.execute 'UPDATE Player SET Admin = :admin
+                  WHERE PlayerID = :player_id', admin ? 1 : 0, player_id
+    end
+
+    unless active.nil?
+      db.execute 'UPDATE Player SET Active = :active
+                  WHERE PlayerID = :player_id', active ? 1 : 0, player_id
+    end
+  end
+end
+
 # recalculate all the stats and populate the history stat tables
 def recalc
   puts 'Calculating games played'
