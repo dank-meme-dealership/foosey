@@ -393,7 +393,7 @@ def add_player(name, slack_name = '', admin = false, active = true)
 end
 
 # changes properties of game with id game_id
-def edit_game(game_id, outcome, timestamp = nil, recalc = true)
+def edit_game(game_id, outcome, timestamp = nil, rec = true)
   database do |db|
     # get timestamp if we need to keep it unchanged
     timestamp ||= db.get_first_value 'SELECT Timestamp FROM Game
@@ -411,7 +411,7 @@ def edit_game(game_id, outcome, timestamp = nil, recalc = true)
     end
   end
 
-  recalc if recalc
+  recalc if rec
 end
 
 def edit_player(player_id, display_name = nil, slack_name = nil, admin = nil,
@@ -577,7 +577,7 @@ def recalc_win_rate
 end
 
 # remove a game by game_id
-def remove_game(game_id, recalc = true)
+def remove_game(game_id, rec = true)
   database do |db|
     # remove the game
     db.execute 'DELETE FROM Game
@@ -589,6 +589,6 @@ def remove_game(game_id, recalc = true)
     db.execute 'DELETE FROM WinRateHistory
                 WHERE GameID = :game_id', game_id
 
-    recalc if recalc
+    recalc if rec
   end
 end
