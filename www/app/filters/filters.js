@@ -1,27 +1,15 @@
 angular
 	.module('foosey')
-
-	// replace & with And
 	.filter('and', and)
-
-	// capitalize the first letter of a word
 	.filter('capitalize', capitalize)
-
-	// capitalize the first letter of a word
 	.filter('date', date)
-
-	// format the elo change for the day
 	.filter('eloChange', eloChange)
-
-	// format 0.9857 into 98.6%
 	.filter('percent', percent)
-
-	// nice string for teams
 	.filter('team', team)
+	.filter('time', time)
+	.filter('percentage', percentage);
 
-	// convert from 24-hour to am/pm
-	.filter('time', time);
-
+// replace & with And
 function and()
 {
 	return function(str)
@@ -30,26 +18,33 @@ function and()
 	}
 }
 
+// capitalize the first letter of a word
 function capitalize() 
 {
   return function(input) {
-    return input.toLowerCase().replace( /\b\w/g, function (m) {
+    return !input ? '' : input.toLowerCase().replace( /\b\w/g, function (m) {
       return m.toUpperCase();
     });
   }
 }
 
+// format date
 function date() 
 {
   return function(input) {
-  	var date = new Date();
-	  var today = ("0" + (date.getMonth() + 1).toString()).substr(-2) + "/" + ("0" + date.getDate().toString()).substr(-2)  + "/" + (date.getFullYear().toString());
+    var day = moment(input);
+  	var daysFromToday = moment().diff(day, 'days');
 	  
-    if (input === today) return 'Today';
+    // Special cases
+    if (daysFromToday === 0) return 'Today';
+    if (daysFromToday === 1) return 'Yesterday';
+    if (daysFromToday < 7) return day.format('dddd');
+
     return input;
   }
 }
 
+// format the elo change for the day
 function eloChange()
 {
 	return function(input)
@@ -60,6 +55,8 @@ function eloChange()
 	}
 }
 
+
+// format 0.9857 into 98.6%
 function percent()
 {
 	return function(decimal)
@@ -68,6 +65,7 @@ function percent()
 	}
 }
 
+// nice string for teams
 function team()
 {
 	return function(players)
@@ -92,15 +90,22 @@ function team()
 	}
 }
 
+// convert from 24-hour to am/pm
 function time()
 {
-	return function(time)
+	return function(input)
 	{
-		var hours = time.split(":")[0];
-		var mins = time.split(":")[1];
-		var ampm = hours < 12 ? "am" : "pm";
-		hours = hours == 0 || hours == 12 ? 12 : hours % 12;
+		var day = moment.unix(input);
+    var daysFromToday = moment().diff(day, 'days');
+    var absolutelyToday = daysFromToday === 0 && day.dayOfYear() === moment().dayOfYear();
 
-		return hours + ":" + mins + ampm;
+		return absolutelyToday ? day.fromNow() : day.format('h:mma');
 	}
+}
+
+function percentage($filter) {
+  return function (input, decimals) 
+  {
+    return $filter('number')(input * 100, decimals) + '%';
+  }
 }

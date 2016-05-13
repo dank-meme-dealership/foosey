@@ -107,7 +107,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
     // Show the action sheet
     $ionicActionSheet.show(
     {
-      titleText: 'Game played at ' + game.time,
+      titleText: $filter('time')(game.timestamp),
       destructiveText: 'Remove Game',
       cancelText: 'Cancel',
       destructiveButtonClicked: function(index) 
