@@ -297,7 +297,8 @@ def get_charts(name, games)
   real_total_games = 0
   total_wins = 0
   index = $names.index(name)
-  g_i = 0
+  g_i = 0 
+
   for g in games.each
     date, time = dateTime(g, '%m/%d', '%H:%M')
     elo, total_games, change = calculate_elo_change(g, elo, total_games)
@@ -318,7 +319,8 @@ def get_charts(name, games)
     g_i += 1
   end
 
-  chart_data
+  # reduce to last 20 games
+  chart_data.last(20)
 end
 
 def get_team_charts(games)
