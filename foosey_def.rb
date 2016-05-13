@@ -319,8 +319,8 @@ def get_charts(name, games)
     g_i += 1
   end
 
-  # reduce to last 20 games
-  chart_data.last(20)
+  # reduce to last 30 games
+  chart_data.last(30)
 end
 
 def get_team_charts(games)
