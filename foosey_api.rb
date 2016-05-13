@@ -289,15 +289,13 @@ namespace '/v1' do
   # Removing Objects
   # Remove Game
   delete '/remove/game/:id' do
-    _id = params['id'].to_i
+    id = params['id'].to_i
 
-    501 # Not yet implemented
-  end
+    remove_game(id)
 
-  # Remove Player
-  delete '/remove/player/:id' do
-    _id = params['id'].to_i
-
-    501 # Not yet implemented
+    json(
+      error: false,
+      message: 'Game removed.'
+    )
   end
 end
