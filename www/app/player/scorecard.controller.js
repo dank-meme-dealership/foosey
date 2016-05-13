@@ -55,7 +55,6 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 	function setUpCharts()
 	{
 		$scope.charts = [];
-		$scope.subtitle = 'Data from All Time';
 
 		FooseyService.charts($scope.player.name).then(
 			function successCallback(response)
@@ -70,6 +69,8 @@ function ScorecardController($scope, $stateParams, localStorage, FooseyService)
 				// })
 
 				$scope.dates = _.pluck(chartData.charts, 'date');
+				var numGames = $scope.dates.length;
+				$scope.subtitle = 'Data from your last ' + numGames + ' games' ;
 
 				// Set up ELO Rating chart
 				$scope.charts.push(getEloChartOptions(_.pluck(chartData.charts, 'elo')));
