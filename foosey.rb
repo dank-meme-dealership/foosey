@@ -27,6 +27,7 @@ set :port, 4006
 
 configure do
   enable :cross_origin
+  set :allow_methods [:get, :post, :options, :delete]
 end
 
 # load other foosey files and enable auto-reload
