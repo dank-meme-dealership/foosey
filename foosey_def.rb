@@ -174,22 +174,28 @@ end
 # returns the elo change over the last 24 hours for the specified player
 def daily_elo_change(player_id)
   database do |db|
-    elos = db.execute('SELECT e.Elo FROM EloHistory e
-                       JOIN Game g
-                       USING (GameID, PlayerID)
-                       WHERE e.PlayerID = :player_id
-                       AND g.Timestamp > :time
-                       ORDER BY g.Timestamp DESC',
-                      player_id, Time.now.to_i - 86_400).flatten
+    midnight = DateTime.new(now.year, now.month, now.day, 0, 0, 0, 0)
+    prev = db.get_first_value 'SELECT * FROM EloHistory e
+                               JOIN Game g
+                               USING (GameID, PlayerID)
+                               WHERE e.PlayerID = :player_id
+                               AND g.Timestamp < :midnight
+                               ORDER BY g.Timestamp DESC
+                               LIMIT 1', player_id, midnight.to_time.to_i
 
-    puts elos.inspect
+    today = db.get_first_value 'SELECT * FROM EloHistory e
+                                JOIN Game g
+                                USING (GameID, PlayerID)
+                                WHERE e.PlayerID = :player_id
+                                AND g.Timestamp >= :now
+                                ORDER BY g.Timestamp DESC
+                                LIMIT 1', player_id, Time.now.to_i
 
-    # safety if player doesn't have any games
-    return 0 if elos.empty?
-    # safety if there is only one game, so we should delta from 1200
-    return elos.first - 1200 if elos.length == 1
+    # corner cases
+    return 0 unless today
+    return today - 1200 unless prev
 
-    elos.first - elos.last
+    today - prev
   end
 end
 
@@ -353,7 +359,8 @@ def add_game(outcome, timestamp = nil)
     # we could have another method, but i'm not really sure what the purpose
     # of that method would be apart from preventing copied code
     # maybe update_elo_by_game(game_id) ?
-    game = create_query_hash(db.execute2('SELECT p.PlayerID, g.Score, p.Elo
+    game = create_query_hash(db.execute2('SELECT p.PlayerID, p.DisplayName,
+                                            g.Score, p.Elo
                                           FROM Game g
                                           JOIN Player p
                                           USING (PlayerID)
@@ -378,6 +385,7 @@ def add_game(outcome, timestamp = nil)
     delta_a, delta_b = elo_delta(rating_a, score_a, rating_b, score_b,
                                  k_factor, win_weight, max_score)
 
+    players = []
     # update history and player tables
     game.each_with_index do |player, idx|
       # elohistory
@@ -407,7 +415,17 @@ def add_game(outcome, timestamp = nil)
                   WHERE PlayerID = :player_id',
                  player['Elo'], games_played, wins / games_played.to_f,
                  player['PlayerID']
+
+      players << {
+        name: player['DisplayName'],
+        elo: player['Elo'],
+        delta: elo_change(player['PlayerID'], game_id)
+      }
     end
+
+    {
+      players: players
+    }
   end
 end
 

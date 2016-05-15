@@ -210,11 +210,12 @@ namespace '/v1' do
       team['players'].each { |p| outcome[p] = team['score'] }
     end
 
-    add_game(outcome, body['timestamp'])
+    stats = add_game(outcome, body['timestamp'])
 
     json(
       error: false,
-      message: 'Game added.'
+      message: 'Game added.',
+      stats: stats
     )
   end
 
@@ -265,10 +266,6 @@ namespace '/v1' do
       error: false,
       message: 'Player updated.'
     )
-  end
-
-  options '/remove/game/:id' do
-    200
   end
 
   # Removing Objects
