@@ -61,6 +61,7 @@ def api_player(player_id)
       elo: player['Elo'],
       winRate: player['WinRate'],
       gamesPlayed: player['GamesPlayed'],
+      dailyChange: daily_elo_change(player['PlayerID']),
       admin: player['Admin'] == 1,
       active: player['Active'] == 1
     }

@@ -171,6 +171,28 @@ def id(name)
   end
 end
 
+# returns the elo change over the last 24 hours for the specified player
+def daily_elo_change(player_id)
+  database do |db|
+    elos = db.execute('SELECT e.Elo FROM EloHistory e
+                       JOIN Game g
+                       USING (GameID, PlayerID)
+                       WHERE e.PlayerID = :player_id
+                       AND g.Timestamp > :time
+                       ORDER BY g.Timestamp DESC',
+                      player_id, Time.now.to_i - 86_400).flatten
+
+    puts elos.inspect
+
+    # safety if player doesn't have any games
+    return 0 if elos.empty?
+    # safety if there is only one game, so we should delta from 1200
+    return elos.first - 1200 if elos.length == 1
+
+    elos.first - elos.last
+  end
+end
+
 # returns the last elo change player with id player_id has seen over n games
 # that is, the delta from their last n played games
 def last_elo_change(player_id, n = 1)
@@ -181,6 +203,11 @@ def last_elo_change(player_id, n = 1)
                        WHERE e.PlayerID = :player_id
                        ORDER BY g.Timestamp DESC
                        LIMIT :n', player_id, n + 1).flatten
+
+    # safety if player doesn't have any games
+    return 0 if elos.empty?
+    # safety if there is only one game, so we should delta from 1200
+    return elos.first - 1200 if elos.length == 1
 
     elos.first - elos.last
   end
