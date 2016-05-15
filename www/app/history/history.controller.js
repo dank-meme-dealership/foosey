@@ -37,6 +37,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
 
       // sort the games by date
       $scope.dates = groupByDate($scope.filteredGames);
+      console.log($scope.dates);
 
       // store them to local storage
       localStorage.setObject('history', $scope.dates);
@@ -148,8 +149,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
   function remove(game)
   {
     // remove game from UI and re-sort by date
-    var index = _.indexOf(_.pluck($scope.games, 'id'), game.id);
-    decrementIds(index);
+    var index = _.indexOf(_.pluck($scope.games, 'gameID'), game.gameID);
     $scope.games.splice(index, 1);
     $scope.dates = groupByDate($scope.games);
     localStorage.setObject('history', $scope.dates)
@@ -157,7 +157,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
     // remove from server
     $scope.removing = true;
     $scope.loading = true;
-    FooseyService.removeGame(game.id)
+    FooseyService.removeGame(game.gameID)
     .then(function()
     {
       refresh();
