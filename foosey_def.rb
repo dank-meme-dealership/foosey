@@ -174,7 +174,7 @@ end
 # returns the elo change over the last 24 hours for the specified player
 def daily_elo_change(player_id)
   database do |db|
-    midnight = DateTime.new(now.year, now.month, now.day, 0, 0, 0, 0)
+    midnight = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
     prev = db.get_first_value 'SELECT * FROM EloHistory e
                                JOIN Game g
                                USING (GameID, PlayerID)
