@@ -286,6 +286,10 @@ namespace '/v1' do
     )
   end
 
+  options '/remove/game/:id' do
+    200
+  end
+
   # Removing Objects
   # Remove Game
   delete '/remove/game/:id' do
