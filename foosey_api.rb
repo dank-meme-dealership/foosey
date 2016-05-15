@@ -4,6 +4,7 @@
 # returns an api object for game with id game_id
 def api_game(game_id)
   database do |db|
+    db.results_as_hash = true
     game = db.execute 'SELECT * FROM Game
                        JOIN (
                          SELECT DisplayName, PlayerID FROM Player
@@ -45,6 +46,7 @@ end
 # returns an api object for player with id player_id
 def api_player(player_id)
   database do |db|
+    db.results_as_hash = true
     player = db.execute('SELECT * FROM Player
                          WHERE PlayerID = :id', player_id).first
 
@@ -68,6 +70,7 @@ end
 # returns an api object for player elo history
 def api_stats_elo(player_id)
   database do |db|
+    db.results_as_hash = true
     games = db.execute 'SELECT * FROM EloHistory
                         JOIN (
                           SELECT PlayerID, GameID, Timestamp FROM Game
@@ -89,6 +92,7 @@ end
 # returns an api object for player winrate history
 def api_stats_winrate(player_id)
   database do |db|
+    db.results_as_hash = true
     games = db.execute 'SELECT * FROM WinRateHistory
                         JOIN (
                           SELECT PlayerID, GameID, Timestamp FROM Game
@@ -276,6 +280,15 @@ namespace '/v1' do
     json(
       error: false,
       message: 'Game removed.'
+    )
+  end
+
+  post '/recalc' do
+    recalc
+
+    json(
+      error: false,
+      message: 'Stats recalculated.'
     )
   end
 end
