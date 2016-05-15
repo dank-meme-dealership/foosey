@@ -3,132 +3,108 @@
 
 # returns an api object for game with id game_id
 def api_game(game_id)
-  db = SQLite3::Database.new 'foosey.db'
+  database do |db|
+    game = db.execute 'SELECT * FROM Game
+                       JOIN (
+                         SELECT DisplayName, PlayerID FROM Player
+                       )
+                       USING (PlayerID)
+                       WHERE GameID = :id
+                       ORDER BY Score DESC', game_id
 
-  db.results_as_hash = true
-  game = db.execute 'SELECT * FROM Game
-                     JOIN (
-                       SELECT DisplayName, PlayerID FROM Player
-                     )
-                     USING (PlayerID)
-                     WHERE GameID = :id
-                     ORDER BY Score DESC', game_id
+    return {
+      error: true,
+      message: "Invalid game ID: #{game_id}"
+    } if game.nil?
 
-  return {
-    error: true,
-    message: "Invalid game ID: #{game_id}"
-  } if game.nil?
+    response = {
+      gameID: game.first['GameID'],
+      timestamp: game.first['Timestamp'],
+      teams: []
+    }
 
-  response = {
-    gameID: game.first['GameID'],
-    timestamp: game.first['Timestamp'],
-    teams: []
-  }
-
-  game.each do |player|
-    i = response[:teams].index { |t| t[:score] == player['Score'] }
-    if i
-      # team exists in hash
-      response[:teams][i][:players] << player['DisplayName']
-    else
-      # team doesn't exist in hash
-      response[:teams] << {
-        players: [player['DisplayName']],
-        score: player['Score'],
-        delta: elo_change(player['PlayerID'], game_id)
-      }
+    game.each do |player|
+      i = response[:teams].index { |t| t[:score] == player['Score'] }
+      if i
+        # team exists in hash
+        response[:teams][i][:players] << player['DisplayName']
+      else
+        # team doesn't exist in hash
+        response[:teams] << {
+          players: [player['DisplayName']],
+          score: player['Score'],
+          delta: elo_change(player['PlayerID'], game_id)
+        }
+      end
     end
-  end
 
-  response
-rescue SQLite3::Exception => e
-  puts e
-  500 # Internal server error
-ensure
-  db.close if db
+    response
+  end
 end
 
 # returns an api object for player with id player_id
 def api_player(player_id)
-  db = SQLite3::Database.new 'foosey.db'
+  database do |db|
+    player = db.execute('SELECT * FROM Player
+                         WHERE PlayerID = :id', player_id).first
 
-  db.results_as_hash = true
-  player = db.execute('SELECT * FROM Player
-                       WHERE PlayerID = :id', player_id).first
+    return {
+      error: true,
+      message: "Invalid player ID: #{player_id}"
+    } if player.nil?
 
-  return {
-    error: true,
-    message: "Invalid player ID: #{player_id}"
-  } if player.nil?
-
-  {
-    playerID: player['PlayerID'],
-    displayName: player['DisplayName'],
-    elo: player['Elo'],
-    winRate: player['WinRate'],
-    gamesPlayed: player['GamesPlayed'],
-    admin: player['Admin'] == 1,
-    active: player['Active'] == 1
-  }
-rescue SQLite3::Exception => e
-  puts e
-  500 # Internal server error
-ensure
-  db.close if db
+    {
+      playerID: player['PlayerID'],
+      displayName: player['DisplayName'],
+      elo: player['Elo'],
+      winRate: player['WinRate'],
+      gamesPlayed: player['GamesPlayed'],
+      admin: player['Admin'] == 1,
+      active: player['Active'] == 1
+    }
+  end
 end
 
 # returns an api object for player elo history
 def api_stats_elo(player_id)
-  db = SQLite3::Database.new 'foosey.db'
+  database do |db|
+    games = db.execute 'SELECT * FROM EloHistory
+                        JOIN (
+                          SELECT PlayerID, GameID, Timestamp FROM Game
+                        )
+                        USING (PlayerID, GameID)
+                        WHERE PlayerID = :player_id
+                        ORDER BY Timestamp;', player_id
 
-  db.results_as_hash = true
-  games = db.execute 'SELECT * FROM EloHistory
-                      JOIN (
-                        SELECT PlayerID, GameID, Timestamp FROM Game
-                      )
-                      USING (PlayerID, GameID)
-                      WHERE PlayerID = :player_id
-                      ORDER BY Timestamp;', player_id
-
-  games.collect do |game|
-    {
-      gameID: game['GameID'],
-      timestamp: game['Timestamp'],
-      elo: game['Elo']
-    }
+    games.collect do |game|
+      {
+        gameID: game['GameID'],
+        timestamp: game['Timestamp'],
+        elo: game['Elo']
+      }
+    end
   end
-rescue SQLite3::Exception => e
-  puts e
-  500 # Internal server error
-ensure
-  db.close if db
 end
 
 # returns an api object for player winrate history
 def api_stats_winrate(player_id)
-  db = SQLite3::Database.new 'foosey.db'
+  database do |db|
+    games = db.execute 'SELECT * FROM WinRateHistory
+                        JOIN (
+                          SELECT PlayerID, GameID, Timestamp FROM Game
+                        )
+                        USING (PlayerID, GameID)
+                        WHERE PlayerID = :player_id
+                        ORDER BY Timestamp;', player_id
 
-  db.results_as_hash = true
-  games = db.execute 'SELECT * FROM WinRateHistory
-                      JOIN (
-                        SELECT PlayerID, GameID, Timestamp FROM Game
-                      )
-                      USING (PlayerID, GameID)
-                      WHERE PlayerID = :player_id
-                      ORDER BY Timestamp;', player_id
-
-  games.collect do |game|
-    {
-      gameID: game['GameID'],
-      timestamp: game['Timestamp'],
-      winRate: game['WinRate']
-    }
+    games.collect do |game|
+      {
+        gameID: game['GameID'],
+        timestamp: game['Timestamp'],
+        winRate: game['WinRate']
+      }
+    end
   end
-rescue SQLite3::Exception => e
-  puts e
-  500 # Internal server error
-ensure
-  db.close if db
 end
 
 namespace '/v1' do
