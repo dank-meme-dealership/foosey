@@ -1,11 +1,17 @@
-angular
-  .module('foosey')
-  .factory('FooseyService', function($http) 
+(function()
+{
+  angular
+    .module('foosey')
+    .factory('FooseyService', FooseyService);
+
+  FooseyService.$inject = ['$http'];
+
+  function FooseyService($http) 
   {
     var oldUrl = "http://api.foosey.futbol/app";
     var url = "http://beta.foosey.futbol/v1/";
 
-	  return {
+    return {
       getAllPlayers     : getAllPlayers,
       getPlayer         : getPlayer,
       getPlayersByID    : getPlayersByID,
@@ -151,5 +157,5 @@ angular
     {
       // Will maybe implement again
     }
-
-  });
+  }
+})();

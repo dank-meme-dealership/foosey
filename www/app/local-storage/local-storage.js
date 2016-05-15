@@ -1,6 +1,12 @@
-angular
-  .module('ionic.utils', [])
-  .factory('localStorage', function localStorage($window)
+(function()
+{
+  angular
+    .module('ionic.utils', [])
+    .factory('localStorage', localStorage);
+
+  localStorage.$inject = ['$window'];
+
+  function localStorage($window)
   {
     return {
       set       : function (key, value)
@@ -28,4 +34,5 @@ angular
         return JSON.parse($window.localStorage[key] || '[]');
       }
     };
-  });
+  }
+})();

@@ -1,26 +1,34 @@
-// set up foosey module
-angular
-  .module('foosey', [
-    'ionic', 
-    'ionic.utils',
+(function()
+{
+  angular
+    .module('foosey', [
+      'ionic', 
+      'ionic.utils',
 
-    'ngIOS9UIWebViewPatch',
+      'ngIOS9UIWebViewPatch',
 
-    'addGame',
-    'chart',
-    'history',
-    'leaderboard',
-    'player',
-    'settings',
-    'teamStats'
-  ])
+      'addGame',
+      'chart',
+      'history',
+      'leaderboard',
+      'player',
+      'settings',
+      'teamStats'
+    ])
+    .config(config)
+    .run(run);
 
-  .config(function ( $httpProvider) {        
+  config.$inject = ['$httpProvider'];
+
+  function config($httpProvider)
+  {        
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-  })
+  }
+
+  run.$inject = ['$ionicPlatform'];
 
   // This establishes a few settings for Ionic
-  .run(function($ionicPlatform) 
+  function run($ionicPlatform) 
   {
     $ionicPlatform.ready(function() 
     {
@@ -33,4 +41,5 @@ angular
         StatusBar.styleDefault();
       }
     });
-  });
+  }
+})();

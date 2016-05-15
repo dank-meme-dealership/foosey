@@ -1,1 +1,5 @@
-angular.module('leaderboard', []);
+(function()
+{
+  angular
+    .module('leaderboard', []);
+})();

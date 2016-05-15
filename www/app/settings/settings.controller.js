@@ -1,8 +1,13 @@
-angular
-	.module('settings')
-	.controller('SettingsController', SettingsController);
-
-function SettingsController($scope, FooseyService)
+(function()
 {
+  angular
+    .module('settings')
+    .controller('SettingsController', SettingsController);
 
-}
+  SettingsController.$inject = ['$scope', 'FooseyService'];
+
+  function SettingsController($scope, FooseyService)
+  {
+
+  }
+})();

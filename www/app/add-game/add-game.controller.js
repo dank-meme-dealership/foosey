@@ -1,160 +1,171 @@
-angular
-	.module('addGame')
-	.controller('AddGameController', AddGameController);
-
-function AddGameController($scope, $rootScope, $ionicScrollDelegate, gameTypes, localStorage, FooseyService)
+(function()
 {
-	$scope.gameTypes = gameTypes;
-	$scope.reset = reset;
-	$scope.playerName = playerName;
+	angular
+		.module('addGame')
+		.controller('AddGameController', AddGameController);
 
-	// initialize page
-	reset();
-	$scope.scores = new Array(11);
+	AddGameController.$inject = ['$scope', '$rootScope', '$ionicScrollDelegate', 'gameTypes', 'localStorage', 'FooseyService'];
 
-	// function to select game
-	$scope.gameSelect = function(type)
+	function AddGameController($scope, $rootScope, $ionicScrollDelegate, gameTypes, localStorage, FooseyService)
 	{
-		$scope.type = _.clone(type);
-		$scope.playersSelected = [];
-		changeState("player-select", "Select Players");
-	};
+		$scope.gameTypes = gameTypes;
+		$scope.reset = reset;
+		$scope.playerName = playerName;
 
-	// function to select player
-	$scope.playerSelect = function(player)
-	{
-		// don't allow selected players to be selected again
-		if (player.selected) return;
+		// initialize page
+		reset();
+		$scope.scores = new Array(11);
 
-		// add player to this team
-		player.selected = true;
-		$scope.playersSelected.push(player.playerID);
+		$scope.gameSelect = gameSelect;
+		$scope.playerSelect = playerSelect;
+		$scope.scoreSelect = scoreSelect;
+		$scope.submit = submit;
+		$scope.undo = undo;
 
-		// if we have selected all players for the team, select the score
-		if ($scope.playersSelected.length === $scope.type.playersPerTeam)
+		// function to select game
+		function gameSelect(type)
 		{
-			changeState("score-select", "Select Score");
-		}
-	};
-
-	// function to select score
-	$scope.scoreSelect = function(score)
-	{
-		$scope.game.push({
-			players: $scope.playersSelected,
-			score: score
-		});
-
-		$scope.playersSelected = [];
-		$scope.type.teams--;
-		
-		// if we have scores for every team, go to confirm
-		if ($scope.type.teams === 0)
-		{
-			changeState("confirm", "Confirm");
-		}
-		else
-		{
+			$scope.type = _.clone(type);
+			$scope.playersSelected = [];
 			changeState("player-select", "Select Players");
-		}
-	};
+		};
 
-	// add the game
-	$scope.submit = function()
-	{
-		$scope.state = "saving";
-		changeState("saving", null);
-		$scope.saveStatus = "saving";
-
-		// set up game object
-		var game = {
-			teams: $scope.game
-		}
-
-		FooseyService.addGame(game).then(function successCallback(response)
+		// function to select player
+		function playerSelect(player)
 		{
-			$scope.response = response.data;
-			$scope.saveStatus = "success";
-		}, function errorCallback(response)
-    {
-    	if ($scope.state === "saving")
-      	$scope.saveStatus = "failed";
-    });
-	}
+			// don't allow selected players to be selected again
+			if (player.selected) return;
 
-	// undo last game
-	$scope.undo = function()
-	{
-		FooseyService.undo();
-		$scope.saveStatus = "removed";
-		$scope.response = [];
-	}
+			// add player to this team
+			player.selected = true;
+			$scope.playersSelected.push(player.playerID);
 
-	// reset the game
-	function reset()
-	{
-		changeState("game-select", "Select the Type of Game");
-		$scope.command = "";
+			// if we have selected all players for the team, select the score
+			if ($scope.playersSelected.length === $scope.type.playersPerTeam)
+			{
+				changeState("score-select", "Select Score");
+			}
+		};
 
-		$scope.game = [];
-		$scope.saveStatus = "";
-		$scope.response = undefined;
-		getPlayers();
-	}
-
-	// get players from server
-	function getPlayers()
-	{
-		// load from local storage
-		$scope.players = localStorage.getObject('players');
-
-		// load from server
-		FooseyService.getAllPlayers().then(
-			function (players)
-    	{ 
-	    	// only overwrite if they haven't selected one yet
-	    	if (noneSelected())
-	    	{
-	    		$scope.players = players;
-	    		$scope.players.sort(function(a, b){
-	    			return a.displayName.localeCompare(b.displayName);
-	    		});
-	    	}
-
-	    	localStorage.setObject('players', $scope.players);
-	  	});
-	}
-
-	// return true if none of the players have been selected yet
-	function noneSelected()
-	{
-		for (var i = 0; i < $scope.players.length; i++)
+		// function to select score
+		function scoreSelect(score)
 		{
-			if ($scope.players[i].selected) return false;
+			$scope.game.push({
+				players: $scope.playersSelected,
+				score: score
+			});
+
+			$scope.playersSelected = [];
+			$scope.type.teams--;
+			
+			// if we have scores for every team, go to confirm
+			if ($scope.type.teams === 0)
+			{
+				changeState("confirm", "Confirm");
+			}
+			else
+			{
+				changeState("player-select", "Select Players");
+			}
+		};
+
+		// add the game
+		function submit()
+		{
+			$scope.state = "saving";
+			changeState("saving", null);
+			$scope.saveStatus = "saving";
+
+			// set up game object
+			var game = {
+				teams: $scope.game
+			}
+
+			FooseyService.addGame(game).then(function successCallback(response)
+			{
+				$scope.response = response.data;
+				$scope.saveStatus = "success";
+			}, function errorCallback(response)
+	    {
+	    	if ($scope.state === "saving")
+	      	$scope.saveStatus = "failed";
+	    });
 		}
-		return true;
-	}
 
-	function playerName(id)
-	{
-		var name = '';
-		_.each($scope.players, function(player)
+		// undo last game
+		function undo()
 		{
-			if (player.playerID === id) name = player.displayName;
+			FooseyService.undo();
+			$scope.saveStatus = "removed";
+			$scope.response = [];
+		}
+
+		// reset the game
+		function reset()
+		{
+			changeState("game-select", "Select the Type of Game");
+			$scope.command = "";
+
+			$scope.game = [];
+			$scope.saveStatus = "";
+			$scope.response = undefined;
+			getPlayers();
+		}
+
+		// get players from server
+		function getPlayers()
+		{
+			// load from local storage
+			$scope.players = localStorage.getObject('players');
+
+			// load from server
+			FooseyService.getAllPlayers().then(
+				function (players)
+	    	{ 
+		    	// only overwrite if they haven't selected one yet
+		    	if (noneSelected())
+		    	{
+		    		$scope.players = players;
+		    		$scope.players.sort(function(a, b){
+		    			return a.displayName.localeCompare(b.displayName);
+		    		});
+		    	}
+
+		    	localStorage.setObject('players', $scope.players);
+		  	});
+		}
+
+		// return true if none of the players have been selected yet
+		function noneSelected()
+		{
+			for (var i = 0; i < $scope.players.length; i++)
+			{
+				if ($scope.players[i].selected) return false;
+			}
+			return true;
+		}
+
+		function playerName(id)
+		{
+			var name = '';
+			_.each($scope.players, function(player)
+			{
+				if (player.playerID === id) name = player.displayName;
+			});
+			return name;
+		}
+
+		function changeState(state, title)
+		{
+			if (state) $scope.state = state;
+			if (title) $scope.title = title;
+			$ionicScrollDelegate.scrollTop();
+
+		}
+
+		$rootScope.$on("$stateChangeSuccess", function() {
+		  reset();
 		});
-		return name;
-	}
-
-	function changeState(state, title)
-	{
-		if (state) $scope.state = state;
-		if (title) $scope.title = title;
-		$ionicScrollDelegate.scrollTop();
 
 	}
-
-	$rootScope.$on("$stateChangeSuccess", function() {
-	  reset();
-	});
-
-}
+})();

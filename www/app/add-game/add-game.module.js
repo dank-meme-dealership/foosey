@@ -1,1 +1,5 @@
-angular.module('addGame', []);
+(function()
+{
+  angular
+    .module('addGame', []);
+})();

@@ -1,1 +1,5 @@
-angular.module('teamStats', []);
+(function()
+{
+  angular
+    .module('teamStats', []);
+})();

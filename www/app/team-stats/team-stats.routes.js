@@ -1,18 +1,23 @@
-angular
-  .module('teamStats')
-	.config(config);
-
-function config($stateProvider) 
+(function()
 {
-  $stateProvider
-    .state('app.team-stats',
-    {
-      url: '/team-stats',
-      views: {
-        menuContent: {
-          controller: 'TeamStatsController',
-          templateUrl: 'app/team-stats/team-stats.html'
+  angular
+    .module('teamStats')
+    .config(config);
+
+  config.$inject = ['$stateProvider'];
+
+  function config($stateProvider) 
+  {
+    $stateProvider
+      .state('app.team-stats',
+      {
+        url: '/team-stats',
+        views: {
+          menuContent: {
+            controller: 'TeamStatsController',
+            templateUrl: 'app/team-stats/team-stats.html'
+          }
         }
-      }
-    });
-}
+      });
+  }
+})();

@@ -1,1 +1,5 @@
-angular.module('player', []);
+(function()
+{
+  angular
+    .module('player', []);
+})();

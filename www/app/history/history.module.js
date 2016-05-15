@@ -1,1 +1,5 @@
-angular.module('history', []);
+(function()
+{
+  angular
+    .module('history', []);
+})();

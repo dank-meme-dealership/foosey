@@ -1,1 +1,5 @@
-angular.module('settings', []);
+(function()
+{
+  angular
+    .module('settings', []);
+})();
