@@ -176,7 +176,7 @@ def daily_elo_change(player_id)
   database do |db|
     midnight = DateTime.new(Time.now.year, Time.now.month, Time.now.day,
                             0, 0, 0, 0).to_time.to_i
-    prev = db.get_first_value 'SELECT * FROM EloHistory e
+    prev = db.get_first_value 'SELECT e.Elo FROM EloHistory e
                                JOIN Game g
                                USING (GameID, PlayerID)
                                WHERE e.PlayerID = :player_id
@@ -184,7 +184,7 @@ def daily_elo_change(player_id)
                                ORDER BY g.Timestamp DESC
                                LIMIT 1', player_id, midnight
 
-    today = db.get_first_value 'SELECT * FROM EloHistory e
+    today = db.get_first_value 'SELECT e.Elo FROM EloHistory e
                                 JOIN Game g
                                 USING (GameID, PlayerID)
                                 WHERE e.PlayerID = :player_id
