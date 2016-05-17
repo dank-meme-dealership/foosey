@@ -39,15 +39,15 @@
 					$scope.charts.unshift(getEloChartOptions(_.pluck(chartData, 'elo'), _.pluck(chartData, 'date')));
 				});
 
-			FooseyService.getWinRateHistory($stateParams.playerID).then(
-				function successCallback(response)
-				{
-					// Get chart data
-					var chartData = response.data;
+			// FooseyService.getWinRateHistory($stateParams.playerID).then(
+			// 	function successCallback(response)
+			// 	{
+			// 		// Get chart data
+			// 		var chartData = response.data;
 
-					// Set up Win Rate chart
-					$scope.charts.push(getPercentChartOptions(_.pluck(chartData, 'winRate'), _.pluck(chartData, 'date')));
-				});
+			// 		// Set up Win Rate chart
+			// 		$scope.charts.push(getPercentChartOptions(_.pluck(chartData, 'winRate'), _.pluck(chartData, 'date')));
+			// 	});
 		}
 
 		// define options for the ELO Rating chart
