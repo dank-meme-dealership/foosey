@@ -39,7 +39,7 @@ def api_game(game_id)
       end
     end
 
-    response
+    return response
   end
 end
 
@@ -55,7 +55,7 @@ def api_player(player_id)
       message: "Invalid player ID: #{player_id}"
     } if player.nil?
 
-    {
+    return {
       playerID: player['PlayerID'],
       displayName: player['DisplayName'],
       elo: player['Elo'],
@@ -80,33 +80,11 @@ def api_stats_elo(player_id)
                         WHERE PlayerID = :player_id
                         ORDER BY Timestamp;', player_id
 
-    games.collect do |game|
+    return games.collect do |game|
       {
         gameID: game['GameID'],
         timestamp: game['Timestamp'],
         elo: game['Elo']
-      }
-    end
-  end
-end
-
-# returns an api object for player winrate history
-def api_stats_winrate(player_id)
-  database do |db|
-    db.results_as_hash = true
-    games = db.execute 'SELECT * FROM WinRateHistory
-                        JOIN (
-                          SELECT PlayerID, GameID, Timestamp FROM Game
-                        )
-                        USING (PlayerID, GameID)
-                        WHERE PlayerID = :player_id
-                        ORDER BY Timestamp;', player_id
-
-    games.collect do |game|
-      {
-        gameID: game['GameID'],
-        timestamp: game['Timestamp'],
-        winRate: game['WinRate']
       }
     end
   end

@@ -21,8 +21,8 @@ Player(
   Admin INTEGER DEFAULT 0,
   Active INTEGER DEFAULT 1,
   Elo INTEGER DEFAULT 1200,
-  WinRate REAL,
-  GamesPlayed INTEGER DEFAULT 0
+  GamesPlayed INTEGER DEFAULT 0,
+  GamesWon INTEGER DEFAULT 0
 );
 
 -- Create a historic table for each major statistic
@@ -33,15 +33,6 @@ EloHistory(
   GameID INTEGER,
   PlayerID INTEGER,
   Elo INTEGER,
-  PRIMARY KEY (GameID, PlayerID)
-);
-
--- Create the WinRate table
-CREATE TABLE IF NOT EXISTS
-WinRateHistory(
-  GameID INTEGER,
-  PlayerID INTEGER,
-  WinRate INTEGER,
   PRIMARY KEY (GameID, PlayerID)
 );
 

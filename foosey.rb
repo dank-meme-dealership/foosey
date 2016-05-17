@@ -38,6 +38,8 @@ also_reload 'foosey_def.rb'
 also_reload 'foosey_slack.rb'
 also_reload 'foosey_api.rb'
 
+recalc if ARGV.include? 'recalc'
+
 get '/' do
   redirect 'https://github.com/brikr/foosey/blob/master/API.md'
 end

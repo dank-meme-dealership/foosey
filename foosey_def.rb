@@ -1,8 +1,12 @@
 # Lower-level foosey functions
 
 # database wrapper function that makes it so we don't have to copy code later
+# also makes sure the block is performed in a transaction for thread safety
+# note that you must use the return keyword at the end of these blocks because
+# the transaction block returns its own values
 def database
   db = SQLite3::Database.new 'foosey.db'
+
   yield db
 rescue SQLite3::Exception => e
   puts e
@@ -45,7 +49,7 @@ def game_to_s(game_id, date = false)
       s << "#{player['DisplayName']} #{player['Score']} "
     end
 
-    s.strip
+    return s.strip
   end
 end
 
@@ -86,15 +90,15 @@ def admin?(slack_name)
     admin = db.get_first_value 'SELECT Admin from Player
                                 WHERE SlackName = :slack_name
                                 COLLATE NOCASE', slack_name
-    admin == 1
+    return admin == 1
   end
 end
 
 def app_dir
   database do |db|
     # return dir
-    db.get_first_value 'SELECT Value FROM Config
-                        WHERE Setting = "AppDirectory"'
+    return db.get_first_value 'SELECT Value FROM Config
+                               WHERE Setting = "AppDirectory"'
   end
 end
 
@@ -129,35 +133,35 @@ end
 def game_ids
   database do |db|
     # return id
-    db.execute('SELECT DISTINCT GameID FROM Game
-                ORDER BY Timestamp DESC').flatten
+    return db.execute('SELECT DISTINCT GameID FROM Game
+                       ORDER BY Timestamp DESC').flatten
   end
 end
 
 # returns an array of game ids involving player with id player_id
 def games_with_player(player_id)
   database do |db|
-    db.execute('SELECT GameID From Game
-                WHERE PlayerID = :player_id
-                ORDER BY Timestamp', player_id).flatten
+    return db.execute('SELECT GameID From Game
+                       WHERE PlayerID = :player_id
+                       ORDER BY Timestamp', player_id).flatten
   end
 end
 
 # returns an array of game ids involving only both player1 and player2
 def games(player1_id, player2_id)
   database do |db|
-    db.execute('SELECT GameID
-                FROM (
-                    SELECT GameID FROM Game
-                    WHERE PlayerID IN (:player1_id, :player2_id)
-                    GROUP BY GameID HAVING COUNT(*) = 2
-                ) AS T1
-                JOIN (
-                    SELECT GameID FROM Game
-                    GROUP BY GameID
-                    HAVING COUNT(*) = 2
-                ) AS T2
-                USING (GameID)', player1_id, player2_id).flatten
+    return db.execute('SELECT GameID
+                       FROM (
+                           SELECT GameID FROM Game
+                           WHERE PlayerID IN (:player1_id, :player2_id)
+                           GROUP BY GameID HAVING COUNT(*) = 2
+                       ) AS T1
+                       JOIN (
+                           SELECT GameID FROM Game
+                           GROUP BY GameID
+                           HAVING COUNT(*) = 2
+                       ) AS T2
+                       USING (GameID)', player1_id, player2_id).flatten
   end
 end
 
@@ -165,9 +169,9 @@ end
 def id(name)
   database do |db|
     # return id
-    db.get_first_value 'SELECT PlayerID FROM Player
-                        WHERE DisplayName = :name
-                        COLLATE NOCASE', name
+    return db.get_first_value 'SELECT PlayerID FROM Player
+                               WHERE DisplayName = :name
+                               COLLATE NOCASE', name
   end
 end
 
@@ -196,7 +200,7 @@ def daily_elo_change(player_id)
     return 0 unless today
     return today - 1200 unless prev
 
-    today - prev
+    return today - prev
   end
 end
 
@@ -216,7 +220,7 @@ def last_elo_change(player_id, n = 1)
     # safety if there is only one game, so we should delta from 1200
     return elos.first - 1200 if elos.length == 1
 
-    elos.first - elos.last
+    return elos.first - elos.last
   end
 end
 
@@ -243,15 +247,15 @@ def elo_change(player_id, game_id)
     # safety if there is only one game, so we should delta from 1200
     return elos.first - 1200 if elos.length == 1
 
-    elos.first - elos.last
+    return elos.first - elos.last
   end
 end
 
 # returns a player's display name, given id
 def name(player_id)
   database do |db|
-    db.get_first_value 'SELECT DisplayName FROM Player
-                        WHERE PlayerID = :player_id', player_id
+    return db.get_first_value 'SELECT DisplayName FROM Player
+                               WHERE PlayerID = :player_id', player_id
   end
 end
 
@@ -260,17 +264,17 @@ end
 # NOTE: index != PlayerID
 def names
   database do |db|
-    db.execute('SELECT DisplayName FROM Player
-                WHERE ACTIVE = 1').flatten
+    return db.execute('SELECT DisplayName FROM Player
+                       WHERE ACTIVE = 1').flatten
   end
 end
 
 # returns an array of elo/names
 def player_elos
   database do |db|
-    db.execute('SELECT DisplayName, Elo from Player
-                WHERE ACTIVE = 1 AND GamesPlayed != 0
-                ORDER BY Elo DESC')
+    return db.execute('SELECT DisplayName, Elo from Player
+                       WHERE ACTIVE = 1 AND GamesPlayed != 0
+                       ORDER BY Elo DESC')
   end
 end
 
@@ -282,7 +286,7 @@ def player_exists?(name)
                                  WHERE DisplayName = :name
                                  COLLATE NOCASE', name
 
-    true if player
+    return true if player
   end
 end
 
@@ -290,19 +294,8 @@ end
 def player_ids
   database do |db|
     # return id
-    db.execute('SELECT PlayerID FROM Player
-                ORDER BY PlayerID').flatten
-  end
-end
-
-# returns an array of win rates
-# sorted by PlayerID
-# NOTE: index != PlayerID
-def win_rates
-  database do |db|
-    db.execute 'SELECT DisplayName, WinRate from Player
-                WHERE ACTIVE = 1 AND GamesPlayed != 0
-                ORDER BY WinRate DESC'
+    return db.execute('SELECT PlayerID FROM Player
+                       ORDER BY PlayerID').flatten
   end
 end
 
@@ -320,7 +313,7 @@ def winner(game_id)
     winner = winner.first if winner.length == 1
 
     # return the winner(s)
-    winner
+    return winner
   end
 end
 
@@ -402,20 +395,23 @@ def add_game(outcome, timestamp = nil)
       games_played = db.get_first_value 'SELECT COUNT(*) FROM Game
                                          WHERE PlayerID = :player_id',
                                         player['PlayerID']
-      wins = db.get_first_value 'SELECT COUNT(*) FROM (
-                                   SELECT PlayerID, MAX(Score)
-                                   FROM Game
+
+      wins = db.get_first_value 'SELECT COUNT(*) FROM Game
+                                 JOIN (
+                                   SELECT GameID, MAX(Score) AS Score FROM Game
                                    GROUP BY GameID
-                                 ) WHERE PlayerID = :player_id',
+                                 )
+                                 USING (GameID, Score)
+                                 WHERE PlayerID = :player_id',
                                 player['PlayerID']
 
       # player
       db.execute 'UPDATE Player
-                  SET Elo = :elo, GamesPlayed = :games_played,
-                  WinRate = :win_rate
+                  SET Elo = :elo,
+                      GamesPlayed = :games_played,
+                      GamesWon = :wins
                   WHERE PlayerID = :player_id',
-                 player['Elo'], games_played, wins / games_played.to_f,
-                 player['PlayerID']
+                 player['Elo'], games_played, wins, player['PlayerID']
 
       players << {
         name: player['DisplayName'],
@@ -433,9 +429,10 @@ end
 # adds a player to the database
 def add_player(name, slack_name = '', admin = false, active = true)
   database do |db|
-    db.execute 'INSERT INTO Player (DisplayName, SlackName, Admin, Active)
-                VALUES (:name, :slack_name, :admin, :active)',
-               name, slack_name, admin ? 1 : 0, active ? 1 : 0
+    return db.execute 'INSERT INTO Player
+                       (DisplayName, SlackName, Admin, Active)
+                       VALUES (:name, :slack_name, :admin, :active)',
+                      name, slack_name, admin ? 1 : 0, active ? 1 : 0
   end
 end
 
@@ -488,20 +485,28 @@ def edit_player(player_id, display_name = nil, slack_name = nil, admin = nil,
 end
 
 # recalculate all the stats and populate the history stat tables
-def recalc
-  puts 'Calculating games played'
-  recalc_games_played
+# if timestamp is specified, recalcs all games after timestamp
+def recalc(timestamp = 0)
+  start = Time.now.to_f
   puts 'Calculating Elo'
-  recalc_elo
+  recalc_elo timestamp
+  printf("Took %.3f seconds\n", Time.now.to_f - start)
+  start = Time.now.to_f
   puts 'Calculating win rate'
   recalc_win_rate
+  printf("Took %.3f seconds\n", Time.now.to_f - start)
 end
 
-def recalc_elo
+def recalc_elo(timestamp = 0)
   database do |db|
-    db.execute 'UPDATE Player SET Elo = 1200'
+    # init transaction for zoom
+    db.transaction
 
-    db.execute 'DELETE FROM EloHistory'
+    db.execute 'DELETE FROM EloHistory
+                WHERE GameID IN (
+                  SELECT GameID FROM Game
+                  WHERE Timestamp >= :timestamp
+                )', timestamp
 
     win_weight = db.get_first_value 'SELECT Value FROM Config
                                      WHERE Setting = "WinWeight"'
@@ -511,13 +516,24 @@ def recalc_elo
                                    WHERE Setting = "KFactor"'
 
     # temporary array of hashes to keep track of player elo
-    player_count = db.get_first_value 'SELECT COUNT(*) FROM Player'
-    elos = Array.new(player_count, 1200)
+    elos = {}
+    player_ids.each do |id|
+      elos[id] = db.get_first_value 'SELECT Elo FROM EloHistory
+                                     JOIN Game USING (GameID, PlayerID)
+                                     WHERE PlayerID = :player_id
+                                     AND Timestamp <= :timestamp
+                                     ORDER BY Timestamp DESC
+                                     LIMIT 1', id, timestamp
+
+      # in case they had no games before timestamp
+      elos[id] ||= 1200
+    end
 
     # for each game
-    db.execute 'SELECT DISTINCT GameID
+    db.execute('SELECT DISTINCT GameID
                 FROM Game
-                ORDER BY Timestamp' do |game_id|
+                WHERE Timestamp >= :timestamp
+                ORDER BY Timestamp', timestamp) do |game_id|
       game = create_query_hash(db.execute2('SELECT PlayerID, Score
                                             FROM Game
                                             WHERE GameID = :game_id
@@ -525,15 +541,15 @@ def recalc_elo
 
       # calculate the elo change
       if game.length == 2
-        rating_a = elos[game[0]['PlayerID'] - 1]
-        rating_b = elos[game[1]['PlayerID'] - 1]
+        rating_a = elos[game[0]['PlayerID']]
+        rating_b = elos[game[1]['PlayerID']]
         score_a = game[0]['Score']
         score_b = game[1]['Score']
       elsif game.length == 4
-        rating_a = ((elos[game[0]['PlayerID'] - 1] +
-                     elos[game[1]['PlayerID'] - 1]) / 2).round
-        rating_b = ((elos[game[2]['PlayerID'] - 1] +
-                     elos[game[3]['PlayerID'] - 1]) / 2).round
+        rating_a = ((elos[game[0]['PlayerID']] +
+                     elos[game[1]['PlayerID']]) / 2).round
+        rating_b = ((elos[game[2]['PlayerID']] +
+                     elos[game[3]['PlayerID']]) / 2).round
         score_a = game[0]['Score']
         score_b = game[2]['Score']
       else
@@ -547,78 +563,44 @@ def recalc_elo
       # insert into history table
       game.each_with_index do |player, idx|
         if game.length == 2
-          elos[player['PlayerID'] - 1] += idx < 1 ? delta_a : delta_b
+          elos[player['PlayerID']] += idx < 1 ? delta_a : delta_b
         elsif game.length == 4
-          elos[player['PlayerID'] - 1] += idx < 2 ? delta_a : delta_b
+          elos[player['PlayerID']] += idx < 2 ? delta_a : delta_b
         end
         db.execute 'INSERT INTO EloHistory
                     VALUES (:game_id, :player_id, :elo)',
-                   game_id, player['PlayerID'], elos[player['PlayerID'] - 1]
+                   game_id, player['PlayerID'], elos[player['PlayerID']]
       end
     end
 
-    elos.each_with_index do |e, idx|
+    elos.each do |id, elo|
       db.execute 'UPDATE Player SET Elo = :elo
                   WHERE PlayerID = :player_id;',
-                 e, idx + 1
+                 elo, id
     end
-  end
-end
 
-def recalc_games_played
-  database do |db|
-    db.execute 'SELECT DISTINCT PlayerID FROM Player' do |player_id|
-      db.execute 'UPDATE Player SET GamesPlayed = (
-                    SELECT COUNT(*) FROM Game
-                    WHERE PlayerID = :player_id
-                  ) WHERE PlayerID = :player_id', player_id
-    end
+    # end transaction
+    db.commit
   end
 end
 
 def recalc_win_rate
   database do |db|
-    db.execute 'DELETE FROM WinRateHistory'
+    db.execute 'SELECT PlayerID FROM Player' do |player_id|
+      db.execute 'UPDATE Player SET GamesPlayed = (
+                    SELECT COUNT(*) FROM Game
+                    WHERE PlayerID = :player_id
+                  ) WHERE PlayerID = :player_id', player_id
 
-    # temporary array of hashes to keep track of player games/wins
-    player_count = db.get_first_value 'SELECT COUNT(*) FROM Player'
-    players = Array.new(player_count, {})
-    players.map! do |_h|
-      { games: 0, wins: 0 }
-    end
-
-    db.execute 'SELECT DISTINCT GameID
-                FROM Game
-                ORDER BY Timestamp' do |game_id|
-      game = create_query_hash(db.execute2('SELECT PlayerID, Score
-                                            FROM Game
-                                            WHERE GameID = :game_id
-                                            ORDER BY Score', game_id))
-
-      winning_score = game.max_by { |p| p['Score'] }['Score']
-
-      game.each do |player|
-        # PlayerID starts 1, so we are subtracting 1 to offset
-        players[player['PlayerID'] - 1][:games] += 1
-        if player['Score'] == winning_score
-          players[player['PlayerID'] - 1][:wins] += 1
-        end
-
-        win_rate = players[player['PlayerID'] - 1][:wins] /
-                   players[player['PlayerID'] - 1][:games].to_f
-        db.execute 'INSERT INTO WinRateHistory
-                    VALUES (:game_id, :player_id, :win_rate)',
-                   game_id, player['PlayerID'], win_rate
-      end
-    end
-
-    db.execute 'SELECT DISTINCT PlayerID FROM Player' do |player_id|
-      db.execute 'UPDATE Player SET WinRate = (
-                    SELECT w.WinRate FROM WinRateHistory w
-                    JOIN Game g USING (GameID)
-                    WHERE w.PlayerID = :player_id
-                    ORDER BY g.Timestamp DESC LIMIT 1
-                  ) WHERE PlayerID = :player_id;', player_id
+      db.execute 'UPDATE Player SET GamesWon = (
+                    SELECT COUNT(*) FROM Game
+                    JOIN (
+                      SELECT GameID, MAX(Score) AS Score FROM Game
+                      GROUP BY GameID
+                    )
+                    USING (GameID, Score)
+                    WHERE PlayerID = :player_id
+                  ) WHERE PlayerID = :player_id', player_id
     end
   end
 end
@@ -626,6 +608,10 @@ end
 # remove a game by game_id
 def remove_game(game_id, rec = true)
   database do |db|
+    # get timestamp
+    timestamp = db.get_first_value 'SELECT Timestamp FROM Game
+                                    WHERE GameID = :game_id', game_id
+
     # remove the game
     db.execute 'DELETE FROM Game
                 WHERE GameID = :game_id', game_id
@@ -633,9 +619,6 @@ def remove_game(game_id, rec = true)
     db.execute 'DELETE FROM EloHistory
                 WHERE GameID = :game_id', game_id
 
-    db.execute 'DELETE FROM WinRateHistory
-                WHERE GameID = :game_id', game_id
-
-    recalc if rec
+    recalc(timestamp) if rec
   end
 end
