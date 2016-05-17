@@ -45,7 +45,7 @@
                 <div ng-show="player.disqualified">{{minimumQualified - player.gamesPlayed}} games left to play</div>
                 <div ng-show="player.qualified"><b>{{player.elo}}</b></div>
                 <div 
-                  ng-show="player.qualified && player.dailyChange"
+                  ng-show="player.qualified && !_.isUndefined(player.dailyChange)"
                   class="elo-change" 
                   ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">
                   {{player.dailyChange | eloChange}}
