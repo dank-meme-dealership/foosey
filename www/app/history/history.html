@@ -27,7 +27,7 @@
 						<div class="history-games">{{day.games.length}} game<span ng-if="day.games.length > 1">s</span></div>
 					</div>
 					<div class="divider"></div>
-					<div ng-repeat="game in day.games"> <!-- ng-click="show(game)" -->
+					<div ng-repeat="game in day.games" ng-click="show(game)">
 						<div class="spaced-out">
 							<div ng-repeat="team in game.teams" class="game-score">
 								<div ng-repeat="player in team.players">
