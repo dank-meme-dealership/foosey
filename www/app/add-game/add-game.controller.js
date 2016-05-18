@@ -4,13 +4,14 @@
 		.module('addGame')
 		.controller('AddGameController', AddGameController);
 
-	AddGameController.$inject = ['$scope', '$rootScope', '$ionicScrollDelegate', 'gameTypes', 'localStorage', 'FooseyService'];
+	AddGameController.$inject = ['$scope', '$rootScope', '$ionicScrollDelegate', 'gameTypes', 'localStorage', 'FooseyService', 'SettingsService'];
 
-	function AddGameController($scope, $rootScope, $ionicScrollDelegate, gameTypes, localStorage, FooseyService)
+	function AddGameController($scope, $rootScope, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
 	{
 		$scope.gameTypes = gameTypes;
 		$scope.reset = reset;
 		$scope.playerName = playerName;
+		$scope.showElo = SettingsService.showElo;
 
 		// initialize page
 		reset();

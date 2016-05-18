@@ -4,10 +4,12 @@
 		.module('player')
 		.controller('ScorecardController', ScorecardController);
 
-	ScorecardController.$inject = ['$scope', '$stateParams', 'localStorage', 'FooseyService'];
+	ScorecardController.$inject = ['$scope', '$stateParams', 'localStorage', 'FooseyService', 'SettingsService'];
 
-	function ScorecardController($scope, $stateParams, localStorage, FooseyService)
+	function ScorecardController($scope, $stateParams, localStorage, FooseyService, SettingsService)
 	{
+		$scope.showElo = SettingsService.showElo;
+
 		_.each(localStorage.getObject('players'), function(player){
 			if(player.playerID == $stateParams.playerID)
 				$scope.name = player.displayName;
@@ -29,16 +31,18 @@
 			$scope.charts = [];
 			$scope.subtitle = 'Data from All Time';
 
-			FooseyService.getEloHistory($stateParams.playerID).then(
-				function successCallback(response)
-				{
-					// Get chart data
-					var chartData = response.data;
+			if ($scope.showElo)
+			{
+				FooseyService.getEloHistory($stateParams.playerID).then(
+					function successCallback(response)
+					{
+						// Get chart data
+						var chartData = response.data;
 
-					// Set up ELO Rating chart
-					$scope.charts.unshift(getEloChartOptions(_.pluck(chartData, 'elo'), _.pluck(chartData, 'date')));
-				});
-
+						// Set up ELO Rating chart
+						$scope.charts.unshift(getEloChartOptions(_.pluck(chartData, 'elo'), _.pluck(chartData, 'date')));
+					});
+			}
 			// FooseyService.getWinRateHistory($stateParams.playerID).then(
 			// 	function successCallback(response)
 			// 	{

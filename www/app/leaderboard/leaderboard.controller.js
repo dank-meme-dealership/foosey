@@ -4,14 +4,15 @@
     .module('leaderboard')
     .controller('LeaderboardController', LeaderboardController);
 
-  LeaderboardController.$inject = ['$scope', 'localStorage', '$ionicSlideBoxDelegate', 'FooseyService'];
+  LeaderboardController.$inject = ['$scope', 'localStorage', '$ionicSlideBoxDelegate', 'FooseyService', 'SettingsService'];
 
-  function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, FooseyService) 
+  function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, FooseyService, SettingsService) 
   {
     // initialize the page
     $scope.slide = 0;
     $scope.loading = true;
     $scope.minimumQualified = 10;
+    $scope.showElo = SettingsService.showElo;
 
     $scope.getStats = getStats;
     $scope.changeSlide = changeSlide;
