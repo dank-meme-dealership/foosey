@@ -54,8 +54,8 @@
       FooseyService.editPlayer(
       {
         id: player.playerID,
-        displayName: player.displayName,
-        slackName: '@none',
+        displayName: !player.displayName ? '' : player.displayName,
+        slackName: !player.slackName ? '' : player.slackName,
         admin: player.admin,
         active: player.active
       });
