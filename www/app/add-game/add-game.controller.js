@@ -120,7 +120,7 @@
 			$scope.players = localStorage.getObject('players');
 
 			// load from server
-			FooseyService.getAllPlayers().then(
+			FooseyService.getAllPlayers(true).then(
 				function (players)
 	    	{ 
 		    	// only overwrite if they haven't selected one yet

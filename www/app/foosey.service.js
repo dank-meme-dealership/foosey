@@ -31,11 +31,13 @@
       undo              : undo
     }
 
-    function getAllPlayers()
+    // filter is an argument to filter out inactive players
+    function getAllPlayers(filter)
     {
       return $http.get(url + 'players').then(
         function(response)
         {
+          if (!filter) return response.data;
           response = _.filter(response.data, function(player)
           {
             return player.active;

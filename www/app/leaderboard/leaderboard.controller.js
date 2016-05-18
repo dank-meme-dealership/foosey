@@ -38,7 +38,7 @@
       $scope.players = localStorage.getObject('leaderboard');
 
       // load from server
-      FooseyService.getAllPlayers().then(
+      FooseyService.getAllPlayers(true).then(
         function successCallback(players)
         { 
           $scope.players = filterPlayers(players);
