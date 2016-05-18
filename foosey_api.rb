@@ -55,12 +55,18 @@ def api_player(player_id)
       message: "Invalid player ID: #{player_id}"
     } if player.nil?
 
+    win_rate = if player['GamesPlayed'] == 0
+                 0
+               else
+                 player['GamesWon'] / player['GamesPlayed'].to_f
+               end
+
     return {
       playerID: player['PlayerID'],
       displayName: player['DisplayName'],
       slackName: player['SlackName'],
       elo: player['Elo'],
-      winRate: player['GamesPlayed'] / player['GamesWon'].to_f,
+      winRate: win_rate,
       gamesPlayed: player['GamesPlayed'],
       dailyChange: daily_elo_change(player['PlayerID']),
       admin: player['Admin'] == 1,
