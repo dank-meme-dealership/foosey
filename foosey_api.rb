@@ -60,7 +60,7 @@ def api_player(player_id)
       displayName: player['DisplayName'],
       slackName: player['SlackName'],
       elo: player['Elo'],
-      winRate: player['WinRate'],
+      winRate: player['GamesPlayed'] / player['GamesWon'].to_f,
       gamesPlayed: player['GamesPlayed'],
       dailyChange: daily_elo_change(player['PlayerID']),
       admin: player['Admin'] == 1,
