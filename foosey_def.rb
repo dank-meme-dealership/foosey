@@ -224,6 +224,19 @@ def last_elo_change(player_id, n = 1)
   end
 end
 
+def elo(player_id, game_id = nil)
+  database do |db|
+    game_id ||= game_ids.last
+
+    elo = db.get_first_value 'SELECT Elo FROM EloHistory
+                              WHERE PlayerID = :player_id
+                              AND GameID = :game_id', player_id, game_id
+
+    # 1200 in case they have no games
+    return elo || 1200
+  end
+end
+
 # returns the elo change for player with id player_id from game with id game_id
 # if the player was not involved in the game, the delta of their last game
 # before game with id game_id will be returned
@@ -325,13 +338,6 @@ end
 # players/score combinations, so i think it's best
 def add_game(outcome, timestamp = nil)
   database do |db|
-    win_weight = db.get_first_value 'SELECT Value FROM Config
-                                     WHERE Setting = "WinWeight"'
-    max_score = db.get_first_value 'SELECT Value FROM Config
-                                    WHERE Setting = "MaxScore"'
-    k_factor = db.get_first_value 'SELECT Value FROM Config
-                                   WHERE Setting = "KFactor"'
-
     # get unix time
     timestamp ||= Time.now.to_i
     # get next game id
@@ -345,78 +351,15 @@ def add_game(outcome, timestamp = nil)
                  game_id, player_id, score, timestamp
     end
 
-    # at this point we are done if the game was not 2 or 4 people
-    return unless outcome.length == 2 || outcome.length == 4
+    # calling recalc with timestamp means we update elo properly for the
+    # new game, regardless of the time it was played
+    recalc(timestamp)
 
-    # calculate elo change
-    # this code is mostly copied from recalc_elo
-    # we could have another method, but i'm not really sure what the purpose
-    # of that method would be apart from preventing copied code
-    # maybe update_elo_by_game(game_id) ?
-    game = create_query_hash(db.execute2('SELECT p.PlayerID, p.DisplayName,
-                                            g.Score, p.Elo
-                                          FROM Game g
-                                          JOIN Player p
-                                          USING (PlayerID)
-                                          WHERE g.GameID = :game_id
-                                          ORDER BY g.Score', game_id))
-
-    # calculate the elo change
-    if game.length == 2
-      rating_a = game[0]['Elo']
-      rating_b = game[1]['Elo']
-      score_a = game[0]['Score']
-      score_b = game[1]['Score']
-    elsif game.length == 4
-      rating_a = ((game[0]['Elo'] + game[1]['Elo']) / 2).round
-      rating_b = ((game[2]['Elo'] + game[3]['Elo']) / 2).round
-      score_a = game[0]['Score']
-      score_b = game[2]['Score']
-    else
-      return
-    end
-
-    delta_a, delta_b = elo_delta(rating_a, score_a, rating_b, score_b,
-                                 k_factor, win_weight, max_score)
-
-    players = []
-    # update history and player tables
-    game.each_with_index do |player, idx|
-      # elohistory
-      if game.length == 2
-        player['Elo'] += idx < 1 ? delta_a : delta_b
-      elsif game.length == 4
-        player['Elo'] += idx < 2 ? delta_a : delta_b
-      end
-      db.execute 'INSERT INTO EloHistory
-                  VALUES (:game_id, :player_id, :elo)',
-                 game_id, player['PlayerID'], player['Elo']
-
-      games_played = db.get_first_value 'SELECT COUNT(*) FROM Game
-                                         WHERE PlayerID = :player_id',
-                                        player['PlayerID']
-
-      wins = db.get_first_value 'SELECT COUNT(*) FROM Game
-                                 JOIN (
-                                   SELECT GameID, MAX(Score) AS Score FROM Game
-                                   GROUP BY GameID
-                                 )
-                                 USING (GameID, Score)
-                                 WHERE PlayerID = :player_id',
-                                player['PlayerID']
-
-      # player
-      db.execute 'UPDATE Player
-                  SET Elo = :elo,
-                      GamesPlayed = :games_played,
-                      GamesWon = :wins
-                  WHERE PlayerID = :player_id',
-                 player['Elo'], games_played, wins, player['PlayerID']
-
-      players << {
-        name: player['DisplayName'],
-        elo: player['Elo'],
-        delta: elo_change(player['PlayerID'], game_id)
+    players = outcome.keys.collect do |player_id|
+      {
+        name: name(player_id),
+        elo: elo(player_id, game_id),
+        delta: elo_change(player_id, game_id)
       }
     end
 
