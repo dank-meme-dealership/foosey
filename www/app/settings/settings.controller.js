@@ -58,9 +58,13 @@
         slackName: !player.slackName ? '' : player.slackName,
         admin: player.admin,
         active: player.active
-      });
+      }).then(
+        function(response)
+        {
+          loadPlayers();
+        }
+      );
       $scope.modal.hide();
-      loadPlayers();
     }
 
     // Cleanup the modal when we're done with it!
