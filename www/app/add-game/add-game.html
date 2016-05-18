@@ -83,7 +83,7 @@
 						Adding Game...
 					</div>
 					<div ng-show="saveStatus === 'success'">
-						{{response.text}}
+						{{response.message}}
 					</div>
 					<div class="ion-close" ng-show="saveStatus === 'failed'">
 						Something went wrong on the server, talk to Matt or Brik.
@@ -94,14 +94,14 @@
 				</ion-item>
 			</div>
 
-			<!-- Attachments -->
-			<div class="card" ng-repeat="attachment in response.attachments">
+			<!-- Elos after game -->
+			<div class="card">
 				<ion-item class="wrap">
-					<div>{{attachment.pretext | and}}</div>
+					<div>Elos after that game:</div>
 					<div class="row">
-						<div class="col" ng-repeat="field in attachment.fields">
-							<div>{{field.title | and}}</div>
-							<div>{{field.value}}</div>
+						<div class="col" ng-repeat="player in response.stats.players">
+							<div>{{player.name}}</div>
+							<div>{{player.elo}} {{player.delta | eloChange}}</div>
 						</div>
 					</div>
 				</ion-item>

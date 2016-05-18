@@ -73,6 +73,11 @@
   font-size: 16px;
   padding: 7px 5px;
 }
+div.grid-item
+{
+  margin: 5px;
+  text-align: center;
+}
 ion-item.item.wrap 
 {
   white-space: normal;
