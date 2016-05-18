@@ -160,25 +160,6 @@ namespace '/v1' do
     end)
   end
 
-  # Player Win Rate History
-  get '/stats/winrate/:id' do
-    id = params['id'].to_i
-    json api_stats_winrate id
-  end
-
-  # Player Win Rate History
-  get '/stats/winrate' do
-    ids = params['ids'].split ',' if params['ids']
-    ids ||= player_ids
-
-    json(ids.collect do |id|
-      {
-        playerID: id,
-        winrates: api_stats_winrate(id)
-      }
-    end)
-  end
-
   # Adding Objects
   # Add Game
   post '/add/game' do
