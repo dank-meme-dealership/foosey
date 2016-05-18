@@ -58,6 +58,7 @@ def api_player(player_id)
     return {
       playerID: player['PlayerID'],
       displayName: player['DisplayName'],
+      slackName: player['SlackName'],
       elo: player['Elo'],
       winRate: player['WinRate'],
       gamesPlayed: player['GamesPlayed'],
