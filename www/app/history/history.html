@@ -33,7 +33,7 @@
 								<div ng-repeat="player in team.players">
 									<span>{{player | capitalize}}</span>
 									<span 
-                  	ng-show="player.change !== null"
+                  	ng-show="showElo && player.change !== null"
                   	ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
                   	{{team.delta | eloChange}}
                 	</span>

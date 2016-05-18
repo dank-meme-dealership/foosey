@@ -1,8 +1,11 @@
 <ion-view view-title="Settings">
 	<ion-content class="background" has-bouncing="true">
-		<ion-item>
-		<div style="float:left">Manage Players</div>
-		<!-- <div class="ion-ios-arrow-right"></div> -->
-		</ion-item>
+		<div class="card">
+			<ion-toggle ng-change="settings.toggleShowElo()" ng-model="settings.showElo" toggle-class="toggle-balanced">Show Elo</ion-toggle>
+			<!-- <ion-item>
+				<div style="float:left">Manage Players</div>
+				<div class="ion-ios-arrow-right"></div>
+			</ion-item> -->
+		</div>
 	</ion-content>
 </ion-view>

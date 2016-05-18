@@ -4,9 +4,9 @@
     .module('history')
     .controller('HistoryController', HistoryController);
 
-  HistoryController.$inject = ['$scope', '$ionicPopup', '$ionicActionSheet', '$filter', 'localStorage', 'FooseyService'];
+  HistoryController.$inject = ['$scope', '$ionicPopup', '$ionicActionSheet', '$filter', 'localStorage', 'FooseyService', 'SettingsService'];
 
-  function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, localStorage, FooseyService)
+  function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, localStorage, FooseyService, SettingsService)
   {
     // some variables
     var loaded = 0;
@@ -21,6 +21,7 @@
     $scope.refresh();
     $scope.loadMore = loadMore;
     $scope.show = show;
+    $scope.showElo = SettingsService.showElo;
     // toggleFilter('Peter');
     // clearFilters();
 
@@ -43,7 +44,6 @@
 
         // sort the games by date
         $scope.dates = groupByDate($scope.filteredGames);
-        console.log($scope.dates);
 
         // store them to local storage
         localStorage.setObject('history', $scope.dates);
