@@ -30,6 +30,7 @@
     {
       // load from local storage
       $scope.dates = localStorage.getObject('history');
+      loaded = 0;
 
       // get most recent games and group by the date
       FooseyService.getGames(gamesToLoad, 0)
