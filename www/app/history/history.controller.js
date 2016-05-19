@@ -23,6 +23,7 @@ function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, loca
   {
     // load from local storage
     $scope.dates = localStorage.getObject('history');
+    loaded = 0;
 
     // get most recent games and group by the date
     FooseyService.history(0, gamesToLoad)
