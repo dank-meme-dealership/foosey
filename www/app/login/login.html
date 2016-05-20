@@ -1,0 +1,37 @@
+<ion-view view-title="Login" cache-view="false">
+  <ion-content class="background-alt login" ng-click="tap()" has-bouncing="true">
+    <form class="app-container background">
+      <div class="row responsive-md">
+        <div class="col col-50 col-offset-25">
+          <div class="padding text-center">
+            <img class="foosey-header" src="img/foosey.png" alt="Foosey"/>
+          </div>
+
+          <div class="list">
+            <label class="item item-input">
+              <input class="text-center" type="text" placeholder="Enter your team name">
+            </label>
+          </div>
+
+          <button class="button button-block button-positive" ng-click="login()">
+            Get Started
+          </button>
+
+          <div class="row row-no-padding">
+            <div class="col">
+              <button class="button button-clear button-light" ng-click="forgot()">
+                Forgot team?
+              </button>
+            </div>
+
+            <div class="col text-right">
+              <button class="button button-clear button-light" ng-click="signUp()">
+                Sign up
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

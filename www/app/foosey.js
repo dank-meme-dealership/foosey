@@ -11,6 +11,7 @@
       'chart',
       'history',
       'leaderboard',
+      'login',
       'player',
       'settings',
       'teamStats'
