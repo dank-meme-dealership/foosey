@@ -12,7 +12,7 @@
 
     $scope.login = login;
     $scope.forgot = forgot;
-    $scope.signUp = signUp;
+    $scope.createTeam = createTeam;
 
     function login()
     {
@@ -37,10 +37,10 @@
       });
     }
 
-    function signUp()
+    function createTeam()
     {
       $ionicPopup.alert({
-        title: 'Sign Up',
+        title: 'Create Team',
         template: '<center>This feature isn\'t implemented yet!</center>'
       });
     }
