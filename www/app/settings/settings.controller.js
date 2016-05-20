@@ -4,9 +4,9 @@
     .module('settings')
     .controller('SettingsController', SettingsController);
 
-  SettingsController.$inject = ['$scope', '$ionicModal', 'FooseyService', 'SettingsService'];
+  SettingsController.$inject = ['$scope', '$state', '$ionicModal', '$ionicViewService', 'FooseyService', 'SettingsService'];
 
-  function SettingsController($scope, $ionicModal, FooseyService, SettingsService)
+  function SettingsController($scope, $state, $ionicModal, $ionicViewService, FooseyService, SettingsService)
   {
   	$scope.settings = SettingsService;
     $scope.players = [];
@@ -15,6 +15,7 @@
   	$scope.tap = tap;
     $scope.openModal = openModal;
     $scope.editPlayer = editPlayer;
+    $scope.logOut = logOut;
 
     loadPlayers();
 
@@ -65,6 +66,15 @@
         }
       );
       $scope.modal.hide();
+    }
+
+    function logOut()
+    {
+      $ionicViewService.nextViewOptions({
+        disableBack: true
+      });
+
+      $state.go('login');
     }
 
     // Cleanup the modal when we're done with it!
