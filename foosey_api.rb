@@ -85,7 +85,8 @@ def api_stats_elo(player_id)
                         )
                         USING (PlayerID, GameID)
                         WHERE PlayerID = :player_id
-                        ORDER BY Timestamp;', player_id
+                        ORDER BY Timestamp DESC
+                        LIMIT 30;', player_id
 
     return games.collect do |game|
       {
