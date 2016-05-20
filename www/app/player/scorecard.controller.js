@@ -29,7 +29,7 @@
 		function setUpCharts()
 		{
 			$scope.charts = [];
-			$scope.subtitle = 'Data from All Time';
+			$scope.subtitle = 'Data from the last ';
 
 			if ($scope.showElo)
 			{
@@ -38,6 +38,8 @@
 					{
 						// Get chart data
 						var chartData = response.data;
+						$scope.subtitle += chartData.length + ' game';
+						if (chartData.length !== 1) $scope.subtitle += 's';
 
 						// Set up ELO Rating chart
 						$scope.charts.unshift(getEloChartOptions(_.pluck(chartData, 'elo'), _.pluck(chartData, 'date')));
