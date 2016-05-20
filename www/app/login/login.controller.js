@@ -16,8 +16,9 @@
 
     function login()
     {
-      if ($scope.team.text !== 'wca-dev')
+      if ($scope.team.text.toLowerCase() !== 'wca-dev')
       {
+        popupAlert('Invalid Team Name', '<center>You need to enter a valid <br> team name to get started.</center>');
         $scope.team.text = '';
         return;
       }
@@ -31,17 +32,19 @@
 
     function forgot()
     {
-      $ionicPopup.alert({
-        title: 'Forgot Team?',
-        template: '<center>This feature isn\'t implemented yet!</center>'
-      });
+      popupAlert('Forgot Team?', '<center>This feature isn\'t implemented yet!</center>');
     }
 
     function createTeam()
     {
+      popupAlert('Create Team', '<center>This feature isn\'t implemented yet!</center>');
+    }
+
+    function popupAlert(title, template)
+    {
       $ionicPopup.alert({
-        title: 'Create Team',
-        template: '<center>This feature isn\'t implemented yet!</center>'
+        title: title,
+        template: template
       });
     }
   }
