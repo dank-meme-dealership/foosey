@@ -9,7 +9,7 @@
 	function SettingsService(localStorage)
 	{
 		var service = {
-			showElo				: localStorage.getObject('showElo') === 'on',
+			showElo				: localStorage.getObject('showElo') !== 'off',
 			toggleShowElo : toggleShowElo
 		}
 
@@ -17,7 +17,7 @@
 
 		function toggleShowElo()
 		{
-			service.showElo = localStorage.getObject('showElo') !== 'on';
+			service.showElo = localStorage.getObject('showElo') === 'off';
 			localStorage.setObject('showElo', service.showElo ? 'on' : 'off');
 		}
 	}
