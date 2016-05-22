@@ -18,6 +18,10 @@
   <preference name="SplashScreenDelay" value="0"/>
   <preference name="StatusBarOverlaysWebview" value="true"/>
   <preference name="StatusBarStyle" value="darkcontent"/>
+  <access origin="mailto:*" launch-external="yes"/>    
+  <allow-intent href="mailto:*" />
+  <plugin name="cordova-plugin-whitelist" version="1" />
+  <allow-navigation href="mailto:*" />
   <platform name="ios">
     <config-file platform="ios" target="*-Info.plist" parent="NSAppTransportSecurity">
       <dict>
