@@ -4,10 +4,13 @@
     .module('login')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$scope', '$state', '$ionicViewService', '$ionicPopup'];
+  LoginController.$inject = ['$scope', '$state', '$ionicViewService', '$ionicPopup', 'SettingsService'];
 
-  function LoginController($scope, $state, $ionicViewService, $ionicPopup)
+  function LoginController($scope, $state, $ionicViewService, $ionicPopup, SettingsService)
   {
+    // send to login screen if they haven't logged in yet
+    if (!SettingsService.loggedIn) SettingsService.logOut();
+    
     $scope.team = { text: '' };
 
     $scope.login = login;
@@ -22,12 +25,8 @@
         $scope.team.text = '';
         return;
       }
-
-      $ionicViewService.nextViewOptions({
-        disableBack: true
-      });
-
-      $state.go('app.leaderboard');
+      
+      SettingsService.logIn();
     }
 
     function forgot()

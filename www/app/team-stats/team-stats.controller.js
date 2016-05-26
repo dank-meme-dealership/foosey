@@ -4,15 +4,18 @@
     .module('teamStats')
     .controller('TeamStatsController', TeamStatsController);
 
-  TeamStatsController.$inject = ['$scope', 'FooseyService'];
+  TeamStatsController.$inject = ['$scope', 'FooseyService', 'SettingsService'];
 
-  function TeamStatsController($scope, FooseyService)
+  function TeamStatsController($scope, FooseyService, SettingsService)
   {
     setUpCharts();   
 
     // set up the charts for the scorecard page
     function setUpCharts()
     {
+      // send to login screen if they haven't logged in yet
+    if (!SettingsService.loggedIn) SettingsService.logOut();
+
       $scope.charts = [];
       $scope.subtitle = 'Data from All Time';
 

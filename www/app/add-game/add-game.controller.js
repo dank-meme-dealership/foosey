@@ -8,6 +8,9 @@
 
 	function AddGameController($scope, $rootScope, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
 	{
+		// send to login screen if they haven't logged in yet
+		if (!SettingsService.loggedIn) SettingsService.logOut();
+
 		$scope.gameTypes = gameTypes;
 		$scope.reset = reset;
 		$scope.playerName = playerName;

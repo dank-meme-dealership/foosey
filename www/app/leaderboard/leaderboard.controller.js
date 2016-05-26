@@ -8,6 +8,9 @@
 
   function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, FooseyService, SettingsService) 
   {
+    // send to login screen if they haven't logged in yet
+    if (!SettingsService.loggedIn) SettingsService.logOut();
+
     // initialize the page
     $scope.slide = 0;
     $scope.loading = true;

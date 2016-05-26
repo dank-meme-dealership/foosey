@@ -8,6 +8,9 @@
 
 	function ScorecardController($scope, $stateParams, localStorage, FooseyService, SettingsService)
 	{
+		// send to login screen if they haven't logged in yet
+		if (!SettingsService.loggedIn) SettingsService.logOut();
+		
 		$scope.showElo = SettingsService.showElo;
 
 		_.each(localStorage.getObject('players'), function(player){

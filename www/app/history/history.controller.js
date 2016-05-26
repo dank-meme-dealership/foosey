@@ -8,6 +8,9 @@
 
   function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, localStorage, FooseyService, SettingsService)
   {
+    // send to login screen if they haven't logged in yet
+    if (!SettingsService.loggedIn) SettingsService.logOut();
+    
     // some variables
     var loaded = 0;
     var gamesToLoad = 30;

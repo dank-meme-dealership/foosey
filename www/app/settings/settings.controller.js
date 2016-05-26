@@ -8,6 +8,9 @@
 
   function SettingsController($scope, $state, $ionicModal, $ionicViewService, FooseyService, SettingsService)
   {
+    // send to login screen if they haven't logged in yet
+    if (!SettingsService.loggedIn) SettingsService.logOut();
+    
   	$scope.settings = SettingsService;
     $scope.players = [];
   	$scope.tapped = 0;
@@ -15,7 +18,6 @@
   	$scope.tap = tap;
     $scope.openModal = openModal;
     $scope.editPlayer = editPlayer;
-    $scope.logOut = logOut;
 
     loadPlayers();
 
@@ -66,15 +68,6 @@
         }
       );
       $scope.modal.hide();
-    }
-
-    function logOut()
-    {
-      $ionicViewService.nextViewOptions({
-        disableBack: true
-      });
-
-      $state.go('login');
     }
 
     // Cleanup the modal when we're done with it!
