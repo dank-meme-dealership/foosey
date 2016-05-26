@@ -6,6 +6,10 @@
     <div class="card" ng-show="tapped > 6">
       <ion-list>
         <div class="item item-divider">Manage Players</div>
+        <ion-item ng-click="openModal()">
+          <div style="float:left">Add New Player</div>
+          <div style="float:right" class="ion-person-add"></div>
+        </ion-item>
         <ion-item ng-repeat="player in players" ng-click="openModal(player)">
           <div style="float:left">
             {{player.displayName}} 

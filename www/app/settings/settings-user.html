@@ -7,15 +7,17 @@
     <div class="list">
       <label class="item item-input">
         <span class="input-label">Display Name</span>
-        <input class="text-right" ng-model="player.displayName" type="text">
+        <input class="text-right" placeholder="(required)" ng-model="player.displayName" type="text">
       </label>
       <label class="item item-input">
         <span class="input-label">Slack Name</span>
-        <input class="text-right" ng-model="player.slackName" type="text">
+        <input class="text-right" placeholder="(optional)" ng-model="player.slackName" type="text">
       </label>
       <ion-toggle ng-model="player.admin" toggle-class="toggle-balanced">Admin</ion-toggle>
       <ion-toggle ng-model="player.active" toggle-class="toggle-balanced">Active</ion-toggle>
-      <button class="button button-full" ng-click="editPlayer(player)">Update</button>
+      <button class="button button-full" ng-show="player.playerID" ng-click="editPlayer(player)">Update</button>
+      <button class="button button-full button-assertive" ng-show="player.playerID" ng-click="removePlayer(player.playerID)">Remove Player</button>
+      <button class="button button-full" ng-show="!player.playerID" ng-click="addPlayer(player)" ng-disabled="!player.displayName">Add Player</button>
     </div>
   </ion-content>
 </ion-modal-view>

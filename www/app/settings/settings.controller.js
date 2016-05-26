@@ -4,9 +4,9 @@
     .module('settings')
     .controller('SettingsController', SettingsController);
 
-  SettingsController.$inject = ['$scope', '$state', '$ionicModal', '$ionicViewService', 'FooseyService', 'SettingsService'];
+  SettingsController.$inject = ['$scope', '$state', '$ionicModal', '$ionicViewService', '$ionicPopup', 'FooseyService', 'SettingsService'];
 
-  function SettingsController($scope, $state, $ionicModal, $ionicViewService, FooseyService, SettingsService)
+  function SettingsController($scope, $state, $ionicModal, $ionicViewService, $ionicPopup, FooseyService, SettingsService)
   {
     // send to login screen if they haven't logged in yet
     if (!SettingsService.loggedIn) SettingsService.logOut();
@@ -17,7 +17,9 @@
 
   	$scope.tap = tap;
     $scope.openModal = openModal;
+    $scope.addPlayer = addPlayer;
     $scope.editPlayer = editPlayer;
+    $scope.removePlayer = removePlayer;
 
     loadPlayers();
 
@@ -52,6 +54,18 @@
       $scope.modal.show();
     };
 
+    function addPlayer(player)
+    {
+      FooseyService.addPlayer(
+      {
+        displayName: !player.displayName ? '' : player.displayName,
+        slackName: !player.slackName ? '' : player.slackName,
+        admin: _.isUndefined(player.admin) ? false : player.admin,
+        active: _.isUndefined(player.admin) ? false : player.active
+      }).then(reload);
+      $scope.modal.hide();
+    }
+
     function editPlayer(player)
     {
       FooseyService.editPlayer(
@@ -61,13 +75,29 @@
         slackName: !player.slackName ? '' : player.slackName,
         admin: player.admin,
         active: player.active
-      }).then(
-        function(response)
-        {
-          loadPlayers();
-        }
-      );
+      }).then(reload);
       $scope.modal.hide();
+    }
+
+    function removePlayer(playerID)
+    {
+      var confirmPopup = $ionicPopup.confirm({
+        title: 'Remove This Player',
+        template: 'Are you sure you want to remove this player? This cannot be undone.'
+      });
+
+      // if yes, delete the last game
+      confirmPopup.then(function(positive) {
+        if(positive) {
+          FooseyService.removePlayer(playerID).then(reload);
+          $scope.modal.hide();
+        }
+      });
+    }
+
+    function reload(response)
+    {
+      loadPlayers();
     }
 
     // Cleanup the modal when we're done with it!
