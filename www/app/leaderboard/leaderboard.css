@@ -3,6 +3,11 @@
 	width: 40px;
   text-align: right;
 }
+.player-name
+{
+  font-size: 16px;
+  display: inline-block;
+}
 .progress
 {
   height: 20px;

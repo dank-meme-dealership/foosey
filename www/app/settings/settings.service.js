@@ -9,14 +9,22 @@
 	function SettingsService($state, $ionicHistory, localStorage)
 	{
 		var service = {
-			showElo				: localStorage.getObject('showElo') !== 'off',
-			loggedIn			: localStorage.getObject('loggedInUser') === 1,
+			showElo				: localStorage.getObject('showElo') !== 0,
+			loggedIn			: localStorage.getObject('loggedIn') === 1,
 			logIn 				: logIn,
 			logOut				: logOut,
+			playerID			: getPlayer(),
+			setPlayer			: setPlayer,
 			toggleShowElo : toggleShowElo
 		}
 
 		return service;
+
+		function getPlayer()
+		{
+			var playerID = localStorage.getObject('playerID');
+			return _.isNumber(playerID) ? playerID : undefined;
+		}
 
 		function logIn()
 		{
@@ -25,7 +33,7 @@
       });
 
 			service.loggedIn = true;
-			localStorage.setObject('loggedInUser', 1);
+			localStorage.setObject('loggedIn', 1);
 
 			$state.go('app.leaderboard');
 		}
@@ -37,15 +45,25 @@
       });
 
 			service.loggedIn = false;
-      localStorage.setObject('loggedInUser', 0);
+			service.playerID = undefined;
+
+      localStorage.setObject('loggedIn', 0);
+      localStorage.setObject('playerID', undefined);
+      localStorage.setObject('showElo', undefined);
 
       $state.go('login');
 		}
 
+		function setPlayer(playerID)
+		{
+			service.playerID = playerID;
+			localStorage.setObject('playerID', playerID);
+		}
+
 		function toggleShowElo()
 		{
-			service.showElo = localStorage.getObject('showElo') === 'off';
-			localStorage.setObject('showElo', service.showElo ? 'on' : 'off');
+			service.showElo = localStorage.getObject('showElo') === 0;
+			localStorage.setObject('showElo', service.showElo ? 1 : 0);
 		}
 	}
 })();

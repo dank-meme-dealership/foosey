@@ -32,6 +32,7 @@
     }
 
     // filter is an argument to filter out inactive players
+    // true will filter to just active players, false will not
     function getAllPlayers(filter)
     {
       return $http.get(url + 'players').then(

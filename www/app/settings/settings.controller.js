@@ -13,6 +13,9 @@
     
   	$scope.settings = SettingsService;
     $scope.players = [];
+    $scope.playerSelections = [];
+    $scope.player = [];
+    $scope.player.selected = SettingsService.playerID;
   	$scope.tapped = 0;
 
   	$scope.tap = tap;
@@ -30,16 +33,24 @@
       $scope.modal = modal;
     });
 
+    $scope.$watch('player.selected', function(player)
+    {
+      if (_.isUndefined(player)) return;
+      SettingsService.setPlayer(player);
+    });
+
     function loadPlayers()
     {
       // load from server
       FooseyService.getAllPlayers(false).then(
         function (players)
         { 
-          $scope.players = players;
-          $scope.players.sort(function(a, b){
+          $scope.players = players.sort(function(a, b){
             return a.displayName.localeCompare(b.displayName);
           });
+          // filter the player selections that you can choose to just the active players
+          $scope.playerSelections = _.filter($scope.players, function(player){ return player.active });
+          // $scope.player.selected = _.filter($scope.playerSelections, function(player){ return player.playerID === SettingsService.playerID });
         });
     }
 

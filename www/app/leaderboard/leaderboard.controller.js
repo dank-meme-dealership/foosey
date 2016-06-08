@@ -16,6 +16,9 @@
     $scope.loading = true;
     $scope.minimumQualified = 10;
     $scope.showElo = SettingsService.showElo;
+    $scope.playerID = SettingsService.playerID;
+    $scope.elos = undefined;
+    $scope.winRates = undefined;
 
     $scope.getStats = getStats;
     $scope.changeSlide = changeSlide;
@@ -38,13 +41,18 @@
     function getStats()
     {
       // load from local storage
-      $scope.players = localStorage.getObject('leaderboard');
+      $scope.elos = localStorage.getObject('elos');
+      $scope.winRates = localStorage.getObject('winRates');
 
       // load from server
       FooseyService.getAllPlayers(true).then(
         function successCallback(players)
         { 
-          $scope.players = filterPlayers(players);
+          // Remove people from the leaderboard who haven't played or are inactive
+          var players = _.filter(players, hasPlayed)
+
+          $scope.elos = getEloRank(players);
+          $scope.winRates = players.sort(sortWinRate);
           $ionicSlideBoxDelegate.update();
           localStorage.setObject('leaderboard', $scope.players);
           $scope.error = false;
@@ -59,9 +67,9 @@
     }
 
     // filters out people that have not yet played enough games
-    function filterPlayers(players)
+    function getEloRank(players)
     {
-      var filteredElos = [];
+      var eloRank = [];
       var unranked = [];
       var rank = 1;
 
@@ -70,15 +78,12 @@
       // set rank and if they're qualified
       for (var i = 0; i < players.length; i++)
       {
-        // Remove people from the leaderboard who haven't played or are inactive
-        if (players[i].gamesPlayed == 0 || !players[i].active) continue;
-
         if (players[i].gamesPlayed >= $scope.minimumQualified)
         {
           players[i].rank = rank;
           players[i].qualified = true;
           rank++;
-          filteredElos.push(players[i]);
+          eloRank.push(players[i]);
         }
         else
         {
@@ -91,15 +96,25 @@
       // add unranked to bottom
       for (var i = 0; i < unranked.length; i++)
       {
-        filteredElos.push(unranked[i]);
+        eloRank.push(unranked[i]);
       }
 
-      return filteredElos;
+      return eloRank;
+    }
+
+    function hasPlayed(player)
+    {
+      return player.gamesPlayed > 0;
     }
 
     function sortElos(a, b)
     {
       return b.elo - a.elo;
+    }
+
+    function sortWinRate(a, b)
+    {
+      return b.winRate - a.winRate;
     }
 
     // turns off spinner and notifies

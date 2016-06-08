@@ -25,7 +25,7 @@
     <ion-item ng-show="error === true">Can't connect to server :(</ion-item>
 
     <!-- show loading while waiting -->
-    <ion-spinner ng-show="!players && !error" class="loading-dots" icon="lines"></ion-spinner>
+    <ion-spinner ng-show="!elos && !error" class="loading-dots" icon="lines"></ion-spinner>
 
     <ion-slide-box on-slide-changed="changeSlide($index)" show-pager="false">
 
@@ -34,13 +34,13 @@
         <ion-list>
           <ion-item 
             class="card"
-            ng-repeat="player in players" 
+            ng-repeat="player in elos" 
             href="#/app/player/{{player.playerID}}">
             <div class="spaced-out">
-              <h2>
+              <div>
                 <div class="rank">{{player.rank}}</div> 
-                {{player.displayName | capitalize}}
-              </h2> 
+                <div class="player-name" ng-class="{'bold' : player.playerID === playerID }">{{player.displayName | capitalize}}</div>
+              </div> 
               <div class="spaced-out">
                 <div ng-show="player.disqualified">{{minimumQualified - player.gamesPlayed}} games left to play</div>
                 <div ng-show="showElo && player.qualified"><b>{{player.elo}}</b></div>
@@ -53,11 +53,6 @@
                 <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
               </div>
             </div>
-            <!-- <div class="progress" ng-show="player.qualified">
-              <div class="progress-bar" style="width: {{player.winRate *  100 | number}}%">
-                <div style="text-shadow: 1px 1px #000000;">{{player.winRate * 100 | number:1}}%</div>
-              </div>
-            </div> -->
           </ion-item>
         </ion-list>
       </ion-slide>
@@ -67,13 +62,13 @@
         <ion-list>
           <ion-item 
             class="card"
-            ng-repeat="player in players"
+            ng-repeat="player in winRates"
             href="#/app/player/{{player.playerID}}">
             <div class="spaced-out">
-              <h2>
+              <div>
                 <div class="rank">{{$index + 1}}</div> 
-                {{player.displayName | capitalize}}
-              </h2> 
+                <div class="player-name" ng-class="{'bold' : player.playerID === playerID }">{{player.displayName | capitalize}}</div>
+              </div> 
               <div class="spaced-out">
                 <b>{{player.winRate * 100 | number:1}}%</b>
                 <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
