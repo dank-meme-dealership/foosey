@@ -15,6 +15,9 @@
 		$scope.reset = reset;
 		$scope.playerName = playerName;
 		$scope.showElo = SettingsService.showElo;
+		$scope.useNowTime = true;
+		$scope.customTime = undefined;
+		$scope.customDate = undefined;
 
 		// initialize page
 		reset();
@@ -76,6 +79,8 @@
 		// add the game
 		function submit()
 		{
+			console.log($scope.customDate);
+			console.log($scope.customTime);
 			$scope.state = "saving";
 			changeState("saving", null);
 			$scope.saveStatus = "saving";
@@ -113,6 +118,11 @@
 			$scope.game = [];
 			$scope.saveStatus = "";
 			$scope.response = undefined;
+
+			$scope.useNowTime = true;
+			$scope.customDate = new Date();
+			$scope.customTime = $scope.customDate;
+
 			getPlayers();
 		}
 

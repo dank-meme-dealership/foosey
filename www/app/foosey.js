@@ -8,6 +8,7 @@
       'ngIOS9UIWebViewPatch',
 
       'addGame',
+      'datepicker',
       'chart',
       'history',
       'leaderboard',

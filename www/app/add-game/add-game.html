@@ -69,8 +69,27 @@
 		</div>
 	
 		<!-- Confirm the game -->
-		<div ng-click="submit()" class="card" ng-show="state === 'confirm'">
-			<ion-item class="center">Save</ion-item>
+		<div ng-show="state === 'confirm'">
+			
+			<!-- Custom times -->
+			<div ng-if="false" ng-click="changeTime()" class="card">
+				<div class="list">
+					<ion-toggle ng-model="useNowTime" toggle-class="toggle-balanced">Use now as timestamp</ion-toggle>
+					<label class="item item-input" ng-if="!useNowTime">
+		        <span class="input-label">Custom Date</span>
+		        <input style="padding: 0" type="text" datepicker ng-model="customDate">
+		      </label>
+					<label class="item item-input" ng-if="!useNowTime">
+		        <span class="input-label">Custom Time</span>
+		        <input style="padding: 0" type="text" datepicker ng-model="customTime">
+		      </label>
+				</div>
+			</div>
+
+			<!-- Save button -->
+			<div ng-click="submit()" class="card">
+				<ion-item class="center">Save</ion-item>
+			</div>
 		</div>
 
 		<!-- Saving the game -->
