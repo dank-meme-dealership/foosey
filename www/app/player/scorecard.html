@@ -11,12 +11,12 @@
 		</div>
 
 		<!-- link to other stats -->
-		<!-- <ion-item class="card" href="#/app/team-stats">
+		<ion-item class="card" href="#/app/team-stats">
 			<div class="spaced-out">
 				<div class="ion-stats-bars space">See team statistics</div>
 				<div class="ion-ios-arrow-forward"></div>
 			</div>
-		</ion-item> -->
+		</ion-item>
 
 		<!-- show loading while waiting -->
 		<div class="card" ng-show="settings.showElo && charts.length < 1">
@@ -26,10 +26,6 @@
 					<ion-spinner class="center dark" icon="lines"></ion-spinner>
 				</div>
 			</ion-item>
-		</div>
-
-		<div class="card" ng-show="!settings.showElo">
-			<ion-item class="center">Nothing to show right now!</ion-item>
 		</div>
 
 		<div class="card" ng-show="scorecardStats">

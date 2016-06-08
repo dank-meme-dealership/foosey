@@ -17,11 +17,40 @@
     if (!SettingsService.loggedIn) SettingsService.logOut();
 
       $scope.charts = [];
-      $scope.subtitle = 'Data from All Time';
+      $scope.subtitle = 'This is mock data till I fix it';
 
-      FooseyService.teamCharts('matt').then(function successCallback(response)
-      {
-        $scope.days = response.data.charts;
+      // FooseyService.getAllGames().then(function successCallback(response)
+      // {
+        $scope.days = [
+          {
+            day: 'Sunday',
+            count: 11
+          },
+          {
+            day: 'Monday',
+            count: 238
+          },
+          {
+            day: 'Tuesday',
+            count: 324
+          },
+          {
+            day: 'Wednesday',
+            count:282
+          },
+          {
+            day: 'Thursday',
+            count: 361
+          },
+          {
+            day: 'Friday',
+            count: 324
+          },
+          {
+            day: 'Saturday',
+            count: 22
+          }
+        ];
 
         $scope.data = [];
         for (var i = 0; i < $scope.days.length; i++)
@@ -32,7 +61,7 @@
           });
         }
         doChart();
-      });
+      // });
     }
 
     // define options for the ELO Rating chart
@@ -59,7 +88,7 @@
           text: 'Games Played Per Day'
         },
         subtitle: {
-          text: 'This is data for all time'
+          text: $scope.subtitle
         },
         xAxis: {
           type: 'category'
