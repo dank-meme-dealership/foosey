@@ -54,7 +54,8 @@
           $scope.elos = getEloRank(players);
           $scope.winRates = players.sort(sortWinRate);
           $ionicSlideBoxDelegate.update();
-          localStorage.setObject('leaderboard', $scope.players);
+          localStorage.setObject('elos', $scope.elos);
+          localStorage.setObject('winRates', $scope.winRates);
           $scope.error = false;
           
           done();
