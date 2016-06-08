@@ -50,7 +50,6 @@
           });
           // filter the player selections that you can choose to just the active players
           $scope.playerSelections = _.filter($scope.players, function(player){ return player.active });
-          // $scope.player.selected = _.filter($scope.playerSelections, function(player){ return player.playerID === SettingsService.playerID });
         });
     }
 

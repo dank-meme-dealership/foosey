@@ -11,10 +11,10 @@
 		// send to login screen if they haven't logged in yet
 		if (!SettingsService.loggedIn) SettingsService.logOut();
 
+		$scope.settings = SettingsService;
 		$scope.gameTypes = gameTypes;
 		$scope.reset = reset;
 		$scope.playerName = playerName;
-		$scope.showElo = SettingsService.showElo;
 		$scope.useNowTime = true;
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;

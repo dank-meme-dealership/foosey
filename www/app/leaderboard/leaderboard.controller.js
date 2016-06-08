@@ -12,13 +12,13 @@
     if (!SettingsService.loggedIn) SettingsService.logOut();
 
     // initialize the page
+    $scope.settings = SettingsService;
     $scope.slide = 0;
     $scope.loading = true;
     $scope.minimumQualified = 10;
-    $scope.showElo = SettingsService.showElo;
-    $scope.playerID = SettingsService.playerID;
     $scope.elos = undefined;
     $scope.winRates = undefined;
+
 
     $scope.getStats = getStats;
     $scope.changeSlide = changeSlide;

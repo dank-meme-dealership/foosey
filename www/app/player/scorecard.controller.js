@@ -11,7 +11,7 @@
 		// send to login screen if they haven't logged in yet
 		if (!SettingsService.loggedIn) SettingsService.logOut();
 		
-		$scope.showElo = SettingsService.showElo;
+		$scope.settings = SettingsService;
 
 		_.each(localStorage.getObject('players'), function(player){
 			if(player.playerID == $stateParams.playerID)
@@ -34,7 +34,7 @@
 			$scope.charts = [];
 			$scope.subtitle = 'Data from the last ';
 
-			if ($scope.showElo)
+			if ($scope.settings.showElo)
 			{
 				FooseyService.getEloHistory($stateParams.playerID).then(
 					function successCallback(response)

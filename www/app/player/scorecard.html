@@ -5,7 +5,7 @@
 		<div class="background-foos player-header">
 			<!-- <div class="player-title">{{player.name | capitalize}}</div> -->
 			<div class="space-around">
-				<div ng-show="showElo" class="player-stat">{{player.elo}}<br>Elo Rating</div>
+				<div ng-show="settings.showElo" class="player-stat">{{player.elo}}<br>Elo Rating</div>
 				<div class="player-stat">{{player.winRate * 100 | number:1}}%<br>Win %</div>
 			</div>
 		</div>
@@ -19,7 +19,7 @@
 		</ion-item> -->
 
 		<!-- show loading while waiting -->
-		<div class="card" ng-show="showElo && charts.length < 1">
+		<div class="card" ng-show="settings.showElo && charts.length < 1">
 			<ion-item class="center">
 				<div>
 					Loading charts<br>
@@ -28,7 +28,7 @@
 			</ion-item>
 		</div>
 
-		<div class="card" ng-show="!showElo">
+		<div class="card" ng-show="!settings.showElo">
 			<ion-item class="center">Nothing to show right now!</ion-item>
 		</div>
 

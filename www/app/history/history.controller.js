@@ -11,20 +11,18 @@
     // send to login screen if they haven't logged in yet
     if (!SettingsService.loggedIn) SettingsService.logOut();
     
-    // some variables
     var loaded = 0;
     var gamesToLoad = 30;
-
-    // create a pull-to-refresh function
-    $scope.refresh = refresh;
-
-    // initialize the page
     $scope.removing = false;
     $scope.loading = true;
-    $scope.refresh();
+    $scope.settings = SettingsService;
+
     $scope.loadMore = loadMore;
     $scope.show = show;
-    $scope.showElo = SettingsService.showElo;
+    $scope.refresh = refresh;
+
+    refresh();
+
     // toggleFilter('Peter');
     // clearFilters();
 
