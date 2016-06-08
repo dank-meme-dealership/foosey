@@ -64,21 +64,23 @@
 
       <!-- % Games won -->
       <ion-slide>
-        <ion-item 
-          class="card"
-          ng-repeat="player in players"
-          href="#/app/player/{{player.playerId}}">
-          <div class="spaced-out">
-            <h2>
-              <div class="rank">{{$index + 1}}</div> 
-              {{player.displayName | capitalize}}
-            </h2> 
+        <ion-list>
+          <ion-item 
+            class="card"
+            ng-repeat="player in players"
+            href="#/app/player/{{player.playerID}}">
             <div class="spaced-out">
-              <b>{{player.winRate * 100 | number:1}}%</b>
-              <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
+              <h2>
+                <div class="rank">{{$index + 1}}</div> 
+                {{player.displayName | capitalize}}
+              </h2> 
+              <div class="spaced-out">
+                <b>{{player.winRate * 100 | number:1}}%</b>
+                <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
+              </div>
             </div>
-          </div>
-        </ion-item>
+          </ion-item>
+        </ion-list>
       </ion-slide>
 
     </ion-slide-box>
