@@ -46,6 +46,7 @@
 
 			service.loggedIn = false;
 			service.playerID = undefined;
+			service.showElo = true;
 
       localStorage.setObject('loggedIn', 0);
       localStorage.setObject('playerID', undefined);
