@@ -169,7 +169,7 @@ namespace '/v1' do
 
   # Adding Objects
   # Add Game
-  post '/add/game' do
+  post '/games' do
     body = JSON.parse request.body.read
 
     outcome = {}
@@ -187,7 +187,7 @@ namespace '/v1' do
   end
 
   # Add Player
-  post '/add/player' do
+  post '/players' do
     body = JSON.parse request.body.read
 
     # set some default values
@@ -206,7 +206,8 @@ namespace '/v1' do
 
   # Editing Objects
   # Edit Game
-  post '/edit/game' do
+  put '/games/:id' do
+    id = params['id'].to_i
     body = JSON.parse request.body.read
 
     outcome = {}
@@ -214,7 +215,7 @@ namespace '/v1' do
       team['players'].each { |p| outcome[p] = team['score'] }
     end
 
-    edit_game(body['id'], outcome, body['timestamp'])
+    edit_game(id, outcome, body['timestamp'])
 
     json(
       error: false,
@@ -223,10 +224,11 @@ namespace '/v1' do
   end
 
   # Edit Player
-  post '/edit/player' do
+  put '/players/:id' do
+    id = params['id'].to_i
     body = JSON.parse request.body.read
 
-    edit_player(body['id'], body['displayName'], body['slackName'],
+    edit_player(id, body['displayName'], body['slackName'],
                 body['admin'], body['active'])
 
     json(
@@ -237,7 +239,7 @@ namespace '/v1' do
 
   # Removing Objects
   # Remove Game
-  delete '/remove/game/:id' do
+  delete '/games/:id' do
     id = params['id'].to_i
 
     remove_game(id)
