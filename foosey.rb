@@ -27,7 +27,7 @@ set :port, 4006
 
 configure do
   enable :cross_origin
-  set :allow_methods, [:get, :post, :options, :delete]
+  set :allow_methods, [:get, :post, :options, :delete, :put]
 end
 
 # load other foosey files and enable auto-reload
@@ -46,4 +46,15 @@ end
 
 get '/foosey.db' do
   return File.read('foosey.db')
+end
+
+# options workaround as defined in sinatra-cross_origin gem
+options '*' do
+  response.headers['Allow'] = 'HEAD,GET,PUT,POST,DELETE,OPTIONS'
+
+  response.headers['Access-Control-Allow-Headers'] =
+    'X-Requested-With, X-HTTP-Method-Override, ' \
+    'Content-Type, Cache-Control, Accept'
+
+  200
 end
