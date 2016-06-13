@@ -8,7 +8,7 @@
 
   function FooseyService($http) 
   {
-    var oldUrl = "http://api.foosey.futbol/app";
+    // var url = "http://localhost:4006/v1/";
     var url = "http://beta.foosey.futbol/v1/";
 
     return {
@@ -137,12 +137,12 @@
 
     function editGame(game)
     {
-      return $http.post(url + 'games/' + game.id, game);
+      return $http.put(url + 'games/' + game.id, game);
     }
 
     function editPlayer(player)
     {
-      return $http.post(url + 'players/' + player.id, player);
+      return $http.put(url + 'players/' + player.id, player);
     }
 
     function removeGame(gameID)
