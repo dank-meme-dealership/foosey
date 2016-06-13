@@ -1,0 +1,17 @@
+<ion-view view-title="Manage Players" cache-view="false">
+  <ion-content class="background" has-bouncing="true">
+
+    <!-- Add player -->
+    <div class="card">
+      <ion-item ng-click="openModal()">
+        <div style="float:left">Add New Player</div>
+        <div style="float:right" class="ion-person-add"></div>
+      </ion-item>
+    </div>
+
+    <!-- Active and inactive players -->
+    <player-list title="'Active Players'" list="activePlayers" reload="loadPlayers"></player-list>
+    <player-list title="'Inactive Players'" list="inactivePlayers" reload="loadPlayers"></player-list>
+
+  </ion-content>
+</ion-view>

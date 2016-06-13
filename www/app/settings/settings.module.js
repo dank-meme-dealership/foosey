@@ -1,5 +1,7 @@
 (function()
 {
   angular
-    .module('settings', []);
+    .module('settings', [
+      'player'
+    ]);
 })();

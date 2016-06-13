@@ -14,24 +14,13 @@
   	$scope.settings = SettingsService;
     $scope.players = [];
     $scope.playerSelections = [];
-    $scope.player = [];
+    $scope.player = {};
     $scope.player.selected = SettingsService.playerID;
   	$scope.tapped = 0;
 
   	$scope.tap = tap;
-    $scope.openModal = openModal;
-    $scope.addPlayer = addPlayer;
-    $scope.editPlayer = editPlayer;
-    $scope.removePlayer = removePlayer;
 
     loadPlayers();
-
-    $ionicModal.fromTemplateUrl('app/settings/settings-user.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
-    });
 
     $scope.$watch('player.selected', function(player)
     {
@@ -57,62 +46,5 @@
   	{
   		$scope.tapped++;
   	}
-
-    function openModal(player) 
-    {
-      $scope.player = _.clone(player);
-      $scope.modal.show();
-    };
-
-    function addPlayer(player)
-    {
-      FooseyService.addPlayer(
-      {
-        displayName: !player.displayName ? '' : player.displayName,
-        slackName: !player.slackName ? '' : player.slackName,
-        admin: _.isUndefined(player.admin) ? false : player.admin,
-        active: _.isUndefined(player.admin) ? false : player.active
-      }).then(reload);
-      $scope.modal.hide();
-    }
-
-    function editPlayer(player)
-    {
-      FooseyService.editPlayer(
-      {
-        id: player.playerID,
-        displayName: !player.displayName ? '' : player.displayName,
-        slackName: !player.slackName ? '' : player.slackName,
-        admin: player.admin,
-        active: player.active
-      }).then(reload);
-      $scope.modal.hide();
-    }
-
-    function removePlayer(playerID)
-    {
-      var confirmPopup = $ionicPopup.confirm({
-        title: 'Remove This Player',
-        template: 'Are you sure you want to remove this player? This cannot be undone.'
-      });
-
-      // if yes, delete the last game
-      confirmPopup.then(function(positive) {
-        if(positive) {
-          FooseyService.removePlayer(playerID).then(reload);
-          $scope.modal.hide();
-        }
-      });
-    }
-
-    function reload(response)
-    {
-      loadPlayers();
-    }
-
-    // Cleanup the modal when we're done with it!
-    $scope.$on('$destroy', function() {
-      $scope.modal.remove();
-    });
   }
 })();

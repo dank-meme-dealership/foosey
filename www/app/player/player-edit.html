@@ -14,9 +14,10 @@
         <input class="text-right" placeholder="(optional)" ng-model="player.slackName" type="text">
       </label>
       <ion-toggle ng-model="player.admin" toggle-class="toggle-balanced">Admin</ion-toggle>
-      <ion-toggle ng-model="player.active" toggle-class="toggle-balanced">Active</ion-toggle>
       <button class="button button-full" ng-show="player.playerID" ng-click="editPlayer(player)">Update</button>
-      <button class="button button-full button-assertive" ng-show="player.playerID" ng-click="removePlayer(player.playerID)">Remove Player</button>
+      <button class="button button-full" ng-class="{'button-assertive' : player.active, 'button-balanced' : !player.active}" ng-show="player.playerID" ng-click="toggleActive(player)">
+        {{ player.active ? 'Disable' : 'Enable' }} Player
+      </button>
       <button class="button button-full" ng-show="!player.playerID" ng-click="addPlayer(player)" ng-disabled="!player.displayName">Add Player</button>
     </div>
   </ion-content>

@@ -9,28 +9,17 @@
           <div class="input-label">
             {{ !player.selected ? 'Select a player' : 'You are' }}
           </div>
-          <select placeholder="(select a player)" ng-model="player.selected" ng-options="player.playerID as player.displayName for player in playerSelections"></select>
+          <select ng-model="player.selected" ng-options="player.playerID as player.displayName for player in playerSelections"></select>
         </label>
       </ion-list>
 		</div>
 
-    <!-- Hidden manage players section -->
+    <!-- Players -->
     <div class="card" ng-show="tapped > 6">
-      <ion-list>
-        <div class="item item-divider">Manage Players</div>
-        <ion-item ng-click="openModal()">
-          <div style="float:left">Add New Player</div>
-          <div style="float:right" class="ion-person-add"></div>
-        </ion-item>
-        <ion-item ng-repeat="player in players" ng-click="openModal(player)">
-          <div style="float:left">
-            {{player.displayName}} 
-            {{player.active ? '' : '(disabled)'}}
-            {{player.admin ? '(admin)' : ''}}
-          </div>
-          <div style="float:right" class="ion-edit"></div>
-        </ion-item>
-      </ion-list>
+      <ion-item href="#/app/manage-players">
+        <div style="float:left">Manage players</div>
+        <div style="float:right" class="ion-ios-arrow-right"></div>
+      </ion-item>
     </div>
 
     <!-- Log out -->
