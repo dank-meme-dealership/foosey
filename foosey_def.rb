@@ -76,6 +76,26 @@ def message_slack(_this_game, text, attach)
   http.request(req)
 end
 
+# true if a game with the given id exists, false otherwise
+def valid_game?(game_id)
+  database do |db|
+    game = db.get_first_value 'SELECT GameID FROM Game
+                               WHERE GameID = :game_id', game_id
+
+    return !game.nil?
+  end
+end
+
+# true if a player with the given id exists, false otherwise
+def valid_player?(player_id)
+  database do |db|
+    player = db.get_first_value 'SELECT PlayerID FROM Player
+                                 WHERE PlayerID = :player_id', player_id
+
+    return !player.nil?
+  end
+end
+
 # pull and load
 # hot hot hot deploys
 def update

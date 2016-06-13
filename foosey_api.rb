@@ -47,8 +47,8 @@ end
 def api_player(player_id)
   database do |db|
     db.results_as_hash = true
-    player = db.execute('SELECT * FROM Player
-                         WHERE PlayerID = :id', player_id).first
+    player = db.get_first_row('SELECT * FROM Player
+                               WHERE PlayerID = :id', player_id)
 
     return {
       error: true,
@@ -210,6 +210,13 @@ namespace '/v1' do
     id = params['id'].to_i
     body = JSON.parse request.body.read
 
+    unless valid_game? id
+      return json(
+        error: true,
+        message: 'Invalid game ID: #{id}'
+      )
+    end
+
     outcome = {}
     body['teams'].each do |team|
       team['players'].each { |p| outcome[p] = team['score'] }
@@ -228,6 +235,13 @@ namespace '/v1' do
     id = params['id'].to_i
     body = JSON.parse request.body.read
 
+    unless valid_player? id
+      return json(
+        error: true,
+        message: 'Invalid player ID: #{id}'
+      )
+    end
+
     edit_player(id, body['displayName'], body['slackName'],
                 body['admin'], body['active'])
 
@@ -241,6 +255,13 @@ namespace '/v1' do
   # Remove Game
   delete '/games/:id' do
     id = params['id'].to_i
+
+    unless valid_game? id
+      return json(
+        error: true,
+        message: 'Invalid game ID: #{id}'
+      )
+    end
 
     remove_game(id)
 
