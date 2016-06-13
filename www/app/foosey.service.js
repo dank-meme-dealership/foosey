@@ -27,7 +27,6 @@
       editGame          : editGame, 
       editPlayer        : editPlayer,
       removeGame        : removeGame,
-      removePlayer      : removePlayer,
       undo              : undo
     }
 
@@ -128,32 +127,27 @@
 
     function addGame(game)
     {
-      return $http.post(url + 'add/game', game);
+      return $http.post(url + 'games', game);
     }
 
     function addPlayer(player)
     {
-      return $http.post(url + 'add/player', player);
+      return $http.post(url + 'players', player);
     }
 
     function editGame(game)
     {
-      return $http.post(url + 'edit/game', game);
+      return $http.post(url + 'games/' + game.id, game);
     }
 
     function editPlayer(player)
     {
-      return $http.post(url + 'edit/player', player);
+      return $http.post(url + 'players/' + player.id, player);
     }
 
     function removeGame(gameID)
     {
-      return $http.delete(url + 'remove/game/' + gameID);
-    }
-
-    function removePlayer(playerID)
-    {
-      return $http.delete(url + 'remove/player/' + playerID);
+      return $http.delete(url + 'games/' + gameID);
     }
 
     function undo()
