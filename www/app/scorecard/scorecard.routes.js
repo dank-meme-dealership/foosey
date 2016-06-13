@@ -1,7 +1,7 @@
 (function()
 {
   angular
-    .module('player')
+    .module('scorecard')
     .config(config);
 
   config.$inject = ['$stateProvider'];
@@ -15,7 +15,7 @@
         views: {
           menuContent: {
             controller: 'ScorecardController',
-            templateUrl: 'app/player/scorecard.html'
+            templateUrl: 'app/scorecard/scorecard.html'
           }
         }
       });

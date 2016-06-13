@@ -1,7 +1,7 @@
 (function()
 {
 	angular
-		.module('player')
+		.module('scorecard')
 		.controller('ScorecardController', ScorecardController);
 
 	ScorecardController.$inject = ['$scope', '$stateParams', 'localStorage', 'FooseyService', 'SettingsService'];

@@ -13,7 +13,7 @@
       'history',
       'leaderboard',
       'login',
-      'player',
+      'scorecard',
       'settings',
       'teamStats'
     ])

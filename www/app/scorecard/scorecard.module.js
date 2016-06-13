@@ -1,5 +1,5 @@
 (function()
 {
   angular
-    .module('player', []);
+    .module('scorecard', []);
 })();
