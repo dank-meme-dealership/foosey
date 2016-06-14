@@ -22,7 +22,9 @@
     <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="getStats()"></ion-refresher>
 
     <!-- Show if error -->
-    <ion-item ng-show="error === true">Can't connect to server :(</ion-item>
+    <div ng-if="error" class="card center">
+      <ion-item>Can't connect to server :(</ion-item>
+    </div>
 
     <!-- show loading while waiting -->
     <ion-spinner ng-show="!elos && !error" class="loading-dots" icon="lines"></ion-spinner>

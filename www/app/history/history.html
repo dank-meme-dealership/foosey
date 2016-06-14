@@ -16,7 +16,9 @@
 	  <ion-spinner ng-show="!dates && !error" class="loading-dots" icon="lines"></ion-spinner>
 	
 	  <!-- Show if error -->
-    <ion-item ng-show="error">Can't connect to server :(</ion-item>
+    <div ng-if="error" class="card center">
+      <ion-item>Can't connect to server :(</ion-item>
+    </div>
 
 		<!-- The full history of games -->
 		<div ng-show="dates" class="card" ng-repeat="day in dates">

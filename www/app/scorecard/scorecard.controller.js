@@ -11,6 +11,8 @@
 		// send to login screen if they haven't logged in yet
 		if (!SettingsService.loggedIn) SettingsService.logOut();
 		
+		$scope.error = false;
+
 		$scope.settings = SettingsService;
 
 		_.each(localStorage.getObject('players'), function(player){
@@ -39,6 +41,8 @@
 				FooseyService.getEloHistory($stateParams.playerID).then(
 					function successCallback(response)
 					{
+						$scope.error = false;
+
 						// Get chart data
 						var chartData = response.data;
 						$scope.subtitle += chartData.length + ' game';
@@ -46,6 +50,9 @@
 
 						// Set up ELO Rating chart
 						$scope.charts.unshift(getEloChartOptions(_.pluck(chartData, 'elo'), _.pluck(chartData, 'date')));
+					}, function errorCallback(response)
+					{
+						$scope.error = true;
 					});
 			}
 			// FooseyService.getWinRateHistory($stateParams.playerID).then(

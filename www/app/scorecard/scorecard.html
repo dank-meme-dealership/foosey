@@ -21,10 +21,11 @@
 		<!-- show loading while waiting -->
 		<div class="card" ng-show="settings.showElo && charts.length < 1">
 			<ion-item class="center">
-				<div>
+				<div ng-show="!error">
 					Loading charts<br>
 					<ion-spinner class="center dark" icon="lines"></ion-spinner>
 				</div>
+				<div ng-show="error">Can't connect to server :(</div>
 			</ion-item>
 		</div>
 

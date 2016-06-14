@@ -19,7 +19,6 @@
     $scope.elos = undefined;
     $scope.winRates = undefined;
 
-
     $scope.getStats = getStats;
     $scope.changeSlide = changeSlide;
     $scope.slideTo = slideTo;
