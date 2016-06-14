@@ -9,8 +9,8 @@
 
     <!-- Shitty copied code, need to erase -->
     <div class="card" ng-if="game">
+      <div class="item item-divider">This Game</div>
       <ion-item class="game-item">
-        <!-- <ion-option-button class="button-assertive ion-trash-a"></ion-option-button> -->
         <div class="spaced-out">
           <div ng-repeat="team in game.teams" class="game-score">
             <div ng-repeat="player in team.players">
@@ -34,8 +34,21 @@
         <ion-item ng-show="!games">
           Loading...
         </ion-item>
-        <ion-item ng-repeat="g in games">
-          {{g.timestamp}}
+        <ion-item class="game-item" ng-repeat="g in games">
+          <div class="spaced-out">
+            <div ng-repeat="team in g.teams" class="game-score">
+              <div ng-repeat="player in team.players">
+                <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</span>
+                <span 
+                  ng-show="settings.showElo && player.change !== null"
+                  ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
+                  {{team.delta | eloChange}}
+                </span>
+              </div>
+              <div><strong>{{team.score}}</strong></div>
+            </div>
+          </div>
+          <div class="time">{{g.timestamp}}</div>
         </ion-item>
       </ion-list>
     </div>

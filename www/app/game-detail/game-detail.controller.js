@@ -18,13 +18,17 @@
       function successCallback(response)
       {
         $scope.game = response.data;
+        fetchSimilarGames();
       });
 
-    FooseyService.getAllGames().then(
+    function fetchSimilarGames()
+    {
+      FooseyService.getPlayerGames(14).then(
       function successCallback(response)
       {
         $scope.games = response.data;
       });
+    }
 
     // confirm that they actually want to remove
     function confirmRemove()
