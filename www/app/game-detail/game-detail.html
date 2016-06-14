@@ -14,7 +14,7 @@
         <div class="spaced-out">
           <div ng-repeat="team in game.teams" class="game-score">
             <div ng-repeat="player in team.players">
-              <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player | capitalize}}</span>
+              <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</span>
               <span 
                 ng-show="settings.showElo && player.change !== null"
                 ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
@@ -31,6 +31,9 @@
     <div class="card">
       <ion-list>
         <div class="item item-divider">Similar Games</div>
+        <ion-item ng-show="!games">
+          Loading...
+        </ion-item>
         <ion-item ng-repeat="g in games">
           {{g.timestamp}}
         </ion-item>

@@ -4,10 +4,14 @@
     .module('gameDetail')
     .controller('GameDetailController', GameDetailController);
 
-  GameDetailController.$inject = ['$scope', '$stateParams', '$ionicPopup', '$ionicHistory', 'FooseyService'];
+  GameDetailController.$inject = ['$scope', '$stateParams', '$ionicPopup', '$ionicHistory', 'FooseyService', 'SettingsService'];
 
-  function GameDetailController($scope, $stateParams, $ionicPopup, $ionicHistory, FooseyService)
+  function GameDetailController($scope, $stateParams, $ionicPopup, $ionicHistory, FooseyService, SettingsService)
   {
+    // send to login screen if they haven't logged in yet
+    if (!SettingsService.loggedIn) SettingsService.logOut();
+
+    $scope.settings = SettingsService;
     $scope.remove = confirmRemove;
 
     FooseyService.getGame($stateParams.gameID).then(
@@ -22,7 +26,7 @@
         $scope.games = response.data;
       });
 
-        // confirm that they actually want to remove
+    // confirm that they actually want to remove
     function confirmRemove()
     {
       var confirmPopup = $ionicPopup.confirm({

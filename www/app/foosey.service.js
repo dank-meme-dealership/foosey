@@ -8,8 +8,8 @@
 
   function FooseyService($http) 
   {
-    // var url = "http://localhost:4006/v1/";
-    var url = "http://beta.foosey.futbol/v1/";
+    var url = "http://localhost:4006/v1/";
+    // var url = "http://beta.foosey.futbol/v1/";
 
     return {
       getAllPlayers     : getAllPlayers,
@@ -21,13 +21,11 @@
       getGamesByID      : getGamesByID,
       getGames          : getGames,
       getEloHistory     : getEloHistory,
-      getWinRateHistory : getWinRateHistory,
       addGame           : addGame,
       addPlayer         : addPlayer,
       editGame          : editGame, 
       editPlayer        : editPlayer,
-      removeGame        : removeGame,
-      undo              : undo
+      removeGame        : removeGame
     }
 
     // filter is an argument to filter out inactive players
@@ -148,11 +146,6 @@
     function removeGame(gameID)
     {
       return $http.delete(url + 'games/' + gameID);
-    }
-
-    function undo()
-    {
-      // Will maybe implement again
     }
   }
 })();
