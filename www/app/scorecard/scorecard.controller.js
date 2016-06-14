@@ -49,7 +49,7 @@
 						if (chartData.length !== 1) $scope.subtitle += 's';
 
 						// Set up ELO Rating chart
-						$scope.charts.unshift(getEloChartOptions(_.pluck(chartData, 'elo'), _.pluck(chartData, 'date')));
+						$scope.charts.unshift(getEloChartOptions(_.map(chartData, 'elo'), _.map(chartData, 'date')));
 					}, function errorCallback(response)
 					{
 						$scope.error = true;
