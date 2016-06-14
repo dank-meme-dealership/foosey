@@ -18,17 +18,7 @@
 			</div>
 		</ion-item>
 
-		<!-- show loading while waiting -->
-		<div class="card" ng-show="settings.showElo && charts.length < 1">
-			<ion-item class="center">
-				<div ng-show="!error">
-					Loading charts<br>
-					<ion-spinner class="center dark" icon="lines"></ion-spinner>
-				</div>
-				<div ng-show="error">Can't connect to server :(</div>
-			</ion-item>
-		</div>
-
+		<!-- additional stats -->
 		<div class="card">
 			<!-- Total Games -->
 			<ion-item class="stat-card">
@@ -59,6 +49,17 @@
 				<div>Nemesis</div>
 				<div ng-show="scorecardStats">{{scorecardStats.nemesis | capitalize}} ({{scorecardStats.nemesisCount}} games)</div>
 				<div ng-show="!scorecardStats">-</div>
+			</ion-item>
+		</div>
+
+		<!-- show loading while waiting -->
+		<div class="card" ng-show="settings.showElo && charts.length < 1">
+			<ion-item class="center">
+				<div ng-show="!error">
+					Loading charts<br>
+					<ion-spinner class="center dark" icon="lines"></ion-spinner>
+				</div>
+				<div ng-show="error">Can't connect to server :(</div>
 			</ion-item>
 		</div>
 	  
