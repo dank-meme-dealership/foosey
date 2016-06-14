@@ -450,15 +450,19 @@ end
 
 # recalculate all the stats and populate the history stat tables
 # if timestamp is specified, recalcs all games after timestamp
-def recalc(timestamp = 0)
-  start = Time.now.to_f
-  puts 'Calculating Elo'
+def recalc(timestamp = 0, silent = true)
+  unless silent
+    start = Time.now.to_f
+    puts 'Calculating Elo'
+  end
   recalc_elo timestamp
-  printf("Took %.3f seconds\n", Time.now.to_f - start)
-  start = Time.now.to_f
-  puts 'Calculating win rate'
+  unless silent
+    printf("Took %.3f seconds\n", Time.now.to_f - start)
+    start = Time.now.to_f
+    puts 'Calculating win rate'
+  end
   recalc_win_rate
-  printf("Took %.3f seconds\n", Time.now.to_f - start)
+  printf("Took %.3f seconds\n", Time.now.to_f - start) unless silent
 end
 
 def recalc_elo(timestamp = 0)

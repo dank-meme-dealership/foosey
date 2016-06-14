@@ -272,7 +272,7 @@ namespace '/v1' do
   end
 
   post '/recalc' do
-    recalc
+    recalc(0, false)
 
     json(
       error: false,
