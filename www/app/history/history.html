@@ -23,29 +23,25 @@
 		<!-- The full history of games -->
 		<div ng-show="dates" class="card" ng-repeat="day in dates">
 			<ion-list>
-				<ion-item>
+				<div class="item item-divider spaced-out">
+					<div class="history-date">{{day.date | date}}</div>
+					<div>{{day.games.length}} game<span ng-if="day.games.length > 1">s</span></div>
+				</div>
+				<ion-item class="game-item" ng-repeat="game in day.games" ng-click="show(game)">
 					<div class="spaced-out">
-						<div class="history-date">{{day.date | date}}</div>
-						<div class="history-games">{{day.games.length}} game<span ng-if="day.games.length > 1">s</span></div>
-					</div>
-					<div class="divider"></div>
-					<div ng-repeat="game in day.games" ng-click="show(game)">
-						<div class="spaced-out">
-							<div ng-repeat="team in game.teams" class="game-score">
-								<div ng-repeat="player in team.players">
-									<span ng-class="{'bold' : player.playerID === settings.playerID }">{{player | capitalize}}</span>
-									<span 
-                  	ng-show="settings.showElo && player.change !== null"
-                  	ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
-                  	{{team.delta | eloChange}}
-                	</span>
-								</div>
-								<div><strong>{{team.score}}</strong></div>
+						<div ng-repeat="team in game.teams" class="game-score">
+							<div ng-repeat="player in team.players">
+								<span ng-class="{'bold' : player.playerID === settings.playerID }">{{player | capitalize}}</span>
+								<span 
+                	ng-show="settings.showElo && player.change !== null"
+                	ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
+                	{{team.delta | eloChange}}
+              	</span>
 							</div>
+							<div><strong>{{team.score}}</strong></div>
 						</div>
-						<div class="time">{{game.timestamp | time}}</div>
-						<div ng-if="!$last" class="divider"></div>
 					</div>
+					<div class="time">{{game.timestamp | time}}</div>
 				</ion-item>
 			</ion-list>
 		</div>

@@ -3,11 +3,11 @@
   text-align: center;
   width: 95px;
 }
-.history-date
+.game-item
 {
-  font-size: 20px;
+  padding: 8px 16px;
 }
-.history-games
+.history-date
 {
   font-size: 18px;
 }
