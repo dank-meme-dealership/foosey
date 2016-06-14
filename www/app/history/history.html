@@ -27,7 +27,7 @@
 					<div class="history-date">{{day.date | date}}</div>
 					<div>{{day.games.length}} game<span ng-if="day.games.length > 1">s</span></div>
 				</div>
-				<ion-item class="game-item" ng-repeat="game in day.games" ng-click="show(game)">
+				<ion-item class="game-item" ng-repeat="game in day.games" ng-click="show(game.gameID)">
 					<!-- <ion-option-button class="button-assertive ion-trash-a"></ion-option-button> -->
 					<div class="spaced-out">
 						<div ng-repeat="team in game.teams" class="game-score">

@@ -4,16 +4,15 @@
     .module('history')
     .controller('HistoryController', HistoryController);
 
-  HistoryController.$inject = ['$scope', '$ionicPopup', '$ionicActionSheet', '$filter', 'localStorage', 'FooseyService', 'SettingsService'];
+  HistoryController.$inject = ['$scope', '$state', '$filter', 'localStorage', 'FooseyService', 'SettingsService'];
 
-  function HistoryController($scope, $ionicPopup, $ionicActionSheet, $filter, localStorage, FooseyService, SettingsService)
+  function HistoryController($scope, $state, $filter, localStorage, FooseyService, SettingsService)
   {
     // send to login screen if they haven't logged in yet
     if (!SettingsService.loggedIn) SettingsService.logOut();
     
     var loaded = 0;
     var gamesToLoad = 30;
-    $scope.removing = false;
     $scope.loading = true;
     $scope.settings = SettingsService;
 
@@ -30,7 +29,7 @@
     function refresh()
     {
       // load from local storage
-      $scope.dates = localStorage.getObject('history');
+      $scope.dates = groupByDate(localStorage.getObject('history'));
       loaded = 0;
 
       // get most recent games and group by the date
@@ -44,11 +43,12 @@
         // filter by name
         applyFilters();
 
+        // store them to local storage
+        localStorage.setObject('history', $scope.games);
+
         // sort the games by date
         $scope.dates = groupByDate($scope.filteredGames);
 
-        // store them to local storage
-        localStorage.setObject('history', $scope.dates);
         $scope.error = false;
 
         done();
@@ -91,14 +91,14 @@
     // group the games by date
     function groupByDate(games)
     {
-      return _.chain(games)
+      return _.isArray(games) ? _.chain(games)
       .groupBy('date')
       .pairs()
       .map(function (currentItem)
       {
         return _.object(_.zip(['date', 'games'], currentItem));
       })
-      .value();
+      .value() : [];
     }
 
     // turns off spinner and notifies
@@ -106,71 +106,14 @@
     {
       $scope.$broadcast('scroll.refreshComplete');
       $scope.$broadcast('scroll.infiniteScrollComplete');
-      $scope.removing = false;
       $scope.loading = false;
     }
 
     // show the action sheet for deleting games
-    function show(game) 
+    function show(gameID) 
     {
-      // Show the action sheet
-      $ionicActionSheet.show(
-      {
-        titleText: $filter('time')(game.timestamp),
-        destructiveText: 'Remove Game',
-        cancelText: 'Cancel',
-        destructiveButtonClicked: function(index) 
-        {
-          confirmRemove(game);
-          return true;
-        }
-      });
+      $state.go('app.game-detail', { gameID: gameID });
     };
-
-    // confirm that they actually want to remove
-    function confirmRemove(game)
-    {
-      if ($scope.removing)
-      {
-        var alertPopup = $ionicPopup.alert({
-          title: 'Can\'t Remove Game',
-          template: '<center>Another game is already being removed at this time. Try again later.</center>'
-        });
-      }
-      else
-      {
-        var confirmPopup = $ionicPopup.confirm({
-          title: 'Remove This Game',
-          template: 'Are you sure you want to remove this game? This cannot be undone.'
-        });
-
-        // if yes, delete the last game
-        confirmPopup.then(function(positive) {
-          if(positive) {
-            remove(game);
-          }
-        });
-      }
-    }
-
-    // Remove game
-    function remove(game)
-    {
-      // remove game from UI and re-sort by date
-      var index = _.indexOf(_.pluck($scope.games, 'gameID'), game.gameID);
-      $scope.games.splice(index, 1);
-      $scope.dates = groupByDate($scope.games);
-      localStorage.setObject('history', $scope.dates)
-
-      // remove from server
-      $scope.removing = true;
-      $scope.loading = true;
-      FooseyService.removeGame(game.gameID)
-      .then(function()
-      {
-        refresh();
-      });
-    }
 
     function toggleFilter(name)
     {

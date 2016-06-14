@@ -1,0 +1,41 @@
+<ion-view view-title="Manage Players" cache-view="false">
+
+  <!-- trash game -->
+  <ion-nav-buttons side="right">
+    <button class="button button-clear ion-trash-a" ng-click="remove()"></button>
+  </ion-nav-buttons>
+
+  <ion-content class="background" has-bouncing="true">
+
+    <!-- Shitty copied code, need to erase -->
+    <div class="card" ng-if="game">
+      <ion-item class="game-item">
+        <!-- <ion-option-button class="button-assertive ion-trash-a"></ion-option-button> -->
+        <div class="spaced-out">
+          <div ng-repeat="team in game.teams" class="game-score">
+            <div ng-repeat="player in team.players">
+              <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player | capitalize}}</span>
+              <span 
+                ng-show="settings.showElo && player.change !== null"
+                ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
+                {{team.delta | eloChange}}
+              </span>
+            </div>
+            <div><strong>{{team.score}}</strong></div>
+          </div>
+        </div>
+        <div class="time">{{game.timestamp | time}}</div>
+      </ion-item>
+    </div>
+
+    <div class="card">
+      <ion-list>
+        <div class="item item-divider">Similar Games</div>
+        <ion-item ng-repeat="g in games">
+          {{g.timestamp}}
+        </ion-item>
+      </ion-list>
+    </div>
+
+  </ion-content>
+</ion-view>

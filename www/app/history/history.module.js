@@ -1,5 +1,5 @@
 (function()
 {
   angular
-    .module('history', []);
+    .module('history', ['gameDetail']);
 })();
