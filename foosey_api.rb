@@ -28,11 +28,17 @@ def api_game(game_id)
       i = response[:teams].index { |t| t[:score] == player['Score'] }
       if i
         # team exists in hash
-        response[:teams][i][:players] << player['DisplayName']
+        response[:teams][i][:players] << {
+          playerID: player['PlayerID'],
+          displayName: player['DisplayName']
+        }
       else
         # team doesn't exist in hash
         response[:teams] << {
-          players: [player['DisplayName']],
+          players: [{
+            playerID: player['PlayerID'],
+            displayName: player['DisplayName']
+          }],
           score: player['Score'],
           delta: elo_change(player['PlayerID'], game_id)
         }
