@@ -114,11 +114,11 @@
 			</div>
 
 			<!-- Elos after game -->
-			<div class="card" ng-show="settings.showElo">
+			<div class="card" ng-show="settings.showElo && response.info">
 				<ion-item class="wrap">
 					<div>Elos after that game:</div>
 					<div class="row">
-						<div class="col" ng-repeat="player in response.stats.players">
+						<div class="col" ng-repeat="player in response.info.players">
 							<div>{{player.name}}</div>
 							<div>{{player.elo}} {{player.delta | eloChange}}</div>
 						</div>
@@ -127,9 +127,9 @@
 			</div>
 
 			<!-- Undo button -->
-			<!-- <div ng-click="undo()" class="card" ng-show="saveStatus === 'success'" >
+			<div ng-click="undo()" class="card" ng-show="gameToUndo" >
 				<ion-item class="center">Undo</ion-item>
-			</div> -->
+			</div>
 
 			<!-- Done button -->
 			<div ng-click="reset()" class="card">

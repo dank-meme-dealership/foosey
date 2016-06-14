@@ -79,9 +79,6 @@
 		// add the game
 		function submit()
 		{
-			console.log($scope.customDate);
-			console.log($scope.customTime);
-			$scope.state = "saving";
 			changeState("saving", null);
 			$scope.saveStatus = "saving";
 
@@ -94,6 +91,7 @@
 			{
 				$scope.response = response.data;
 				$scope.saveStatus = "success";
+				$scope.gameToUndo = response.data.info.gameID;
 			}, function errorCallback(response)
 	    {
 	    	if ($scope.state === "saving")
@@ -104,9 +102,15 @@
 		// undo last game
 		function undo()
 		{
-			FooseyService.undo();
-			$scope.saveStatus = "removed";
-			$scope.response = [];
+			FooseyService.removeGame($scope.gameToUndo).then(function successCallback(response)
+			{
+				$scope.saveStatus = "removed";
+				$scope.response = [];
+			}, function errorCallback(response)
+	    {
+	    	if ($scope.state === "saving")
+	      	$scope.saveStatus = "failed";
+	    });
 		}
 
 		// reset the game
@@ -116,6 +120,7 @@
 			$scope.command = "";
 
 			$scope.game = [];
+			$scope.gameToUndo = undefined;
 			$scope.saveStatus = "";
 			$scope.response = undefined;
 
