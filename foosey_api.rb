@@ -182,7 +182,7 @@ namespace '/v1' do
     json(
       error: false,
       message: 'Game added.',
-      info: stats
+      info: info
     )
   end
 

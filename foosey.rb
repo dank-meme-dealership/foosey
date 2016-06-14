@@ -31,7 +31,7 @@ configure do
 end
 
 # load other foosey files and enable auto-reload
-script_dir = "#{File.dirname(__FILE__)}"
+script_dir = File.dirname(__FILE__).to_s
 load "#{script_dir}/foosey_def.rb"
 load "#{script_dir}/foosey_slack.rb"
 load "#{script_dir}/foosey_api.rb"

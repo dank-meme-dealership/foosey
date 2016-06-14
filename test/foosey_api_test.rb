@@ -10,7 +10,7 @@ module Rack
   class Response
     module Helpers
       def jbody
-        JSON.parse self.body
+        JSON.parse body
       end
     end
   end
@@ -24,8 +24,8 @@ describe 'Foosey API' do
   end
 
   before(:all) do
-    unless File.exists? "#{File.dirname(__FILE__)}/foosey.db"
-      raise 'Need pristine database!' 
+    unless File.exist? "#{File.dirname(__FILE__)}/foosey.db"
+      raise 'Need pristine database!'
     end
 
     FileUtils.cp("#{File.dirname(__FILE__)}/foosey.db",
@@ -61,13 +61,13 @@ describe 'Foosey API' do
       expect(last_response.jbody).to include('error' => true)
     end
 
-    it 'get games from valid player', :slow => true do
+    it 'get games from valid player', slow: true do
       get '/v1/players/2/games'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_at_least(2).games
     end
 
-    it 'get games', :slow => true do
+    it 'get games', slow: true do
       get '/v1/games'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_at_least(2).games
