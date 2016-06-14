@@ -16,7 +16,7 @@ def api_game(game_id)
     return {
       error: true,
       message: "Invalid game ID: #{game_id}"
-    } if game.nil?
+    } if game.empty?
 
     response = {
       gameID: game.first['GameID'],

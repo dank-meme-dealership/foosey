@@ -31,12 +31,13 @@ configure do
 end
 
 # load other foosey files and enable auto-reload
-load 'foosey_def.rb'
-load 'foosey_slack.rb'
-load 'foosey_api.rb'
-also_reload 'foosey_def.rb'
-also_reload 'foosey_slack.rb'
-also_reload 'foosey_api.rb'
+script_dir = "#{File.dirname(__FILE__)}"
+load "#{script_dir}/foosey_def.rb"
+load "#{script_dir}/foosey_slack.rb"
+load "#{script_dir}/foosey_api.rb"
+also_reload "#{script_dir}/foosey_def.rb"
+also_reload "#{script_dir}/foosey_slack.rb"
+also_reload "#{script_dir}/foosey_api.rb"
 
 recalc if ARGV.include? 'recalc'
 

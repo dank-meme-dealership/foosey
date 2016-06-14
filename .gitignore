@@ -1,5 +1,5 @@
 # foosey files
-foosey.db
+/foosey.db
 
 *.gem
 *.rbc
