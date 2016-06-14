@@ -11,7 +11,8 @@ This bot has some work to be done before it's useful to anyone other than the in
 Foosey uses the following gems:  
 
 - `json`
-- `inifile`
+- `rspec`
+- `rspec-collection_matchers`
 - `sinatra`
 - `sinatra-json`
 - `sinatra-cross_origin`
