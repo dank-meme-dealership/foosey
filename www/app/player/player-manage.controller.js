@@ -4,10 +4,13 @@
     .module('player')
     .controller('PlayerManageController', PlayerManageController);
 
-  PlayerManageController.$inject = ['$scope', '$ionicModal', 'FooseyService'];
+  PlayerManageController.$inject = ['$scope', '$ionicModal', 'FooseyService', 'SettingsService'];
 
-  function PlayerManageController($scope, $ionicModal, FooseyService)
+  function PlayerManageController($scope, $ionicModal, FooseyService, SettingsService)
   {
+    // send to login screen if they haven't logged in yet
+    if (!SettingsService.loggedIn) SettingsService.logOut();
+
     $scope.activePlayers = undefined;
     $scope.inactivePlayers = undefined;
 
