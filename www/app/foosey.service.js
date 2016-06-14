@@ -8,8 +8,8 @@
 
   function FooseyService($http) 
   {
-    var url = "http://localhost:4006/v1/";
-    // var url = "http://beta.foosey.futbol/v1/";
+    // var url = "http://localhost:4006/v1/";
+    var url = "http://beta.foosey.futbol/v1/";
 
     return {
       getAllPlayers     : getAllPlayers,
