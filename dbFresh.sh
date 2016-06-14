@@ -1,4 +1,5 @@
 #!/bin/bash
+# Requires wget `brew install wget`
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
