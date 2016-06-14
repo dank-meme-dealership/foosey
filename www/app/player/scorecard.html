@@ -18,6 +18,39 @@
 			</div>
 		</ion-item>
 
+		<div class="card">
+			<!-- Total Games -->
+			<ion-item class="stat-card">
+				<div>Total Games</div>
+				<div ng-show="scorecardStats">{{scorecardStats.totalGames }} games</div>
+				<div ng-show="!scorecardStats">-</div>
+			</ion-item>
+			<!-- Total Singles -->
+			<ion-item class="stat-card">
+				<div>Singles</div>
+				<div ng-show="scorecardStats">{{scorecardStats.singlesTotal}} ({{scorecardStats.singlesPercent | percentage:1}} wins)</div>
+				<div ng-show="!scorecardStats">-</div>
+			</ion-item>
+			<!-- Total Doubles -->
+			<ion-item class="stat-card">
+				<div>Doubles</div>
+				<div ng-show="scorecardStats">{{scorecardStats.doublesTotal}} ({{scorecardStats.doublesPercent | percentage:1}} wins)</div>
+				<div ng-show="!scorecardStats">-</div>
+			</ion-item>
+			<!-- Ally -->
+			<ion-item class="stat-card">
+				<div>Ally</div>
+				<div ng-show="scorecardStats">{{scorecardStats.ally | capitalize}} ({{scorecardStats.allyCount}} games)</div>
+				<div ng-show="!scorecardStats">-</div>
+			</ion-item>
+			<!-- Nemesis -->
+			<ion-item class="stat-card">
+				<div>Nemesis</div>
+				<div ng-show="scorecardStats">{{scorecardStats.nemesis | capitalize}} ({{scorecardStats.nemesisCount}} games)</div>
+				<div ng-show="!scorecardStats">-</div>
+			</ion-item>
+		</div>
+
 		<!-- show loading while waiting -->
 		<div class="card" ng-show="!dates">
 			<ion-item class="center">
@@ -26,35 +59,6 @@
 					<ion-spinner class="center dark" icon="lines"></ion-spinner>
 				</div>
 			</ion-item>
-		</div>
-
-		<div class="card" ng-show="scorecardStats">
-			<!-- Total Games -->
-			<ion-item class="stat-card">
-				<div>Total Games</div>
-				<div>{{scorecardStats.totalGames}} games</div>
-			</ion-item>
-			<!-- Total Singles -->
-			<ion-item class="stat-card">
-				<div>Singles</div>
-				<div>{{scorecardStats.singlesTotal}} ({{scorecardStats.singlesPercent | percentage:1}} wins)</div>
-			</ion-item>
-			<!-- Total Doubles -->
-			<ion-item class="stat-card">
-				<div>Doubles</div>
-				<div>{{scorecardStats.doublesTotal}} ({{scorecardStats.doublesPercent | percentage:1}} wins)</div>
-			</ion-item>
-			<!-- Ally -->
-			<ion-item class="stat-card">
-				<div>Ally</div>
-				<div>{{scorecardStats.ally | capitalize}} ({{scorecardStats.allyCount}} games)</div>
-			</ion-item>
-			<!-- Nemesis -->
-			<ion-item class="stat-card">
-				<div>Nemesis</div>
-				<div>{{scorecardStats.nemesis | capitalize}} ({{scorecardStats.nemesisCount}} games)</div>
-			</ion-item>
-
 		</div>
 	  
 		<!-- set up charts -->
