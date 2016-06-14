@@ -384,6 +384,7 @@ def add_game(outcome, timestamp = nil)
     end
 
     {
+      gameID: game_id,
       players: players
     }
   end

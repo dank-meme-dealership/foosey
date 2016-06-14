@@ -177,12 +177,12 @@ namespace '/v1' do
       team['players'].each { |p| outcome[p] = team['score'] }
     end
 
-    stats = add_game(outcome, body['timestamp'])
+    info = add_game(outcome, body['timestamp'])
 
     json(
       error: false,
       message: 'Game added.',
-      stats: stats
+      info: stats
     )
   end
 
