@@ -8,9 +8,10 @@
   <ion-content class="background" has-bouncing="true">
 
     <!-- Shitty copied code, need to erase -->
-    <div class="card" ng-if="game">
-      <div class="item item-divider">{{game.timestamp | time:true}}</div>
-      <ion-item class="game-item">
+    <div class="card">
+      <div class="item item-divider">{{game ? (game.timestamp | time:true) : 'Loading...'}}</div>
+      <ion-item ng-show="!game">Loading</ion-item>
+      <ion-item class="game-item" ng-show="game">
         <div class="spaced-out">
           <div ng-repeat="team in game.teams" class="game-score">
             <div ng-repeat="player in team.players">
