@@ -42,7 +42,7 @@
       if (daysFromToday === 1) return 'Yesterday';
       if (daysFromToday < 7) return day.format('dddd');
 
-      return input;
+      return day.format('MMMM Do, YYYY');
     }
   }
 
@@ -95,13 +95,13 @@
   // convert from 24-hour to am/pm
   function time()
   {
-    return function(input)
+    return function(input, dateInstead)
     {
       var day = moment.unix(input);
       var daysFromToday = moment().diff(day, 'days');
       var absolutelyToday = daysFromToday === 0 && day.dayOfYear() === moment().dayOfYear();
 
-      return absolutelyToday ? day.fromNow() : day.format('h:mma');
+      return absolutelyToday ? day.fromNow() : dateInstead ? day.format('MMMM Do, YYYY') : day.format('h:mma');
     }
   }
 

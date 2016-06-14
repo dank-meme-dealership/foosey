@@ -9,7 +9,7 @@
 
     <!-- Shitty copied code, need to erase -->
     <div class="card" ng-if="game">
-      <div class="item item-divider">This Game</div>
+      <div class="item item-divider">{{game.timestamp | time:true}}</div>
       <ion-item class="game-item">
         <div class="spaced-out">
           <div ng-repeat="team in game.teams" class="game-score">
@@ -48,7 +48,7 @@
               <div><strong>{{team.score}}</strong></div>
             </div>
           </div>
-          <div class="time">{{g.timestamp}}</div>
+          <div class="time">{{g.timestamp | time:true}}</div>
         </ion-item>
       </ion-list>
     </div>
