@@ -163,7 +163,7 @@ def games_with_player(player_id)
   database do |db|
     return db.execute('SELECT GameID From Game
                        WHERE PlayerID = :player_id
-                       ORDER BY Timestamp', player_id).flatten
+                       ORDER BY Timestamp DESC', player_id).flatten
   end
 end
 
