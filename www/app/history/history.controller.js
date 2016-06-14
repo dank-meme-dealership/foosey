@@ -91,14 +91,12 @@
     // group the games by date
     function groupByDate(games)
     {
-      return _.isArray(games) ? _.chain(games)
-      .groupBy('date')
-      .pairs()
-      .map(function (currentItem)
-      {
-        return _.object(_.zip(['date', 'games'], currentItem));
-      })
-      .value() : [];
+      return _.isArray(games) ? _.values(
+        _.mapKeys(
+        _.groupBy(games, 'date'), function(value, key) 
+        { 
+          value.date = key; return value; 
+        })) : [];
     }
 
     // turns off spinner and notifies

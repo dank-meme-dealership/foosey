@@ -73,6 +73,10 @@
   font-size: 16px;
   padding: 7px 5px;
 }
+.highlight 
+{
+  background: #f5f5dc;
+}
 div.grid-item
 {
   margin: 5px;

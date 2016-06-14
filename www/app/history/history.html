@@ -21,13 +21,13 @@
     </div>
 
 		<!-- The full history of games -->
-		<div ng-show="dates" class="card" ng-repeat="day in dates">
+		<div ng-show="dates" class="card" ng-repeat="games in dates">
 			<ion-list>
 				<div class="item item-divider spaced-out">
-					<div class="history-date">{{day.date | date}}</div>
-					<div>{{day.games.length}} game<span ng-if="day.games.length > 1">s</span></div>
+					<div class="history-date">{{games.date | date}}</div>
+					<div>{{games.length}} game<span ng-if="games.length > 1">s</span></div>
 				</div>
-				<ion-item class="game-item" ng-repeat="game in day.games" ng-click="show(game.gameID)">
+				<ion-item class="game-item" ng-repeat="game in games" ng-click="show(game.gameID)">
 					<!-- <ion-option-button class="button-assertive ion-trash-a"></ion-option-button> -->
 					<div class="spaced-out">
 						<div ng-repeat="team in game.teams" class="game-score">

@@ -12,21 +12,37 @@
     if (!SettingsService.loggedIn) SettingsService.logOut();
 
     $scope.settings = SettingsService;
+    $scope.fetching = false;
+
     $scope.remove = confirmRemove;
 
     FooseyService.getGame($stateParams.gameID).then(
       function successCallback(response)
       {
         $scope.game = response.data;
-        fetchSimilarGames();
+        // only two people in game
+        if ($scope.game.teams.length === 2 && $scope.game.teams[0].players.length === 1)
+        {
+          $scope.fetching = true;
+          var p1 = $scope.game.teams[0].players[0].playerID;
+          var p2 = $scope.game.teams[1].players[0].playerID;
+          fetchSimilarGames(p1, p2);
+        }
       });
 
-    function fetchSimilarGames()
+    function fetchSimilarGames(p1, p2)
     {
-      FooseyService.getPlayerGames(14).then(
-      function successCallback(response)
+      FooseyService.getPlayerGames(p1).then(
+      function successCallback(response1)
       {
-        $scope.games = response.data;
+        FooseyService.getPlayerGames(p2).then(
+        function successCallback(response2)
+        {
+          $scope.games = _.filter(_.intersectionBy(response1.data, response2.data, 'gameID'), function(game)
+            {
+              return game.teams.length === 2 && game.teams[0].players.length === 1;
+            });
+        });
       });
     }
 
