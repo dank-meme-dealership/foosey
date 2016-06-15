@@ -40,13 +40,19 @@
 			</ion-item>
 			<!-- Ally -->
 			<ion-item class="stat-card">
-				<div>Ally</div>
+				<div>
+					Ally
+					<i class="ion-ios-information" ng-click="info(scorecardInfo.ally)"></i>
+				</div>
 				<div ng-show="player">{{player.ally | capitalize}} ({{player.allyCount}} games)</div>
 				<div ng-show="!player">-</div>
 			</ion-item>
 			<!-- Nemesis -->
 			<ion-item class="stat-card">
-				<div>Nemesis</div>
+				<div>
+					Nemesis
+					<i class="ion-ios-information" ng-click="info(scorecardInfo.nemesis)"></i>
+				</div>
 				<div ng-show="player">{{player.nemesis | capitalize}} ({{player.nemesisCount}} games)</div>
 				<div ng-show="!player">-</div>
 			</ion-item>

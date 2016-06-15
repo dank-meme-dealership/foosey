@@ -4,16 +4,18 @@
 		.module('scorecard')
 		.controller('ScorecardController', ScorecardController);
 
-	ScorecardController.$inject = ['$scope', '$stateParams', 'localStorage', 'FooseyService', 'SettingsService'];
+	ScorecardController.$inject = ['$scope', '$stateParams', '$ionicPopup', 'localStorage', 'scorecardInfo', 'FooseyService', 'SettingsService'];
 
-	function ScorecardController($scope, $stateParams, localStorage, FooseyService, SettingsService)
+	function ScorecardController($scope, $stateParams, $ionicPopup, localStorage, scorecardInfo, FooseyService, SettingsService)
 	{
 		// send to login screen if they haven't logged in yet
 		if (!SettingsService.loggedIn) SettingsService.logOut();
 		
+		$scope.settings = SettingsService;
+		$scope.scorecardInfo = scorecardInfo;
 		$scope.error = false;
 
-		$scope.settings = SettingsService;
+		$scope.info = info;
 
 		// Get preliminary name while we load from server
 		_.each(localStorage.getObject('players'), function(player){
@@ -90,6 +92,13 @@
 				data: data,
 				dates: dates
 			};
+		}
+
+		function info(message)
+		{
+			$ionicPopup.confirm({
+        template: '<div style="text-align: center;">' + message + '</div>'
+      });
 		}
 	}
 })();
