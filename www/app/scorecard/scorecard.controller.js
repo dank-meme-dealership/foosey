@@ -15,11 +15,11 @@
 
 		$scope.settings = SettingsService;
 
+		// Get preliminary name while we load from server
 		_.each(localStorage.getObject('players'), function(player){
 			if(player.playerID == $stateParams.playerID)
 				$scope.name = player.displayName;
 		});
-
 
 		// set up the player
 		FooseyService.getPlayer($stateParams.playerID).then(

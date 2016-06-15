@@ -23,32 +23,32 @@
 			<!-- Total Games -->
 			<ion-item class="stat-card">
 				<div>Total Games</div>
-				<div ng-show="scorecardStats">{{scorecardStats.totalGames }} games</div>
-				<div ng-show="!scorecardStats">-</div>
+				<div ng-show="player">{{player.gamesPlayed }} games</div>
+				<div ng-show="!player">-</div>
 			</ion-item>
 			<!-- Total Singles -->
 			<ion-item class="stat-card">
 				<div>Singles</div>
-				<div ng-show="scorecardStats">{{scorecardStats.singlesTotal}} ({{scorecardStats.singlesPercent | percentage:1}} wins)</div>
-				<div ng-show="!scorecardStats">-</div>
+				<div ng-show="player">{{player.singlesTotal}} ({{player.singlesWinRate | percentage:1}} wins)</div>
+				<div ng-show="!player">-</div>
 			</ion-item>
 			<!-- Total Doubles -->
 			<ion-item class="stat-card">
 				<div>Doubles</div>
-				<div ng-show="scorecardStats">{{scorecardStats.doublesTotal}} ({{scorecardStats.doublesPercent | percentage:1}} wins)</div>
-				<div ng-show="!scorecardStats">-</div>
+				<div ng-show="player">{{player.doublesTotal}} ({{player.doublesWinRate | percentage:1}} wins)</div>
+				<div ng-show="!player">-</div>
 			</ion-item>
 			<!-- Ally -->
 			<ion-item class="stat-card">
 				<div>Ally</div>
-				<div ng-show="scorecardStats">{{scorecardStats.ally | capitalize}} ({{scorecardStats.allyCount}} games)</div>
-				<div ng-show="!scorecardStats">-</div>
+				<div ng-show="player">{{player.ally | capitalize}} ({{player.allyCount}} games)</div>
+				<div ng-show="!player">-</div>
 			</ion-item>
 			<!-- Nemesis -->
 			<ion-item class="stat-card">
 				<div>Nemesis</div>
-				<div ng-show="scorecardStats">{{scorecardStats.nemesis | capitalize}} ({{scorecardStats.nemesisCount}} games)</div>
-				<div ng-show="!scorecardStats">-</div>
+				<div ng-show="player">{{player.nemesis | capitalize}} ({{player.nemesisCount}} games)</div>
+				<div ng-show="!player">-</div>
 			</ion-item>
 		</div>
 
