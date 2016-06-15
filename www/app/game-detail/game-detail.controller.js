@@ -23,6 +23,7 @@
         // only two people in game
         if ($scope.game.teams.length === 2 && $scope.game.teams[0].players.length === 1)
         {
+          $scope.teams = _.clone($scope.game.teams);
           $scope.fetching = true;
           var p1 = $scope.game.teams[0].players[0].playerID;
           var p2 = $scope.game.teams[1].players[0].playerID;
@@ -42,7 +43,19 @@
             {
               return game.teams.length === 2 && game.teams[0].players.length === 1;
             });
+          getRecord();
         });
+      });
+    }
+
+    function getRecord()
+    {
+      $scope.teams[0].wins = 0;
+      $scope.teams[1].wins = 0;
+      _.each($scope.games, function(game)
+      {
+        // the first team is always the winner so add a win to whoever it's for
+        game.teams[0].players[0].playerID === $scope.teams[0].players[0].playerID ? $scope.teams[0].wins++ : $scope.teams[1].wins++;
       });
     }
 

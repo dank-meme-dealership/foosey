@@ -29,7 +29,27 @@
       </ion-item>
     </div>
 
-    <!-- Similar games, also shitty code -->
+    <!-- Record -->
+    <div class="card" ng-show="fetching">
+      <ion-list>
+        <div class="item item-divider">Record</div>
+        <ion-item ng-show="!teams">
+          Loading...
+        </ion-item>
+        <ion-item class="game-item" ng-if="teams">
+          <div class="spaced-out">
+            <div ng-repeat="team in teams" class="game-score">
+              <div ng-repeat="player in team.players">
+                <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</span>
+              </div>
+              <div><strong>{{team.wins >= 0 ? team.wins : '-'}}</strong></div>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <!-- Past games, also shitty code -->
     <div class="card" ng-show="fetching">
       <ion-list>
         <div class="item item-divider">Past Games</div>
@@ -50,7 +70,7 @@
               <div><strong>{{team.score}}</strong></div>
             </div>
           </div>
-          <div class="time">{{g.timestamp | time:true}}</div>
+          <div class="time">{{g.gameID}} {{g.timestamp | time:true}}</div>
         </ion-item>
       </ion-list>
     </div>
