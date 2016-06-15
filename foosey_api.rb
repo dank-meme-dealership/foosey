@@ -67,6 +67,8 @@ def api_player(player_id)
                  player['GamesWon'] / player['GamesPlayed'].to_f
                end
 
+    stats = stats(player['PlayerID'])
+
     return {
       playerID: player['PlayerID'],
       displayName: player['DisplayName'],
@@ -76,7 +78,16 @@ def api_player(player_id)
       gamesPlayed: player['GamesPlayed'],
       dailyChange: daily_elo_change(player['PlayerID']),
       admin: player['Admin'] == 1,
-      active: player['Active'] == 1
+      active: player['Active'] == 1,
+
+      ally: stats[:ally],
+      allyCount: stats[:allyCount],
+      doublesWinRate: stats[:doublesWinRate],
+      doublesTotal: stats[:doublesTotal],
+      nemesis: stats[:nemesis],
+      nemesisCount: stats[:nemesisCount],
+      singlesWinRate: stats[:singlesWinRate],
+      singlesTotal: stats[:singlesTotal]
     }
   end
 end

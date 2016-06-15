@@ -224,6 +224,28 @@ def daily_elo_change(player_id)
   end
 end
 
+def stats(player_id)
+  database do |db|
+    elos = db.execute('SELECT e.Elo FROM EloHistory e
+                       JOIN Game g
+                       USING (GameID, PlayerID)
+                       WHERE e.PlayerID = :player_id
+                       ORDER BY g.Timestamp DESC
+                       LIMIT :n', player_id, n + 1).flatten
+
+    return {
+      ally: 'matt',
+      allyCount: 3,
+      doublesWinRate: 0.5,
+      doublesTotal: 5,
+      nemesis: 'brik',
+      nemesisCount: 7,
+      singlesWinRate: 0.7,
+      singlesTotal: 9
+    }
+  end
+end
+
 # returns the last elo change player with id player_id has seen over n games
 # that is, the delta from their last n played games
 def last_elo_change(player_id, n = 1)
