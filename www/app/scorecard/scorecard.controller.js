@@ -96,7 +96,8 @@
 
 		function info(message)
 		{
-			$ionicPopup.confirm({
+			$ionicPopup.alert({
+				title: 'Wanna know what that is?',
         template: '<div style="text-align: center;">' + message + '</div>'
       });
 		}
