@@ -226,12 +226,12 @@ end
 
 def stats(player_id)
   database do |db|
-    elos = db.execute('SELECT e.Elo FROM EloHistory e
-                       JOIN Game g
-                       USING (GameID, PlayerID)
-                       WHERE e.PlayerID = :player_id
-                       ORDER BY g.Timestamp DESC
-                       LIMIT :n', player_id, n + 1).flatten
+    # elos = db.execute('SELECT e.Elo FROM EloHistory e
+    #                    JOIN Game g
+    #                    USING (GameID, PlayerID)
+    #                    WHERE e.PlayerID = :player_id
+    #                    ORDER BY g.Timestamp DESC
+    #                    LIMIT :n', player_id, n + 1).flatten
 
     return {
       ally: 'matt',
