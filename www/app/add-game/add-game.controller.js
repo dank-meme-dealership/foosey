@@ -105,6 +105,7 @@
 			FooseyService.removeGame($scope.gameToUndo).then(function successCallback(response)
 			{
 				$scope.saveStatus = "removed";
+				$scope.gameToUndo = undefined;
 				$scope.response = [];
 			}, function errorCallback(response)
 	    {
