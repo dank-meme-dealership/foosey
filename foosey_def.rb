@@ -649,7 +649,6 @@ def recalc_win_rate(league_id = 1)
   database do |db|
     db.execute('SELECT PlayerID FROM Player WHERE LeagueID = :league_id',
                league_id) do |player_id|
-
       db.execute('UPDATE Player SET GamesPlayed = (
                     SELECT COUNT(*) FROM Game
                     WHERE PlayerID = :player_id
