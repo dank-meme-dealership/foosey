@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS
 Game(
   GameID INTEGER,
   PlayerID INTEGER,
+  LeagueID INTEGER,
   Score INTEGER,
   Timestamp DATETIME,
   PRIMARY KEY (GameID, PlayerID)
@@ -16,6 +17,7 @@ Game(
 CREATE TABLE IF NOT EXISTS
 Player(
   PlayerID INTEGER PRIMARY KEY,
+  LeagueID INTEGER,
   DisplayName TEXT UNIQUE,
   SlackName TEXT,
   Admin INTEGER DEFAULT 0,
@@ -25,6 +27,13 @@ Player(
   GamesWon INTEGER DEFAULT 0
 );
 
+-- Create the leagues table
+CREATE TABLE IF NOT EXISTS
+League(
+  LeagueID INTEGER PRIMARY KEY,
+  LeagueName TEXT UNIQUE
+);
+
 -- Create a historic table for each major statistic
 
 -- Create the Elo table
@@ -32,6 +41,7 @@ CREATE TABLE IF NOT EXISTS
 EloHistory(
   GameID INTEGER,
   PlayerID INTEGER,
+  LeagueID INTEGER,
   Elo INTEGER,
   PRIMARY KEY (GameID, PlayerID)
 );

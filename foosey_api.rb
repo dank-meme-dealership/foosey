@@ -2,7 +2,7 @@
 # for more information see API.md
 
 # returns an api object for game with id game_id
-def api_game(game_id)
+def api_game(game_id, league_id = 1)
   database do |db|
     db.results_as_hash = true
     game = db.execute 'SELECT * FROM Game
@@ -10,12 +10,13 @@ def api_game(game_id)
                          SELECT DisplayName, PlayerID FROM Player
                        )
                        USING (PlayerID)
-                       WHERE GameID = :id
-                       ORDER BY Score DESC', game_id
+                       WHERE GameID = :game_id
+                       AND LeagueID = :league_id
+                       ORDER BY Score DESC', game_id, league_id
 
     return {
       error: true,
-      message: "Invalid game ID: #{game_id}"
+      message: "Invalid game ID: #{game_id} or league ID: #{league_id}"
     } if game.empty?
 
     response = {
@@ -50,15 +51,16 @@ def api_game(game_id)
 end
 
 # returns an api object for player with id player_id
-def api_player(player_id)
+def api_player(player_id, league_id = 1)
   database do |db|
     db.results_as_hash = true
     player = db.get_first_row('SELECT * FROM Player
-                               WHERE PlayerID = :id', player_id)
+                               WHERE PlayerID = :player_id
+                               AND LeagueID = :league_id', player_id, league_id)
 
     return {
       error: true,
-      message: "Invalid player ID: #{player_id}"
+      message: "Invalid player ID: #{player_id} or league ID: #{league_id}"
     } if player.nil?
 
     win_rate = if player['GamesPlayed'] == 0
@@ -93,7 +95,7 @@ def api_player(player_id)
 end
 
 # returns an api object for player elo history
-def api_stats_elo(player_id)
+def api_stats_elo(player_id, league_id = 1)
   database do |db|
     db.results_as_hash = true
     games = db.execute 'SELECT * FROM EloHistory
@@ -102,8 +104,9 @@ def api_stats_elo(player_id)
                         )
                         USING (PlayerID, GameID)
                         WHERE PlayerID = :player_id
+                        AND LeagueID = :league_id
                         ORDER BY Timestamp DESC
-                        LIMIT 30;', player_id
+                        LIMIT 30;', player_id, league_id
 
     return games.collect do |game|
       {
