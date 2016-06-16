@@ -416,7 +416,7 @@ def winner(game_id, league_id = 1)
                            AND LeagueID = :league_id
                            GROUP BY GameID
                          )',
-                        'game_id' => game_id, 
+                        'game_id' => game_id,
                         'league_id' => league_id).flatten
 
     winner = winner.first if winner.length == 1
@@ -590,9 +590,9 @@ def recalc_elo(timestamp = 0, league_id = 1)
                                      AND Timestamp <= :timestamp
                                      ORDER BY Timestamp DESC
                                      LIMIT 1',
-                                    'player_id' => player_id,
-                                    'league_id' => league_id,
-                                    'timestamp' => timestamp)
+                                           'player_id' => player_id,
+                                           'league_id' => league_id,
+                                           'timestamp' => timestamp)
 
       # in case they had no games before timestamp
       elos[player_id] ||= 1200
@@ -662,7 +662,8 @@ end
 def recalc_win_rate(league_id = 1)
   # database do |db|
   #   puts league_id
-  #   db.execute('SELECT PlayerID FROM Player WHERE LeagueID = :league_id', league_id) do |player_id|
+  #   db.execute('SELECT PlayerID FROM Player WHERE LeagueID = :league_id',
+  #              league_id) do |player_id|
 
   #     puts player_id
 
