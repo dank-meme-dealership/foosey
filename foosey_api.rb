@@ -138,8 +138,11 @@ namespace '/v1' do
   # Games a Player Has Played In
   get '/players/:id/games' do
     id = params['id'].to_i
-
+    limit = params['limit'].to_i if params['limit']
     ids = games_with_player id
+    limit ||= ids.length
+    
+    ids = ids[0, limit]
 
     json ids.collect { |i| api_game i }
   end
