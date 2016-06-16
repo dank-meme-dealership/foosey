@@ -583,13 +583,13 @@ def recalc_elo(timestamp = 0, league_id = 1)
     elos = {}
     player_ids.each do |player_id|
       elos[player_id] = db.get_first_value('SELECT Elo FROM EloHistory e
-                                     JOIN Game g USING (GameID, PlayerID)
-                                     WHERE PlayerID = :player_id
-                                     AND e.LeagueID = :league_id
-                                     AND g.LeagueID = :league_id
-                                     AND Timestamp <= :timestamp
-                                     ORDER BY Timestamp DESC
-                                     LIMIT 1',
+                                            JOIN Game g USING (GameID, PlayerID)
+                                            WHERE PlayerID = :player_id
+                                            AND e.LeagueID = :league_id
+                                            AND g.LeagueID = :league_id
+                                            AND Timestamp <= :timestamp
+                                            ORDER BY Timestamp DESC
+                                            LIMIT 1',
                                            'player_id' => player_id,
                                            'league_id' => league_id,
                                            'timestamp' => timestamp)
