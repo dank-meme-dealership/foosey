@@ -40,8 +40,7 @@ def game_to_s(game_id, date = false, league_id = 1)
                                           AND g.LeagueID = :league_id
                                           AND p.LeagueID = :league_id
                                           ORDER BY g.Score DESC',
-                                         'game_id' => game_id,
-                                         'league_id' => league_id))
+                                         game_id, league_id))
 
     s = if date
           Time.at(game.first['Timestamp']).strftime '%b %d, %Y - '
@@ -198,9 +197,7 @@ def games(player1_id, player2_id, league_id = 1)
                            HAVING COUNT(*) = 2
                        ) AS T2
                        USING (GameID)',
-                      'player1_id' => player1_id,
-                      'player2_id' => player2_id,
-                      'league_id' => league_id).flatten
+                      player1_id, player2_id, league_id).flatten
   end
 end
 
@@ -230,9 +227,7 @@ def daily_elo_change(player_id, league_id = 1)
                                AND g.Timestamp < :midnight
                                ORDER BY g.Timestamp DESC
                                LIMIT 1',
-                              'player_id' => player_id,
-                              'league_id' => league_id,
-                              'midnight' => midnight)
+                              player_id, league_id, midnight)
 
     today = db.get_first_value('SELECT e.Elo FROM EloHistory e
                                 JOIN Game g
@@ -243,9 +238,7 @@ def daily_elo_change(player_id, league_id = 1)
                                 AND g.Timestamp >= :midnight
                                 ORDER BY g.Timestamp DESC
                                 LIMIT 1',
-                               'player_id' => player_id,
-                               'league_id' => league_id,
-                               'midnight' => midnight)
+                               player_id, league_id, midnight)
 
     # corner cases
     return 0 unless today
@@ -282,9 +275,7 @@ def last_elo_change(player_id, n = 1, league_id = 1)
                        AND g.LeagueID = :league_id
                        ORDER BY g.Timestamp DESC
                        LIMIT :n',
-                      'player_id' => player_id,
-                      'league_id' => league_id,
-                      'n' => n + 1).flatten
+                      player_id, league_id, n + 1).flatten
 
     # safety if player doesn't have any games
     return 0 if elos.empty?
@@ -331,9 +322,7 @@ def elo_change(player_id, game_id, league_id = 1)
                        AND g.Timestamp <= :timestamp
                        ORDER BY g.Timestamp DESC
                        LIMIT 2',
-                      'player_id' => player_id,
-                      'league_id' => league_id,
-                      'timestamp' => timestamp).flatten
+                      player_id, league_id, timestamp).flatten
 
     # safety if player doesn't have any games
     return 0 if elos.empty?
@@ -416,8 +405,7 @@ def winner(game_id, league_id = 1)
                            AND LeagueID = :league_id
                            GROUP BY GameID
                          )',
-                        'game_id' => game_id,
-                        'league_id' => league_id).flatten
+                        game_id, league_id).flatten
 
     winner = winner.first if winner.length == 1
 
@@ -590,9 +578,7 @@ def recalc_elo(timestamp = 0, league_id = 1)
                                             AND Timestamp <= :timestamp
                                             ORDER BY Timestamp DESC
                                             LIMIT 1',
-                                           'player_id' => player_id,
-                                           'league_id' => league_id,
-                                           'timestamp' => timestamp)
+                                           player_id, league_id, timestamp)
 
       # in case they had no games before timestamp
       elos[player_id] ||= 1200
@@ -660,39 +646,33 @@ def recalc_elo(timestamp = 0, league_id = 1)
 end
 
 def recalc_win_rate(league_id = 1)
-  # database do |db|
-  #   puts league_id
-  #   db.execute('SELECT PlayerID FROM Player WHERE LeagueID = :league_id',
-  #              league_id) do |player_id|
+  database do |db|
+    db.execute('SELECT PlayerID FROM Player WHERE LeagueID = :league_id',
+               league_id) do |player_id|
 
-  #     puts player_id
+      db.execute('UPDATE Player SET GamesPlayed = (
+                    SELECT COUNT(*) FROM Game
+                    WHERE PlayerID = :player_id
+                    AND LeagueID = :league_id
+                  ) WHERE PlayerID = :player_id
+                    AND LeagueID = :league_id',
+                 player_id, league_id)
 
-  #     db.execute('UPDATE Player SET GamesPlayed = (
-  #                   SELECT COUNT(*) FROM Game
-  #                   WHERE PlayerID = :player_id
-  #                   AND LeagueID = :league_id
-  #                 ) WHERE PlayerID = :player_id
-  #                   AND LeagueID = :league_id',
-  #                'player_id' => player_id,
-  #                'league_id' => league_id)
-
-  #     db.execute('UPDATE Player SET GamesWon = (
-  #                   SELECT COUNT(*) FROM Game
-  #                   WHERE LeagueID = :league_id
-  #                   JOIN (
-  #                     SELECT GameID, MAX(Score) AS Score FROM Game
-  #                     WHERE LeagueID = :league_id
-  #                     GROUP BY GameID
-  #                   )
-  #                   USING (GameID, Score)
-  #                   WHERE PlayerID = :player_id
-  #                   AND LeagueID = :league_id
-  #                 ) WHERE PlayerID = :player_id
-  #                   AND LeagueID = :league_id',
-  #                'league_id' => league_id,
-  #                'player_id' => player_id)
-  #   end
-  # end
+      db.execute('UPDATE Player SET GamesWon = (
+                    SELECT COUNT(*) FROM Game
+                    JOIN (
+                      SELECT GameID, MAX(Score) AS Score FROM Game
+                      WHERE LeagueID = :league_id
+                      GROUP BY GameID
+                    )
+                    USING (GameID, Score)
+                    WHERE PlayerID = :player_id
+                    AND LeagueID = :league_id
+                  ) WHERE PlayerID = :player_id
+                    AND LeagueID = :league_id',
+                 league_id, player_id)
+    end
+  end
 end
 
 # remove a game by game_id
