@@ -47,12 +47,7 @@
                 <div ng-show="player.disqualified">{{minimumQualified - player.gamesPlayed}} games left to play</div>
 
                 <!-- Badges -->
-                <div class="badges" ng-show="player.gamesPlayed > 10 && player.gamesPlayed < 15" ng-bind-html="'👶' | twemoji"></div>
-                <div class="badges" ng-show="badges.streak(player.playerID) >= 5 && badges.streak(player.playerID) < 10" ng-bind-html="'5⃣' | twemoji"></div>
-                <div class="badges" ng-show="badges.streak(player.playerID) >= 10" ng-bind-html="'🔟' | twemoji"></div>
-                <div class="badges" ng-show="badges.skunk(player.playerID)" ng-bind-html="'🚽' | twemoji"></div>
-                <div class="badges" ng-show="badges.highest(player.dailyChange)" ng-bind-html="'🔥' | twemoji"></div>
-                <div class="badges" ng-show="badges.lowest(player.dailyChange)" ng-bind-html="'💩' | twemoji"></div>
+                <badges player="player"></badges>
 
                 <div ng-show="settings.showElo && player.qualified"><b>{{player.elo}}</b></div>
                 <div 
@@ -81,6 +76,9 @@
                 <div class="player-name" ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</div>
               </div> 
               <div class="spaced-out">
+                <!-- Badges -->
+                <badges player="player"></badges>
+                
                 <b>{{player.winRate * 100 | number:1}}%</b>
                 <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
               </div>
