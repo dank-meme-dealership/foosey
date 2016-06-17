@@ -51,7 +51,7 @@ def api_game(game_id, league_id = 1)
 end
 
 # returns an api object for player with id player_id
-def api_player(player_id, league_id = 1)
+def api_player(player_id, extended = false, league_id = 1)
   database do |db|
     db.results_as_hash = true
     player = db.get_first_row('SELECT * FROM Player
@@ -69,9 +69,7 @@ def api_player(player_id, league_id = 1)
                  player['GamesWon'] / player['GamesPlayed'].to_f
                end
 
-    stats = stats(player['PlayerID'])
-
-    return {
+    player = {
       playerID: player['PlayerID'],
       displayName: player['DisplayName'],
       slackName: player['SlackName'],
@@ -80,17 +78,12 @@ def api_player(player_id, league_id = 1)
       gamesPlayed: player['GamesPlayed'],
       dailyChange: daily_elo_change(player['PlayerID']),
       admin: player['Admin'] == 1,
-      active: player['Active'] == 1,
-
-      ally: stats[:ally],
-      allyCount: stats[:allyCount],
-      doublesWinRate: stats[:doublesWinRate],
-      doublesTotal: stats[:doublesTotal],
-      nemesis: stats[:nemesis],
-      nemesisCount: stats[:nemesisCount],
-      singlesWinRate: stats[:singlesWinRate],
-      singlesTotal: stats[:singlesTotal]
+      active: player['Active'] == 1
     }
+
+    player.merge! extended_stats(player_id) if extended
+
+    return player
   end
 end
 
@@ -131,7 +124,7 @@ namespace '/v1' do
   # One Player
   get '/players/:id' do
     id = params['id'].to_i
-    json api_player id
+    json api_player(id, true)
   end
 
   # Game Information
@@ -141,7 +134,7 @@ namespace '/v1' do
     limit = params['limit'].to_i if params['limit']
     ids = games_with_player id
     limit ||= ids.length
-    
+
     ids = ids[0, limit]
 
     json ids.collect { |i| api_game i }

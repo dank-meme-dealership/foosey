@@ -248,17 +248,59 @@ def daily_elo_change(player_id, league_id = 1)
   end
 end
 
-def stats(_player_id, _league_id = 1)
-  database do |_db|
+def extended_stats(player_id, league_id = 1)
+  database do |db|
+    allies = Hash.new(0) # key -> player_id, value -> wins
+    nemeses = Hash.new(0) # key -> player_id, value -> losses
+    singles_games = 0
+    singles_wins = 0
+    doubles_games = 0
+    doubles_wins = 0
+
+    db.execute('SELECT DISTINCT GameID
+                FROM Game
+                WHERE PlayerID = :player_id
+                AND LeagueID = :league_id',
+               player_id, league_id) do |game_id|
+      game = create_query_hash(db.execute2('SELECT PlayerID, Score
+                                            FROM Game
+                                            WHERE GameID = :game_id
+                                            ORDER BY Score', game_id))
+
+      case game.length
+      when 2
+        singles_games += 1
+        if game[1]['PlayerID'] == player_id
+          # this player won
+          singles_wins += 1
+        else
+          # this player lost
+          nemeses[game[1]['PlayerID']] += 1
+        end
+      when 4
+        doubles_games += 1
+        idx = game.index { |g| g['PlayerID'] == player_id }
+        if idx >= 2
+          # this player won
+          doubles_wins += 1
+          allies[idx == 2 ? 3 : 2] += 1
+        end
+      end
+    end
+
+    ally = allies.max_by { |_k, v| v } || ['Nobody', 0]
+    nemesis = nemeses.max_by { |_k, v| v } || ['Nobody', 0]
+    doubles_win_rate = doubles_wins / doubles_games.to_f
+    singles_win_rate = singles_wins / singles_games.to_f
     return {
-      ally: 'matt',
-      allyCount: 3,
-      doublesWinRate: 0.5,
-      doublesTotal: 5,
-      nemesis: 'brik',
-      nemesisCount: 7,
-      singlesWinRate: 0.7,
-      singlesTotal: 9
+      ally: name(ally[0]),
+      allyCount: ally[1],
+      doublesWinRate: doubles_win_rate.nan? ? nil : doubles_win_rate,
+      doublesTotal: doubles_games,
+      nemesis: name(nemesis[0]),
+      nemesisCount: nemesis[1],
+      singlesWinRate: singles_win_rate.nan? ? nil : singles_win_rate,
+      singlesTotal: singles_games
     }
   end
 end
@@ -594,17 +636,16 @@ def recalc_elo(timestamp = 0, league_id = 1)
       game = create_query_hash(db.execute2('SELECT PlayerID, Score
                                             FROM Game
                                             WHERE GameID = :game_id
-                                            AND LeagueID = :league_id
-                                            ORDER BY Score',
-                                           game_id, league_id))
+                                            ORDER BY Score', game_id))
 
       # calculate the elo change
-      if game.length == 2
+      case game.length
+      when 2
         rating_a = elos[game[0]['PlayerID']]
         rating_b = elos[game[1]['PlayerID']]
         score_a = game[0]['Score']
         score_b = game[1]['Score']
-      elsif game.length == 4
+      when 4
         rating_a = ((elos[game[0]['PlayerID']] +
                      elos[game[1]['PlayerID']]) / 2).round
         rating_b = ((elos[game[2]['PlayerID']] +
@@ -621,9 +662,10 @@ def recalc_elo(timestamp = 0, league_id = 1)
 
       # insert into history table
       game.each_with_index do |player, idx|
-        if game.length == 2
+        case game.length
+        when 2
           elos[player['PlayerID']] += idx < 1 ? delta_a : delta_b
-        elsif game.length == 4
+        when 4
           elos[player['PlayerID']] += idx < 2 ? delta_a : delta_b
         end
         db.execute 'INSERT INTO EloHistory
@@ -635,9 +677,8 @@ def recalc_elo(timestamp = 0, league_id = 1)
 
     elos.each do |player_id, elo|
       db.execute 'UPDATE Player SET Elo = :elo
-                  WHERE PlayerID = :player_id
-                  AND LeagueID = :league_id',
-                 elo, player_id, league_id
+                  WHERE PlayerID = :player_id',
+                 elo, player_id
     end
 
     # end transaction
