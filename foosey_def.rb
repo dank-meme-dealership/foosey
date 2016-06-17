@@ -283,7 +283,7 @@ def extended_stats(player_id, league_id = 1)
         if idx >= 2
           # this player won
           doubles_wins += 1
-          allies[idx == 2 ? 3 : 2] += 1
+          allies[game[idx == 2 ? 3 : 2]['PlayerID']] += 1
         end
       end
     end
