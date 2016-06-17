@@ -173,6 +173,8 @@ def badges(league_id = 1)
   toilets = api_game(toilet_game, league_id)[:teams][1][:players] if toilet_game
   toilets.each { |b| badges[b[:playerID]] << '🚽' }
 
+  # win streak badges
+  # 5 and 10 current win streak
   win_streaks = {}
   players.each do |p|
     games = games_with_player(p, league_id)
@@ -187,6 +189,16 @@ def badges(league_id = 1)
     badges[p] << '5⃣' if s.between?(5, 9)
     badges[p] << '🔟' if s >= 10
   end
+
+  # zzz badge
+  # hasn't played a game in 2 weeks
+  sleepers = players.select do |p|
+    games = games_with_player(p, league_id)
+    next if games.empty?
+    last_game = api_game(games.first, league_id)
+    Time.now.to_i - last_game[:timestamp] > 1_209_600 # 2 weeks
+  end
+  sleepers.each { |b| badges[b] << '💤' }
 
   # build hash
   badges.collect do |k, v|
