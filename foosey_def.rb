@@ -168,6 +168,8 @@ def badges(league_id = 1)
 
   # toilet badge
   # last skunk (lost w/ 0 points)
+  toilet_game = game_ids(league_id).map{ |g| api_game(g, league_id) }.find { |g| g[:teams][g[:teams].length-1][:score] == 0 }
+  toilet_game[:teams][toilet_game[:teams].length-1][:players].map { |p| p[:playerID] }.each { |b| badges[b] << '🚽' }
 
   # 5 badge
   # 5-win streak
