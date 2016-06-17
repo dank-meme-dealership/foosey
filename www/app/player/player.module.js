@@ -1,5 +1,7 @@
 (function()
 {
   angular
-    .module('player', []);
+    .module('player', [
+      'badges'
+    ]);
 })();
