@@ -66,7 +66,7 @@
     function loadMore()
     {
       console.log("Loading new games starting from " + loaded + " to " + (loaded + gamesToLoad));
-      FooseyService.getGames(gamesToLoad, loaded + gamesToLoad)
+      FooseyService.getGames(gamesToLoad, loaded)
       .then(function successCallback(result)
       {
         // if no games have been loaded yet, we can't do anything
@@ -95,11 +95,10 @@
     function groupByDate(games)
     {
       return _.isArray(games) ? _.values(
-        _.mapKeys(
         _.groupBy(games, 'date'), function(value, key) 
         { 
           value.date = key; return value; 
-        })) : [];
+        }) : [];
     }
 
     // turns off spinner and notifies
