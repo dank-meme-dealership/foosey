@@ -161,21 +161,35 @@ def badges(league_id = 1)
   monkeys = players.select do |p|
     games = games_with_player(p, league_id)
     next if games.empty?
-    last_game = api_game(games[0], league_id)
-    last_game[:teams][0][:delta] < 0 && last_game[:teams][0][:players].any? { |a| a[:playerID] == p }
+    last_game = api_game(games.first, league_id)
+    last_game[:teams][0][:delta] < 0 &&
+      last_game[:teams][0][:players].any? { |a| a[:playerID] == p }
   end
   monkeys.each { |b| badges[b] << '🙈' }
 
   # toilet badge
   # last skunk (lost w/ 0 points)
-  toilet_game = game_ids(league_id).map{ |g| api_game(g, league_id) }.find { |g| g[:teams][g[:teams].length-1][:score] == 0 }
-  toilet_game[:teams][toilet_game[:teams].length-1][:players].map { |p| p[:playerID] }.each { |b| badges[b] << '🚽' }
+  toilet_game = game_ids.find do |g|
+    api_game(g, league_id)[:teams][1][:score] == 0
+  end
+  toilets = api_game(toilet_game, league_id)[:teams][1][:players] if toilet_game
+  toilets.each { |b| badges[b[:playerID]] << '🚽' }
 
-  # 5 badge
-  # 5-win streak
+  win_streaks = {}
+  players.each do |p|
+    games = games_with_player(p, league_id)
+    last_wins = games.take_while do |g|
+      game = api_game(g, league_id)
+      true if game[:teams][0][:players].any? { |a| a[:playerID] == p }
+      false
+    end
+    win_streaks[p] = last_wins.length
+  end
 
-  # 10 badge
-  # 10-win streak
+  win_streaks.each do |p, s|
+    badges[p] << '5⃣' if s.between?(5, 9)
+    badges[p] << '🔟' if s >= 10
+  end
 
   # build hash
   badges.collect do |k, v|
