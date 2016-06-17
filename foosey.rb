@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'json'
+require 'net/http'
 require 'sinatra'
 require 'sinatra/cross_origin'
 require 'sinatra/json'
@@ -27,6 +28,7 @@ set :port, 4005
 configure do
   enable :cross_origin
   set :allow_methods, [:get, :post, :options, :delete, :put]
+  set :show_exceptions, false
 end
 
 # load other foosey files and enable auto-reload

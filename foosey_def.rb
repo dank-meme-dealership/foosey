@@ -56,9 +56,9 @@ def game_to_s(game_id, date = false, league_id = 1)
   end
 end
 
-def message_slack(_this_game, text, attach)
+def message_slack(text, attach, url)
   data = {
-    username: 'foosey-app',
+    username: 'Foosey',
     channel: '#foosey',
     text: text,
     attachments: attach,
@@ -492,7 +492,26 @@ def add_game(outcome, timestamp = nil, league_id = 1)
       }
     end
 
-    {
+    slack_url = db.get_first_value 'SELECT Value FROM Config
+                                    WHERE Setting = "SlackUrl"'
+
+    unless slack_url.empty?
+      text = "Game added: #{game_to_s(game_id)}"
+      attachments = [{
+        fields: players.collect do |p|
+          delta = p[:delta] >= 0 ? "+#{p[:delta]}" : p[:delta]
+          {
+            title: p[:name],
+            value: "#{p[:elo]} (#{delta})",
+            short: true
+          }
+        end
+      }]
+      puts attachments.to_json
+      message_slack(text, attachments, slack_url)
+    end
+
+    return {
       gameID: game_id,
       players: players
     }
