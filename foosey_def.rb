@@ -178,8 +178,7 @@ def badges(league_id = 1)
     games = games_with_player(p, league_id)
     last_wins = games.take_while do |g|
       game = api_game(g, league_id)
-      true if game[:teams][0][:players].any? { |a| a[:playerID] == p }
-      false
+      game[:teams][0][:players].any? { |a| a[:playerID] == p }
     end
     win_streaks[p] = last_wins.length
   end
