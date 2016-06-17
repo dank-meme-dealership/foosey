@@ -74,5 +74,31 @@
 		<!-- set up charts -->
 		<chart ng-repeat="chart in charts" options="chart"></chart>
 
+		<!-- Recent games, shitty code -->
+		<div class="card">
+      <ion-list>
+        <div class="item item-divider">Recent Games</div>
+        <ion-item ng-show="recentGames.length === 0">
+          Loading...
+        </ion-item>
+        <ion-item class="game-item" ng-repeat="game in recentGames">
+          <div class="spaced-out">
+            <div ng-repeat="team in game.teams" class="game-score">
+              <div ng-repeat="player in team.players">
+                <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</span>
+                <span 
+                  ng-show="settings.showElo && player.change !== null"
+                  ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
+                  {{team.delta | eloChange}}
+                </span>
+              </div>
+              <div><strong>{{team.score}}</strong></div>
+            </div>
+          </div>
+          <div class="time">{{game.timestamp | date}}, {{game.timestamp | time}}</div>
+        </ion-item>
+      </ion-list>
+    </div>
+
 	</ion-content>
 </ion-view>

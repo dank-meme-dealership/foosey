@@ -10,6 +10,7 @@
 	{
 		$scope.settings = SettingsService;
 		$scope.scorecardInfo = scorecardInfo;
+		$scope.recentGames = [];
 		$scope.player = undefined;
 		$scope.error = false;
 
@@ -21,6 +22,7 @@
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
       setUpPlayer();
+      setUpRecentGames();
       setUpCharts();
     });
 
@@ -30,6 +32,15 @@
 			FooseyService.getPlayer($stateParams.playerID).then(
 				function(response){
 					$scope.player = response.data;
+				});
+    }
+
+    function setUpRecentGames()
+    {
+    	// set up the player
+			FooseyService.getPlayerGames($stateParams.playerID, 3).then(
+				function(response){
+					$scope.recentGames = response.data;
 				});
     }
 

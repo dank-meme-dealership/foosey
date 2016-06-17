@@ -10,7 +10,7 @@
 
     <!-- Shitty copied code, need to erase -->
     <div class="card">
-      <div class="item item-divider">{{game ? (game.timestamp | time:true) : 'Loading...'}}</div>
+      <div class="item item-divider">{{game ? (game.timestamp | date) : 'Loading...'}}</div>
       <ion-item ng-show="!game">Loading</ion-item>
       <ion-item class="game-item" ng-show="game">
         <div class="spaced-out">
@@ -79,7 +79,7 @@
               <div><strong>{{team.score}}</strong></div>
             </div>
           </div>
-          <div class="time">{{g.timestamp | time:true}}</div>
+          <div class="time">{{g.timestamp | date}}, {{g.timestamp | time}}</div>
         </ion-item>
       </ion-list>
     </div>

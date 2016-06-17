@@ -9,6 +9,7 @@
     .filter('percent', percent)
     .filter('team', team)
     .filter('time', time)
+    .filter('toTimestamp', toTimestamp)
     .filter('percentage', percentage);
 
   // replace & with And
@@ -34,7 +35,7 @@
   function date() 
   {
     return function(input) {
-      var day = moment(input);
+      var day = moment.unix(input);
       var daysFromToday = moment().diff(day, 'days');
       
       // Special cases
@@ -95,13 +96,21 @@
   // convert from 24-hour to am/pm
   function time()
   {
-    return function(input, dateInstead)
+    return function(input)
     {
       var day = moment.unix(input);
       var daysFromToday = moment().diff(day, 'days');
       var absolutelyToday = daysFromToday === 0 && day.dayOfYear() === moment().dayOfYear();
 
-      return absolutelyToday ? day.fromNow() : dateInstead ? day.format('MMMM Do, YYYY') : day.format('h:mma');
+      return absolutelyToday ? day.fromNow() : day.format('h:mma');
+    }
+  }
+
+  function toTimestamp()
+  {
+    return function(input)
+    {
+      return moment(input).unix();
     }
   }
 
