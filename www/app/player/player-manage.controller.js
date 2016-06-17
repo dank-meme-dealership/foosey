@@ -27,6 +27,7 @@
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
+      BadgesService.updateBadges();
       loadPlayers();
     });
 
@@ -36,8 +37,6 @@
       FooseyService.getAllPlayers(false).then(
         function onSuccess(players)
         {
-          // BadgesService.updateBadges(players);
-
           var allPlayers = players.sort(function(a, b){
             return a.displayName.localeCompare(b.displayName);
           });

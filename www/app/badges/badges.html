@@ -1,8 +1,1 @@
-<!-- <div class="badges" ng-show="player.gamesPlayed > 10 && player.gamesPlayed < 15" ng-bind-html="'👶' | twemoji"></div>
-<div class="badges" ng-show="service.streak(player.playerID) >= 5 && service.streak(player.playerID) < 10" ng-bind-html="'5⃣' | twemoji"></div>
-<div class="badges" ng-show="service.streak(player.playerID) >= 10" ng-bind-html="'🔟' | twemoji"></div>
-<div class="badges" ng-show="service.skunk(player.playerID)" ng-bind-html="'🚽' | twemoji"></div>
-<div class="badges" ng-show="service.highest(player.dailyChange)" ng-bind-html="'🔥' | twemoji"></div>
-<div class="badges" ng-show="service.lowest(player.dailyChange)" ng-bind-html="'💩' | twemoji"></div>
-<div class="badges" ng-show="service.againstOdds(player.playerID)" ng-bind-html="'🙈' | twemoji"></div> -->
-<!-- <div class="badges" ng-show="service.lowest(player.dailyChange)" ng-bind-html="'👏' | twemoji"></div> -->
+<div class="badges" ng-repeat="badge in service.myBadges(player.playerID)" ng-bind-html="badge | twemoji"></div>

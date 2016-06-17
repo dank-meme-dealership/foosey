@@ -25,6 +25,7 @@
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
+      BadgesService.updateBadges();
       getStats();
     });
 
@@ -59,8 +60,6 @@
           localStorage.setObject('elos', $scope.elos);
           localStorage.setObject('winRates', $scope.winRates);
           $scope.error = false;
-          
-          // BadgesService.updateBadges(players);
 
           done();
         }, 

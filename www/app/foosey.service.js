@@ -21,6 +21,7 @@
       getGamesByID      : getGamesByID,
       getGames          : getGames,
       getEloHistory     : getEloHistory,
+      getBadges         : getBadges,
       addGame           : addGame,
       addPlayer         : addPlayer,
       editGame          : editGame, 
@@ -110,17 +111,9 @@
         });
     }
 
-    function getWinRateHistory(playerID)
+    function getBadges()
     {
-      return $http.get(url + 'stats/winrate/' + playerID).then(
-        function(response)
-        {
-          _.each(response.data, function(point)
-          {
-            point.date = moment.unix(point.timestamp).format("MM/DD");
-          })
-          return response;
-        });
+      return $http.get(url + 'badges');
     }
 
     function addGame(game)
