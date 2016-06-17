@@ -35,8 +35,8 @@
   function date() 
   {
     return function(input) {
-      var day = moment.unix(input);
-      var daysFromToday = moment().diff(day, 'days');
+      var day = roundDown(moment.unix(input));
+      var daysFromToday = roundDown(moment()).diff(day, 'days');
       
       // Special cases
       if (daysFromToday === 0) return 'Today';
@@ -45,6 +45,11 @@
 
       return day.format('MMMM Do, YYYY');
     }
+  }
+
+  function roundDown(someMoment)
+  {
+    return moment(someMoment.format('MM/DD/YYYY'), 'MM/DD/YYYY');
   }
 
   // format the elo change for the day
@@ -110,7 +115,7 @@
   {
     return function(input)
     {
-      return moment(input).unix();
+      return moment(input, 'MM/DD/YYYY').unix();
     }
   }
 
