@@ -8,7 +8,7 @@
 
   function FooseyService($http) 
   {
-    // var url = "http://localhost:4006/v1/";
+    // var url = "http://localhost:4005/v1/";
     var url = "http://api.foosey.futbol/v1/";
 
     return {
