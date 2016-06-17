@@ -158,6 +158,13 @@ def badges(league_id = 1)
 
   # monkey badge
   # won last game but elo went down
+  monkeys = players.select do |p|
+    games = games_with_player(p, league_id)
+    next if games.empty?
+    last_game = api_game(games[0], league_id)
+    last_game[:teams][0][:delta] < 0 && last_game[:teams][0][:players].any? { |a| a[:playerID] == p }
+  end
+  monkeys.each { |b| badges[b] << '🙈' }
 
   # toilet badge
   # last skunk (lost w/ 0 points)
