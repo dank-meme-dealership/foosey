@@ -8,10 +8,6 @@
 
   function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, FooseyService, SettingsService, BadgesService) 
   {
-    // send to login screen if they haven't logged in yet
-    if (!SettingsService.loggedIn) SettingsService.logOut();
-
-    // initialize the page
     $scope.settings = SettingsService;
     $scope.badges = BadgesService;
     $scope.slide = 0;
@@ -24,7 +20,13 @@
     $scope.changeSlide = changeSlide;
     $scope.slideTo = slideTo;
 
-    getStats();
+    // load on entering view 
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
+      // send to login screen if they haven't logged in yet
+      if (!SettingsService.loggedIn) SettingsService.logOut();
+      getStats();
+    });
 
     // function for swiping between views
     function changeSlide(index)

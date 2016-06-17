@@ -28,10 +28,10 @@
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
   }
 
-  run.$inject = ['$ionicPlatform', '$ionicConfig'];
+  run.$inject = ['$ionicPlatform'];
 
   // This establishes a few settings for Ionic
-  function run($ionicPlatform, $ionicConfig) 
+  function run($ionicPlatform) 
   {
     $ionicPlatform.ready(function() 
     {
@@ -43,9 +43,6 @@
       {
         StatusBar.styleDefault();
       }
-
-      // Disable swiping back to fix #2
-      $ionicConfig.views.swipeBackEnabled(false);
     });
   }
 })();

@@ -8,9 +8,6 @@
 
   function PlayerManageController($scope, $ionicModal, FooseyService, SettingsService, BadgesService)
   {
-    // send to login screen if they haven't logged in yet
-    if (!SettingsService.loggedIn) SettingsService.logOut();
-
     $scope.activePlayers = undefined;
     $scope.inactivePlayers = undefined;
 
@@ -25,7 +22,13 @@
       $scope.modal = modal;
     });
 
-    loadPlayers();
+    // load on entering view 
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
+      // send to login screen if they haven't logged in yet
+      if (!SettingsService.loggedIn) SettingsService.logOut();
+      loadPlayers();
+    });
 
     function loadPlayers()
     {

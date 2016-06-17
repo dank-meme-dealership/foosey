@@ -8,9 +8,6 @@
 
   function LoginController($scope, $state, $ionicViewService, $ionicPopup, SettingsService)
   {
-    // send to login screen if they haven't logged in yet
-    if (!SettingsService.loggedIn) SettingsService.logOut();
-    
     $scope.team = { text: '' };
 
     $scope.login = login;

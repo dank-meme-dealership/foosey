@@ -8,9 +8,6 @@
 
 	function AddGameController($scope, $rootScope, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
 	{
-		// send to login screen if they haven't logged in yet
-		if (!SettingsService.loggedIn) SettingsService.logOut();
-
 		$scope.settings = SettingsService;
 		$scope.gameTypes = gameTypes;
 		$scope.reset = reset;
@@ -18,9 +15,6 @@
 		$scope.useNowTime = true;
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;
-
-		// initialize page
-		reset();
 		$scope.scores = new Array(11);
 
 		$scope.gameSelect = gameSelect;
@@ -28,6 +22,14 @@
 		$scope.scoreSelect = scoreSelect;
 		$scope.submit = submit;
 		$scope.undo = undo;
+
+		// load on entering view 
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
+      // send to login screen if they haven't logged in yet
+      if (!SettingsService.loggedIn) SettingsService.logOut();
+      reset();
+    });
 
 		// function to select game
 		function gameSelect(type)

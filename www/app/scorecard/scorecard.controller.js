@@ -8,29 +8,30 @@
 
 	function ScorecardController($scope, $stateParams, $ionicPopup, localStorage, scorecardInfo, FooseyService, SettingsService)
 	{
-		// send to login screen if they haven't logged in yet
-		if (!SettingsService.loggedIn) SettingsService.logOut();
-		
 		$scope.settings = SettingsService;
 		$scope.scorecardInfo = scorecardInfo;
+		$scope.player = undefined;
 		$scope.error = false;
 
 		$scope.info = info;
 
-		// Get preliminary name while we load from server
-		_.each(localStorage.getObject('players'), function(player){
-			if(player.playerID == $stateParams.playerID)
-				$scope.name = player.displayName;
-		});
+		// load on entering view 
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
+      // send to login screen if they haven't logged in yet
+      if (!SettingsService.loggedIn) SettingsService.logOut();
+      setUpPlayer();
+      setUpCharts();
+    });
 
-		// set up the player
-		FooseyService.getPlayer($stateParams.playerID).then(
-			function(response){
-				$scope.player = response.data;
-			});
-
-		// set up charts
-		setUpCharts();
+    function setUpPlayer()
+    {
+			// set up the player
+			FooseyService.getPlayer($stateParams.playerID).then(
+				function(response){
+					$scope.player = response.data;
+				});
+    }
 
 		// set up the charts for the scorecard page
 		function setUpCharts()

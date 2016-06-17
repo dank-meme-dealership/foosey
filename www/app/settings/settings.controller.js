@@ -8,10 +8,7 @@
 
   function SettingsController($scope, localStorage, FooseyService, SettingsService)
   {
-    // send to login screen if they haven't logged in yet
-    if (!SettingsService.loggedIn) SettingsService.logOut();
-    
-  	$scope.settings = SettingsService;
+    $scope.settings = SettingsService;
     $scope.players = [];
     $scope.playerSelections = [];
     $scope.player = {};
@@ -21,7 +18,13 @@
   	$scope.tap = tap;
     $scope.addTestCard = addTestCard;
 
-    loadPlayers();
+    // load on entering view 
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
+      // send to login screen if they haven't logged in yet
+      if (!SettingsService.loggedIn) SettingsService.logOut();
+      loadPlayers();
+    });
 
     $scope.$watch('player.selected', function(player)
     {

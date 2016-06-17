@@ -8,9 +8,6 @@
 
   function HistoryController($scope, $state, $filter, localStorage, FooseyService, SettingsService)
   {
-    // send to login screen if they haven't logged in yet
-    if (!SettingsService.loggedIn) SettingsService.logOut();
-    
     var loaded = 0;
     var gamesToLoad = 30;
     $scope.loading = true;
@@ -20,7 +17,13 @@
     $scope.show = show;
     $scope.refresh = refresh;
 
-    refresh();
+    // load on entering view 
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
+      // send to login screen if they haven't logged in yet
+      if (!SettingsService.loggedIn) SettingsService.logOut();
+      refresh();
+    });
 
     // toggleFilter('Peter');
     // clearFilters();

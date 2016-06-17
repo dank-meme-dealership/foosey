@@ -8,7 +8,13 @@
 
   function TeamStatsController($scope, FooseyService, SettingsService)
   {
-    setUpCharts();   
+    // load on entering view 
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
+      // send to login screen if they haven't logged in yet
+      if (!SettingsService.loggedIn) SettingsService.logOut();
+      setUpCharts();
+    }); 
 
     // set up the charts for the scorecard page
     function setUpCharts()

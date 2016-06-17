@@ -8,28 +8,36 @@
 
   function GameDetailController($scope, $stateParams, $ionicPopup, $ionicHistory, FooseyService, SettingsService)
   {
-    // send to login screen if they haven't logged in yet
-    if (!SettingsService.loggedIn) SettingsService.logOut();
-
     $scope.settings = SettingsService;
     $scope.fetching = false;
 
     $scope.remove = confirmRemove;
 
-    FooseyService.getGame($stateParams.gameID).then(
-      function successCallback(response)
-      {
-        $scope.game = response.data;
-        // only two people in game
-        if ($scope.game.teams.length === 2 && $scope.game.teams[0].players.length === 1)
+    // load on entering view 
+    $scope.$on('$ionicView.beforeEnter', function()
+    {
+      // send to login screen if they haven't logged in yet
+      if (!SettingsService.loggedIn) SettingsService.logOut();
+      loadGame();
+    });
+
+    function loadGame()
+    {
+      FooseyService.getGame($stateParams.gameID).then(
+        function successCallback(response)
         {
-          $scope.teams = _.clone($scope.game.teams);
-          $scope.fetching = true;
-          var p1 = $scope.game.teams[0].players[0].playerID;
-          var p2 = $scope.game.teams[1].players[0].playerID;
-          fetchSimilarGames(p1, p2);
-        }
-      });
+          $scope.game = response.data;
+          // only two people in game
+          if ($scope.game.teams.length === 2 && $scope.game.teams[0].players.length === 1)
+          {
+            $scope.teams = _.clone($scope.game.teams);
+            $scope.fetching = true;
+            var p1 = $scope.game.teams[0].players[0].playerID;
+            var p2 = $scope.game.teams[1].players[0].playerID;
+            fetchSimilarGames(p1, p2);
+          }
+        });
+    }
 
     function fetchSimilarGames(p1, p2)
     {
