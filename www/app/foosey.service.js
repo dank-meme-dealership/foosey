@@ -54,9 +54,9 @@
       return $http.get(url + 'players?ids=' + playerIDs);
     }
 
-    function getPlayerGames(playerID)
+    function getPlayerGames(playerID, limit)
     {
-      return $http.get(url + 'players/' + playerID + '/games');
+      return $http.get(url + 'players/' + playerID + '/games' + (limit ? '?limit=' + limit : ''));
     }
 
     function getAllGames()

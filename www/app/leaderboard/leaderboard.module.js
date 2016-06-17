@@ -1,5 +1,7 @@
 (function()
 {
   angular
-    .module('leaderboard', []);
+    .module('leaderboard', [
+      'badges'
+    ]);
 })();

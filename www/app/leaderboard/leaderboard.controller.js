@@ -4,15 +4,16 @@
     .module('leaderboard')
     .controller('LeaderboardController', LeaderboardController);
 
-  LeaderboardController.$inject = ['$scope', 'localStorage', '$ionicSlideBoxDelegate', 'FooseyService', 'SettingsService'];
+  LeaderboardController.$inject = ['$scope', 'localStorage', '$ionicSlideBoxDelegate', 'FooseyService', 'SettingsService', 'BadgesService'];
 
-  function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, FooseyService, SettingsService) 
+  function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, FooseyService, SettingsService, BadgesService) 
   {
     // send to login screen if they haven't logged in yet
     if (!SettingsService.loggedIn) SettingsService.logOut();
 
     // initialize the page
     $scope.settings = SettingsService;
+    $scope.badges = BadgesService;
     $scope.slide = 0;
     $scope.loading = true;
     $scope.minimumQualified = 10;
@@ -57,6 +58,8 @@
           localStorage.setObject('winRates', $scope.winRates);
           $scope.error = false;
           
+          BadgesService.updateBadges(players);
+
           done();
         }, 
         function errorCallback(response)

@@ -6,6 +6,7 @@
       'ionic.utils',
 
       'ngIOS9UIWebViewPatch',
+      'sc.twemoji',
 
       'addGame',
       'datepicker',
