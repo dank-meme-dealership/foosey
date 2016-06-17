@@ -29,6 +29,14 @@
       </ion-item>
     </div>
 
+    <!-- Disclaimer -->
+    <div class="card" ng-show="game && !fetching">
+      <div class="item item-divider">Not Available</div>
+        <ion-item ng-show="!games">
+          No history for {{game.teams.length * game.teams[0].players.length}} person games yet!
+        </ion-item>
+    </div>
+
     <!-- Record -->
     <div class="card" ng-show="fetching">
       <ion-list>
@@ -70,7 +78,7 @@
               <div><strong>{{team.score}}</strong></div>
             </div>
           </div>
-          <div class="time">{{g.gameID}} {{g.timestamp | time:true}}</div>
+          <div class="time">{{g.timestamp | time:true}}</div>
         </ion-item>
       </ion-list>
     </div>
