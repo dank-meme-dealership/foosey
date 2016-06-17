@@ -139,15 +139,13 @@ def badges(league_id = 1)
 
   # fire badge
   # best daily change
-  fire_id = players.max_by { |p| daily_elo_change(p, league_id) }
-  fire_id = nil if daily_elo_change(fire_id) == 0
-  badges[fire_id] << '🔥'
+  best_change = players.group_by { |p| daily_elo_change(p, league_id) }.max
+  best_change.last.each { |b| badges[b] << '🔥' } if best_change.first > 0
 
   # poop badge
   # worst daily change
-  poop_id = players.min_by { |p| daily_elo_change(p, league_id) }
-  poop_id = nil if daily_elo_change(poop_id) == 0
-  badges[poop_id] << '💩'
+  worst_change = players.group_by { |p| daily_elo_change(p, league_id) }.min
+  worst_change.last.each { |b| badges[b] << '💩' } if worst_change.first < 0
 
   # baby badge
   # 10-15 games played
