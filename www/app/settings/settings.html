@@ -1,12 +1,13 @@
 <ion-view>
   <ion-nav-title>Settings</ion-nav-title>
 
-	<ion-content class="background" ng-click="tap()" has-bouncing="true">
+	<ion-content class="background" has-bouncing="true">
 		
     <!-- Settings -->
     <div class="card">
       <ion-list>
 			  <ion-toggle ng-change="settings.toggleShowElo()" ng-model="settings.showElo" toggle-class="toggle-balanced">Show Ranking Points</ion-toggle>
+        <ion-toggle ng-change="settings.toggleShowRelTimes()" ng-model="settings.showRelTimes" toggle-class="toggle-balanced">Show Relative Times</ion-toggle>
         <label class="item item-input item-select">
           <div class="input-label">
             {{ !player.selected ? 'Select a player' : 'You are' }}
@@ -17,7 +18,7 @@
 		</div>
 
     <!-- Players -->
-    <div class="card" ng-show="tapped > 1">
+    <div class="card" ng-show="settings.isAdmin">
       <ion-item href="#/app/manage-players">
         <div style="float:left">Manage players</div>
         <div style="float:right" class="ion-ios-arrow-right"></div>

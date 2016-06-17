@@ -13,9 +13,7 @@
     $scope.playerSelections = [];
     $scope.player = {};
     $scope.player.selected = SettingsService.playerID;
-  	$scope.tapped = 0;
 
-  	$scope.tap = tap;
     $scope.addTestCard = addTestCard;
 
     // load on entering view 
@@ -45,11 +43,6 @@
           $scope.playerSelections = _.filter($scope.players, function(player){ return player.active });
         });
     }
-
-  	function tap()
-  	{
-  		$scope.tapped++;
-  	}
 
     function addTestCard()
     {

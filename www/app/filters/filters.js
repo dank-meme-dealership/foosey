@@ -101,13 +101,13 @@
   // convert from 24-hour to am/pm
   function time()
   {
-    return function(input)
+    return function(input, showRelTimes)
     {
       var day = moment.unix(input);
       var daysFromToday = moment().diff(day, 'days');
       var absolutelyToday = daysFromToday === 0 && day.dayOfYear() === moment().dayOfYear();
 
-      return absolutelyToday ? day.fromNow() : day.format('h:mma');
+      return absolutelyToday && showRelTimes ? day.fromNow() : day.format('h:mma');
     }
   }
 

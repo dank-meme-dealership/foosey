@@ -9,13 +9,16 @@
 	function SettingsService($state, $ionicHistory, localStorage)
 	{
 		var service = {
-			showElo				: localStorage.getObject('showElo') !== 0,
-			loggedIn			: localStorage.getObject('loggedIn') === 1,
-			logIn 				: logIn,
-			logOut				: logOut,
-			playerID			: getPlayer(),
-			setPlayer			: setPlayer,
-			toggleShowElo : toggleShowElo
+			isAdmin						: localStorage.getObject('isAdmin') === 1,
+			showElo						: localStorage.getObject('showElo') !== 0,
+			showRelTimes			: localStorage.getObject('showRelTimes') !== 0,
+			loggedIn					: localStorage.getObject('loggedIn') === 1,
+			logIn 						: logIn,
+			logOut						: logOut,
+			playerID					: getPlayer(),
+			setPlayer					: setPlayer,
+			toggleShowElo 		: toggleShowElo,
+			toggleShowRelTimes: toggleShowRelTimes
 		}
 
 		return service;
@@ -26,8 +29,14 @@
 			return _.isNumber(playerID) ? playerID : undefined;
 		}
 
-		function logIn()
+		function logIn(admin)
 		{
+			if (admin) 
+			{
+				service.isAdmin = true;
+				localStorage.setObject('isAdmin', 1);
+			}
+
 			$ionicHistory.nextViewOptions({
         disableBack: true
       });
@@ -47,10 +56,14 @@
 			service.loggedIn = false;
 			service.playerID = undefined;
 			service.showElo = true;
+			service.showRelTimes = true;
+			service.isAdmin = false;
 
       localStorage.setObject('loggedIn', 0);
       localStorage.setObject('playerID', undefined);
       localStorage.setObject('showElo', undefined);
+      localStorage.setObject('showRelTimes', undefined);
+      localStorage.setObject('isAdmin', undefined);
 
       $state.go('login');
 		}
@@ -65,6 +78,12 @@
 		{
 			service.showElo = localStorage.getObject('showElo') === 0;
 			localStorage.setObject('showElo', service.showElo ? 1 : 0);
+		}
+
+		function toggleShowRelTimes()
+		{
+			service.showRelTimes = localStorage.getObject('showRelTimes') === 0;
+			localStorage.setObject('showRelTimes', service.showRelTimes ? 1 : 0);
 		}
 	}
 })();

@@ -43,7 +43,7 @@
 							<div><strong>{{team.score}}</strong></div>
 						</div>
 					</div>
-					<div class="time">{{game.timestamp | time}}</div>
+					<div class="time">{{game.timestamp | time:settings.showRelTimes}}</div>
 				</ion-item>
 			</ion-list>
 		</div>

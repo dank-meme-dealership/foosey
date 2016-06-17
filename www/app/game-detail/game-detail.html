@@ -26,7 +26,7 @@
             <div><strong>{{team.score}}</strong></div>
           </div>
         </div>
-        <div class="time">{{game.timestamp | time}}</div>
+        <div class="time">{{game.timestamp | time:settings.showRelTimes}}</div>
       </ion-item>
     </div>
 
@@ -79,7 +79,7 @@
               <div><strong>{{team.score}}</strong></div>
             </div>
           </div>
-          <div class="time">{{g.timestamp | date}}, {{g.timestamp | time}}</div>
+          <div class="time">{{g.timestamp | date}}, {{g.timestamp | time:settings.showRelTimes}}</div>
         </ion-item>
       </ion-list>
     </div>

@@ -16,14 +16,20 @@
 
     function login()
     {
-      if ($scope.team.text.toLowerCase() !== 'wca-dev')
+      if ($scope.team.text.toLowerCase() === 'wca-dev')
+      {
+        SettingsService.logIn(false);
+      }
+      else if ($scope.team.text.toLowerCase() === 'wca-admin')
+      {
+        SettingsService.logIn(true);
+      }
+      else
       {
         popupAlert('Invalid Team Name', '<center>You need to enter a valid <br> team name to get started.</center>');
         $scope.team.text = '';
         return;
       }
-      
-      SettingsService.logIn();
     }
 
     function forgot()
