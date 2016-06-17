@@ -573,7 +573,7 @@ def add_game(outcome, timestamp = nil, league_id = 1)
     slack_url = db.get_first_value 'SELECT Value FROM Config
                                     WHERE Setting = "SlackUrl"'
 
-    unless slack_url.empty?
+    unless true || slack_url.empty?
       text = "Game added: #{game_to_s(game_id)}"
       attachments = [{
         fields: players.collect do |p|
