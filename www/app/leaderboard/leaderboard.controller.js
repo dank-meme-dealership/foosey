@@ -16,7 +16,7 @@
     $scope.elos = undefined;
     $scope.winRates = undefined;
 
-    $scope.getStats = getStats;
+    $scope.updateLeaderboard = updateLeaderboard;
     $scope.changeSlide = changeSlide;
     $scope.slideTo = slideTo;
 
@@ -25,8 +25,7 @@
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
-      BadgesService.updateBadges();
-      getStats();
+      updateLeaderboard();
     });
 
     // function for swiping between views
@@ -38,6 +37,12 @@
     function slideTo(index)
     {
       $ionicSlideBoxDelegate.slide(index);
+    }
+
+    function updateLeaderboard()
+    {
+      BadgesService.updateBadges();
+      getStats();
     }
 
     // gets the list of names and elos

@@ -20,7 +20,7 @@
 
   <ion-content class="background has-subheader" has-bouncing="true">
     <!-- pull to refresh -->
-    <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="getStats()"></ion-refresher>
+    <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="updateLeaderboard()"></ion-refresher>
 
     <!-- Show if error -->
     <div ng-if="error" class="card center">
