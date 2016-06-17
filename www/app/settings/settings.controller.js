@@ -4,9 +4,9 @@
     .module('settings')
     .controller('SettingsController', SettingsController);
 
-  SettingsController.$inject = ['$scope', '$state', '$ionicModal', '$ionicViewService', '$ionicPopup', 'FooseyService', 'SettingsService'];
+  SettingsController.$inject = ['$scope', 'FooseyService', 'SettingsService'];
 
-  function SettingsController($scope, $state, $ionicModal, $ionicViewService, $ionicPopup, FooseyService, SettingsService)
+  function SettingsController($scope, FooseyService, SettingsService)
   {
     // send to login screen if they haven't logged in yet
     if (!SettingsService.loggedIn) SettingsService.logOut();
