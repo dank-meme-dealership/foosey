@@ -140,6 +140,12 @@ namespace '/v1' do
     json ids.collect { |i| api_game i }
   end
 
+  # Badges
+  # All Players
+  get '/badges' do
+    json badges
+  end
+
   # All Games / Multiple Games
   get '/games' do
     # set params and their defaults1

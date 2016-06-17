@@ -61,6 +61,13 @@ describe 'Foosey API' do
       expect(last_response.jbody).to include('error' => true)
     end
 
+    it 'get badges' do
+      get '/v1/badges'
+      expect(last_response).to be_ok
+      expect(last_response.jbody).to have_at_least(1).players
+      expect(last_response.jbody[0]).to have_key('badges')
+    end
+
     it 'get games from valid player', slow: true do
       get '/v1/players/2/games'
       expect(last_response).to be_ok

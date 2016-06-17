@@ -131,6 +131,52 @@ def app_dir
   end
 end
 
+# returns array of players and their badges in a given league
+def badges(league_id = 1)
+  # get players
+  players = player_ids league_id
+  badges = Hash.new { |h, k| h[k] = [] }
+
+  # fire badge
+  # best daily change
+  fire_id = players.max_by { |p| daily_elo_change(p, league_id) }
+  fire_id = nil if daily_elo_change(fire_id) == 0
+  badges[fire_id] << '🔥'
+
+  # poop badge
+  # worst daily change
+  poop_id = players.min_by { |p| daily_elo_change(p, league_id) }
+  poop_id = nil if daily_elo_change(poop_id) == 0
+  badges[poop_id] << '💩'
+
+  # baby badge
+  # 10-15 games played
+  babies = players.select do |p|
+    games_with_player(p, league_id).length.between?(10, 15)
+  end
+  babies.each { |b| badges[b] << '👶' }
+
+  # monkey badge
+  # won last game but elo went down
+
+  # toilet badge
+  # last skunk (lost w/ 0 points)
+
+  # 5 badge
+  # 5-win streak
+
+  # 10 badge
+  # 10-win streak
+
+  # build hash
+  badges.collect do |k, v|
+    {
+      playerID: k,
+      badges: v
+    }
+  end
+end
+
 # returns the respective elo deltas given two ratings and two scores
 def elo_delta(rating_a, score_a, rating_b, score_b,
               k_factor, win_weight, max_score)
