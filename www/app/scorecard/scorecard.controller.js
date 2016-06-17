@@ -94,10 +94,10 @@
 			};
 		}
 
-		function info(message)
+		function info(title, message)
 		{
 			$ionicPopup.alert({
-				title: 'Wanna know what that is?',
+				title: title,
         template: '<div style="text-align: center;">' + message + '</div>'
       });
 		}
