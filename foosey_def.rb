@@ -194,7 +194,7 @@ def badges(league_id = 1)
   # hasn't played a game in 2 weeks
   sleepers = players.select do |p|
     games = games_with_player(p, league_id)
-    next if games.empty?
+    next if games.length < 10
     last_game = api_game(games.first, league_id)
     Time.now.to_i - last_game[:timestamp] > 1_209_600 # 2 weeks
   end
