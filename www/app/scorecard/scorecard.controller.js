@@ -23,7 +23,6 @@
       if (!SettingsService.loggedIn) SettingsService.logOut();
       setUpPlayer();
       setUpRecentGames();
-      setUpCharts();
     });
 
     function setUpPlayer()
@@ -32,6 +31,7 @@
 			FooseyService.getPlayer($stateParams.playerID).then(
 				function(response){
 					$scope.player = response.data;
+      		setUpCharts();
 				});
     }
 
@@ -69,22 +69,12 @@
 						$scope.error = true;
 					});
 			}
-			// FooseyService.getWinRateHistory($stateParams.playerID).then(
-			// 	function successCallback(response)
-			// 	{
-			// 		// Get chart data
-			// 		var chartData = response.data;
-
-			// 		// Set up Win Rate chart
-			// 		$scope.charts.push(getPercentChartOptions(_.pluck(chartData, 'winRate'), _.pluck(chartData, 'date')));
-			// 	});
 		}
 
 		// define options for the ELO Rating chart
 		function getEloChartOptions(data, dates)
 		{
 			return {
-				title: 'Elo Rating',
 				subtitle: $scope.subtitle,
 				yAxis: 'Elo',
 				class: 'elo',

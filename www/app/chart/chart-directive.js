@@ -9,7 +9,11 @@
     return {
       restrict: 'E',
       templateUrl: 'app/chart/chart.html',
-      scope: { options: '=' },
+      scope: { 
+        options: '=',
+        player: '=',
+        showTitle: '='
+      },
       controller: controller
     }
   }

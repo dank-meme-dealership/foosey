@@ -2,26 +2,32 @@
 	<ion-nav-title>{{player.displayName}}</ion-nav-title>
 	
 	<ion-content class="background" has-bouncing="true">
-		
-		<!-- Player header -->
-		<div class="background-foos player-header">
-			<!-- <div class="player-title">{{player.name | capitalize}}</div> -->
-			<div class="space-around">
-				<div ng-show="settings.showElo" class="player-stat">{{player.elo}}<br>Elo Rating</div>
-				<div class="player-stat">{{player.winRate * 100 | number:1}}%<br>Win %</div>
-			</div>
-		</div>
 
-		<!-- link to other stats -->
-		<!-- <ion-item class="card" href="#/app/team-stats">
-			<div class="spaced-out">
-				<div class="ion-stats-bars space">See team statistics</div>
-				<div class="ion-ios-arrow-forward"></div>
-			</div>
-		</ion-item> -->
+    <!-- show loading while waiting -->
+    <div class="card" ng-show="settings.showElo && charts.length < 1">
+      <ion-item class="center">
+        <div ng-show="!error">
+          Loading charts<br>
+          <ion-spinner class="center dark" icon="lines"></ion-spinner>
+        </div>
+        <div ng-show="error">Can't connect to server :(</div>
+      </ion-item>
+    </div>
+    
+    <!-- set up charts -->
+    <chart ng-repeat="chart in charts" options="chart" player="player" show-title="true"></chart>
+
+    <!-- link to other stats -->
+    <!-- <ion-item class="card" href="#/app/team-stats">
+      <div class="spaced-out">
+        <div class="ion-stats-bars space">See team statistics</div>
+        <div class="ion-ios-arrow-forward"></div>
+      </div>
+    </ion-item> -->
 
 		<!-- additional stats -->
 		<div class="card">
+      <div class="item item-divider">Stats</div>
 			<!-- Total Games -->
 			<ion-item class="stat-card">
 				<div>Total Games</div>
@@ -59,20 +65,6 @@
 				<div ng-show="!player">-</div>
 			</ion-item>
 		</div>
-
-		<!-- show loading while waiting -->
-		<div class="card" ng-show="settings.showElo && charts.length < 1">
-			<ion-item class="center">
-				<div ng-show="!error">
-					Loading charts<br>
-					<ion-spinner class="center dark" icon="lines"></ion-spinner>
-				</div>
-				<div ng-show="error">Can't connect to server :(</div>
-			</ion-item>
-		</div>
-	  
-		<!-- set up charts -->
-		<chart ng-repeat="chart in charts" options="chart"></chart>
 
 		<!-- Recent games, shitty code -->
 		<div class="card">

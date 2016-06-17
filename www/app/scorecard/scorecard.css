@@ -5,10 +5,9 @@
 .player-stat
 {
 	font-weight: bold;
-	font-size: 24px;
+	font-size: 36px;
   line-height: normal;
 	text-align: center;
-	text-shadow: 2px 2px #000000;
 }
 .player-title
 {
