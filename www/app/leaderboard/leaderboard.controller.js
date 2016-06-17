@@ -58,7 +58,7 @@
           localStorage.setObject('winRates', $scope.winRates);
           $scope.error = false;
           
-          BadgesService.updateBadges(players);
+          // BadgesService.updateBadges(players);
 
           done();
         }, 

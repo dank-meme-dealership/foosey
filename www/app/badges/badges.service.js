@@ -9,15 +9,17 @@
   function BadgesService(FooseyService)
   {
     var skunks = [];
+    var streaks = [];
+    var againstOddsList = [];
     var max = 0;
     var min = 0;
-    var streaks = [];
 
     var service = {
       skunk: skunk,
       highest: highest,
       lowest: lowest,
       streak: streak,
+      againstOdds: againstOdds,
       updateBadges: updateBadges
     }
 
@@ -41,6 +43,11 @@
     function streak(playerID)
     {
       return streaks.length > 0 ? streaks[playerID - 1] : 0;
+    }
+
+    function againstOdds(playerID)
+    {
+      return againstOddsList.length > 0 ? againstOddsList[playerID - 1] : 0;
     }
 
     function updateBadges()
@@ -75,6 +82,7 @@
         function(response)
         {
           streaks = _.times(response.length, _.constant(0));
+          againstOdds = _.times(response.length, _.constant(false));
 
           _.each(response, function(player)
           {
@@ -82,6 +90,7 @@
             min = player.dailyChange < min ? player.dailyChange : min;
 
             updateStreak(player);
+            updateAgainstOdds(player);
           })
         });
     }
@@ -93,13 +102,30 @@
         {
           _.each(response.data, function(game)
             {
-              var winningTeam = game.teams[0];
-              if (_.includes(_.map(winningTeam.players, 'playerID'), player.playerID))
+              if (winner(player, game))
                 streaks[player.playerID - 1]++
               else
                 return false;
             });
         });
+    }
+
+    function updateAgainstOdds(player)
+    {
+      FooseyService.getPlayerGames(player.playerID, 1).then(
+        function(response)
+        {
+          if (response.data.length === 0) return
+          var losingTeam = response.data[0].teams[response.data[0].teams.length - 1];
+          if (winner(player, response.data[0]) && losingTeam.delta > 0)
+            againstOddsList[player.playerID - 1] = true;
+        });
+    }
+
+    function winner(player, game)
+    {
+      var winningTeam = game.teams[0];
+      return _.includes(_.map(winningTeam.players, 'playerID'), player.playerID);
     }
   }
 })();
