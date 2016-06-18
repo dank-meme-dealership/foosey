@@ -8,7 +8,7 @@
     <ion-item ng-show="!games || games.length === 0">
       Loading...
     </ion-item>
-    <ion-item class="game-item" ng-repeat="game in games" ng-click="show(game.gameID)">
+    <ion-item class="game-item" ng-class="{'highlight' : highlight === game.gameID}" ng-repeat="game in games" ng-click="show(game.gameID)">
       <div class="spaced-out">
         <div ng-repeat="team in game.teams" class="game-score">
           <div ng-repeat="player in team.players">

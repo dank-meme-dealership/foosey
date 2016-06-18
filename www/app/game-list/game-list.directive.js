@@ -10,7 +10,8 @@
       restrict    : 'EA',
       scope       : {
         title : '=',
-        list  : '='
+        list  : '=',
+        highlight: '='
       },
       controller  : controller,
       templateUrl : 'app/game-list/game-list.html'
