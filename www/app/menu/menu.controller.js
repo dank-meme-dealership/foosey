@@ -8,14 +8,7 @@
 
   function MenuController($scope, SettingsService)
   {
-    $scope.playerID = SettingsService.playerID;
-
-    $scope.getPlayerID = getPlayerID;
-
-    function getPlayerID()
-    {
-      return SettingsService.playerID;
-    }
+    $scope.settings = SettingsService;
   }
 
 })();
