@@ -4,9 +4,9 @@
 		.module('scorecard')
 		.controller('ScorecardController', ScorecardController);
 
-	ScorecardController.$inject = ['$scope', '$stateParams', '$ionicPopup', 'localStorage', 'scorecardInfo', 'FooseyService', 'SettingsService'];
+	ScorecardController.$inject = ['$scope', '$state', '$stateParams', '$ionicPopup', 'localStorage', 'scorecardInfo', 'FooseyService', 'SettingsService'];
 
-	function ScorecardController($scope, $stateParams, $ionicPopup, localStorage, scorecardInfo, FooseyService, SettingsService)
+	function ScorecardController($scope, $state, $stateParams, $ionicPopup, localStorage, scorecardInfo, FooseyService, SettingsService)
 	{
 		$scope.settings = SettingsService;
 		$scope.scorecardInfo = scorecardInfo;
@@ -15,6 +15,7 @@
 		$scope.error = false;
 
 		$scope.info = info;
+		$scope.hardReload = hardReload;
 
 		// load on entering view 
     $scope.$on('$ionicView.beforeEnter', function()
@@ -102,6 +103,11 @@
 				title: title,
         template: '<div style="text-align: center;">' + message + '</div>'
       });
+		}
+
+		function hardReload()
+		{
+			location.reload();
 		}
 	}
 })();

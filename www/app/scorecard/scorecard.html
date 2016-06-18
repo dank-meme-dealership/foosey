@@ -1,6 +1,11 @@
 <ion-view>
 	<ion-nav-title>{{player.displayName}}</ion-nav-title>
 	
+  <!-- hard reload -->
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-large ion-refresh" ng-click="hardReload()"></button>
+  </ion-nav-buttons>
+
 	<ion-content class="background" has-bouncing="true">
 
     <!-- show loading while waiting -->

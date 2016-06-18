@@ -16,7 +16,7 @@
             <span 
               ng-show="settings.showElo && player.change !== null"
               ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
-              {{team.delta | eloChange}}
+              ({{team.delta | eloChange}})
             </span>
           </div>
           <div><strong>{{team.score}}</strong></div>

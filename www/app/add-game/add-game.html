@@ -121,7 +121,7 @@
 					<div class="row">
 						<div class="col" ng-repeat="player in response.info.players">
 							<div>{{player.name}}</div>
-							<div>{{player.elo}} {{player.delta | eloChange}}</div>
+							<div>{{player.elo}} ({{player.delta | eloChange}})</div>
 						</div>
 					</div>
 				</ion-item>

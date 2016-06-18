@@ -58,8 +58,7 @@
     return function(input)
     {
       if (input === undefined || input === null) return '';
-      plusOrMinus = input < 0 ? input : '+' + input
-      return '(' + plusOrMinus + ')';
+      return input < 0 ? input : '+' + input;
     }
   }
 
