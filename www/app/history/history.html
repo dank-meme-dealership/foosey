@@ -14,39 +14,16 @@
 		<ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
 	
 		<!-- show loading while waiting -->
-	  <ion-spinner ng-show="!dates && !error" class="loading-dots" icon="lines"></ion-spinner>
+	  <ion-spinner ng-show="!games && !error" class="loading-dots" icon="lines"></ion-spinner>
 	
 	  <!-- Show if error -->
     <div ng-if="error" class="card center">
       <ion-item>Can't connect to server :(</ion-item>
     </div>
 
-		<!-- The full history of games -->
-		<div ng-show="dates" class="card" ng-repeat="games in dates">
-			<ion-list>
-				<div class="item item-divider spaced-out">
-					<div class="history-date">{{games[0].date | toTimestamp | date}}</div>
-					<div>{{games.length}} game<span ng-if="games.length > 1">s</span></div>
-				</div>
-				<ion-item class="game-item" ng-repeat="game in games" ng-click="show(game.gameID)">
-					<!-- <ion-option-button class="button-assertive ion-trash-a"></ion-option-button> -->
-					<div class="spaced-out">
-						<div ng-repeat="team in game.teams" class="game-score">
-							<div ng-repeat="player in team.players">
-								<span ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</span>
-								<span 
-                	ng-show="settings.showElo && player.change !== null"
-                	ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
-                	{{team.delta | eloChange}}
-              	</span>
-							</div>
-							<div><strong>{{team.score}}</strong></div>
-						</div>
-					</div>
-					<div class="time">{{game.timestamp | time:settings.showRelTimes}}</div>
-				</ion-item>
-			</ion-list>
-		</div>
+    <!-- The full history of games -->
+    <game-list list="games"></game-list>
+
 		<!-- Load more games if you reach the bottom -->
 		<ion-infinite-scroll
 			ng-if="!allLoaded && games"

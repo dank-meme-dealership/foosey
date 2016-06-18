@@ -26,14 +26,14 @@
       FooseyService.getGame($stateParams.gameID).then(
         function successCallback(response)
         {
-          $scope.game = response.data;
+          $scope.game = [response.data];
           // only two people in game
-          if ($scope.game.teams.length === 2 && $scope.game.teams[0].players.length === 1)
+          if ($scope.game[0].teams.length === 2 && $scope.game[0].teams[0].players.length === 1)
           {
-            $scope.teams = _.clone($scope.game.teams);
+            $scope.teams = _.clone($scope.game[0].teams);
             $scope.fetching = true;
-            var p1 = $scope.game.teams[0].players[0].playerID;
-            var p2 = $scope.game.teams[1].players[0].playerID;
+            var p1 = $scope.game[0].teams[0].players[0].playerID;
+            var p2 = $scope.game[0].teams[1].players[0].playerID;
             fetchSimilarGames(p1, p2);
           }
         });

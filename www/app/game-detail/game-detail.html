@@ -8,33 +8,14 @@
 
   <ion-content class="background" has-bouncing="true">
 
-    <!-- Shitty copied code, need to erase -->
-    <div class="card">
-      <div class="item item-divider">{{game ? (game.timestamp | date) : 'Loading...'}}</div>
-      <ion-item ng-show="!game">Loading</ion-item>
-      <ion-item class="game-item" ng-show="game">
-        <div class="spaced-out">
-          <div ng-repeat="team in game.teams" class="game-score">
-            <div ng-repeat="player in team.players">
-              <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</span>
-              <span 
-                ng-show="settings.showElo && player.change !== null"
-                ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
-                {{team.delta | eloChange}}
-              </span>
-            </div>
-            <div><strong>{{team.score}}</strong></div>
-          </div>
-        </div>
-        <div class="time">{{game.timestamp | time:settings.showRelTimes}}</div>
-      </ion-item>
-    </div>
+    <!-- This game -->
+    <game-list title="game ? (game[0].timestamp | date) : 'Loading...'" list="game"></game-list>
 
     <!-- Disclaimer -->
     <div class="card" ng-show="game && !fetching">
       <div class="item item-divider">Not Available</div>
         <ion-item ng-show="!games">
-          No history for {{game.teams.length * game.teams[0].players.length}} person games yet!
+          No history for {{game[0].teams.length * game[0].teams[0].players.length}} person games yet!
         </ion-item>
     </div>
 
@@ -58,31 +39,8 @@
       </ion-list>
     </div>
 
-    <!-- Past games, also shitty code -->
-    <div class="card" ng-show="fetching">
-      <ion-list>
-        <div class="item item-divider">Past Games</div>
-        <ion-item ng-show="!games">
-          Loading...
-        </ion-item>
-        <ion-item ng-class="{'highlight' : g.gameID === game.gameID}" class="game-item" ng-repeat="g in games">
-          <div class="spaced-out">
-            <div ng-repeat="team in g.teams" class="game-score">
-              <div ng-repeat="player in team.players">
-                <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</span>
-                <span 
-                  ng-show="settings.showElo && player.change !== null"
-                  ng-class="{'elo-green': team.delta > 0, 'elo-red': team.delta < 0}">
-                  {{team.delta | eloChange}}
-                </span>
-              </div>
-              <div><strong>{{team.score}}</strong></div>
-            </div>
-          </div>
-          <div class="time">{{g.timestamp | date}}, {{g.timestamp | time:settings.showRelTimes}}</div>
-        </ion-item>
-      </ion-list>
-    </div>
+    <!-- Past Games -->
+    <game-list title="'Past Games'" list="games" ng-show="fetching"></game-list>
 
   </ion-content>
 </ion-view>

@@ -1,5 +1,7 @@
 (function()
 {
   angular
-    .module('gameDetail', []);
+    .module('gameDetail', [
+      'gameList'
+    ]);
 })();
