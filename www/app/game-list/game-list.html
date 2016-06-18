@@ -22,7 +22,9 @@
           <div><strong>{{team.score}}</strong></div>
         </div>
       </div>
-      <div class="time">{{game.timestamp | date}}, {{game.timestamp | time:settings.showRelTimes}}</div>
+      <div class="time">
+        <span ng-show="title">{{game.timestamp | date}},</span> {{game.timestamp | time:settings.showRelTimes}}
+      </div>
     </ion-item>
   </ion-list>
 </div>

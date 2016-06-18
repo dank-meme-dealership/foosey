@@ -26,7 +26,7 @@
       FooseyService.getGame($stateParams.gameID).then(
         function successCallback(response)
         {
-          $scope.game = [response.data];
+          $scope.game = response;
           // only two people in game
           if ($scope.game[0].teams.length === 2 && $scope.game[0].teams[0].players.length === 1)
           {

@@ -62,17 +62,29 @@
 
     function getAllGames()
     {
-      return $http.get(url + 'games');
+      return $http.get(url + 'games').then(
+        function (response)
+        {
+          return _.map(response.data, addDateInfo);
+        });
     }
 
     function getGame(gameID)
     {
-      return $http.get(url + 'games/' + gameID);
+      return $http.get(url + 'games/' + gameID).then(
+        function (response)
+        {
+          return _.map([response.data], addDateInfo);
+        });
     }
 
     function getGamesByID(gameIDs)
     {
-      return $http.get(url + 'games?ids=' + gameIDs);
+      return $http.get(url + 'games?ids=' + gameIDs).then(
+        function (response)
+        {
+          return _.map(response.data, addDateInfo);
+        });
     }
 
     function getGames(limit, offset)
@@ -81,7 +93,7 @@
         function (response)
         {
           return _.map(response.data, addDateInfo);
-        });;
+        });
     }
 
     function addDateInfo(game)
