@@ -4,10 +4,10 @@
 	<ion-content class="background" has-bouncing="true">
 
     <!-- show loading while waiting -->
-    <div class="card" ng-show="settings.showElo && charts.length < 1">
+    <div class="card" ng-show="settings.showElo && (!charts || charts.length < 1)">
       <ion-item class="center">
         <div ng-show="!error">
-          Loading charts<br>
+          Loading Elo Chart<br>
           <ion-spinner class="center dark" icon="lines"></ion-spinner>
         </div>
         <div ng-show="error">Can't connect to server :(</div>
