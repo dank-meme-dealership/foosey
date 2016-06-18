@@ -44,6 +44,12 @@
   background: #373E48;
   border-color: #242A38;
 }
+.button-large,
+.button-large .icon:before
+{
+  font-size: 20px !important;
+  margin-right: 2px;
+}
 .card, .list-inset
 {
   margin: 10px;
