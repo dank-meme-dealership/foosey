@@ -1,5 +1,5 @@
 # foosey files
-/foosey.db
+/backend/foosey.db
 
 *.gem
 *.rbc
@@ -17,6 +17,9 @@
 .dat*
 .repl_history
 build/
+
+## Ionic
+platforms/
 
 ## Documentation cache and generated files:
 /.yardoc/
@@ -37,7 +40,3 @@ build/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
-
-foosey.ini
-
-games.csv

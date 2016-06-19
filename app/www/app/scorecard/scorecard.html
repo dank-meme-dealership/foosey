@@ -1,0 +1,77 @@
+<ion-view>
+	<ion-nav-title>{{player.displayName}}</ion-nav-title>
+	
+  <!-- hard reload -->
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-large ion-refresh" ng-click="hardReload()"></button>
+  </ion-nav-buttons>
+
+	<ion-content class="background" has-bouncing="true">
+
+    <!-- show loading while waiting -->
+    <div class="card" ng-show="settings.showElo && (!charts || charts.length < 1)">
+      <ion-item class="center">
+        <div ng-show="!error">
+          Loading Elo Chart<br>
+          <ion-spinner class="center dark" icon="lines"></ion-spinner>
+        </div>
+        <div ng-show="error">Can't connect to server :(</div>
+      </ion-item>
+    </div>
+    
+    <!-- set up charts -->
+    <chart ng-repeat="chart in charts" options="chart" player="player" show-title="true"></chart>
+
+    <!-- link to other stats -->
+    <!-- <ion-item class="card" href="#/app/team-stats">
+      <div class="spaced-out">
+        <div class="ion-stats-bars space">See team statistics</div>
+        <div class="ion-ios-arrow-forward"></div>
+      </div>
+    </ion-item> -->
+
+		<!-- additional stats -->
+		<div class="card">
+      <div class="item item-divider">Stats</div>
+			<!-- Total Games -->
+			<ion-item class="stat-card">
+				<div>Total Games</div>
+				<div ng-show="player">{{player.gamesPlayed }} games</div>
+				<div ng-show="!player">-</div>
+			</ion-item>
+			<!-- Total Singles -->
+			<ion-item class="stat-card">
+				<div>Singles</div>
+				<div ng-show="player">{{player.singlesTotal}} ({{player.singlesWinRate | percentage:1}} wins)</div>
+				<div ng-show="!player">-</div>
+			</ion-item>
+			<!-- Total Doubles -->
+			<ion-item class="stat-card">
+				<div>Doubles</div>
+				<div ng-show="player">{{player.doublesTotal}} ({{player.doublesWinRate | percentage:1}} wins)</div>
+				<div ng-show="!player">-</div>
+			</ion-item>
+			<!-- Ally -->
+			<ion-item class="stat-card">
+				<div ng-click="info('Ally?', scorecardInfo.ally)">
+					Ally
+					<i class="ion-ios-information"></i>
+				</div>
+				<div ng-show="player">{{player.ally | capitalize}} ({{player.allyCount}} games)</div>
+				<div ng-show="!player">-</div>
+			</ion-item>
+			<!-- Nemesis -->
+			<ion-item class="stat-card">
+				<div ng-click="info('Nemesis?', scorecardInfo.nemesis)">
+					Nemesis
+					<i class="ion-ios-information"></i>
+				</div>
+				<div ng-show="player">{{player.nemesis | capitalize}} ({{player.nemesisCount}} games)</div>
+				<div ng-show="!player">-</div>
+			</ion-item>
+		</div>
+
+    <game-list title="'Recent Games'" list="recentGames"></game-list>
+
+	</ion-content>
+</ion-view>

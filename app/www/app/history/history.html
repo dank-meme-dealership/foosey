@@ -1,0 +1,35 @@
+<ion-view>
+	<ion-nav-title>History</ion-nav-title>
+	
+	<!-- show loading on the top right if loading -->
+	<ion-nav-buttons side="right">
+		<button class="button button-clear" ng-if="loading">
+  		<ion-spinner icon="lines" class="dark"></ion-spinner>
+		</button>
+	</ion-nav-buttons>
+
+	<ion-content class="background" has-bouncing="true">
+
+		<!-- pull to refresh -->
+		<ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
+	
+		<!-- show loading while waiting -->
+	  <ion-spinner ng-show="!games && !error" class="loading-dots" icon="lines"></ion-spinner>
+	
+	  <!-- Show if error -->
+    <div ng-if="error" class="card center">
+      <ion-item>Can't connect to server :(</ion-item>
+    </div>
+
+    <!-- The full history of games -->
+    <game-list list="games"></game-list>
+
+		<!-- Load more games if you reach the bottom -->
+		<ion-infinite-scroll
+			ng-if="!allLoaded && games"
+			spinner="lines"
+		  on-infinite="loadMore()"
+		  distance="1%">
+		</ion-infinite-scroll>
+	</ion-content>
+</ion-view>

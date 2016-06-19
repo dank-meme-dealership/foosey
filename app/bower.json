@@ -1,0 +1,9 @@
+{
+  "name": "HelloIonic",
+  "private": "true",
+  "devDependencies": {
+    "angular": "~1.4.7",
+    "angular-touch": "~1.4.7",
+    "ionic": "driftyco/ionic-bower#1.1.0"
+  }
+}

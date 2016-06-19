@@ -1,0 +1,8 @@
+<!-- Wrap the chart in an ion-item -->
+<ion-item class="card" style="padding: 5px 5px 0 5px;">
+  <div class="center chart-title" ng-show="showTitle">
+    <span style="padding-right: 5px">Elo Rating: {{player.elo}}</span>
+    <span ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">({{player.dailyChange | eloChange}} today)</span>
+  </div>
+	<div id="{{options.class}}" class="chart-container"></div>
+</ion-item>

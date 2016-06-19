@@ -1,0 +1,10 @@
+div.badges
+{
+  display: inline-block;
+  margin-right: 4px;
+}
+img.emoji
+{
+  height: 20px;
+  vertical-align: bottom;
+}

@@ -1,0 +1,21 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.matt.foosey"
+        },
+        "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.matt.foosey"
+        },
+        "org.apache.cordova.statusbar": {
+            "PACKAGE_NAME": "com.matt.foosey"
+        }
+    },
+    "dependent_plugins": {}
+}

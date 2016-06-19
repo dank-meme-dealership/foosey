@@ -1,0 +1,144 @@
+<ion-view>
+	<ion-nav-title>{{title}}</ion-nav-title>
+	
+	<!-- Cancel button to return to game select state -->
+	<ion-nav-buttons side="right">
+    <button 
+    	class="button button-clear button-assertive" 
+    	ng-click="reset()">
+    	<div ng-if="state !== 'game-select' && state !== 'saving'">
+    		Cancel
+    	</div>
+    	<ion-spinner 
+    		icon="lines" 
+    		class="dark"
+    		ng-if="saveStatus === 'saving'">
+    	</ion-spinner>
+		</button>
+  </ion-nav-buttons>
+
+	<ion-content class="background" has-bouncing="true">
+	
+		<!-- Selecting the game type -->
+		<div ng-click="gameSelect(type)" class="card center title" ng-repeat="type in gameTypes" ng-show="state === 'game-select'">
+			<ion-item>
+				{{type.name}}
+			</ion-item>
+		</div>
+
+		<!-- score at the top while selecting scores -->
+		<div class="card" ng-show="state !== 'game-select'">
+			<ion-item style="text-align: center">
+				<div class="title">{{type.name}}</div>
+				<div class="spaced-out">
+					<div ng-repeat="team in game" class="game-score">
+						<div ng-repeat="playerID in team.players">
+							{{playerName(playerID)}}
+						</div>
+						<div><strong>{{team.score}}</strong></div>
+					</div>
+				</div>
+			</ion-item>
+		</div>
+	
+		<!-- Player select -->
+		<div ng-show="state === 'player-select'">
+			<!-- show loading while waiting -->
+	  	<ion-spinner ng-show="!players" class="loading-dots" icon="lines"></ion-spinner>
+			<div class="grid-container">
+				<div 
+					class="grid-item item" 
+					ng-class="{'selected': player.selected}"
+					ng-repeat="player in players"
+	  		  ng-click="playerSelect(player)">
+	  		  {{player.displayName | capitalize}}
+	  		</div>
+			</div>
+		</div>
+		
+		<!-- Score select -->
+		<div ng-show="state === 'score-select'">
+			<div class="grid-container">
+				<div 
+					class="grid-item item"
+					ng-class="{'bold': $index === 5 || $index === 0}"
+					ng-repeat="score in scores track by $index"
+	  		  ng-click="scoreSelect(scores.length - 1 - $index)">
+	  		  {{scores.length - 1 - $index}}
+	  		</div>
+			</div>
+		</div>
+	
+		<!-- Confirm the game -->
+		<div ng-show="state === 'confirm'">
+			
+			<!-- Custom times -->
+			<div ng-if="false" ng-click="changeTime()" class="card">
+				<div class="list">
+					<ion-toggle ng-model="useNowTime" toggle-class="toggle-balanced">Use now as timestamp</ion-toggle>
+					<label class="item item-input" ng-if="!useNowTime">
+		        <span class="input-label">Custom Date</span>
+		        <input style="padding: 0" type="text" datepicker ng-model="customDate">
+		      </label>
+					<label class="item item-input" ng-if="!useNowTime">
+		        <span class="input-label">Custom Time</span>
+		        <input style="padding: 0" type="text" datepicker ng-model="customTime">
+		      </label>
+				</div>
+			</div>
+
+			<!-- Save button -->
+			<div ng-click="submit()" class="card">
+				<ion-item class="center">Save</ion-item>
+			</div>
+		</div>
+
+		<!-- Saving the game -->
+		<div ng-show="state === 'saving'">
+
+			<!-- Progress -->
+			<div class="card">
+				<ion-item class="wrap">	
+					<div ng-show="saveStatus === 'saving'">
+						Adding Game...
+					</div>
+					<div ng-show="saveStatus === 'success'">
+						{{response.message}}
+					</div>
+					<div class="ion-close" ng-show="saveStatus === 'failed'">
+						Something went wrong on the server, talk to Matt or Brik.
+					</div>
+					<div ng-show="saveStatus === 'removed'">
+						Game Removed!
+					</div>
+				</ion-item>
+			</div>
+
+			<!-- Elos after game -->
+			<div class="card" ng-show="settings.showElo && response.info">
+				<ion-item class="wrap">
+					<div>Elos after that game:</div>
+					<div class="row">
+						<div class="col" ng-repeat="player in response.info.players">
+							<div>{{player.name}}</div>
+							<div>{{player.elo}} ({{player.delta | eloChange}})</div>
+						</div>
+					</div>
+				</ion-item>
+			</div>
+
+			<!-- Undo button -->
+			<div ng-click="undo()" class="card" ng-show="gameToUndo" >
+				<ion-item class="center">Undo</ion-item>
+			</div>
+
+			<!-- Done button -->
+			<div ng-click="reset()" class="card">
+				<ion-item class="center" ng-click="reset()">
+					Add Another Game
+				</ion-item>
+			</div>
+		</div>
+
+	</ion-content>
+</ion-view>

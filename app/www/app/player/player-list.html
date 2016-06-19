@@ -1,0 +1,19 @@
+<div class="card">
+  <ion-list>
+    <div class="item item-divider">
+      {{title}} <span ng-show="list.length">({{list.length}})</span>
+    </div>
+    <ion-item ng-repeat="player in list" ng-click="openModal(player)">
+      <div style="float:left">
+        {{player.displayName}} 
+        {{player.admin ? '(admin)' : ''}}
+      </div>
+      <div style="float:right" class="ion-edit"></div>
+      <badges ng-if="player.active" style="float:right" player="player"></badges>
+    </ion-item>
+
+    <!-- No players and loading cases -->
+    <ion-item ng-if="!list">Loading...</ion-item>
+    <ion-item ng-if="list.length === 0">No players to show.</ion-item>
+  </ion-list>
+</div>

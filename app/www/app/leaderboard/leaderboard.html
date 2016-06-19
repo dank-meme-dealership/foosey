@@ -1,0 +1,90 @@
+<ion-view>
+  <ion-nav-title>Leaderboard</ion-nav-title>
+  
+  <!-- show loading on the top right if loading -->
+  <ion-nav-buttons side="right">
+    <button class="button button-clear" ng-if="loading">
+      <ion-spinner icon="lines" class="dark"></ion-spinner>
+    </button>
+  </ion-nav-buttons>
+  
+  <!-- Header bar for different leaderboards -->
+  <div class="bar bar-subheader background">
+    <div class="tabs">
+      <a class="tab-item" ng-click="slideTo(0)"
+        ng-class="{active: slide === 0}">{{settings.showElo ? 'Elo Rating' : 'Ranking'}}</a>    
+      <a class="tab-item" ng-click="slideTo(1)"
+        ng-class="{active: slide === 1}">Win Percentage</a>
+    </div>      
+  </div>
+
+  <ion-content class="background has-subheader" has-bouncing="true">
+    <!-- pull to refresh -->
+    <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="updateLeaderboard()"></ion-refresher>
+
+    <!-- Show if error -->
+    <div ng-if="error" class="card center">
+      <ion-item>Can't connect to server :(</ion-item>
+    </div>
+
+    <!-- show loading while waiting -->
+    <ion-spinner ng-show="!elos && !error" class="loading-dots" icon="lines"></ion-spinner>
+
+    <ion-slide-box on-slide-changed="changeSlide($index)" show-pager="false">
+
+      <!-- ELO Ratings -->
+      <ion-slide>
+        <ion-list>
+          <ion-item 
+            class="card"
+            ng-repeat="player in elos" 
+            href="#/app/scorecard/{{player.playerID}}">
+            <div class="spaced-out">
+              <div>
+                <div class="rank">{{player.rank}}</div> 
+                <div class="player-name" ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</div>
+              </div> 
+              <div class="spaced-out">
+                <badges player="player"></badges>
+                <div ng-show="player.disqualified">{{minimumQualified - player.gamesPlayed}} games left to play</div>
+                <div ng-show="settings.showElo && player.qualified"><b>{{player.elo}}</b></div>
+                <div 
+                  ng-show="settings.showElo && player.qualified && !_.isUndefined(player.dailyChange)"
+                  class="elo-change" 
+                  ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">
+                  ({{player.dailyChange | eloChange}})
+                </div>
+                <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
+              </div>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-slide>
+
+      <!-- % Games won -->
+      <ion-slide>
+        <ion-list>
+          <ion-item 
+            class="card"
+            ng-repeat="player in winRates"
+            href="#/app/scorecard/{{player.playerID}}">
+            <div class="spaced-out">
+              <div>
+                <div class="rank">{{$index + 1}}</div> 
+                <div class="player-name" ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</div>
+              </div> 
+              <div class="spaced-out">
+                <!-- Badges -->
+                <badges player="player"></badges>
+                
+                <b>{{player.winRate * 100 | number:1}}%</b>
+                <div class="ion-ios-arrow-forward" style="padding-left:16px"></div>
+              </div>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-slide>
+
+    </ion-slide-box>
+  </ion-content>
+</ion-view>

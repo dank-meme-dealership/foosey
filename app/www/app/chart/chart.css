@@ -1,0 +1,11 @@
+.chart-container
+{
+	height: 250px;
+	margin: 0 auto;
+}
+.chart-title
+{
+  font-size: 20px;
+  line-height: 25px;
+  margin-top: 5px;
+}
