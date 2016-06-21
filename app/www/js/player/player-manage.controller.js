@@ -15,7 +15,7 @@
     $scope.addPlayer = addPlayer;
     $scope.loadPlayers = loadPlayers;
 
-    $ionicModal.fromTemplateUrl('app/player/player-edit.html', {
+    $ionicModal.fromTemplateUrl('js/player/player-edit.html', {
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {

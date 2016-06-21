@@ -15,7 +15,7 @@
         views: {
           menuContent: {
             controller: 'HistoryController',
-            templateUrl: 'app/history/history.html'
+            templateUrl: 'js/history/history.html'
           }
         }
       });

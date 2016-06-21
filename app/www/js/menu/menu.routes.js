@@ -13,7 +13,7 @@
         url         : '/app',
         abstract    : true,
         controller  : 'MenuController',
-        templateUrl : 'app/menu/menu.html'
+        templateUrl : 'js/menu/menu.html'
       });
   }
 })();

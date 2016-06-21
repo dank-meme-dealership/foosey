@@ -12,7 +12,7 @@
         player : '='
       },
       controller  : controller,
-      templateUrl : 'app/badges/badges.html'
+      templateUrl : 'js/badges/badges.html'
     }
 
     return directive;

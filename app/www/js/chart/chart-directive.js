@@ -8,7 +8,7 @@
   {
     return {
       restrict: 'E',
-      templateUrl: 'app/chart/chart.html',
+      templateUrl: 'js/chart/chart.html',
       scope: { 
         options: '=',
         player: '=',

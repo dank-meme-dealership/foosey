@@ -15,7 +15,7 @@
         views: {
           menuContent: {
             controller: 'SettingsController',
-            templateUrl: 'app/settings/settings.html'
+            templateUrl: 'js/settings/settings.html'
           }
         }
       });

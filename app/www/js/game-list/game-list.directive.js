@@ -14,7 +14,7 @@
         highlight: '='
       },
       controller  : controller,
-      templateUrl : 'app/game-list/game-list.html'
+      templateUrl : 'js/game-list/game-list.html'
     }
 
     return directive;

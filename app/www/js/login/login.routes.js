@@ -11,7 +11,7 @@
       {
         url: '/login',
         controller: 'LoginController',
-        templateUrl: 'app/login/login.html'
+        templateUrl: 'js/login/login.html'
       });
   }
 })();

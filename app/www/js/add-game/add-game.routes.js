@@ -1,7 +1,7 @@
 (function()
 {
   angular
-    .module('leaderboard')
+    .module('addGame')
     .config(config);
 
   config.$inject = ['$stateProvider'];
@@ -9,13 +9,13 @@
   function config($stateProvider) 
   {
     $stateProvider
-      .state('app.leaderboard', 
+      .state('app.add-game',
       {
-        url: '/leaderboard',
+        url: '/add-game',
         views: {
           menuContent: {
-            controller: 'LeaderboardController',
-            templateUrl: 'app/leaderboard/leaderboard.html'
+            controller: 'AddGameController',
+            templateUrl: 'js/add-game/add-game.html'
           }
         }
       });

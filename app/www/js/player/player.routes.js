@@ -15,7 +15,7 @@
         views: {
           menuContent: {
             controller: 'PlayerManageController',
-            templateUrl: 'app/player/player-manage.html'
+            templateUrl: 'js/player/player-manage.html'
           }
         }
       });

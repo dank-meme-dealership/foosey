@@ -1,7 +1,7 @@
 (function()
 {
   angular
-    .module('teamStats')
+    .module('scorecard')
     .config(config);
 
   config.$inject = ['$stateProvider'];
@@ -9,13 +9,13 @@
   function config($stateProvider) 
   {
     $stateProvider
-      .state('app.team-stats',
+      .state('app.scorecard',
       {
-        url: '/team-stats',
+        url: '/scorecard/:playerID',
         views: {
           menuContent: {
-            controller: 'TeamStatsController',
-            templateUrl: 'app/team-stats/team-stats.html'
+            controller: 'ScorecardController',
+            templateUrl: 'js/scorecard/scorecard.html'
           }
         }
       });

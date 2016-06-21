@@ -15,7 +15,7 @@
         views: {
           menuContent: {
             controller: 'GameDetailController',
-            templateUrl: 'app/game-detail/game-detail.html'
+            templateUrl: 'js/game-detail/game-detail.html'
           }
         }
       });

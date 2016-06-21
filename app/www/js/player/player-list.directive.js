@@ -14,7 +14,7 @@
         reload: '='
       },
       controller  : controller,
-      templateUrl : 'app/player/player-list.html'
+      templateUrl : 'js/player/player-list.html'
     }
 
     return directive;
@@ -28,7 +28,7 @@
     $scope.editPlayer = editPlayer;
     $scope.toggleActive = toggleActive;
 
-    $ionicModal.fromTemplateUrl('app/player/player-edit.html', {
+    $ionicModal.fromTemplateUrl('js/player/player-edit.html', {
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
