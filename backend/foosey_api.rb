@@ -111,6 +111,25 @@ def api_stats_elo(player_id, league_id = 1)
   end
 end
 
+def api_league(league_name)
+  database do |db|
+    db.results_as_hash = true
+    league = db.get_first_row 'SELECT * FROM League
+                               WHERE LeagueName = :league_name', league_name
+
+    return {
+      error: true,
+      message: "Invalid league name: #{league_name}"
+    } if league.nil?
+
+    return {
+      leagueID: league['LeagueID'],
+      leagueName: league_name
+    }
+    
+  end
+end
+
 namespace '/v1' do
   # Player Information
   # All Players / Multiple Players
@@ -189,6 +208,12 @@ namespace '/v1' do
     end)
   end
 
+  # League lookup
+  get '/leagues/:name' do
+    league_name = params['name']
+    json api_league league_name
+  end
+
   # Adding Objects
   # Add Game
   post '/games' do
@@ -223,6 +248,17 @@ namespace '/v1' do
     json(
       error: false,
       message: 'Player added.'
+    )
+  end
+
+  post '/leagues' do
+    body = JSON.parse request.body.read
+
+    add_league(body['leagueName'])
+
+    json(
+      error: false,
+      message: 'League added.'
     )
   end
 

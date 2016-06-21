@@ -109,6 +109,18 @@ describe 'Foosey API' do
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_at_least(5).games
     end
+
+    it 'get valid league' do
+      get '/v1/leagues/wca-dev'
+      expect(last_response).to be_ok
+      expect(last_response.jbody).to include('leagueID' => 1)
+    end
+
+    it 'get invalid league' do
+      get '/v1/leagues/matt'
+      expect(last_response).to be_ok
+      expect(last_response.jbody).to include('error' => true)
+    end
   end
 
   describe 'Mutators' do
@@ -187,6 +199,14 @@ describe 'Foosey API' do
         slackName: 'testo',
         admin: true,
         active: false
+      }.to_json
+      expect(last_response).to be_ok
+      expect(last_response.jbody).to include('error' => false)
+    end
+
+    it 'add new league' do
+      post '/v1/leagues', {
+        leagueName: 'Testo'
       }.to_json
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => false)
