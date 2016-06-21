@@ -15,6 +15,7 @@
     $scope.player.selected = SettingsService.playerID;
 
     $scope.addTestCard = addTestCard;
+    $scope.update = update;
 
     // load on entering view 
     $scope.$on('$ionicView.beforeEnter', function()
@@ -75,6 +76,15 @@
         success: authenticationSuccess,
         error: authenticationFailure
       });
+    }
+
+    function update()
+    {
+      FooseyService.update().then(
+        function(response)
+        {
+          alert(response.data.text);
+        })
     }
   }
 })();

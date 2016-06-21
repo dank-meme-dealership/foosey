@@ -26,7 +26,8 @@
       addPlayer         : addPlayer,
       editGame          : editGame, 
       editPlayer        : editPlayer,
-      removeGame        : removeGame
+      removeGame        : removeGame,
+      update            : update
     }
 
     // filter is an argument to filter out inactive players
@@ -151,6 +152,11 @@
     function removeGame(gameID)
     {
       return $http.delete(url + 'games/' + gameID);
+    }
+
+    function update()
+    {
+      return $http.post("http://api.foosey.futbol/slack?user_name=matttt&text=update", {});
     }
   }
 })();
