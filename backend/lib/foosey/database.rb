@@ -1,5 +1,5 @@
 module Foosey
-  def Foosey.database
+  def self.database
     @db ||= SQLite3::Database.new 'foosey.db'
 
     yield @db

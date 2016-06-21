@@ -1,12 +1,10 @@
 module Foosey
-  class League
+  class League < Foosey::Cacheable
     def initialize(id = 1)
       @id = id
     end
 
-    def id
-      @id
-    end
+    attr_reader :id
 
     def players
       @players ||= Foosey.database do |db|
@@ -19,9 +17,9 @@ module Foosey
 
     def games
       @games ||= Foosey.database do |db|
-        db.execute('SELECT GameID FROM Game
+        db.execute('SELECT DISTINCT GameID FROM Game
                     WHERE LeagueID = :league_id
-                    ORDER BY Timestamp',
+                    ORDER BY Timestamp DESC',
                    id).flatten
       end
     end

@@ -367,39 +367,6 @@ def player_exists?(name, league_id = 1)
   end
 end
 
-# returns an array of all player ids
-def player_ids(league_id = 1)
-  database do |db|
-    # return id
-    return db.execute('SELECT PlayerID FROM Player
-                       WHERE LeagueID = :league_id
-                       ORDER BY PlayerID',
-                      league_id).flatten
-  end
-end
-
-# returns the id of the winning player (or players) in game with id id
-def winner(game_id, league_id = 1)
-  database do |db|
-    # get max score
-    winner = db.execute('SELECT PlayerID FROM Game
-                         WHERE GameID = :game_id
-                         AND LeagueID = :league_id
-                         AND Score = (
-                           SELECT MAX(Score) FROM Game
-                           WHERE GameID = :game_id
-                           AND LeagueID = :league_id
-                           GROUP BY GameID
-                         )',
-                        game_id, league_id).flatten
-
-    winner = winner.first if winner.length == 1
-
-    # return the winner(s)
-    return winner
-  end
-end
-
 # add a game to the database and update the history tables
 # outcome is hash containing key/value pairs where
 # key = player id

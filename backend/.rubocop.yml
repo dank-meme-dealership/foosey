@@ -1,17 +1,23 @@
 Metrics/AbcSize:
-  Max: 1000 # no max
+  Enabled: false
 
 Metrics/CyclomaticComplexity:
-  Max: 1000 # no max
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
 
 Metrics/LineLength:
   Max: 120
 
 Metrics/MethodLength:
-  Max: 1000 # no max
+  Enabled: false
 
 Metrics/ParameterLists:
-  Max: 1000 # no max
+  Enabled: false
 
 Metrics/PerceivedComplexity:
-  Max: 1000 # no max
+  Enabled: false
+
+Documentation:
+  Enabled: false

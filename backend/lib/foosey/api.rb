@@ -68,12 +68,16 @@ module Foosey
       get '/players/:id/games' do
         id = params['id'].to_i
         limit = params['limit'].to_i if params['limit']
-        ids = games_with_player id
+        offset = params['offset'].to_i if params['offset']
+        ids = Player.new(id).games
         limit ||= ids.length
+        offset ||= 0
 
-        ids = ids[0, limit]
+        ids = ids[offset, limit]
+        # fix if offset is too high, return empty array
+        ids ||= []
 
-        json ids.collect { |i| api_game i }
+        json ids.collect { |id| Game.new(id).to_h }
       end
 
       # Badges
@@ -88,7 +92,7 @@ module Foosey
         ids = params['ids'].split ',' if params['ids']
         limit = params['limit'].to_i if params['limit']
         offset = params['offset'].to_i if params['offset']
-        ids ||= game_ids
+        ids ||= League.new.games
         limit ||= ids.length
         offset ||= 0
 
@@ -96,31 +100,31 @@ module Foosey
         # fix if offset is too high, return empty array
         ids ||= []
 
-        json ids.collect { |id| api_game id }
+        json ids.collect { |id| Game.new(id).to_h }
       end
 
       # One Game
       get '/games/:id' do
         id = params['id'].to_i
-        json api_game id
+        json Game.new(id).to_h
       end
 
       # Statistics
       # Player Elo History
       get '/stats/elo/:id' do
         id = params['id'].to_i
-        json api_stats_elo id
+        json Player.new(id).elo_history
       end
 
       # Players Elo History
       get '/stats/elo' do
         ids = params['ids'].split ',' if params['ids']
-        ids ||= player_ids
+        ids ||= League.new.players
 
         json(ids.collect do |id|
           {
             playerID: id,
-            elos: api_stats_elo(id)
+            elos: Player.new(id).elo_history
           }
         end)
       end

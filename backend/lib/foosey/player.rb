@@ -1,69 +1,73 @@
 module Foosey
-  class Player
+  class Player < Foosey::Cacheable
+    attr_accessor :id
+    attr_accessor :league_id
+    attr_accessor :display_name
+    attr_accessor :slack_name
+    attr_accessor :admin
+    attr_accessor :active
+    attr_accessor :elo
+    attr_accessor :games_played
+    attr_accessor :games_won
+
     def initialize(id)
       @id = id
-    end
 
-    def id
-      @id
-    end
-
-    def league_id
-      @league_id ||= Foosey.database do |db|
-        db.get_first_value 'SELECT LeagueID FROM Player WHERE PlayerID = :id', id
-      end
-    end
-
-    def display_name
-      @display_name ||= Foosey.database do |db|
-        db.get_first_value 'SELECT DisplayName FROM Player WHERE PlayerID = :id', id
-      end
-    end
-
-    def slack_name
-      @slack_name ||= Foosey.database do |db|
-        db.get_first_value 'SELECT SlackName FROM Player WHERE PlayerID = :id', id
+      Foosey.database do |db|
+        db.results_as_hash = true
+        p = db.get_first_row 'SELECT * FROM Player WHERE PlayerID = :id', id
+        @league_id = p['LeagueID']
+        @display_name = p['DisplayName']
+        @slack_name = p['SlackName']
+        @admin = p['Admin'] == 1
+        @active = p['Active'] == 1
+        @elo = p['Elo']
+        @games_played = p['GamesPlayed']
+        @games_won = p['GamesWon']
+        db.results_as_hash = false
       end
     end
 
     def admin?
-      @admin ||= Foosey.database do |db|
-        db.get_first_value('SELECT Admin FROM Player WHERE PlayerID = :id', id) == 1
-      end
+      @admin
     end
 
     def active?
-      @active ||= Foosey.database do |db|
-        db.get_first_value('SELECT Active FROM Player WHERE PlayerID = :id', id) == 1
-      end
-    end
-
-    def elo
-      @elo ||= Foosey.database do |db|
-        db.get_first_value 'SELECT Elo FROM Player WHERE PlayerID = :id', id
-      end
-    end
-
-    def games_played
-      @games_played ||= Foosey.database do |db|
-        db.get_first_value 'SELECT GamesPlayed FROM Player WHERE PlayerID = :id', id
-      end
-    end
-
-    def games_won
-      @games_won ||= Foosey.database do |db|
-        db.get_first_value 'SELECT GamesWon FROM Player WHERE PlayerID = :id', id
-      end
+      @active
     end
 
     def games
       @games ||= Foosey.database do |db|
-        db.execute('SELECT DISTINCT GameID FROM Game WHERE PlayerID = :id', id)
+        db.execute('SELECT DISTINCT GameID FROM Game WHERE PlayerID = :id', id).flatten
       end
     end
 
+    # not caching this because it changes so often
+    def elo_history(games = 30)
+      Foosey.database do |db|
+        db.results_as_hash = true
+        games = db.execute 'SELECT * FROM EloHistory
+                            JOIN (
+                              SELECT PlayerID, GameID, Timestamp FROM Game
+                            )
+                            USING (PlayerID, GameID)
+                            WHERE PlayerID = :player_id
+                            ORDER BY Timestamp DESC
+                            LIMIT 30;', id
+
+        games.collect do |game|
+          {
+            gameID: game['GameID'],
+            timestamp: game['Timestamp'],
+            elo: game['Elo']
+          }
+        end
+      end
+    end
+
+    # not caching this because it changes so often
     def daily_elo_change
-      @daily_elo_change ||= Foosey.database do |db|
+      Foosey.database do |db|
         midnight = DateTime.new(Time.now.year, Time.now.month, Time.now.day,
                                 0, 0, 0, 0).to_time.to_i
         prev = db.get_first_value('SELECT e.Elo FROM EloHistory e
@@ -93,7 +97,7 @@ module Foosey
     end
 
     def extended_stats
-      @extended_stats ||= Foosey.database do |db|
+      @extended_stats ||= Foosey.database do |_db|
         allies = Hash.new(0) # key -> player_id, value -> wins
         nemeses = Hash.new(0) # key -> player_id, value -> losses
         singles_games = 0
@@ -125,17 +129,17 @@ module Foosey
           end
         end
 
-        ally = allies.max_by { |_k, v| v } || ['Nobody', 0]
-        nemesis = nemeses.max_by { |_k, v| v } || ['Nobody', 0]
+        ally = allies.max_by { |_k, v| v }
+        nemesis = nemeses.max_by { |_k, v| v }
         doubles_win_rate = doubles_wins / doubles_games.to_f
         singles_win_rate = singles_wins / singles_games.to_f
         return {
-          ally: Player.new(ally[0]).display_name,
-          allyCount: ally[1],
+          ally: ally ? Player.new(ally[0]).display_name : 'Nobody',
+          allyCount: ally ? ally[1] : 0,
           doublesWinRate: doubles_win_rate.nan? ? nil : doubles_win_rate,
           doublesTotal: doubles_games,
-          nemesis: Player.new(nemesis[0]).display_name,
-          nemesisCount: nemesis[1],
+          nemesis: nemesis ? Player.new(nemesis[0]).display_name : 'Nobody',
+          nemesisCount: nemesis ? nemesis[1] : 0,
           singlesWinRate: singles_win_rate.nan? ? nil : singles_win_rate,
           singlesTotal: singles_games
         }

@@ -1,11 +1,9 @@
 module Foosey
-  class Game
+  class Game < Foosey::Cacheable
+    attr_accessor :id
+
     def initialize(id)
       @id = id
-    end
-
-    def id
-      @id
     end
 
     def players
@@ -16,14 +14,14 @@ module Foosey
 
     def timestamp
       @timestamp ||= Foosey.database do |db|
-        db.execute 'SELECT Timestamp FROM Game WHERE GameID = :id', id
+        db.get_first_value 'SELECT Timestamp FROM Game WHERE GameID = :id', id
       end
     end
 
     def score(player_id)
       @scores ||= {}
       @scores[player_id] ||= Foosey.database do |db|
-        db.execute 'SELECT Score FROM Game WHERE GameID = :id AND PlayerID = :player_id', id, player_id
+        db.get_first_value 'SELECT Score FROM Game WHERE GameID = :id AND PlayerID = :player_id', id, player_id
       end
     end
 
@@ -50,7 +48,7 @@ module Foosey
 
     # array of hashes, each containing array of members (id/name) and team score
     def teams
-      @teams ||= Foosey.database do |db|
+      @teams ||= begin
         rval = []
         players.each do |player_id|
           player = Player.new player_id
@@ -63,7 +61,7 @@ module Foosey
             }
           else
             # team doesn't exist in hash
-            response[:teams] << {
+            rval << {
               players: [{
                 playerID: player.id,
                 displayName: player.display_name
@@ -73,40 +71,31 @@ module Foosey
             }
           end
         end
+        rval
       end
     end
 
     def winners
       @winners ||= Foosey.database do |db|
-        winner = db.execute('SELECT PlayerID FROM Game
-                             WHERE GameID = :id
-                             AND Score = (
-                               SELECT MAX(Score) FROM Game
-                               WHERE GameID = :game_id
-                               GROUP BY GameID
-                             )', id).flatten
-
-        winner = winner.first if winner.length == 1
-
-        # return the winner(s)
-        return winner
+        db.execute('SELECT PlayerID FROM Game
+                    WHERE GameID = :id
+                    AND Score = (
+                      SELECT MAX(Score) FROM Game
+                      WHERE GameID = :id
+                      GROUP BY GameID
+                    )', id).flatten
       end
     end
 
     def losers
       @losers ||= Foosey.database do |db|
-        loser = db.execute('SELECT PlayerID FROM Game
-                            WHERE GameID = :id
-                            AND Score = (
-                              SELECT MIN(Score) FROM Game
-                              WHERE GameID = :game_id
-                              GROUP BY GameID
-                            )', id).flatten
-
-        loser = loser.first if loser.length == 1
-
-        # return the winner(s)
-        return loser
+        db.execute('SELECT PlayerID FROM Game
+                    WHERE GameID = :id
+                    AND Score = (
+                      SELECT MIN(Score) FROM Game
+                      WHERE GameID = :id
+                      GROUP BY GameID
+                    )', id).flatten
       end
     end
 
@@ -119,22 +108,11 @@ module Foosey
     end
 
     def to_h
-      @h ||= Foosey.database do |db|
-        db.results_as_hash = true
-        game = db.execute 'SELECT * FROM Game
-                           JOIN (
-                             SELECT DisplayName, PlayerID FROM Player
-                           )
-                           USING (PlayerID)
-                           WHERE GameID = :id
-                           ORDER BY Score DESC', id
-
-        {
-          gameID: id,
-          timestamp: timestamp,
-          teams: teams
-        }
-      end
+      @h ||= {
+        gameID: id,
+        timestamp: timestamp,
+        teams: teams
+      }
     end
   end
 end

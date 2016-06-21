@@ -8,6 +8,7 @@ require 'sinatra/reloader'
 require 'sqlite3'
 
 require 'foosey/api'
+require 'foosey/cacheable'
 require 'foosey/database'
 require 'foosey/game'
 require 'foosey/league'
