@@ -51,6 +51,7 @@
       // load from local storage
       $scope.elos = localStorage.getObject('elos');
       $scope.winRates = localStorage.getObject('winRates');
+      $scope.loading = true;
 
       // load from server
       FooseyService.getAllPlayers(true).then(

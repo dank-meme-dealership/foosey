@@ -10,7 +10,7 @@
   {
     var loaded = 0;
     var gamesToLoad = 30;
-    $scope.loading = true;
+    $scope.loading = false;
 
     $scope.loadMore = loadMore;
     $scope.refresh = refresh;
@@ -28,6 +28,7 @@
     {
       // load from local storage
       $scope.games = localStorage.getObject('history');
+      $scope.loading = true;
       loaded = 0;
 
       // get most recent games and group by the date
@@ -54,7 +55,8 @@
     // infinite scroll
     function loadMore()
     {
-      console.log("Loading new games starting from " + loaded + " to " + (loaded + gamesToLoad));
+      $scope.loading = true;
+      
       FooseyService.getGames(gamesToLoad, loaded)
       .then(function successCallback(result)
       {
@@ -63,7 +65,6 @@
 
         // push new games to the end of the games list
         $scope.games.push.apply($scope.games, result);
-        console.log("Loaded " + result.length);
         loaded += result.length;
 
         // see if we can load more games or not
