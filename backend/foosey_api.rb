@@ -159,7 +159,7 @@ namespace '/v1' do
   end
 
   # Badges
-  # All Players
+  # All Badges
   get '/badges' do
     json badges
   end
