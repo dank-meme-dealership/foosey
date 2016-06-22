@@ -490,7 +490,7 @@ def player_elos(league_id = 1)
     return db.execute('SELECT DisplayName, Elo from Player
                        WHERE ACTIVE = 1
                        AND LeagueID = :league_id
-                       AND GamesPlayed != 0
+                       AND GamesPlayed >= 10
                        ORDER BY Elo DESC',
                       league_id)
   end
