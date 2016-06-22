@@ -50,6 +50,10 @@ get '/foosey.db' do
   return File.read('foosey.db')
 end
 
+get '/icon.png' do
+  return send_file 'icon.png'
+end
+
 # options workaround as defined in sinatra-cross_origin gem
 options '*' do
   response.headers['Allow'] = 'HEAD,GET,PUT,POST,DELETE,OPTIONS'
