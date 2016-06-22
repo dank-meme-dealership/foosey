@@ -1,14 +1,14 @@
 module Foosey
   class Player < Foosey::Cacheable
-    attr_accessor :id
-    attr_accessor :league_id
-    attr_accessor :display_name
-    attr_accessor :slack_name
-    attr_accessor :admin
-    attr_accessor :active
-    attr_accessor :elo
-    attr_accessor :games_played
-    attr_accessor :games_won
+    attr_reader :id
+    attr_reader :league_id
+    attr_reader :display_name
+    attr_reader :slack_name
+    attr_reader :admin
+    attr_reader :active
+    attr_reader :elo
+    attr_reader :games_played
+    attr_reader :games_won
 
     def initialize(id)
       @id = id

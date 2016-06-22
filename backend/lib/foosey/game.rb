@@ -1,6 +1,6 @@
 module Foosey
   class Game < Foosey::Cacheable
-    attr_accessor :id
+    attr_reader :id
 
     def initialize(id)
       @id = id
@@ -114,5 +114,55 @@ module Foosey
         teams: teams
       }
     end
+
+    # set the properties of this game via an info hash
+    # this will replace all existing records in the database with regards to this game!
+    # the info hash must contain the following keys:
+    # timestamp: game time
+    # league_id: league ID
+    # outcome: key/value pairs of player_id/score
+    def info=(info)
+      Foosey.database do |db|
+        db.transaction
+        # remove existing data for game
+        db.execute 'DELETE FROM Game WHERE GameID = :id', id
+
+        info[:outcome].each do |player_id, score|
+          db.execute 'INSERT INTO Game VALUES (:id, :player_id, :league_id, :score, :timestamp)',
+                     id, player_id, info[:league_id], score, info[:timestamp]
+        end
+
+        db.commit
+
+        Foosey.recalc(info[:timestamp])
+
+        # remove this game from cache
+        invalidate
+      end
+    end
+
+    # add a game to the database and update the history tables
+    # outcome is hash containing key/value pairs where
+    # key = player id
+    # value = score
+    def create(outcome, league_id = 1, timestamp = nil)
+      id = Foosey.database do |db|
+        1 + (db.get_first_value('SELECT GameID FROM Game ORDER BY GameID DESC LIMIT 1') || 0)
+      end
+      timestamp ||= Time.now.to_i
+
+      game = Game.new(id)
+      game.info = {
+        league_id: league_id,
+        timestamp: timestamp,
+        outcome: outcome
+      }
+
+      game
+    end
+  end
+
+  # recalculate elos/elo history for all games after timestamp
+  def self.recalc(_timestamp = 0, _silent = true)
   end
 end

@@ -379,9 +379,7 @@ def add_game(outcome, timestamp = nil, league_id = 1)
     timestamp ||= Time.now.to_i
     # get next game id
     game_id = 1 + db.get_first_value('SELECT GameID FROM Game
-                                      WHERE LeagueID = :league_id
-                                      ORDER BY GameID DESC LIMIT 1',
-                                     league_id)
+                                      ORDER BY GameID DESC LIMIT 1')
 
     # insert new game into Game table
     outcome.each do |player_id, score|

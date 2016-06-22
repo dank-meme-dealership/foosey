@@ -77,7 +77,7 @@ module Foosey
         # fix if offset is too high, return empty array
         ids ||= []
 
-        json ids.collect { |id| Game.new(id).to_h }
+        json ids.collect { |i| Game.new(i).to_h }
       end
 
       # Badges

@@ -7,11 +7,16 @@ module Foosey
 
   class Cacheable
     def self.new(*args)
-      Foosey.cache[self.name][args[0]] || begin
+      @cache_id = args[0]
+      Foosey.cache[name][args[0]] || begin
         obj = allocate
         obj.send(:initialize, *args)
-        Foosey.cache[self.name][args[0]] = obj
+        Foosey.cache[name][args[0]] = obj
       end
+    end
+
+    def invalidate
+      Foosey.cache[name].delete(@cache_id)
     end
   end
 end
