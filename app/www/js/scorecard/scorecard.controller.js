@@ -4,11 +4,12 @@
 		.module('scorecard')
 		.controller('ScorecardController', ScorecardController);
 
-	ScorecardController.$inject = ['$scope', '$state', '$stateParams', '$ionicPopup', 'localStorage', 'scorecardInfo', 'FooseyService', 'SettingsService'];
+	ScorecardController.$inject = ['$scope', '$state', '$stateParams', '$ionicPopup', 'localStorage', 'scorecardInfo', 'FooseyService', 'SettingsService', 'BadgesService'];
 
-	function ScorecardController($scope, $state, $stateParams, $ionicPopup, localStorage, scorecardInfo, FooseyService, SettingsService)
+	function ScorecardController($scope, $state, $stateParams, $ionicPopup, localStorage, scorecardInfo, FooseyService, SettingsService, BadgesService)
 	{
 		$scope.settings = SettingsService;
+		$scope.badges = BadgesService;
 		$scope.scorecardInfo = scorecardInfo;
 		$scope.recentGames = [];
 		$scope.player = undefined;
@@ -22,6 +23,7 @@
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
+      BadgesService.updateBadges();
       setUpPlayer();
       setUpRecentGames();
     });

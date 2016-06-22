@@ -140,19 +140,19 @@ def badges(league_id = 1)
   # fire badge
   # best daily change
   best_change = players.group_by { |p| daily_elo_change(p, league_id) }.max
-  best_change.last.each { |b| badges[b] << '🔥' } if best_change.first >= 10
+  best_change.last.each { |b| badges[b] << badge('🔥', 'On Fire') } if best_change.first >= 10
 
   # poop badge
   # worst daily change
   worst_change = players.group_by { |p| daily_elo_change(p, league_id) }.min
-  worst_change.last.each { |b| badges[b] << '💩' } if worst_change.first <= -10
+  worst_change.last.each { |b| badges[b] << badge('💩', 'Rough Day') } if worst_change.first <= -10
 
   # baby badge
   # 10-15 games played
   babies = players.select do |p|
     games_with_player(p, league_id).length.between?(10, 15)
   end
-  babies.each { |b| badges[b] << '👶' }
+  babies.each { |b| badges[b] << badge('👶', 'Newly Ranked') }
 
   # monkey badge
   # won last game but elo went down
@@ -163,7 +163,7 @@ def badges(league_id = 1)
     last_game[:teams][0][:delta] < 0 &&
       last_game[:teams][0][:players].any? { |a| a[:playerID] == p }
   end
-  monkeys.each { |b| badges[b] << '🙈' }
+  monkeys.each { |b| badges[b] << badge('🙈', 'Lame Win') }
 
   # toilet badge
   # last skunk (lost w/ 0 points)
@@ -171,7 +171,7 @@ def badges(league_id = 1)
     api_game(g, league_id)[:teams][1][:score] == 0
   end
   toilets = api_game(toilet_game, league_id)[:teams][1][:players] if toilet_game
-  toilets.each { |b| badges[b[:playerID]] << '🚽' }
+  toilets.each { |b| badges[b[:playerID]] << badge('🚽', 'Get Rekt') }
 
   # win streak badges
   # 5 and 10 current win streak
@@ -186,10 +186,10 @@ def badges(league_id = 1)
   end
 
   win_streaks.each do |p, s|
-    badges[p] << '3⃣' if s.between?(3, 4)
-    badges[p] << '5⃣' if s.between?(5, 6)
-    badges[p] << '7⃣' if s.between?(7, 9)
-    badges[p] << '🔟' if s >= 10
+    badges[p] << badge('3⃣', '3 Win Streak') if s.between?(3, 4)
+    badges[p] << badge('5⃣', '5 Win Streak') if s.between?(5, 6)
+    badges[p] << badge('7⃣', '7 Win Streak') if s.between?(7, 9)
+    badges[p] << badge('🔟', '10 Win Streak') if s >= 10
   end
 
   # zzz badge
@@ -200,7 +200,7 @@ def badges(league_id = 1)
     last_game = api_game(games.first, league_id)
     Time.now.to_i - last_game[:timestamp] > 1_209_600 # 2 weeks
   end
-  sleepers.each { |b| badges[b] << '💤' }
+  sleepers.each { |b| badges[b] << badge('💤', 'Snoozin\'') }
 
   # build hash
   badges.collect do |k, v|
@@ -209,6 +209,13 @@ def badges(league_id = 1)
       badges: v
     }
   end
+end
+
+def badge(emoji, definition)
+  {
+    emoji: emoji,
+    definition: definition
+  }
 end
 
 # returns the respective elo deltas given two ratings and two scores

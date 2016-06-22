@@ -126,7 +126,6 @@ def api_league(league_name)
       leagueID: league['LeagueID'],
       leagueName: league_name
     }
-    
   end
 end
 

@@ -4,6 +4,9 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Max: 1000 # no max
 
+Metrics/LineLength:
+  Max: 120
+
 Metrics/MethodLength:
   Max: 1000 # no max
 
