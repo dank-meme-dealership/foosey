@@ -1,7 +1,17 @@
 <ion-view>
 	<ion-nav-title>{{player.displayName}}</ion-nav-title>
 
+  <!-- show loading on the top right if loading -->
+  <ion-nav-buttons side="right">
+    <button class="button button-clear" ng-if="loading">
+      <ion-spinner icon="lines" class="dark"></ion-spinner>
+    </button>
+  </ion-nav-buttons>
+
 	<ion-content class="background" has-bouncing="true">
+
+    <!-- pull to refresh -->
+    <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
 
     <!-- elo chart -->
     <ion-item class="card" style="padding: 5px 5px 0 5px;" ng-show="settings.showElo">
@@ -9,11 +19,8 @@
         <span style="padding-right: 5px">Elo Rating: {{player.elo}}</span>
         <span ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">({{player.dailyChange | eloChange}} today)</span>
       </div>
-      <div class="center" ng-show="!chart">
-        <div ng-show="!error">
-          Loading Elo Chart<br>
-          <ion-spinner class="center dark" icon="lines"></ion-spinner>
-        </div>
+      <div class="padding center" ng-show="!chart">
+        <div ng-show="!error">Loading Elo Chart...</div>
         <div ng-show="error">Can't connect to server :(</div>
       </div>
       <highchart ng-if="chart" id="chart1" config="chart"></highchart>

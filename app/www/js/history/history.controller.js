@@ -70,8 +70,7 @@
         // see if we can load more games or not
         $scope.allLoaded = $scope.games[$scope.games.length - 1].id === 0;
 
-        // broadcast
-        $scope.$broadcast('scroll.infiniteScrollComplete');
+        done();
       })
     }
 

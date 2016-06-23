@@ -8,7 +8,6 @@
 
 	function ScorecardController($scope, $stateParams, $ionicPopup, scorecardInfo, FooseyService, SettingsService, BadgesService)
 	{
-
 		$scope.chart = undefined;
 		$scope.settings = SettingsService;
 		$scope.badges = BadgesService;
@@ -16,18 +15,24 @@
 		$scope.recentGames = [];
 		$scope.player = undefined;
 		$scope.error = false;
+    $scope.loading = false;
 
 		$scope.info = info;
+    $scope.refresh = refresh;
 
 		// load on entering view 
-    $scope.$on('$ionicView.beforeEnter', function()
+    $scope.$on('$ionicView.beforeEnter', refresh);
+
+    function refresh()
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
+      $scope.loading = true;
       BadgesService.updateBadges();
       setUpPlayer();
       setUpRecentGames();
-    });
+      $scope.$broadcast('scroll.refreshComplete');
+    }
 
     function setUpPlayer()
     {
@@ -68,9 +73,11 @@
 
 						// Set up ELO Rating chart
 						$scope.chart = getEloChartOptions(_.map(chartData, 'elo').reverse(), _.map(chartData, 'date').reverse());
+            $scope.loading = false;
 					}, function errorCallback(response)
 					{
 						$scope.error = true;
+            $scope.loading = false;
 					});
 			}
 		}
