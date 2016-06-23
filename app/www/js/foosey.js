@@ -9,7 +9,6 @@
       'sc.twemoji',
 
       'addGame',
-      'datepicker',
       'history',
       'leaderboard',
       'login',

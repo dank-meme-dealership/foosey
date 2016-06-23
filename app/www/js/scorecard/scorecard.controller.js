@@ -4,9 +4,9 @@
 		.module('scorecard')
 		.controller('ScorecardController', ScorecardController);
 
-	ScorecardController.$inject = ['$scope', '$state', '$stateParams', '$ionicPopup', 'localStorage', 'scorecardInfo', 'FooseyService', 'SettingsService', 'BadgesService'];
+	ScorecardController.$inject = ['$scope', '$stateParams', '$ionicPopup', 'scorecardInfo', 'FooseyService', 'SettingsService', 'BadgesService'];
 
-	function ScorecardController($scope, $state, $stateParams, $ionicPopup, localStorage, scorecardInfo, FooseyService, SettingsService, BadgesService)
+	function ScorecardController($scope, $stateParams, $ionicPopup, scorecardInfo, FooseyService, SettingsService, BadgesService)
 	{
 
 		$scope.chart = undefined;

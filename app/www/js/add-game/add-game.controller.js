@@ -4,9 +4,9 @@
 		.module('addGame')
 		.controller('AddGameController', AddGameController);
 
-	AddGameController.$inject = ['$scope', '$rootScope', '$ionicScrollDelegate', 'gameTypes', 'localStorage', 'FooseyService', 'SettingsService'];
+	AddGameController.$inject = ['$scope', '$ionicScrollDelegate', 'gameTypes', 'localStorage', 'FooseyService', 'SettingsService'];
 
-	function AddGameController($scope, $rootScope, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
+	function AddGameController($scope, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
 	{
 		$scope.settings = SettingsService;
 		$scope.gameTypes = gameTypes;
@@ -182,12 +182,6 @@
 			if (state) $scope.state = state;
 			if (title) $scope.title = title;
 			$ionicScrollDelegate.scrollTop();
-
 		}
-
-		$rootScope.$on("$stateChangeSuccess", function() {
-		  reset();
-		});
-
 	}
 })();

@@ -4,15 +4,16 @@
     .module('login')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$scope', '$state', '$ionicViewService', '$ionicPopup', 'SettingsService'];
+  LoginController.$inject = ['$scope', '$ionicPopup', 'SettingsService'];
 
-  function LoginController($scope, $state, $ionicViewService, $ionicPopup, SettingsService)
+  function LoginController($scope, $ionicPopup, SettingsService)
   {
     $scope.team = { text: '' };
 
     $scope.login = login;
     $scope.forgot = forgot;
     $scope.createTeam = createTeam;
+    $scope.createTeamPopup = createTeamPopup;
 
     function login()
     {
@@ -47,6 +48,31 @@
       $ionicPopup.alert({
         title: title,
         template: template
+      });
+    }
+
+    function createTeamPopup()
+    {
+      $ionicPopup.show({
+        title: 'Create Team',
+        subTitle: 'Enter a team name below',
+        template: '<input ng-model="team.text">',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' },
+          {
+            text: '<b>Save</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.team.text) {
+                //don't allow the user to close unless he enters wifi password
+                e.preventDefault();
+              } else {
+                console.log($scope.team.text);
+              }
+            }
+          }
+        ]
       });
     }
   }
