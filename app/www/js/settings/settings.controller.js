@@ -82,6 +82,7 @@
 
     function validate(property, value)
     {
+      value = parseInt(value);
       SettingsService.setProperty(property, (!_.isInteger(value) || value < 1 ? 1 : value))
     }
   }
