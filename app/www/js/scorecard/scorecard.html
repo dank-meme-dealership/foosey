@@ -37,7 +37,7 @@
 
     <!-- badge definitions -->
     <div class="card" ng-show="badges.myBadges(player.playerID).length > 0">
-      <div class="item item-divider">Badges</div>
+      <div class="item item-divider">Current Badges</div>
       <ion-item class="spaced-out" ng-repeat="badge in badges.myBadges(player.playerID)">
         <div ng-bind-html="badge.emoji | twemoji"></div>
         <div>{{badge.definition}}</div>
