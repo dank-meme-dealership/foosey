@@ -3,22 +3,39 @@
 
 	<ion-content class="background" has-bouncing="true">
 		
-    <!-- Settings -->
+    <!-- General -->
     <div class="card">
       <ion-list>
+        <div class="item item-divider">General</div>
 			  <ion-toggle ng-change="settings.toggleShowElo()" ng-model="settings.showElo" toggle-class="toggle-balanced">Show Ranking Points</ion-toggle>
         <ion-toggle ng-change="settings.toggleShowRelTimes()" ng-model="settings.showRelTimes" toggle-class="toggle-balanced">Show Relative Times</ion-toggle>
         <label class="item item-input item-select">
           <div class="input-label">
             {{ !player.selected ? 'Select a player' : 'You are' }}
           </div>
-          <select ng-model="player.selected" ng-options="player.playerID as player.displayName for player in playerSelections"></select>
+          <select ng-model="settings.playerID" ng-change="settings.setProperty('playerID', settings.playerID)" ng-options="player.playerID as player.displayName for player in playerSelections"></select>
         </label>
       </ion-list>
 		</div>
 
-    <!-- Players -->
+    <!-- Scorecard -->
+    <div class="card">
+      <ion-list>
+        <div class="item item-divider">Scorecard</div>
+        <label class="item item-input" ng-show="settings.showElo">
+          <span class="input-label">Elo Chart Games</span>
+          <input class="text-right" ng-change="settings.setProperty('eloChartGames', settings.eloChartGames)" ng-model="settings.eloChartGames" type="number">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Recent Games</span>
+          <input class="text-right" ng-change="settings.setProperty('recentGames', settings.recentGames)" ng-model="settings.recentGames" type="number">
+        </label>
+      </ion-list>
+    </div>
+
+    <!-- Admin -->
     <div class="card" ng-show="settings.isAdmin">
+      <div class="item item-divider">Admin</div>
       <ion-item href="#/app/manage-players">
         <div style="float:left">Manage players</div>
         <div style="float:right" class="ion-ios-arrow-right"></div>
@@ -36,7 +53,7 @@
 
     <!-- Log out -->
     <div class="card">
-      <ion-item ng-click="settings.logOut()" class="center">Log out</ion-item>
+      <ion-item ng-click="settings.logOut()" class="center assertive">Log out</ion-item>
     </div>
 
 	</ion-content>

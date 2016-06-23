@@ -21,9 +21,9 @@
       {
         $window.localStorage[key] = JSON.stringify(value);
       },
-      getObject : function (key)
+      getObject : function (key, defaultValue)
       {
-        return $window.localStorage[key] === "undefined" ? {} : JSON.parse($window.localStorage[key] || '{}');
+        return $window.localStorage[key] === "undefined" ? {} : JSON.parse($window.localStorage[key] || (defaultValue ? defaultValue : '{}'));
       },
       setArray  : function (key, value)
       {

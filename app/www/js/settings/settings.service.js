@@ -9,6 +9,8 @@
 	function SettingsService($state, $ionicHistory, localStorage)
 	{
 		var service = {
+			eloChartGames			: localStorage.getObject('eloChartGames', 30),
+			recentGames				: localStorage.getObject('recentGames', 3),
 			isAdmin						: localStorage.getObject('isAdmin') === 1,
 			showElo						: localStorage.getObject('showElo') !== 0,
 			showRelTimes			: localStorage.getObject('showRelTimes') !== 0,
@@ -17,6 +19,7 @@
 			logOut						: logOut,
 			playerID					: getPlayer(),
 			setPlayer					: setPlayer,
+			setProperty				: setProperty,
 			toggleShowElo 		: toggleShowElo,
 			toggleShowRelTimes: toggleShowRelTimes
 		}
@@ -72,6 +75,12 @@
 		{
 			service.playerID = playerID;
 			localStorage.setObject('playerID', playerID);
+		}
+
+		function setProperty(property, value)
+		{
+			service[property] = value;
+			localStorage.setObject(property, value);
 		}
 
 		function toggleShowElo()

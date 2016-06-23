@@ -42,7 +42,7 @@
     function setUpRecentGames()
     {
     	// set up the player
-			FooseyService.getPlayerGames($stateParams.playerID, 3).then(
+			FooseyService.getPlayerGames($stateParams.playerID, SettingsService.recentGames).then(
 				function(response){
 					$scope.recentGames = response.data;
 				});
@@ -56,7 +56,7 @@
 
 			if ($scope.settings.showElo)
 			{
-				FooseyService.getEloHistory($stateParams.playerID).then(
+				FooseyService.getEloHistory($stateParams.playerID, SettingsService.eloChartGames).then(
 					function successCallback(response)
 					{
 						$scope.error = false;
@@ -79,6 +79,7 @@
 		function getEloChartOptions(data, dates)
 		{
 			return {
+        options: { colors: ['#7CB5EC'] },
         title: {
           text: undefined
         },
@@ -101,15 +102,15 @@
             enableMouseTracking: false
           }
         },
-        plotOptions: {
-          spline: {
-            marker: {
-              radius: 4,
-              lineColor: '#666666',
-              lineWidth: 1
-            }
-          }
-        },
+        // plotOptions: {
+        //   spline: {
+        //     marker: {
+        //       radius: 4,
+        //       lineColor: '#666666',
+        //       lineWidth: 1
+        //     }
+        //   }
+        // },
         series: [{
           marker: {
             symbol: 'diamond'

@@ -11,8 +11,6 @@
     $scope.settings = SettingsService;
     $scope.players = [];
     $scope.playerSelections = [];
-    $scope.player = {};
-    $scope.player.selected = SettingsService.playerID;
 
     $scope.addTestCard = addTestCard;
     $scope.update = update;
@@ -23,12 +21,6 @@
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
       loadPlayers();
-    });
-
-    $scope.$watch('player.selected', function(player)
-    {
-      if (_.isUndefined(player)) return;
-      SettingsService.setPlayer(player);
     });
 
     function loadPlayers()
