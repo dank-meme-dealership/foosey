@@ -139,12 +139,25 @@ module Foosey
           team['players'].each { |p| outcome[p] = team['score'] }
         end
 
-        info = add_game(outcome, body['timestamp'])
+        #TODO: change to :league_id here
+        game = Game.create(outcome, 1, body['timestamp'])
+
+        puts game.inspect
 
         json(
           error: false,
           message: 'Game added.',
-          info: info
+          info: {
+            gameID: game.id,
+            players: game.players.collect do |player_id|
+              player = Player.new(player_id)
+              {
+                name: player.display_name,
+                elo: player.elo,
+                delta: game.delta(player_id)
+              }
+            end
+          }
         )
       end
 
