@@ -102,16 +102,8 @@
             enableMouseTracking: false
           }
         },
-        // plotOptions: {
-        //   spline: {
-        //     marker: {
-        //       radius: 4,
-        //       lineColor: '#666666',
-        //       lineWidth: 1
-        //     }
-        //   }
-        // },
         series: [{
+          name: 'Elo',
           marker: {
             symbol: 'diamond'
           },

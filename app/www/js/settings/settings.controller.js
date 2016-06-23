@@ -14,6 +14,7 @@
 
     $scope.addTestCard = addTestCard;
     $scope.update = update;
+    $scope.validate = validate;
 
     // load on entering view 
     $scope.$on('$ionicView.beforeEnter', function()
@@ -77,6 +78,11 @@
         {
           alert(response.data.text);
         })
+    }
+
+    function validate(property, value)
+    {
+      SettingsService.setProperty(property, (!value || value < 1 ? 1 : value))
     }
   }
 })();
