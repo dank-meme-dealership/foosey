@@ -5,4 +5,4 @@ ionic build ios
 chmod +x modify_plist.sh
 ./modify_plist.sh
 open platforms/ios/Foosey.xcodeproj
-open resourses/ios/icon/
+open resources/ios/icon/
