@@ -82,7 +82,7 @@
 
     function validate(property, value)
     {
-      SettingsService.setProperty(property, (!value || value < 1 ? 1 : value))
+      SettingsService.setProperty(property, (!_.isInteger(value) || value < 1 ? 1 : value))
     }
   }
 })();
