@@ -17,20 +17,13 @@
 			loggedIn					: localStorage.getObject('loggedIn') === 1,
 			logIn 						: logIn,
 			logOut						: logOut,
-			playerID					: getPlayer(),
-			setPlayer					: setPlayer,
+			playerID					: localStorage.getObject('playerID', undefined),
 			setProperty				: setProperty,
 			toggleShowElo 		: toggleShowElo,
 			toggleShowRelTimes: toggleShowRelTimes
 		}
 
 		return service;
-
-		function getPlayer()
-		{
-			var playerID = localStorage.getObject('playerID');
-			return _.isNumber(playerID) ? playerID : undefined;
-		}
 
 		function logIn(admin)
 		{
@@ -61,20 +54,18 @@
 			service.showElo = true;
 			service.showRelTimes = true;
 			service.isAdmin = false;
+			service.eloChartGames	= 30;
+			service.recentGames	= 3;
 
       localStorage.setObject('loggedIn', 0);
       localStorage.setObject('playerID', undefined);
       localStorage.setObject('showElo', undefined);
       localStorage.setObject('showRelTimes', undefined);
       localStorage.setObject('isAdmin', undefined);
+      localStorage.setObject('eloChartGames', 30);
+      localStorage.setObject('recentGames', 3);
 
       $state.go('login');
-		}
-
-		function setPlayer(playerID)
-		{
-			service.playerID = playerID;
-			localStorage.setObject('playerID', playerID);
 		}
 
 		function setProperty(property, value)
