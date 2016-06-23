@@ -54,6 +54,10 @@
 {
   margin: 10px;
 }
+.card .item.item-input input 
+{
+  padding-right: 24px;
+}
 .center
 {
   display: flex;
