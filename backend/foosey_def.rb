@@ -62,7 +62,7 @@ def message_slack(text, attach, url)
     channel: '#foosey',
     text: text,
     attachments: attach,
-    icon_emoji: ':foosey:'
+    icon_url: 'http://foosey.futbol/icon.png'
   }
 
   uri = URI.parse(url)

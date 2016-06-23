@@ -7,7 +7,7 @@ def make_response(response, attachments = [])
     attachments: attachments,
     link_names: '1',
     username: 'Foosey',
-    icon_url: 'http://api.foosey.futbol/icon.png'
+    icon_url: 'http://foosey.futbol/icon.png'
   }
 end
 
