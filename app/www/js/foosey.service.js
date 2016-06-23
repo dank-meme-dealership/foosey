@@ -111,9 +111,9 @@
       return $http.get(url + 'stats/elo');
     }
 
-    function getEloHistory(playerID)
+    function getEloHistory(playerID, limit)
     {
-      return $http.get(url + 'stats/elo/' + playerID).then(
+      return $http.get(url + 'stats/elo/' + playerID + (limit ? '?limit=' + limit : '')).then(
         function(response)
         {
           _.each(response.data, function(point)
