@@ -10,7 +10,6 @@
 
       'addGame',
       'datepicker',
-      'chart',
       'history',
       'leaderboard',
       'login',

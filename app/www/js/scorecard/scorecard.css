@@ -1,3 +1,9 @@
+.chart-title
+{
+  font-size: 20px;
+  line-height: 25px;
+  margin-top: 5px;
+}
 .player-header
 {
 	padding: 20px;

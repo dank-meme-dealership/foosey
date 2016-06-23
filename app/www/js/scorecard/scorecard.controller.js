@@ -8,6 +8,8 @@
 
 	function ScorecardController($scope, $state, $stateParams, $ionicPopup, localStorage, scorecardInfo, FooseyService, SettingsService, BadgesService)
 	{
+
+		$scope.chart = undefined;
 		$scope.settings = SettingsService;
 		$scope.badges = BadgesService;
 		$scope.scorecardInfo = scorecardInfo;
@@ -16,7 +18,6 @@
 		$scope.error = false;
 
 		$scope.info = info;
-		$scope.hardReload = hardReload;
 
 		// load on entering view 
     $scope.$on('$ionicView.beforeEnter', function()
@@ -66,7 +67,7 @@
 						if (chartData.length !== 1) $scope.subtitle += 's';
 
 						// Set up ELO Rating chart
-						$scope.charts.unshift(getEloChartOptions(_.map(chartData, 'elo').reverse(), _.map(chartData, 'date').reverse()));
+						$scope.chart = getEloChartOptions(_.map(chartData, 'elo').reverse(), _.map(chartData, 'date').reverse());
 					}, function errorCallback(response)
 					{
 						$scope.error = true;
@@ -78,25 +79,48 @@
 		function getEloChartOptions(data, dates)
 		{
 			return {
-				subtitle: $scope.subtitle,
-				yAxis: 'Elo',
-				class: 'elo',
-				data: data,
-				dates: dates
-			};
-		}
-
-		// define options for the Win Percentage chart
-		function getPercentChartOptions(data, dates)
-		{
-			return {
-				title: 'Percent Games Won',
-				subtitle: $scope.subtitle,
-				yAxis: 'Percent',
-				class: 'percent',
-				data: data,
-				dates: dates
-			};
+        title: {
+          text: undefined
+        },
+        subtitle: {
+          text: $scope.subtitle
+        },
+        xAxis: {
+          categories: dates
+        },
+        yAxis: {
+          title: {
+            text: 'Elo'
+          }
+        },
+        plotOptions: {
+          line: {
+            dataLabels: {
+              enabled: true
+            },
+            enableMouseTracking: false
+          }
+        },
+        plotOptions: {
+          spline: {
+            marker: {
+              radius: 4,
+              lineColor: '#666666',
+              lineWidth: 1
+            }
+          }
+        },
+        series: [{
+          marker: {
+            symbol: 'diamond'
+          },
+          data: data,
+          showInLegend: false
+        }],
+        size: {
+			  	height: 250
+			  }
+      }
 		}
 
 		function info(title, message)
@@ -105,11 +129,6 @@
 				title: title,
         template: '<div style="text-align: center;">' + message + '</div>'
       });
-		}
-
-		function hardReload()
-		{
-			location.reload();
 		}
 	}
 })();
