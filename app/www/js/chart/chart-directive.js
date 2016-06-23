@@ -28,6 +28,9 @@
         chart: {
           type: 'spline'      
         },
+        credits: {
+          enabled: false
+        },
         title: {
           text: $scope.options.title
         },
@@ -70,9 +73,6 @@
           data: $scope.options.data
         }]
       });
-
-      // Remove link
-      $("text")[$("text").length -1].remove();
     });
   }
 })();
