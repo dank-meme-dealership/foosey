@@ -40,7 +40,7 @@
 			FooseyService.getPlayer($stateParams.playerID).then(
 				function(response){
 					$scope.player = response.data;
-      		setUpCharts();
+      		setUpChart();
 				});
     }
 
@@ -54,10 +54,9 @@
     }
 
 		// set up the charts for the scorecard page
-		function setUpCharts()
+		function setUpChart()
 		{
-			$scope.charts = [];
-			$scope.subtitle = 'Data from the last ';
+			var subtitle = 'Data from the last ';
 
 			if ($scope.settings.showElo)
 			{
@@ -68,11 +67,10 @@
 
 						// Get chart data
 						var chartData = response.data;
-						$scope.subtitle += chartData.length + ' game';
-						if (chartData.length !== 1) $scope.subtitle += 's';
+						subtitle += chartData.length + (chartData.length === 1 ? ' game' : ' games');
 
 						// Set up ELO Rating chart
-						$scope.chart = getEloChartOptions(_.map(chartData, 'elo').reverse(), _.map(chartData, 'date').reverse());
+						$scope.chart = getEloChartOptions(_.map(chartData, 'elo').reverse(), _.map(chartData, 'date').reverse(), subtitle);
             $scope.loading = false;
 					}, function errorCallback(response)
 					{
@@ -83,7 +81,7 @@
 		}
 
 		// define options for the ELO Rating chart
-		function getEloChartOptions(data, dates)
+		function getEloChartOptions(data, dates, subtitle)
 		{
 			return {
         options: { colors: ['#7CB5EC'] },
@@ -91,7 +89,7 @@
           text: undefined
         },
         subtitle: {
-          text: $scope.subtitle
+          text: subtitle
         },
         xAxis: {
           categories: dates
@@ -101,16 +99,9 @@
             text: 'Elo'
           }
         },
-        plotOptions: {
-          line: {
-            dataLabels: {
-              enabled: true
-            },
-            enableMouseTracking: false
-          }
-        },
         series: [{
           name: 'Elo',
+          enableMouseTracking: false,
           marker: {
             symbol: 'diamond'
           },
