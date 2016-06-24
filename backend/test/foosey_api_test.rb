@@ -38,86 +38,86 @@ describe 'Foosey API' do
 
   describe 'Accessors' do
     it 'get players' do
-      get '/v1/players'
+      get '/v1/1/players'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_at_least(2).players
     end
 
     it 'get some players' do
-      get '/v1/players?ids=2,5,6'
+      get '/v1/1/players?ids=2,5,6'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have(3).players
     end
 
     it 'get valid player' do
-      get '/v1/players/2'
+      get '/v1/1/players/2'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('displayName' => 'Brik')
     end
 
     it 'get invalid player' do
-      get '/v1/players/0'
+      get '/v1/1/players/0'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => true)
     end
 
     it 'get badges' do
-      get '/v1/badges'
+      get '/v1/1/badges'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_at_least(1).players
       expect(last_response.jbody[0]).to have_key('badges')
     end
 
     it 'get games from valid player', slow: true do
-      get '/v1/players/2/games'
+      get '/v1/1/players/2/games'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_at_least(2).games
     end
 
     it 'get games', slow: true do
-      get '/v1/games'
+      get '/v1/1/games'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_at_least(2).games
     end
 
     it 'get some games' do
-      get '/v1/games?offset=20&limit=10'
+      get '/v1/1/games?offset=20&limit=10'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have(10).games
     end
 
     it 'get valid game' do
-      get '/v1/games/10'
+      get '/v1/1/games/10'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_key('timestamp')
     end
 
     it 'get invalid game' do
-      get '/v1/games/99999'
+      get '/v1/1/games/99999'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => true)
     end
 
     it 'get elo history' do
-      get '/v1/stats/elo'
+      get '/v1/1/stats/elo'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_at_least(2).players
     end
 
     it 'get elo history for player' do
-      get '/v1/stats/elo/2'
+      get '/v1/1/stats/elo/2'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_at_least(5).games
     end
 
     it 'get valid league' do
-      get '/v1/leagues/wca-dev'
+      get '/v1/1/leagues/wca-dev'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('leagueID' => 1)
     end
 
     it 'get invalid league' do
-      get '/v1/leagues/matt'
+      get '/v1/1/leagues/matt'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => true)
     end
@@ -130,7 +130,7 @@ describe 'Foosey API' do
     end
 
     it 'add new game' do
-      post '/v1/games', {
+      post '/v1/1/games', {
         timestamp: 1_465_916_565,
         teams: [
           {
@@ -148,13 +148,13 @@ describe 'Foosey API' do
       expect(last_response.jbody['info']).to have_key('gameID')
       game_id = last_response.jbody['info']['gameID']
 
-      get "/v1/games/#{game_id}"
+      get "/v1/1/games/#{game_id}"
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('timestamp' => 1_465_916_565)
     end
 
     it 'edit existing game' do
-      put '/v1/games/2', {
+      put '/v1/1/games/2', {
         teams: [
           {
             players: [1],
@@ -169,7 +169,7 @@ describe 'Foosey API' do
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => false)
 
-      get '/v1/games/2'
+      get '/v1/1/games/2'
       expect(last_response).to be_ok
       expect(last_response.jbody).to have_key('teams')
       expect(last_response.jbody['teams']).to have(2).teams
@@ -177,7 +177,7 @@ describe 'Foosey API' do
     end
 
     it 'edit nonexistent game' do
-      put '/v1/games/99999', {
+      put '/v1/1/games/99999', {
         teams: [
           {
             players: [1],
@@ -194,7 +194,7 @@ describe 'Foosey API' do
     end
 
     it 'add new player' do
-      post '/v1/players', {
+      post '/v1/1/players', {
         displayName: 'Testo',
         slackName: 'testo',
         admin: true,
@@ -205,7 +205,7 @@ describe 'Foosey API' do
     end
 
     it 'add new league' do
-      post '/v1/leagues', {
+      post '/v1/1/leagues', {
         leagueName: 'Testo'
       }.to_json
       expect(last_response).to be_ok
@@ -213,19 +213,19 @@ describe 'Foosey API' do
     end
 
     it 'edit existing player' do
-      put '/v1/players/2', {
+      put '/v1/1/players/2', {
         displayName: 'New Brik'
       }.to_json
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => false)
 
-      get '/v1/players/2'
+      get '/v1/1/players/2'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('displayName' => 'New Brik')
     end
 
     it 'edit nonexistent player' do
-      put '/v1/players/0', {
+      put '/v1/1/players/0', {
         displayName: 'Nono'
       }.to_json
       expect(last_response).to be_ok
@@ -233,17 +233,17 @@ describe 'Foosey API' do
     end
 
     it 'remove existing game' do
-      delete '/v1/games/2'
+      delete '/v1/1/games/2'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => false)
 
-      get '/v1/games/2'
+      get '/v1/1/games/2'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => true)
     end
 
     it 'remove nonexistent game' do
-      delete '/v1/games/99999'
+      delete '/v1/1/games/99999'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => true)
     end

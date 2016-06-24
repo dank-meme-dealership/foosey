@@ -2,7 +2,7 @@
 # for more information see API.md
 
 # returns an api object for game with id game_id
-def api_game(game_id, league_id = 1)
+def api_game(game_id, league_id)
   database do |db|
     db.results_as_hash = true
     game = db.execute 'SELECT * FROM Game
@@ -41,7 +41,7 @@ def api_game(game_id, league_id = 1)
             displayName: player['DisplayName']
           }],
           score: player['Score'],
-          delta: elo_change(player['PlayerID'], game_id)
+          delta: elo_change(player['PlayerID'], game_id, league_id)
         }
       end
     end
@@ -51,7 +51,7 @@ def api_game(game_id, league_id = 1)
 end
 
 # returns an api object for player with id player_id
-def api_player(player_id, extended = false, league_id = 1)
+def api_player(player_id, extended, league_id)
   database do |db|
     db.results_as_hash = true
     player = db.get_first_row('SELECT * FROM Player
@@ -76,19 +76,19 @@ def api_player(player_id, extended = false, league_id = 1)
       elo: player['Elo'],
       winRate: win_rate,
       gamesPlayed: player['GamesPlayed'],
-      dailyChange: daily_elo_change(player['PlayerID']),
+      dailyChange: daily_elo_change(player['PlayerID'], league_id),
       admin: player['Admin'] == 1,
       active: player['Active'] == 1
     }
 
-    player.merge! extended_stats(player_id) if extended
+    player.merge! extended_stats(player_id, league_id) if extended
 
     return player
   end
 end
 
 # returns an api object for player elo history
-def api_stats_elo(player_id, limit, league_id = 1)
+def api_stats_elo(player_id, limit, league_id)
   database do |db|
     db.results_as_hash = true
     games = db.execute 'SELECT * FROM EloHistory
@@ -123,6 +123,7 @@ def api_league(league_name)
     } if league.nil?
 
     return {
+      error: false,
       leagueID: league['LeagueID'],
       leagueName: league_name
     }
@@ -130,83 +131,200 @@ def api_league(league_name)
 end
 
 namespace '/v1' do
-  # Player Information
-  # All Players / Multiple Players
-  get '/players' do
-    # set ids to params, or all player ids
-    ids = params['ids'].split ',' if params['ids']
-    ids ||= player_ids
-    json ids.collect { |id| api_player id }
-  end
+  namespace '/:league_id' do
+    # Player Information
+    # All Players / Multiple Players
+    get '/players' do
+      # set ids to params, or all player ids
+      ids = params['ids'].split ',' if params['ids']
+      ids ||= player_ids params['league_id'].to_i
+      json ids.collect { |id| api_player(id, false, params['league_id'].to_i) }
+    end
 
-  # One Player
-  get '/players/:id' do
-    id = params['id'].to_i
-    json api_player(id, true)
-  end
+    # One Player
+    get '/players/:id' do
+      id = params['id'].to_i
+      json api_player(id, true, params['league_id'].to_i)
+    end
 
-  # Game Information
-  # Games a Player Has Played In
-  get '/players/:id/games' do
-    id = params['id'].to_i
-    limit = params['limit'].to_i if params['limit']
-    ids = games_with_player id
-    limit ||= ids.length
+    # Game Information
+    # Games a Player Has Played In
+    get '/players/:id/games' do
+      id = params['id'].to_i
+      limit = params['limit'].to_i if params['limit']
+      ids = games_with_player(id, params['league_id'].to_i)
+      limit ||= ids.length
 
-    ids = ids[0, limit]
+      ids = ids[0, limit]
 
-    json ids.collect { |i| api_game i }
-  end
+      json ids.collect { |i| api_game(i, params['league_id'].to_i) }
+    end
 
-  # Badges
-  # All Badges
-  get '/badges' do
-    json badges
-  end
+    # Badges
+    # All Badges
+    get '/badges' do
+      json badges params['league_id'].to_i
+    end
 
-  # All Games / Multiple Games
-  get '/games' do
-    # set params and their defaults1
-    ids = params['ids'].split ',' if params['ids']
-    limit = params['limit'].to_i if params['limit']
-    offset = params['offset'].to_i if params['offset']
-    ids ||= game_ids
-    limit ||= ids.length
-    offset ||= 0
+    # All Games / Multiple Games
+    get '/games' do
+      # set params and their defaults1
+      ids = params['ids'].split ',' if params['ids']
+      limit = params['limit'].to_i if params['limit']
+      offset = params['offset'].to_i if params['offset']
+      ids ||= game_ids params['league_id'].to_i
+      limit ||= ids.length
+      offset ||= 0
 
-    ids = ids[offset, limit]
-    # fix if offset is too high, return empty array
-    ids ||= []
+      ids = ids[offset, limit]
+      # fix if offset is too high, return empty array
+      ids ||= []
 
-    json ids.collect { |id| api_game id }
-  end
+      json ids.collect { |id| api_game(id, params['league_id'].to_i) }
+    end
 
-  # One Game
-  get '/games/:id' do
-    id = params['id'].to_i
-    json api_game id
-  end
+    # One Game
+    get '/games/:id' do
+      id = params['id'].to_i
+      json api_game(id, params['league_id'].to_i)
+    end
 
-  # Statistics
-  # Player Elo History
-  get '/stats/elo/:id' do
-    id = params['id'].to_i
-    limit = params['limit'].to_i if params['limit']
-    limit ||= 30
-    json api_stats_elo(id, limit)
-  end
+    # Statistics
+    # Player Elo History
+    get '/stats/elo/:id' do
+      id = params['id'].to_i
+      limit = params['limit'].to_i if params['limit']
+      limit ||= 30
+      json api_stats_elo(id, limit, params['league_id'].to_i)
+    end
 
-  # Players Elo History
-  get '/stats/elo' do
-    ids = params['ids'].split ',' if params['ids']
-    ids ||= player_ids
+    # Players Elo History
+    get '/stats/elo' do
+      ids = params['ids'].split ',' if params['ids']
+      ids ||= player_ids params['league_id'].to_i
+      limit = params['limit'].to_i if params['limit']
+      limit ||= 30
 
-    json(ids.collect do |id|
-      {
-        playerID: id,
-        elos: api_stats_elo(id)
-      }
-    end)
+      json(ids.collect do |id|
+        {
+          playerID: id,
+          elos: api_stats_elo(id, limit, params['league_id'].to_i)
+        }
+      end)
+    end
+
+    # Adding Objects
+    # Add Game
+    post '/games' do
+      body = JSON.parse request.body.read
+
+      outcome = {}
+      body['teams'].each do |team|
+        team['players'].each { |p| outcome[p] = team['score'] }
+      end
+
+      info = add_game(outcome, params['league_id'].to_i, body['timestamp'])
+
+      json(
+        error: false,
+        message: 'Game added.',
+        info: info
+      )
+    end
+
+    # Add Player
+    post '/players' do
+      body = JSON.parse request.body.read
+
+      # set some default values
+      admin = body['admin']
+      admin = false if admin.nil?
+      active = body['active']
+      active = true if active.nil?
+
+      add_player(params['league_id'].to_i, body['displayName'], body['slackName'], admin, active)
+
+      json(
+        error: false,
+        message: 'Player added.'
+      )
+    end
+
+    # Editing Objects
+    # Edit Game
+    put '/games/:id' do
+      id = params['id'].to_i
+      body = JSON.parse request.body.read
+
+      unless valid_game?(id, params['league_id'].to_i)
+        return json(
+          error: true,
+          message: 'Invalid game ID: #{id}'
+        )
+      end
+
+      outcome = {}
+      body['teams'].each do |team|
+        team['players'].each { |p| outcome[p] = team['score'] }
+      end
+
+      edit_game(params['league_id'].to_i, id, outcome, body['timestamp'])
+
+      json(
+        error: false,
+        message: 'Game updated.'
+      )
+    end
+
+    # Edit Player
+    put '/players/:id' do
+      id = params['id'].to_i
+      body = JSON.parse request.body.read
+
+      unless valid_player?(id, params['league_id'].to_i)
+        return json(
+          error: true,
+          message: 'Invalid player ID: #{id}'
+        )
+      end
+
+      edit_player(params['league_id'].to_i, id, body['displayName'], body['slackName'],
+                  body['admin'], body['active'])
+
+      json(
+        error: false,
+        message: 'Player updated.'
+      )
+    end
+
+    # Removing Objects
+    # Remove Game
+    delete '/games/:id' do
+      id = params['id'].to_i
+
+      unless valid_game?(id, params['league_id'].to_i)
+        return json(
+          error: true,
+          message: 'Invalid game ID: #{id}'
+        )
+      end
+
+      remove_game(id, params['league_id'].to_i)
+
+      json(
+        error: false,
+        message: 'Game removed.'
+      )
+    end
+
+    post '/recalc' do
+      recalc(params['league_id'].to_i, 0, false)
+
+      json(
+        error: false,
+        message: 'Stats recalculated.'
+      )
+    end
   end
 
   # League lookup
@@ -215,43 +333,7 @@ namespace '/v1' do
     json api_league league_name
   end
 
-  # Adding Objects
-  # Add Game
-  post '/games' do
-    body = JSON.parse request.body.read
-
-    outcome = {}
-    body['teams'].each do |team|
-      team['players'].each { |p| outcome[p] = team['score'] }
-    end
-
-    info = add_game(outcome, body['timestamp'])
-
-    json(
-      error: false,
-      message: 'Game added.',
-      info: info
-    )
-  end
-
-  # Add Player
-  post '/players' do
-    body = JSON.parse request.body.read
-
-    # set some default values
-    admin = body['admin']
-    admin = false if admin.nil?
-    active = body['active']
-    active = true if active.nil?
-
-    add_player(body['displayName'], body['slackName'], admin, active)
-
-    json(
-      error: false,
-      message: 'Player added.'
-    )
-  end
-
+  # add a new league
   post '/leagues' do
     body = JSON.parse request.body.read
 
@@ -260,82 +342,6 @@ namespace '/v1' do
     json(
       error: false,
       message: 'League added.'
-    )
-  end
-
-  # Editing Objects
-  # Edit Game
-  put '/games/:id' do
-    id = params['id'].to_i
-    body = JSON.parse request.body.read
-
-    unless valid_game? id
-      return json(
-        error: true,
-        message: 'Invalid game ID: #{id}'
-      )
-    end
-
-    outcome = {}
-    body['teams'].each do |team|
-      team['players'].each { |p| outcome[p] = team['score'] }
-    end
-
-    edit_game(id, outcome, body['timestamp'])
-
-    json(
-      error: false,
-      message: 'Game updated.'
-    )
-  end
-
-  # Edit Player
-  put '/players/:id' do
-    id = params['id'].to_i
-    body = JSON.parse request.body.read
-
-    unless valid_player? id
-      return json(
-        error: true,
-        message: 'Invalid player ID: #{id}'
-      )
-    end
-
-    edit_player(id, body['displayName'], body['slackName'],
-                body['admin'], body['active'])
-
-    json(
-      error: false,
-      message: 'Player updated.'
-    )
-  end
-
-  # Removing Objects
-  # Remove Game
-  delete '/games/:id' do
-    id = params['id'].to_i
-
-    unless valid_game? id
-      return json(
-        error: true,
-        message: 'Invalid game ID: #{id}'
-      )
-    end
-
-    remove_game(id)
-
-    json(
-      error: false,
-      message: 'Game removed.'
-    )
-  end
-
-  post '/recalc' do
-    recalc(0, false)
-
-    json(
-      error: false,
-      message: 'Stats recalculated.'
     )
   end
 end

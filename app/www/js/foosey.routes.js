@@ -4,7 +4,7 @@
     .module('foosey')
     .config(config);
 
-  function config($stateProvider, $urlRouterProvider, SettingsServiceProvider) 
+  function config($urlRouterProvider, SettingsServiceProvider) 
   { 
     // If they're logged in, default to leaderboard
     if (SettingsServiceProvider.$get().loggedIn)

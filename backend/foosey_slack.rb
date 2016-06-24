@@ -30,7 +30,8 @@ end
 
 # Return Slack-friendly stats output
 def slack_stats
-  elos_s = player_elos.map { |x| x.join(': ') }
+  # Hardcode 1 because it's just us
+  elos_s = player_elos(1).map { |x| x.join(': ') }
 
   stats = [
     {
@@ -57,7 +58,7 @@ def slack(user_name, args)
     slack_stats
   when 'add'
     return succinct_help unless admin? user_name
-    add_player(args[1], args[2])
+    add_player(1, args[1], args[2])
     make_response('Player added!')
   when 'update'
     return succinct_help unless admin? user_name
@@ -66,7 +67,7 @@ def slack(user_name, args)
   when 'recalc'
     return succinct_help unless admin?(user_name)
     puts 'Starting recalc...'
-    recalc
+    recalc(1)
     slack_stats
   else
     succinct_help

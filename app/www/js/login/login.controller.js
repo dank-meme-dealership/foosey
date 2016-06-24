@@ -4,9 +4,9 @@
     .module('login')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$scope', '$ionicPopup', 'SettingsService'];
+  LoginController.$inject = ['$scope', '$ionicPopup', 'FooseyService', 'SettingsService'];
 
-  function LoginController($scope, $ionicPopup, SettingsService)
+  function LoginController($scope, $ionicPopup, FooseyService, SettingsService)
   {
     $scope.team = { text: '' };
 
@@ -17,20 +17,22 @@
 
     function login()
     {
-      if ($scope.team.text.toLowerCase() === 'wca-dev')
-      {
-        SettingsService.logIn(false);
-      }
-      else if ($scope.team.text.toLowerCase() === 'wca-admin')
-      {
-        SettingsService.logIn(true);
-      }
-      else
-      {
-        popupAlert('Invalid Team Name', '<center>You need to enter a valid <br> team name to get started.</center>');
-        $scope.team.text = '';
-        return;
-      }
+      var name = $scope.team.text.toLowerCase();
+
+      FooseyService.getLeague(name === 'wca-admin' ? 'wca-dev' : name).then(
+        function(response)
+        {
+          if (response.data.error) 
+          {
+            popupAlert('Invalid League Name', '<center>You need to enter a valid <br> league name to get started.</center>');
+            $scope.team.text = '';
+            return;
+          }
+          else
+          {
+            SettingsService.logIn(response.data, name === 'wca-admin');
+          }
+        });
     }
 
     function forgot()

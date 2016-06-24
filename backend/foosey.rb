@@ -40,7 +40,7 @@ also_reload "#{script_dir}/foosey_def.rb"
 also_reload "#{script_dir}/foosey_slack.rb"
 also_reload "#{script_dir}/foosey_api.rb"
 
-recalc(0, false) if ARGV.include? 'recalc'
+recalc(1, 0, false) if ARGV.include? 'recalc'
 
 get '/' do
   redirect 'https://github.com/brikr/foosey/blob/master/API.md'
