@@ -337,7 +337,16 @@ namespace '/v1' do
   post '/leagues' do
     body = JSON.parse request.body.read
 
-    add_league(body['leagueName'])
+    league_name = body['leagueName']
+
+    if league_exists? league_name
+      return json(
+        error: true,
+        message: 'League already exists'
+      )
+    end
+
+    add_league(league_name)
 
     json(
       error: false,

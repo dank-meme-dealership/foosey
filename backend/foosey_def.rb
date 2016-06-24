@@ -103,6 +103,17 @@ def valid_player?(player_id, league_id)
   end
 end
 
+# true if league exists
+def league_exists?(league_name)
+  database do |db|
+    league = db.get_first_value 'SELECT * FROM League
+                                 WHERE LeagueName = :league_name',
+                                league_name
+
+    return !league.nil?
+  end
+end
+
 # pull and load
 # hot hot hot deploys
 def update
