@@ -151,19 +151,19 @@ def badges(league_id)
   # fire badge
   # best daily change
   best_change = players.group_by { |p| daily_elo_change(p, league_id) }.max
-  best_change.last.each { |b| badges[b] << badge('🔥', 'On Fire') } if best_change != nil && best_change.first >= 10
+  best_change.last.each { |b| badges[b] << badge('🔥', 'On Fire') } if !best_change.nil? && best_change.first >= 10
 
   # poop badge
   # worst daily change
   worst_change = players.group_by { |p| daily_elo_change(p, league_id) }.min
-  worst_change.last.each { |b| badges[b] << badge('💩', 'Rough Day') } if worst_change != nil && worst_change.first <= -10
+  worst_change.last.each { |b| badges[b] << badge('💩', 'Rough Day') } if !worst_change.nil? && worst_change.first <= -10
 
   # baby badge
   # 10-15 games played
   babies = players.select do |p|
     games_with_player(p, league_id).length.between?(10, 15)
   end
-  babies.each { |b| badges[b] << badge('👶', 'Newly Ranked') } if babies != nil
+  babies.each { |b| badges[b] << badge('👶', 'Newly Ranked') } unless babies.nil?
 
   # monkey badge
   # won last game but elo went down
@@ -174,7 +174,7 @@ def badges(league_id)
     last_game[:teams][0][:delta] < 0 &&
       last_game[:teams][0][:players].any? { |a| a[:playerID] == p }
   end
-  monkeys.each { |b| badges[b] << badge('🙈', 'Lame Win') } if monkeys != nil
+  monkeys.each { |b| badges[b] << badge('🙈', 'Lame Win') } unless monkeys.nil?
 
   # toilet badge
   # last skunk (lost w/ 0 points)
@@ -182,7 +182,7 @@ def badges(league_id)
     api_game(g, league_id)[:teams][1][:score] == 0
   end
   toilets = api_game(toilet_game, league_id)[:teams][1][:players] if toilet_game
-  toilets.each { |b| badges[b[:playerID]] << badge('🚽', 'Get Rekt') } if toilets != nil
+  toilets.each { |b| badges[b[:playerID]] << badge('🚽', 'Get Rekt') } unless toilets.nil?
 
   # win streak badges
   # 5 and 10 current win streak
@@ -542,15 +542,12 @@ def add_game(outcome, league_id, timestamp)
     # get unix time
     timestamp ||= Time.now.to_i
 
-    puts outcome, league_id, timestamp
-
     # get next game id
     game_id = 1 + db.get_first_value('SELECT GameID FROM Game
                                       ORDER BY GameID DESC LIMIT 1')
 
     # insert new game into Game table
     outcome.each do |player_id, score|
-      puts player_id, score
       db.execute 'INSERT INTO Game
                   VALUES
                     (:game_id, :player_id, :league_id, :score, :timestamp)',
@@ -584,7 +581,6 @@ def add_game(outcome, league_id, timestamp)
           }
         end
       }]
-      puts attachments.to_json
       message_slack(text, attachments, slack_url)
     end
 
