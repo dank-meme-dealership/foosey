@@ -13,7 +13,7 @@
           <div class="input-label">
             {{ !player.selected ? 'Select a player' : 'You are' }}
           </div>
-          <select ng-model="settings.playerID" ng-change="settings.setProperty('playerID', settings.playerID)" ng-options="player.playerID as player.displayName for player in playerSelections"></select>
+          <select ng-model="settings.playerID" ng-change="setPlayer(settings.playerID)" ng-options="player.playerID as player.displayName for player in playerSelections"></select>
         </label>
       </ion-list>
 		</div>

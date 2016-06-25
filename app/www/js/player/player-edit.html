@@ -9,10 +9,6 @@
         <span class="input-label">Display Name</span>
         <input class="text-right" placeholder="(required)" ng-model="player.displayName" type="text">
       </label>
-      <label class="item item-input">
-        <span class="input-label">Slack Name</span>
-        <input class="text-right" placeholder="(optional)" ng-model="player.slackName" type="text">
-      </label>
       <ion-toggle ng-model="player.admin" toggle-class="toggle-balanced">Admin</ion-toggle>
       <button class="button button-full" ng-show="player.playerID" ng-click="editPlayer(player)">Update</button>
       <button class="button button-full" ng-class="{'button-assertive' : player.active, 'button-balanced' : !player.active}" ng-show="player.playerID" ng-click="toggleActive(player)">

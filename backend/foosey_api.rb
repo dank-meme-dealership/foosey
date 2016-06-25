@@ -348,9 +348,6 @@ namespace '/v1' do
 
     add_league(league_name)
 
-    json(
-      error: false,
-      message: 'League added.'
-    )
+    json api_league league_name
   end
 end

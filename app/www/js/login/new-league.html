@@ -1,0 +1,14 @@
+<input 
+  class="text-center" 
+  ng-model="newLeague.leagueName" 
+  ng-trim="false" 
+  ng-change="newLeague.leagueName = newLeague.leagueName.replace(leagueChars, '')"
+  placeholder="League Name"
+  type="text">
+<input
+  class="text-center"
+  ng-model="newLeague.playerName" 
+  ng-trim="false" 
+  ng-change="newLeague.playerName = newLeague.playerName.replace(playerChars, '')"
+  placeholder="Your Name"
+  type="text">

@@ -33,17 +33,19 @@
 
       // get most recent games and group by the date
       FooseyService.getGames(gamesToLoad, 0)
-      .then(function successCallback(result) 
+      .then(function successCallback(response) 
       { 
         // get games from server
-        $scope.games = result;
-        loaded += result.length;
+        $scope.games = response;
+        loaded += response.length;
 
         // store them to local storage
         localStorage.setObject('history', $scope.games);
 
-        $scope.error = false;
+        // see if we can load more games or not
+        $scope.allLoaded = response.length === 0;
 
+        $scope.error = false;
         done();
       }, function errorCallback(response)
       {
@@ -58,17 +60,17 @@
       $scope.loading = true;
       
       FooseyService.getGames(gamesToLoad, loaded)
-      .then(function successCallback(result)
+      .then(function successCallback(response)
       {
         // if no games have been loaded yet, we can't do anything
         if (!$scope.games) return;
 
         // push new games to the end of the games list
-        $scope.games.push.apply($scope.games, result);
-        loaded += result.length;
+        $scope.games.push.apply($scope.games, response);
+        loaded += response.length;
 
         // see if we can load more games or not
-        $scope.allLoaded = $scope.games[$scope.games.length - 1].id === 0;
+        $scope.allLoaded = response.length === 0;
 
         done();
       })

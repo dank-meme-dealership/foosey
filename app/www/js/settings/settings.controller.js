@@ -13,6 +13,7 @@
     $scope.playerSelections = [];
 
     $scope.addTestCard = addTestCard;
+    $scope.setPlayer = setPlayer;
     $scope.update = update;
     $scope.validate = validate;
 
@@ -69,6 +70,13 @@
         success: authenticationSuccess,
         error: authenticationFailure
       });
+    }
+
+    function setPlayer(playerID)
+    {
+      var player = _.find($scope.players, function(player){ return player.playerID === playerID; });
+      SettingsService.setProperty('playerID', playerID);
+      SettingsService.setProperty('isAdmin', player.admin ? 1 : 0);
     }
 
     function update()

@@ -10,7 +10,6 @@
 	{
 		var service = {
 			eloChartGames			: localStorage.getObject('eloChartGames', 30),
-			isAdmin						: localStorage.getObject('isAdmin') === 1,
 			leagueID					: localStorage.getObject('leagueID', undefined),
 			loggedIn					: _.isInteger(localStorage.getObject('leagueID')),
 			logIn 						: logIn,
@@ -26,14 +25,8 @@
 
 		return service;
 
-		function logIn(league, admin)
+		function logIn(league)
 		{
-			if (admin) 
-			{
-				service.isAdmin = true;
-				localStorage.setObject('isAdmin', 1);
-			}
-
 			// set the leagueID to localStorage
 			localStorage.setObject('leagueID', league.leagueID);
 			service.leagueID = league.leagueID;
@@ -55,7 +48,6 @@
 			service.playerID = undefined;
 			service.showElo = true;
 			service.showRelTimes = true;
-			service.isAdmin = false;
 			service.eloChartGames	= 30;
 			service.recentGames	= 3;
 			service.leagueID = undefined;
@@ -64,7 +56,6 @@
       localStorage.setObject('playerID', undefined);
       localStorage.setObject('showElo', undefined);
       localStorage.setObject('showRelTimes', undefined);
-      localStorage.setObject('isAdmin', undefined);
       localStorage.setObject('eloChartGames', 30);
       localStorage.setObject('recentGames', 3);
 			localStorage.setObject('leagueID', undefined);
