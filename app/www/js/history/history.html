@@ -22,7 +22,7 @@
     </div>
 
     <!-- Need to add a game -->
-    <div class="card" ng-show="games.length === 0">
+    <div class="card" ng-show="!loading && games.length === 0">
       <div class="item item-divider">
         No games have been logged yet
       </div>
