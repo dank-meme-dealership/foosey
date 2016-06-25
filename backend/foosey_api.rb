@@ -138,6 +138,7 @@ namespace '/v1' do
       # set ids to params, or all player ids
       ids = params['ids'].split ',' if params['ids']
       ids ||= player_ids params['league_id'].to_i
+
       json ids.collect { |id| api_player(id, false, params['league_id'].to_i) }
     end
 
@@ -242,12 +243,9 @@ namespace '/v1' do
       active = body['active']
       active = true if active.nil?
 
-      add_player(params['league_id'].to_i, body['displayName'], body['slackName'], admin, active)
+      new_player = add_player(params['league_id'].to_i, body['displayName'], body['slackName'], admin, active)
 
-      json(
-        error: false,
-        message: 'Player added.'
-      )
+      json api_player(new_player, false, params['league_id'].to_i)
     end
 
     # Editing Objects

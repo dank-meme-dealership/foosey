@@ -594,11 +594,16 @@ end
 # adds a player to the database
 def add_player(league_id, name, slack_name = '', admin = false, active = true)
   database do |db|
-    return db.execute 'INSERT INTO Player
-                       (LeagueID, DisplayName, SlackName, Admin, Active)
-                       VALUES
-                         (:league_id, :name, :slack_name, :admin, :active)',
-                      league_id, name, slack_name, admin ? 1 : 0, active ? 1 : 0
+    db.execute 'INSERT INTO Player
+                (LeagueID, DisplayName, SlackName, Admin, Active)
+                VALUES
+                  (:league_id, :name, :slack_name, :admin, :active)',
+               league_id, name, slack_name, admin ? 1 : 0, active ? 1 : 0
+    return db.get_first_value 'SELECT * from Player
+                               WHERE DisplayName = :name
+                               AND LeagueID = :league_id
+                               COLLATE NOCASE',
+                              name, league_id
   end
 end
 

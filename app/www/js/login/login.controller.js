@@ -8,17 +8,19 @@
 
   function LoginController($scope, $ionicPopup, FooseyService, SettingsService)
   {
-    $scope.league = { text: '' };
+    $scope.league = { text: '', leagueID: '', playerID: '' };
     $scope.newLeague = { leagueName: '', playerName: '' };
+    $scope.players = [];
     $scope.leagueChars = /[^0-9A-Za-z\-]/g;
     $scope.playerChars = /[^A-Za-z'. ]/g;
+    $scope.settings = SettingsService;
 
-    $scope.login = login;
+    $scope.getStarted = getStarted;
     $scope.forgot = forgot;
     $scope.createLeaguePopup = createLeaguePopup;
     $scope.addLeague = addLeague;
 
-    function login()
+    function getStarted()
     {
       var name = $scope.league.text.toLowerCase();
 
@@ -33,9 +35,40 @@
           }
           else
           {
-            SettingsService.logIn(response.data);
+            $scope.league.leagueID = response.data.leagueID;
+            getPlayers(response.data.leagueID);
           }
         });
+    }
+
+    function getPlayers(leagueID)
+    {
+      FooseyService.getAllPlayers(true, leagueID).then(
+        function(response)
+        {
+          $scope.players = response;
+          $scope.league.playerID = response[0].playerID;
+          whoAreYou();
+        });
+    }
+
+    function whoAreYou()
+    {
+      $ionicPopup.show({
+        title: 'Who are you?',
+        templateUrl: 'js/login/pick-player.html',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' },
+          {
+            text: '<b>Ok</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              SettingsService.logIn($scope.league);
+            }
+          }
+        ]
+      });
     }
 
     function forgot()
@@ -88,12 +121,16 @@
           }
           else
           {
-            SettingsService.logIn(response.data);
+            var league = response.data;
             FooseyService.addPlayer(
             {
               displayName: $scope.newLeague.playerName,
               admin: true,
               active: true
+            }, league.leagueID).then(function(response)
+            {
+              league.playerID = response.data.playerID;
+              SettingsService.logIn(league);
             })
           }
         });

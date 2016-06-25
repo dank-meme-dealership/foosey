@@ -31,8 +31,8 @@
 		function logIn(league)
 		{
 			// set the leagueID to localStorage
-			localStorage.setObject('leagueID', league.leagueID);
-			service.leagueID = league.leagueID;
+			setProperty('leagueID', league.leagueID);
+			setProperty('playerID', league.playerID);
 			service.loggedIn = true;
 
 			$ionicHistory.nextViewOptions({
@@ -52,7 +52,6 @@
 			service.loggedIn = false;
 			setProperty('eloChartGames', 30);
 			setProperty('isAdmin', false);
-			setProperty('leagueID', undefined);
 			setProperty('noGamePlayers', true);
 			setProperty('playerID', undefined);
 			setProperty('recentGames', 3);
