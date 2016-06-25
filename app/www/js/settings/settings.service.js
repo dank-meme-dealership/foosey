@@ -9,18 +9,21 @@
 	function SettingsService($state, $ionicHistory, localStorage)
 	{
 		var service = {
+			//Properties
 			eloChartGames			: localStorage.getObject('eloChartGames', 30),
+			isAdmin						: localStorage.getObject('isAdmin', false),
 			leagueID					: localStorage.getObject('leagueID', undefined),
 			loggedIn					: _.isInteger(localStorage.getObject('leagueID')),
-			logIn 						: logIn,
-			logOut						: logOut,
+			noGamePlayers			: localStorage.getObject('noGamePlayers', true),
 			playerID					: localStorage.getObject('playerID', undefined),
 			recentGames				: localStorage.getObject('recentGames', 3),
-			setProperty				: setProperty,
-			showElo						: localStorage.getObject('showElo') !== 0,
-			showRelTimes			: localStorage.getObject('showRelTimes') !== 0,
-			toggleShowElo 		: toggleShowElo,
-			toggleShowRelTimes: toggleShowRelTimes
+			showBadges				: localStorage.getObject('showBadges', true),
+			showElo						: localStorage.getObject('showElo', false),
+			showRelTimes			: localStorage.getObject('showRelTimes', true),
+			//Functions
+			logIn 						: logIn,
+			logOut						: logOut,
+			setProperty				: setProperty
 		}
 
 		return service;
@@ -45,20 +48,17 @@
         disableBack: true
       });
 
-			service.playerID = undefined;
-			service.showElo = true;
-			service.showRelTimes = true;
-			service.eloChartGames	= 30;
-			service.recentGames	= 3;
-			service.leagueID = undefined;
+			// Set all properties to defaults
 			service.loggedIn = false;
-
-      localStorage.setObject('playerID', undefined);
-      localStorage.setObject('showElo', undefined);
-      localStorage.setObject('showRelTimes', undefined);
-      localStorage.setObject('eloChartGames', 30);
-      localStorage.setObject('recentGames', 3);
-			localStorage.setObject('leagueID', undefined);
+			setProperty('eloChartGames', 30);
+			setProperty('isAdmin', false);
+			setProperty('leagueID', undefined);
+			setProperty('noGamePlayers', true);
+			setProperty('playerID', undefined);
+			setProperty('recentGames', 3);
+			setProperty('showBadges', true);
+			setProperty('showElo', false);
+			setProperty('showRelTimes', true);
 
       $state.go('login');
 		}
@@ -67,18 +67,6 @@
 		{
 			service[property] = value;
 			localStorage.setObject(property, value);
-		}
-
-		function toggleShowElo()
-		{
-			service.showElo = localStorage.getObject('showElo') === 0;
-			localStorage.setObject('showElo', service.showElo ? 1 : 0);
-		}
-
-		function toggleShowRelTimes()
-		{
-			service.showRelTimes = localStorage.getObject('showRelTimes') === 0;
-			localStorage.setObject('showRelTimes', service.showRelTimes ? 1 : 0);
 		}
 	}
 })();

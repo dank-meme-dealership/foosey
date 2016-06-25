@@ -45,7 +45,7 @@
                 <div class="player-name" ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</div>
               </div> 
               <div class="spaced-out">
-                <badges player="player"></badges>
+                <badges player="player" ng-if="settings.showBadges"></badges>
                 <div ng-show="player.disqualified">{{minimumQualified - player.gamesPlayed}} games left to play</div>
                 <div ng-show="settings.showElo && player.qualified"><b>{{player.elo}}</b></div>
                 <div 

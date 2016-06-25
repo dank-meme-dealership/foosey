@@ -9,7 +9,7 @@
         {{player.admin ? '(admin)' : ''}}
       </div>
       <div style="float:right" class="ion-edit"></div>
-      <badges ng-if="player.active" style="float:right" player="player"></badges>
+      <badges ng-if="settings.showBadges && player.active" style="float:right" player="player"></badges>
     </ion-item>
 
     <!-- No players and loading cases -->

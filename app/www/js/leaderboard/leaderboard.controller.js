@@ -58,7 +58,7 @@
         function successCallback(players)
         { 
           // Remove people from the leaderboard who haven't played or are inactive
-          var players = _.filter(players, hasPlayed)
+          if (!SettingsService.noGamePlayers) players = _.filter(players, hasPlayed)
 
           $scope.elos = getEloRank(players);
           $scope.winRates = players.sort(sortWinRate);

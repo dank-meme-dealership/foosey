@@ -20,10 +20,12 @@
     return directive;
   }
 
-  controller.$inject = ['$scope', '$ionicModal', 'FooseyService'];
+  controller.$inject = ['$scope', '$ionicModal', 'FooseyService', 'SettingsService'];
 
-  function controller($scope, $ionicModal, FooseyService)
+  function controller($scope, $ionicModal, FooseyService, SettingsService)
   {
+    $scope.settings = SettingsService;
+
     $scope.openModal = openModal;
     $scope.editPlayer = editPlayer;
     $scope.toggleActive = toggleActive;

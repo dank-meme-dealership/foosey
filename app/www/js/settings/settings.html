@@ -7,8 +7,9 @@
     <div class="card">
       <ion-list>
         <div class="item item-divider">General</div>
-			  <ion-toggle ng-change="settings.toggleShowElo()" ng-model="settings.showElo" toggle-class="toggle-balanced">Show Ranking Points</ion-toggle>
-        <ion-toggle ng-change="settings.toggleShowRelTimes()" ng-model="settings.showRelTimes" toggle-class="toggle-balanced">Show Relative Times</ion-toggle>
+			  <ion-toggle ng-change="settings.setProperty('showElo', settings.showElo)" ng-model="settings.showElo" toggle-class="toggle-balanced">Show Ranking Points</ion-toggle>
+        <ion-toggle ng-change="settings.setProperty('showRelTimes', settings.showRelTimes)" ng-model="settings.showRelTimes" toggle-class="toggle-balanced">Show Relative Times</ion-toggle>
+        <ion-toggle ng-change="settings.setProperty('showBadges', settings.showBadges)" ng-model="settings.showBadges" toggle-class="toggle-balanced">Show Badges</ion-toggle>
         <label class="item item-input item-select">
           <div class="input-label">
             {{ !player.selected ? 'Select a player' : 'You are' }}
@@ -17,6 +18,14 @@
         </label>
       </ion-list>
 		</div>
+
+    <!-- Leaderboard -->
+    <div class="card">
+      <ion-list>
+        <div class="item item-divider">Leaderboard</div>
+        <ion-toggle ng-change="settings.setProperty('noGamePlayers', settings.noGamePlayers)" ng-model="settings.noGamePlayers" toggle-class="toggle-balanced">No-Game Players</ion-toggle>
+      </ion-list>
+    </div>
 
     <!-- Scorecard -->
     <div class="card">
