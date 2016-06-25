@@ -4,14 +4,15 @@
     .module('history')
     .controller('HistoryController', HistoryController);
 
-  HistoryController.$inject = ['$scope', 'localStorage', 'FooseyService', 'SettingsService'];
+  HistoryController.$inject = ['$scope', '$state', 'localStorage', 'FooseyService', 'SettingsService'];
 
-  function HistoryController($scope, localStorage, FooseyService, SettingsService)
+  function HistoryController($scope, $state, localStorage, FooseyService, SettingsService)
   {
     var loaded = 0;
     var gamesToLoad = 30;
     $scope.loading = false;
 
+    $scope.addAGame = addAGame;
     $scope.loadMore = loadMore;
     $scope.refresh = refresh;
 
@@ -82,6 +83,11 @@
       $scope.$broadcast('scroll.refreshComplete');
       $scope.$broadcast('scroll.infiniteScrollComplete');
       $scope.loading = false;
+    }
+
+    function addAGame()
+    {
+      $state.go('app.add-game');
     }
   }
 })();

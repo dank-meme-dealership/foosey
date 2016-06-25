@@ -21,6 +21,16 @@
       <ion-item>Can't connect to server :(</ion-item>
     </div>
 
+    <!-- Need to add a game -->
+    <div class="card" ng-show="games.length === 0">
+      <div class="item item-divider">
+        No games have been logged yet
+      </div>
+      <div class="item text-center positive" ng-click="addAGame()">
+        Add your first game
+      </div>
+    </div>
+
     <!-- The full history of games -->
     <game-list list="games"></game-list>
 

@@ -19,8 +19,18 @@
 
 	<ion-content class="background" has-bouncing="true">
 	
+		<!-- Need to add more players -->
+		<div class="card" ng-show="players.length < 2">
+			<div class="item item-divider">
+				Not enough players to add a game
+			</div>
+			<div class="item text-center positive" ng-click="addMorePlayers()">
+				Add More Players
+			</div>
+		</div>
+
 		<!-- Selecting the game type -->
-		<div ng-click="gameSelect(type)" class="card center title" ng-repeat="type in gameTypes" ng-show="state === 'game-select'">
+		<div ng-click="gameSelect(type)" class="card center title" ng-repeat="type in gameTypes" ng-show="state === 'game-select' && players.length >= type.totalPlayers">
 			<ion-item>
 				{{type.name}}
 			</ion-item>

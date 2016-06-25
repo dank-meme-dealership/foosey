@@ -9,10 +9,11 @@
 	function ScorecardController($scope, $stateParams, $ionicPopup, scorecardInfo, FooseyService, SettingsService, BadgesService)
 	{
 		$scope.chart = undefined;
+    $scope.empty = false;
 		$scope.settings = SettingsService;
 		$scope.badges = BadgesService;
 		$scope.scorecardInfo = scorecardInfo;
-		$scope.recentGames = [];
+		$scope.recentGames = undefined;
 		$scope.player = undefined;
 		$scope.error = false;
     $scope.loading = false;
@@ -83,6 +84,7 @@
 		// define options for the ELO Rating chart
 		function getEloChartOptions(data, dates, subtitle)
 		{
+      $scope.empty = data.length === 0;
 			return {
         options: { colors: ['#7CB5EC'] },
         title: {

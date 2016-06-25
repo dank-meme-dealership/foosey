@@ -3,7 +3,7 @@
 
   <!-- show loading on the top right if loading -->
   <ion-nav-buttons side="right">
-    <button class="button button-clear" ng-if="loading">
+    <button class="button button-clear" ng-if="settings.showElo && loading">
       <ion-spinner icon="lines" class="dark"></ion-spinner>
     </button>
   </ion-nav-buttons>
@@ -23,7 +23,8 @@
         <div ng-show="!error">Loading Elo Chart...</div>
         <div ng-show="error">Can't connect to server :(</div>
       </div>
-      <highchart ng-if="chart" id="chart1" config="chart"></highchart>
+      <div ng-show="empty" class="padding center">You haven't played any games yet.</div>
+      <highchart ng-if="chart && !empty" id="chart1" config="chart"></highchart>
     </ion-item>
 
     <!-- link to other stats -->

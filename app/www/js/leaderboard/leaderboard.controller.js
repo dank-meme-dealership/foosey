@@ -4,9 +4,9 @@
     .module('leaderboard')
     .controller('LeaderboardController', LeaderboardController);
 
-  LeaderboardController.$inject = ['$scope', 'localStorage', '$ionicSlideBoxDelegate', 'FooseyService', 'SettingsService', 'BadgesService'];
+  LeaderboardController.$inject = ['$scope', '$state', 'localStorage', '$ionicSlideBoxDelegate', 'FooseyService', 'SettingsService', 'BadgesService'];
 
-  function LeaderboardController($scope, localStorage, $ionicSlideBoxDelegate, FooseyService, SettingsService, BadgesService) 
+  function LeaderboardController($scope, $state, localStorage, $ionicSlideBoxDelegate, FooseyService, SettingsService, BadgesService) 
   {
     $scope.settings = SettingsService;
     $scope.badges = BadgesService;
@@ -16,6 +16,7 @@
     $scope.elos = undefined;
     $scope.winRates = undefined;
 
+    $scope.addAGame = addAGame;
     $scope.updateLeaderboard = updateLeaderboard;
     $scope.changeSlide = changeSlide;
     $scope.slideTo = slideTo;
@@ -132,6 +133,11 @@
     {
       $scope.loading = false;
       $scope.$broadcast('scroll.refreshComplete');
+    }
+
+    function addAGame()
+    {
+      $state.go('app.add-game');
     }
   }
 })();

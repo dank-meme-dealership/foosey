@@ -4,9 +4,9 @@
 		.module('addGame')
 		.controller('AddGameController', AddGameController);
 
-	AddGameController.$inject = ['$scope', '$ionicScrollDelegate', 'gameTypes', 'localStorage', 'FooseyService', 'SettingsService'];
+	AddGameController.$inject = ['$scope', '$state', '$ionicScrollDelegate', 'gameTypes', 'localStorage', 'FooseyService', 'SettingsService'];
 
-	function AddGameController($scope, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
+	function AddGameController($scope, $state, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
 	{
 		$scope.settings = SettingsService;
 		$scope.gameTypes = gameTypes;
@@ -17,6 +17,7 @@
 		$scope.customDate = undefined;
 		$scope.scores = new Array(11);
 
+		$scope.addMorePlayers = addMorePlayers;
 		$scope.gameSelect = gameSelect;
 		$scope.playerSelect = playerSelect;
 		$scope.scoreSelect = scoreSelect;
@@ -182,6 +183,11 @@
 			if (state) $scope.state = state;
 			if (title) $scope.title = title;
 			$ionicScrollDelegate.scrollTop();
+		}
+
+		function addMorePlayers()
+		{
+			$state.go('app.manage-players');
 		}
 	}
 })();

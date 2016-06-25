@@ -11,11 +11,12 @@
     $scope.league = { text: '' };
     $scope.newLeague = { leagueName: '', playerName: '' };
     $scope.leagueChars = /[^0-9A-Za-z\-]/g;
-    $scope.playerChars = /[^A-Za-z' ]/g;
+    $scope.playerChars = /[^A-Za-z'. ]/g;
 
     $scope.login = login;
     $scope.forgot = forgot;
     $scope.createLeaguePopup = createLeaguePopup;
+    $scope.addLeague = addLeague;
 
     function login()
     {
@@ -67,30 +68,35 @@
                 //don't allow the user to save unless he enters league name
                 e.preventDefault();
               } else {
-                FooseyService.addLeague($scope.newLeague.leagueName.toLowerCase()).then(
-                  function(response)
-                  {
-                    $scope.newLeague.leagueName = '';
-                    if (response.data.error)
-                    {
-                      popupAlert('Error', '<div class="text-center">League Already Exists</div>');
-                    }
-                    else
-                    {
-                      SettingsService.logIn(response.data);
-                      FooseyService.addPlayer(
-                      {
-                        displayName: $scope.newLeague.playerName,
-                        admin: true,
-                        active: true
-                      })
-                    }
-                  })
+                $scope.addLeague();
               }
             }
           }
         ]
       });
+    }
+
+    function addLeague()
+    {
+      FooseyService.addLeague($scope.newLeague.leagueName.toLowerCase()).then(
+        function(response)
+        {
+          $scope.newLeague.leagueName = '';
+          if (response.data.error)
+          {
+            popupAlert('Error', '<div class="text-center">League Already Exists</div>');
+          }
+          else
+          {
+            SettingsService.logIn(response.data);
+            FooseyService.addPlayer(
+            {
+              displayName: $scope.newLeague.playerName,
+              admin: true,
+              active: true
+            })
+          }
+        });
     }
   }
 })();
