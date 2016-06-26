@@ -23,7 +23,7 @@
         <div ng-show="!error">Loading Elo Chart...</div>
         <div ng-show="error">Can't connect to server :(</div>
       </div>
-      <div ng-show="empty" class="padding center">{{ settings.playerID === playerID ? 'You' : 'They' }} haven't played any games yet.</div>
+      <div ng-show="empty" class="padding center">{{ settings.playerID == playerID ? 'You' : 'They' }} haven't played any games yet.</div>
       <highchart ng-if="chart && !empty" id="chart1" config="chart"></highchart>
     </ion-item>
 
