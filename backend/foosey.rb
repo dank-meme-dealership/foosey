@@ -50,6 +50,30 @@ get '/foosey.db' do
   return File.read('foosey.db')
 end
 
+get '/matt' do
+  database do |db|
+
+    db.execute('CREATE TABLE Player2 (
+      PlayerID INTEGER,
+      LeagueID INTEGER,
+      DisplayName TEXT,
+      SlackName TEXT,
+      Admin INTEGER DEFAULT 0,
+      Active INTEGER DEFAULT 1,
+      Elo INTEGER DEFAULT 1200,
+      GamesPlayed INTEGER DEFAULT 0,
+      GamesWon INTEGER DEFAULT 0,
+      PRIMARY KEY(PlayerID)
+    );')
+
+    db.execute('INSERT INTO Player2 SELECT * FROM Player;')
+
+    db.execute('DROP TABLE Player;')
+
+    db.execute('ALTER TABLE Player2 RENAME TO Player;')
+  end
+end
+
 # options workaround as defined in sinatra-cross_origin gem
 options '*' do
   response.headers['Allow'] = 'HEAD,GET,PUT,POST,DELETE,OPTIONS'
