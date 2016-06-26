@@ -494,7 +494,7 @@ def player_exists?(name, league_id)
                                  COLLATE NOCASE',
                                 name, league_id
 
-    return true if player
+    return !player.nil?
   end
 end
 
@@ -599,7 +599,7 @@ def add_player(league_id, name, slack_name = '', admin = false, active = true)
                 VALUES
                   (:league_id, :name, :slack_name, :admin, :active)',
                league_id, name, slack_name, admin ? 1 : 0, active ? 1 : 0
-    return db.get_first_value 'SELECT * from Player
+    return db.get_first_value 'SELECT PlayerID from Player
                                WHERE DisplayName = :name
                                AND LeagueID = :league_id
                                COLLATE NOCASE',
@@ -647,7 +647,7 @@ def edit_player(league_id, player_id, display_name = nil, slack_name = nil, admi
                 active = nil)
   database do |db|
     # update the defined fields
-    unless display_name.nil?
+    unless player_exists?(display_name, league_id) || display_name.nil?
       db.execute 'UPDATE Player SET DisplayName = :display_name
                   WHERE PlayerID = :player_id
                   AND LeagueID = :league_id',

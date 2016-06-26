@@ -236,12 +236,20 @@ namespace '/v1' do
     # Add Player
     post '/players' do
       body = JSON.parse request.body.read
+      display_name = body['displayName']
 
       # set some default values
       admin = body['admin']
       admin = false if admin.nil?
       active = body['active']
       active = true if active.nil?
+
+      if player_exists?(display_name, params['league_id'].to_i)
+        return json(
+          error: true,
+          message: 'Player name already exists'
+        )
+      end
 
       new_player = add_player(params['league_id'].to_i, body['displayName'], body['slackName'], admin, active)
 
@@ -278,6 +286,7 @@ namespace '/v1' do
     put '/players/:id' do
       id = params['id'].to_i
       body = JSON.parse request.body.read
+      display_name = body['displayName']
 
       unless valid_player?(id, params['league_id'].to_i)
         return json(
@@ -286,7 +295,7 @@ namespace '/v1' do
         )
       end
 
-      edit_player(params['league_id'].to_i, id, body['displayName'], body['slackName'],
+      edit_player(params['league_id'].to_i, id, display_name, body['slackName'],
                   body['admin'], body['active'])
 
       json(
