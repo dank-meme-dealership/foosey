@@ -247,7 +247,7 @@ namespace '/v1' do
       if player_exists?(display_name, params['league_id'].to_i)
         return json(
           error: true,
-          message: 'Player name already exists'
+          message: 'A player with that name already exists in this league.'
         )
       end
 
@@ -295,13 +295,22 @@ namespace '/v1' do
         )
       end
 
+      exists = player_exists?(display_name, params['league_id'].to_i, id)
+
       edit_player(params['league_id'].to_i, id, display_name, body['slackName'],
                   body['admin'], body['active'])
 
-      json(
-        error: false,
-        message: 'Player updated.'
-      )
+      if exists
+        return json(
+          error: true,
+          message: 'A player with that name already exists in this league. We updated everything else but the name.'
+        )
+      else
+        return json(
+          error: false,
+          message: 'Player updated.'
+        )
+      end
     end
 
     # Removing Objects

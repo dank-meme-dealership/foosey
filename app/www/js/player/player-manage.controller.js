@@ -4,9 +4,9 @@
     .module('player')
     .controller('PlayerManageController', PlayerManageController);
 
-  PlayerManageController.$inject = ['$scope', '$ionicModal', 'FooseyService', 'SettingsService', 'BadgesService'];
+  PlayerManageController.$inject = ['$scope', '$ionicModal', '$ionicPopup', 'FooseyService', 'SettingsService', 'BadgesService'];
 
-  function PlayerManageController($scope, $ionicModal, FooseyService, SettingsService, BadgesService)
+  function PlayerManageController($scope, $ionicModal, $ionicPopup, FooseyService, SettingsService, BadgesService)
   {
     $scope.activePlayers = undefined;
     $scope.inactivePlayers = undefined;
@@ -31,8 +31,16 @@
       loadPlayers();
     });
 
-    function loadPlayers()
+    function loadPlayers(response)
     {
+      if (response && response.data.error)
+      {
+        $ionicPopup.alert({
+          title: 'Duplicate Player',
+          template: '<div class="text-center">' + response.data.message + '</div>'
+        });
+      }
+
       // load from server
       FooseyService.getAllPlayers(false).then(
         function onSuccess(players)

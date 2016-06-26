@@ -486,13 +486,14 @@ end
 
 # returns true if a player with DisplayName name is in the database
 # false otherwise
-def player_exists?(name, league_id)
+def player_exists?(name, league_id, player_id = 0)
   database do |db|
     player = db.get_first_value 'SELECT * from Player
                                  WHERE DisplayName = :name
                                  AND LeagueID = :league_id
+                                 AND PlayerID != :player_id
                                  COLLATE NOCASE',
-                                name, league_id
+                                name, league_id, player_id
 
     return !player.nil?
   end
@@ -647,7 +648,7 @@ def edit_player(league_id, player_id, display_name = nil, slack_name = nil, admi
                 active = nil)
   database do |db|
     # update the defined fields
-    unless player_exists?(display_name, league_id) || display_name.nil?
+    unless player_exists?(display_name, league_id, player_id) || display_name.nil?
       db.execute 'UPDATE Player SET DisplayName = :display_name
                   WHERE PlayerID = :player_id
                   AND LeagueID = :league_id',
