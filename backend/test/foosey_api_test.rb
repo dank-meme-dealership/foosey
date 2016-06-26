@@ -111,13 +111,13 @@ describe 'Foosey API' do
     end
 
     it 'get valid league' do
-      get '/v1/1/leagues/wca-dev'
+      get '/v1/leagues/wca-dev'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('leagueID' => 1)
     end
 
     it 'get invalid league' do
-      get '/v1/1/leagues/matt'
+      get '/v1/leagues/matt'
       expect(last_response).to be_ok
       expect(last_response.jbody).to include('error' => true)
     end
@@ -201,11 +201,12 @@ describe 'Foosey API' do
         active: false
       }.to_json
       expect(last_response).to be_ok
-      expect(last_response.jbody).to include('error' => false)
+      expect(last_response.jbody).to include('admin' => true)
+      expect(last_response.jbody).to include('active' => false)
     end
 
     it 'add new league' do
-      post '/v1/1/leagues', {
+      post '/v1/leagues', {
         leagueName: 'Testo'
       }.to_json
       expect(last_response).to be_ok
