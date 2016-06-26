@@ -37,9 +37,11 @@
       return $http.post(url + SettingsService.leagueID + '/games', game);
     }
 
-    function addPlayer(player)
+    // leagueID is optional
+    function addPlayer(player, leagueID)
     {
-      return $http.post(url + SettingsService.leagueID + '/players', player);
+      var id = leagueID ? leagueID : SettingsService.leagueID;
+      return $http.post(url + id + '/players', player);
     }
 
     function addLeague(leagueName)
@@ -59,11 +61,14 @@
 
     // filter is an argument to filter out inactive players
     // true will filter to just active players, false will not
-    function getAllPlayers(filter)
+    // leagueID is also optional
+    function getAllPlayers(filter, leagueID)
     {
-      return $http.get(url + SettingsService.leagueID + '/players').then(
+      var id = leagueID ? leagueID : SettingsService.leagueID;
+      return $http.get(url + id + '/players').then(
         function(response)
         {
+          response.data = _.sortBy(response.data, 'displayName');
           if (!filter) return response.data;
           response = _.filter(response.data, function(player)
           {
