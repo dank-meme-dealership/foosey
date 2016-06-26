@@ -17,6 +17,7 @@
 		$scope.player = undefined;
 		$scope.error = false;
     $scope.loading = false;
+    $scope.playerID = $stateParams.playerID;
 
 		$scope.info = info;
     $scope.refresh = refresh;

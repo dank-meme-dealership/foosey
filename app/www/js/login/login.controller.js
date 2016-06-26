@@ -8,7 +8,7 @@
 
   function LoginController($scope, $ionicPopup, FooseyService, SettingsService)
   {
-    $scope.league = { text: '', leagueID: '', playerID: '' };
+    $scope.league = { text: '', leagueID: ''};
     $scope.newLeague = { leagueName: '', playerName: '' };
     $scope.players = [];
     $scope.leagueChars = /[^0-9A-Za-z\-]/g;
@@ -47,7 +47,7 @@
         function(response)
         {
           $scope.players = response;
-          $scope.league.playerID = response[0].playerID;
+          $scope.league.player = response[0];
           whoAreYou();
         });
     }
@@ -129,7 +129,7 @@
               active: true
             }, league.leagueID).then(function(response)
             {
-              league.playerID = response.data.playerID;
+              league.player = response.data;
               SettingsService.logIn(league);
             })
           }

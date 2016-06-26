@@ -18,7 +18,7 @@
 			playerID					: localStorage.getObject('playerID', undefined),
 			recentGames				: localStorage.getObject('recentGames', 3),
 			showBadges				: localStorage.getObject('showBadges', true),
-			showElo						: localStorage.getObject('showElo', false),
+			showElo						: localStorage.getObject('showElo', true),
 			showRelTimes			: localStorage.getObject('showRelTimes', true),
 			//Functions
 			logIn 						: logIn,
@@ -32,7 +32,8 @@
 		{
 			// set the leagueID to localStorage
 			setProperty('leagueID', league.leagueID);
-			setProperty('playerID', league.playerID);
+			setProperty('playerID', league.player.playerID);
+			setProperty('isAdmin', league.player.admin);
 			service.loggedIn = true;
 
 			$ionicHistory.nextViewOptions({
@@ -56,8 +57,14 @@
 			setProperty('playerID', undefined);
 			setProperty('recentGames', 3);
 			setProperty('showBadges', true);
-			setProperty('showElo', false);
+			setProperty('showElo', true);
 			setProperty('showRelTimes', true);
+
+			// Clear other stored values
+			setProperty('elos', undefined);
+			setProperty('playerBadges', undefined);
+			setProperty('winRates', undefined);
+			setProperty('history', undefined);
 
       $state.go('login');
 		}

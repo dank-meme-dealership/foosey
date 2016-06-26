@@ -1,5 +1,5 @@
 <ion-view>
-	<ion-nav-title>{{player.displayName}}</ion-nav-title>
+	<ion-nav-title>{{ settings.playerID == playerID ? 'You' : player.displayName}}</ion-nav-title>
 
   <!-- show loading on the top right if loading -->
   <ion-nav-buttons side="right">
@@ -23,7 +23,7 @@
         <div ng-show="!error">Loading Elo Chart...</div>
         <div ng-show="error">Can't connect to server :(</div>
       </div>
-      <div ng-show="empty" class="padding center">{{ settings.playerID === player.playerID ? 'You' : 'They' }} haven't played any games yet.</div>
+      <div ng-show="empty" class="padding center">{{ settings.playerID === playerID ? 'You' : 'They' }} haven't played any games yet.</div>
       <highchart ng-if="chart && !empty" id="chart1" config="chart"></highchart>
     </ion-item>
 
