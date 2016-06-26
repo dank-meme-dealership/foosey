@@ -23,7 +23,7 @@
       },
       getObject : function (key, defaultValue)
       {
-        return $window.localStorage[key] === "undefined" ? {} : JSON.parse($window.localStorage[key] || (defaultValue ? defaultValue : '{}'));
+        return $window.localStorage[key] === "undefined" ? {} : JSON.parse($window.localStorage[key] || (_.isUndefined(defaultValue) ? '{}' : defaultValue));
       },
       setArray  : function (key, value)
       {
