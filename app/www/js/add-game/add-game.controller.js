@@ -17,7 +17,7 @@
 		$scope.useNowTime = true;
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;
-		$scope.scores = _.range(11);
+		$scope.scores = _.reverse(_.range(11));
 		$scope.canCancel = false;
 
 		$scope.addMorePlayers = addMorePlayers;
