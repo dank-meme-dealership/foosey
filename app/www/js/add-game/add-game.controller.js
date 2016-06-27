@@ -8,19 +8,26 @@
 
 	function AddGameController($scope, $state, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
 	{
+		var selectedPlayer = undefined;
+		var selectedScoreIndex = undefined;
+
 		$scope.settings = SettingsService;
 		$scope.gameTypes = gameTypes;
 		$scope.reset = reset;
-		$scope.playerName = playerName;
 		$scope.useNowTime = true;
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;
-		$scope.scores = new Array(11);
+		$scope.scores = _.range(11);
+		$scope.canCancel = false;
 
 		$scope.addMorePlayers = addMorePlayers;
-		$scope.gameSelect = gameSelect;
+		$scope.choosePlayer = choosePlayer;
+		$scope.chooseScore = chooseScore;
+		$scope.filterPlayers = filterPlayers;
+		$scope.isSelected = isSelected;
 		$scope.playerSelect = playerSelect;
 		$scope.scoreSelect = scoreSelect;
+		$scope.playerName = playerName;
 		$scope.submit = submit;
 		$scope.undo = undo;
 
@@ -36,58 +43,107 @@
 		function gameSelect(type)
 		{
 			$scope.type = _.clone(type);
-			$scope.playersSelected = [];
-			changeState("player-select", "Select Players");
+			$scope.teams = [
+				{
+					players: type.playersPerTeam === 1 ? [null] : [null, null],
+					score: null
+				},
+				{
+					players: type.playersPerTeam === 1 ? [null] : [null, null],
+					score: null
+				}
+			]
 		};
+
+		function choosePlayer(teamIndex, playerIndex)
+		{
+			selectedPlayer = { teamIndex: teamIndex, playerIndex: playerIndex };
+			selectedScoreIndex = undefined;
+			changeState("player-select", "Select Players");
+		}
+
+		function chooseScore(teamIndex)
+		{
+			selectedScoreIndex = teamIndex;
+			selectedPlayer = undefined;
+			changeState("score-select", "Select Score");
+		}
+
+		function isSelected(teamIndex, playerIndex)
+		{
+			return (selectedPlayer &&
+							selectedPlayer.teamIndex === teamIndex && 
+							selectedPlayer.playerIndex === playerIndex) ||
+						 (selectedScoreIndex === teamIndex &&
+						 	playerIndex === -1);
+		}
 
 		// function to select player
 		function playerSelect(player)
 		{
-			// don't allow selected players to be selected again
-			if (player.selected) return;
+			$scope.canCancel = true;
 
-			// add player to this team
-			player.selected = true;
-			$scope.playersSelected.push(player.playerID);
-
-			// if we have selected all players for the team, select the score
-			if ($scope.playersSelected.length === $scope.type.playersPerTeam)
-			{
-				changeState("score-select", "Select Score");
-			}
+			team = $scope.teams[selectedPlayer.teamIndex];
+			team.players[selectedPlayer.playerIndex] = player.playerID;
+			
+			jump();
 		};
 
 		// function to select score
 		function scoreSelect(score)
-		{
-			$scope.game.push({
-				players: $scope.playersSelected,
-				score: score
-			});
+		{	
+			team = $scope.teams[selectedScoreIndex];
+			team.score = score;
 
-			$scope.playersSelected = [];
-			$scope.type.teams--;
-			
-			// if we have scores for every team, go to confirm
-			if ($scope.type.teams === 0)
-			{
-				changeState("confirm", "Confirm");
-			}
-			else
-			{
-				changeState("player-select", "Select Players");
-			}
+			jump();
 		};
+
+		function jump()
+		{
+			for (var t = 0; t < $scope.teams.length; t++)
+			{
+				for (var p = 0; p < $scope.teams[t].players.length; p++)
+				{
+					if ($scope.teams[t].players[p] === null)
+					{ 
+						choosePlayer(t, p);
+						return;
+					}
+				}
+				if ($scope.teams[t].score === null)
+				{
+					chooseScore(t);
+					return;
+				}
+			}
+			selectedPlayer = undefined;
+			selectedScoreIndex = undefined;
+			changeState("confirm", "Confirm");
+		}
+
+		function filterPlayers(player)
+		{
+			var allowed = true;
+			_.each($scope.teams, function(team)
+			{
+				_.each(team.players, function(playerID)
+				{
+					if (playerID === player.playerID) allowed = false;
+				})
+			})
+			return allowed;
+		}
 
 		// add the game
 		function submit()
 		{
 			changeState("saving", null);
 			$scope.saveStatus = "saving";
+			$scope.canCancel = false;
 
 			// set up game object
 			var game = {
-				teams: $scope.game
+				teams: $scope.teams
 			}
 
 			FooseyService.addGame(game).then(function successCallback(response)
@@ -118,20 +174,23 @@
 		}
 
 		// reset the game
-		function reset()
+		function reset(gameType)
 		{
-			changeState("game-select", "Select the Type of Game");
-			$scope.command = "";
+			selectedPlayer = undefined;
+			selectedScoreIndex = undefined;
 
-			$scope.game = [];
+			$scope.teams = [];
 			$scope.gameToUndo = undefined;
 			$scope.saveStatus = "";
 			$scope.response = undefined;
+			$scope.canCancel = false;
 
 			$scope.useNowTime = true;
 			$scope.customDate = new Date();
 			$scope.customTime = $scope.customDate;
 
+			gameSelect(gameType || gameTypes[0]);
+			choosePlayer(0, 0);
 			getPlayers();
 		}
 
@@ -170,7 +229,7 @@
 
 		function playerName(id)
 		{
-			var name = '';
+			var name = undefined;
 			_.each($scope.players, function(player)
 			{
 				if (player.playerID === id) name = player.displayName;
@@ -182,7 +241,7 @@
 		{
 			if (state) $scope.state = state;
 			if (title) $scope.title = title;
-			$ionicScrollDelegate.scrollTop();
+			$ionicScrollDelegate.scrollTop(true);
 		}
 
 		function addMorePlayers()

@@ -6,7 +6,7 @@
     <button 
     	class="button button-clear button-assertive" 
     	ng-click="reset()">
-    	<div ng-if="state !== 'game-select' && state !== 'saving'">
+    	<div ng-if="canCancel">
     		Cancel
     	</div>
     	<ion-spinner 
@@ -17,7 +17,15 @@
 		</button>
   </ion-nav-buttons>
 
-	<ion-content class="background" has-bouncing="true">
+  <!-- Header bar for different game types -->
+	<div class="bar bar-subheader background" ng-if="players.length > 1">
+	  <div class="tabs">
+	    <a class="tab-item" ng-click="reset(gameType)" ng-repeat="gameType in gameTypes"
+	      ng-class="{active: type.name === gameType.name }">{{gameType.name}}</a>
+	  </div>      
+	</div>
+
+	<ion-content class="background has-subheader" has-bouncing="true">
 	
 		<!-- Need to add more players -->
 		<div class="card" ng-show="players.length < 2">
@@ -29,23 +37,26 @@
 			</div>
 		</div>
 
-		<!-- Selecting the game type -->
-		<div ng-click="gameSelect(type)" class="card center title" ng-repeat="type in gameTypes" ng-show="state === 'game-select' && players.length >= type.totalPlayers">
-			<ion-item>
-				{{type.name}}
-			</ion-item>
-		</div>
-
 		<!-- score at the top while selecting scores -->
-		<div class="card" ng-show="state !== 'game-select'">
+		<div class="card" ng-class="{'opaque': saveStatus === 'removed'}">
 			<ion-item style="text-align: center">
-				<div class="title">{{type.name}}</div>
 				<div class="spaced-out">
-					<div ng-repeat="team in game" class="game-score">
-						<div ng-repeat="playerID in team.players">
-							{{playerName(playerID)}}
+					<div ng-repeat="team in teams track by $index">
+						<div 
+							class="button player-button" 
+							ng-class="{'selected': isSelected($parent.$index, $index) }" 
+							ng-repeat="playerID in team.players track by $index"
+							ng-click="choosePlayer($parent.$index, $index)"
+							ng-disabled="state === 'saving'">
+							{{playerName(playerID) || '(select player)'}}
 						</div>
-						<div><strong>{{team.score}}</strong></div>
+						<div 
+							class="button player-button" 
+							ng-class="{'selected': isSelected($index, -1) }"
+							ng-click="chooseScore($index)"
+							ng-disabled="state === 'saving'">
+							<strong>{{team.score === null ? '(score)' : team.score}}</strong>
+						</div>
 					</div>
 				</div>
 			</ion-item>
@@ -57,9 +68,8 @@
 	  	<ion-spinner ng-show="!players" class="loading-dots" icon="lines"></ion-spinner>
 			<div class="grid-container">
 				<div 
-					class="grid-item item" 
-					ng-class="{'selected': player.selected}"
-					ng-repeat="player in players"
+					class="grid-item item"
+					ng-repeat="player in players | filter:filterPlayers"
 	  		  ng-click="playerSelect(player)">
 	  		  {{player.displayName | capitalize}}
 	  		</div>
@@ -72,9 +82,9 @@
 				<div 
 					class="grid-item item"
 					ng-class="{'bold': $index === 5 || $index === 0}"
-					ng-repeat="score in scores track by $index"
-	  		  ng-click="scoreSelect(scores.length - 1 - $index)">
-	  		  {{scores.length - 1 - $index}}
+					ng-repeat="score in scores"
+	  		  ng-click="scoreSelect(score)">
+	  		  {{score}}
 	  		</div>
 			</div>
 		</div>
@@ -98,8 +108,11 @@
 			</div>
 
 			<!-- Save button -->
-			<div ng-click="submit()" class="card">
+			<!-- <div ng-click="submit()" class="card" ng-disabled="true">
 				<ion-item class="center positive">Save</ion-item>
+			</div> -->
+			<div class="padding">
+				<button class="button button-full no-margin positive" ng-show="!player.playerID" ng-click="submit()" ng-disabled="teams[0].score === teams[1].score">Save</button>
 			</div>
 		</div>
 
