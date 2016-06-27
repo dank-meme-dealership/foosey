@@ -24,6 +24,12 @@
   display: block;
   margin: 2px;
   min-width: 125px;
+  padding: 10px 5px;
+}
+.player-button[disabled]
+{
+  cursor: default !important;
+  pointer-events: none;
 }
 
 /*Make game opaque on remove*/
@@ -34,8 +40,4 @@
 .opaque
 {
   opacity: 0.3;
-}
-.player-button.button[disabled]
-{
-  opacity: 1.0;
 }

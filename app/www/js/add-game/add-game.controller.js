@@ -239,6 +239,9 @@
 
 		function changeState(state, title)
 		{
+			// skip if we're already at that state
+			if ($scope.state === state) return;
+			
 			if (state) $scope.state = state;
 			if (title) $scope.title = title;
 			$ionicScrollDelegate.scrollTop(true);

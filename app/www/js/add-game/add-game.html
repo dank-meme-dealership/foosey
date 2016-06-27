@@ -1,5 +1,5 @@
 <ion-view>
-	<ion-nav-title>{{title}}</ion-nav-title>
+	<ion-nav-title>Add Game</ion-nav-title>
 	
 	<!-- Cancel button to return to game select state -->
 	<ion-nav-buttons side="right">
@@ -43,19 +43,20 @@
 				<div class="spaced-out">
 					<div ng-repeat="team in teams track by $index">
 						<div 
-							class="button player-button" 
+							class="player-button" 
 							ng-class="{'selected': isSelected($parent.$index, $index) }" 
 							ng-repeat="playerID in team.players track by $index"
 							ng-click="choosePlayer($parent.$index, $index)"
 							ng-disabled="state === 'saving'">
-							{{playerName(playerID) || '(select player)'}}
+							<strong>{{playerName(playerID) || '-'}}</strong>
 						</div>
+						<hr style="border-color:#CCC">
 						<div 
-							class="button player-button" 
+							class="player-button" 
 							ng-class="{'selected': isSelected($index, -1) }"
 							ng-click="chooseScore($index)"
 							ng-disabled="state === 'saving'">
-							<strong>{{team.score === null ? '(score)' : team.score}}</strong>
+							<strong>{{team.score === null ? '-' : team.score}}</strong>
 						</div>
 					</div>
 				</div>
@@ -111,7 +112,7 @@
 			<!-- <div ng-click="submit()" class="card" ng-disabled="true">
 				<ion-item class="center positive">Save</ion-item>
 			</div> -->
-			<div class="padding">
+			<div class="padding-sides">
 				<button class="button button-full no-margin positive" ng-show="!player.playerID" ng-click="submit()" ng-disabled="teams[0].score === teams[1].score">Save</button>
 			</div>
 		</div>
