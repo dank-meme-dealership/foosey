@@ -4,12 +4,11 @@
 		.module('scorecard')
 		.controller('ScorecardController', ScorecardController);
 
-	ScorecardController.$inject = ['$scope', '$stateParams', '$ionicPopup', 'scorecardInfo', 'FooseyService', 'SettingsService', 'BadgesService'];
+	ScorecardController.$inject = ['$scope', '$state', '$stateParams', '$ionicPopup', 'scorecardInfo', 'FooseyService', 'SettingsService', 'BadgesService'];
 
-	function ScorecardController($scope, $stateParams, $ionicPopup, scorecardInfo, FooseyService, SettingsService, BadgesService)
+	function ScorecardController($scope, $state, $stateParams, $ionicPopup, scorecardInfo, FooseyService, SettingsService, BadgesService)
 	{
 		$scope.chart = undefined;
-    $scope.empty = false;
 		$scope.settings = SettingsService;
 		$scope.badges = BadgesService;
 		$scope.scorecardInfo = scorecardInfo;
@@ -17,10 +16,11 @@
 		$scope.player = undefined;
 		$scope.error = false;
     $scope.loading = false;
-    $scope.playerID = $stateParams.playerID;
+    $scope.you = $stateParams.playerID == SettingsService.playerID;
 
 		$scope.info = info;
     $scope.refresh = refresh;
+    $scope.addAGame = addAGame;
 
 		// load on entering view 
     $scope.$on('$ionicView.beforeEnter', refresh);
@@ -29,8 +29,8 @@
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
+      if (SettingsService.showBadges) BadgesService.updateBadges();
       $scope.loading = true;
-      BadgesService.updateBadges();
       setUpPlayer();
       setUpRecentGames();
       $scope.$broadcast('scroll.refreshComplete');
@@ -42,7 +42,7 @@
 			FooseyService.getPlayer($stateParams.playerID).then(
 				function(response){
 					$scope.player = response.data;
-      		setUpChart();
+      		if (SettingsService.showElo) setUpChart();
 				});
     }
 
@@ -85,7 +85,6 @@
 		// define options for the ELO Rating chart
 		function getEloChartOptions(data, dates, subtitle)
 		{
-      $scope.empty = data.length === 0;
 			return {
         options: { colors: ['#7CB5EC'] },
         title: {
@@ -124,5 +123,10 @@
         template: '<div style="text-align: center;">' + message + '</div>'
       });
 		}
+
+    function addAGame()
+    {
+      $state.go('app.add-game');
+    }
 	}
 })();

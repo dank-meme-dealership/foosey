@@ -1,5 +1,5 @@
 <ion-view>
-	<ion-nav-title>{{ settings.playerID == playerID ? 'You' : player.displayName}}</ion-nav-title>
+	<ion-nav-title>{{you ? 'You' : player.displayName}}</ion-nav-title>
 
   <!-- show loading on the top right if loading -->
   <ion-nav-buttons side="right">
@@ -13,79 +13,92 @@
     <!-- pull to refresh -->
     <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
 
-    <!-- elo chart -->
-    <ion-item class="card" style="padding: 5px 5px 0 5px;" ng-show="settings.showElo">
-      <div class="center chart-title">
-        <span style="padding-right: 5px">Elo Rating: {{player.elo}}</span>
-        <span ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">({{player.dailyChange | eloChange}} today)</span>
+    <!-- Need to add a game -->
+    <div class="card" ng-show="player.gamesPlayed === 0">
+      <div class="item item-divider">
+        {{you ? 'You' : 'They'}} have not played yet
       </div>
-      <div class="padding center" ng-show="!chart">
-        <div ng-show="!error">Loading Elo Chart...</div>
-        <div ng-show="error">Can't connect to server :(</div>
+      <div class="item text-center positive" ng-click="addAGame()">
+        Add a game
       </div>
-      <div ng-show="empty" class="padding center">{{ settings.playerID == playerID ? 'You' : 'They' }} haven't played any games yet.</div>
-      <highchart ng-if="chart && !empty" id="chart1" config="chart"></highchart>
-    </ion-item>
-
-    <!-- link to other stats -->
-    <!-- <ion-item class="card" href="#/app/team-stats">
-      <div class="spaced-out">
-        <div class="ion-stats-bars space">See team statistics</div>
-        <div class="ion-ios-arrow-forward"></div>
-      </div>
-    </ion-item> -->
-
-    <!-- badge definitions -->
-    <div class="card" ng-show="settings.showBadges && badges.myBadges(player.playerID).length > 0">
-      <div class="item item-divider">Current Badges</div>
-      <ion-item class="spaced-out" ng-repeat="badge in badges.myBadges(player.playerID)">
-        <div ng-bind-html="badge.emoji | twemoji"></div>
-        <div>{{badge.definition}}</div>
-      </ion-item>
     </div>
 
-		<!-- additional stats -->
-		<div class="card">
-      <div class="item item-divider">Stats</div>
-			<!-- Total Games -->
-			<ion-item class="stat-card">
-				<div>Total Games</div>
-				<div ng-show="player">{{player.gamesPlayed }} games</div>
-				<div ng-show="!player">-</div>
-			</ion-item>
-			<!-- Total Singles -->
-			<ion-item class="stat-card">
-				<div>Singles</div>
-				<div ng-show="player">{{player.singlesTotal}} ({{player.singlesWinRate | percentage:1}} wins)</div>
-				<div ng-show="!player">-</div>
-			</ion-item>
-			<!-- Total Doubles -->
-			<ion-item class="stat-card">
-				<div>Doubles</div>
-				<div ng-show="player">{{player.doublesTotal}} ({{player.doublesWinRate | percentage:1}} wins)</div>
-				<div ng-show="!player">-</div>
-			</ion-item>
-			<!-- Ally -->
-			<ion-item class="stat-card">
-				<div ng-click="info('Ally?', scorecardInfo.ally)">
-					Ally
-					<i class="ion-ios-information"></i>
-				</div>
-				<div ng-show="player">{{player.ally | capitalize}} ({{player.allyCount}} games)</div>
-				<div ng-show="!player">-</div>
-			</ion-item>
-			<!-- Nemesis -->
-			<ion-item class="stat-card">
-				<div ng-click="info('Nemesis?', scorecardInfo.nemesis)">
-					Nemesis
-					<i class="ion-ios-information"></i>
-				</div>
-				<div ng-show="player">{{player.nemesis | capitalize}} ({{player.nemesisCount}} games)</div>
-				<div ng-show="!player">-</div>
-			</ion-item>
-		</div>
+    <div ng-show="player.gamesPlayed > 0">
 
-    <game-list title="'Recent Games'" list="recentGames"></game-list>
+      <!-- elo chart -->
+      <ion-item class="card" style="padding: 5px 5px 0 5px;" ng-show="settings.showElo">
+        <div class="center chart-title">
+          <span style="padding-right: 5px">Elo Rating: {{player.elo}}</span>
+          <span ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">({{player.dailyChange | eloChange}} today)</span>
+        </div>
+        <div class="padding center" ng-show="!chart">
+          <div ng-show="!error">Loading Elo Chart...</div>
+          <div ng-show="error">Can't connect to server :(</div>
+        </div>
+        <highchart ng-if="chart && !empty" id="chart1" config="chart"></highchart>
+      </ion-item>
+
+      <!-- link to other stats -->
+      <!-- <ion-item class="card" href="#/app/team-stats">
+        <div class="spaced-out">
+          <div class="ion-stats-bars space">See team statistics</div>
+          <div class="ion-ios-arrow-forward"></div>
+        </div>
+      </ion-item> -->
+
+      <!-- badge definitions -->
+      <div class="card" ng-show="settings.showBadges && badges.myBadges(player.playerID).length > 0">
+        <div class="item item-divider">Current Badges</div>
+        <ion-item class="spaced-out" ng-repeat="badge in badges.myBadges(player.playerID)">
+          <div ng-bind-html="badge.emoji | twemoji"></div>
+          <div>{{badge.definition}}</div>
+        </ion-item>
+      </div>
+
+  		<!-- additional stats -->
+  		<div class="card">
+        <div class="item item-divider">Stats</div>
+  			<!-- Total Games -->
+  			<ion-item class="stat-card">
+  				<div>Total Games</div>
+  				<div ng-show="player">{{player.gamesPlayed }} games</div>
+  				<div ng-show="!player">-</div>
+  			</ion-item>
+  			<!-- Total Singles -->
+  			<ion-item class="stat-card">
+  				<div>Singles</div>
+  				<div ng-show="player">{{player.singlesTotal}} ({{player.singlesWinRate | percentage:1}} wins)</div>
+  				<div ng-show="!player">-</div>
+  			</ion-item>
+  			<!-- Total Doubles -->
+  			<ion-item class="stat-card">
+  				<div>Doubles</div>
+  				<div ng-show="player">{{player.doublesTotal}} ({{player.doublesWinRate | percentage:1}} wins)</div>
+  				<div ng-show="!player">-</div>
+  			</ion-item>
+  			<!-- Ally -->
+  			<ion-item class="stat-card">
+  				<div ng-click="info('Ally?', scorecardInfo.ally)">
+  					Ally
+  					<i class="ion-ios-information"></i>
+  				</div>
+  				<div ng-show="player">{{player.ally | capitalize}} ({{player.allyCount}} games)</div>
+  				<div ng-show="!player">-</div>
+  			</ion-item>
+  			<!-- Nemesis -->
+  			<ion-item class="stat-card">
+  				<div ng-click="info('Nemesis?', scorecardInfo.nemesis)">
+  					Nemesis
+  					<i class="ion-ios-information"></i>
+  				</div>
+  				<div ng-show="player">{{player.nemesis | capitalize}} ({{player.nemesisCount}} games)</div>
+  				<div ng-show="!player">-</div>
+  			</ion-item>
+  		</div>
+
+      <game-list title="'Recent Games'" list="recentGames"></game-list>
+
+    </div>
 
 	</ion-content>
 </ion-view>

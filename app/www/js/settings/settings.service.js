@@ -4,9 +4,9 @@
 		.module('settings')
 		.factory('SettingsService', SettingsService);
 
-	SettingsService.$inject = ['$state', '$ionicHistory', 'localStorage'];
+	SettingsService.$inject = ['$state', '$ionicPopup', '$ionicHistory', 'localStorage'];
 
-	function SettingsService($state, $ionicHistory, localStorage)
+	function SettingsService($state, $ionicPopup, $ionicHistory, localStorage)
 	{
 		var service = {
 			//Properties
@@ -45,22 +45,28 @@
 
 		function logOut()
 		{
+			$ionicPopup.confirm({
+        title: 'Change League',
+        template: '<div class="text-center">Are you sure you want to go back to the login screen?</div>'
+      }).then(function(positive) {
+        if(positive) {
+          reallyLogOut();
+        }
+      });
+		}
+
+		function reallyLogOut()
+		{
 			$ionicHistory.nextViewOptions({
         disableBack: true
       });
 
-			// Set all properties to defaults
+			// Completely log out player
 			service.loggedIn = false;
-			setProperty('eloChartGames', 30);
 			setProperty('isAdmin', false);
-			setProperty('noGamePlayers', true);
 			setProperty('playerID', undefined);
-			setProperty('recentGames', 3);
-			setProperty('showBadges', true);
-			setProperty('showElo', true);
-			setProperty('showRelTimes', true);
 
-			// Clear other stored values
+			// Clear league specific cache
 			setProperty('elos', undefined);
 			setProperty('playerBadges', undefined);
 			setProperty('winRates', undefined);
