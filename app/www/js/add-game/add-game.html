@@ -7,7 +7,7 @@
     	class="button button-clear button-assertive" 
     	ng-click="reset()">
     	<div ng-if="canCancel">
-    		Cancel
+    		Clear
     	</div>
     	<ion-spinner 
     		icon="lines" 
@@ -22,8 +22,8 @@
 	  <div class="tabs">
 	    <a 
 	    	class="tab-item" 
-	    	ng-click="reset(gameType)" 
-	    	ng-repeat="gameType in gameTypes"
+	    	ng-click="gameSelect($index, gameType)" 
+	    	ng-repeat="gameType in gameTypes track by $index"
 	      ng-class="{active: type.name === gameType.name }"
 	      ng-show="gameType.totalPlayers <= players.length">
 	      {{gameType.name}}

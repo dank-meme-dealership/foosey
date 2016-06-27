@@ -24,6 +24,7 @@
 		$scope.choosePlayer = choosePlayer;
 		$scope.chooseScore = chooseScore;
 		$scope.filterPlayers = filterPlayers;
+		$scope.gameSelect = gameSelect;
 		$scope.isSelected = isSelected;
 		$scope.playerSelect = playerSelect;
 		$scope.scoreSelect = scoreSelect;
@@ -39,21 +40,19 @@
       reset();
     });
 
-		// function to select game
-		function gameSelect(type)
+		// function to select game type
+		function gameSelect(index, type)
 		{
+			//return if it's the same type
+			if ($scope.type.name === type.name) return;
+
 			$scope.type = _.clone(type);
-			$scope.teams = [
-				{
-					players: type.playersPerTeam === 1 ? [null] : [null, null],
-					score: null
-				},
-				{
-					players: type.playersPerTeam === 1 ? [null] : [null, null],
-					score: null
-				}
-			]
-		};
+			var newTeams = _.clone($scope.teams);
+			newTeams[0].players = type.playersPerTeam === 1 ? newTeams[0].players.slice(0, 1) : newTeams[0].players.slice(0, 1).concat([null]);
+			newTeams[1].players = type.playersPerTeam === 1 ? newTeams[1].players.slice(0, 1) : newTeams[1].players.slice(0, 1).concat([null]);
+			$scope.teams = newTeams;
+			jump();
+		}
 
 		function choosePlayer(teamIndex, playerIndex)
 		{
@@ -174,12 +173,12 @@
 		}
 
 		// reset the game
-		function reset(gameType)
+		function reset()
 		{
 			selectedPlayer = undefined;
 			selectedScoreIndex = undefined;
 
-			$scope.teams = [];
+			$scope.teams = emptyTeams(gameTypes[0]);
 			$scope.gameToUndo = undefined;
 			$scope.saveStatus = "";
 			$scope.response = undefined;
@@ -189,7 +188,6 @@
 			$scope.customDate = new Date();
 			$scope.customTime = $scope.customDate;
 
-			gameSelect(gameType || gameTypes[0]);
 			choosePlayer(0, 0);
 			getPlayers();
 		}
@@ -237,11 +235,23 @@
 			return name;
 		}
 
-		function changeState(state, title)
+		function emptyTeams(type)
 		{
-			// skip if we're already at that state
-			if ($scope.state === state) return;
-			
+			$scope.type = _.clone(type);
+			return [
+				{
+					players: type.playersPerTeam === 1 ? [null] : [null, null],
+					score: null
+				},
+				{
+					players: type.playersPerTeam === 1 ? [null] : [null, null],
+					score: null
+				}
+			]
+		}
+
+		function changeState(state, title)
+		{	
 			if (state) $scope.state = state;
 			if (title) $scope.title = title;
 			$ionicScrollDelegate.scrollTop(true);
