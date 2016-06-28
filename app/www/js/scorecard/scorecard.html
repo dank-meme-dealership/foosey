@@ -32,10 +32,9 @@
           <span ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">({{player.dailyChange | eloChange}} today)</span>
         </div>
         <div class="padding center" ng-show="!chart">
-          <div ng-show="!error">Loading Elo Chart...</div>
-          <div ng-show="error">Can't connect to server :(</div>
+          {{ error ? 'Can\'t connect to server :(' : 'Loading Elo Chart...' }}
         </div>
-        <highchart ng-if="chart && !empty" id="chart1" config="chart"></highchart>
+        <highchart ng-if="chart" id="chart1" config="chart"></highchart>
       </ion-item>
 
       <!-- link to other stats -->
