@@ -321,7 +321,7 @@ end
 def daily_elo_change(player_id, league_id)
   database do |db|
     midnight = DateTime.new(Time.now.year, Time.now.month, Time.now.day,
-                            0, 0, 0, 0).to_time.to_i
+                            0, 0, 0, "-7").to_time.to_i
     prev = db.get_first_value('SELECT e.Elo FROM EloHistory e
                                JOIN Game g
                                USING (GameID, PlayerID)
