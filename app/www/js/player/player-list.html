@@ -5,8 +5,9 @@
     </div>
     <ion-item ng-repeat="player in list" ng-click="openModal(player)">
       <div style="float:left">
-        {{player.displayName}} 
+        {{player.displayName}}
         {{player.admin ? '(admin)' : ''}}
+        {{player.gamesPlayed === 0 ? '(no games)' : ''}}
       </div>
       <div style="float:right" class="ion-edit"></div>
       <badges ng-if="settings.showBadges && player.active" style="float:right" player="player"></badges>
