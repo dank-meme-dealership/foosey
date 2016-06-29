@@ -13,6 +13,9 @@
     <!-- pull to refresh -->
     <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
 
+    <!-- show loading while waiting -->
+    <ion-spinner ng-show="!player" class="loading-dots" icon="lines"></ion-spinner>
+
     <!-- Need to add a game -->
     <div class="card" ng-show="player.gamesPlayed === 0">
       <div class="item item-divider">
@@ -57,7 +60,13 @@
   		<!-- additional stats -->
   		<div class="card">
         <div class="item item-divider">Stats</div>
-  			<!-- Total Games -->
+  			<!-- Last Active -->
+        <ion-item class="stat-card">
+          <div>Last Active</div>
+          <div ng-show="recentGames">{{recentGames[0].timestamp | date}}</div>
+          <div ng-show="!recentGames">-</div>
+        </ion-item>
+        <!-- Total Games -->
   			<ion-item class="stat-card">
   				<div>Total Games</div>
   				<div ng-show="player">{{player.gamesPlayed }} games</div>
