@@ -229,8 +229,8 @@ def badges(league_id, player_id)
       nemeses << p if this_player[:displayName] == you[:nemesis]
       allies << p if this_player[:displayName] == you[:ally]
     end
-    nemeses.each { |b| badges[b] << badge('😈', 'Your nemesis\'') }
-    allies.each { |b| badges[b] << badge('😇', 'Your ally\'') }
+    nemeses.each { |b| badges[b] << badge('😈', 'Your nemesis') }
+    allies.each { |b| badges[b] << badge('😇', 'Your ally') }
   end
 
   # build hash
