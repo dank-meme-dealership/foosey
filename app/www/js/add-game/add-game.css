@@ -37,7 +37,7 @@
 {
   background-color: rgba(255, 255, 255, 0.3);
 }
-.opaque
+.opaque, .grid-item[disabled]
 {
   opacity: 0.3;
 }

@@ -23,9 +23,9 @@
 		$scope.addMorePlayers = addMorePlayers;
 		$scope.choosePlayer = choosePlayer;
 		$scope.chooseScore = chooseScore;
-		$scope.filterPlayers = filterPlayers;
 		$scope.gameSelect = gameSelect;
 		$scope.isSelected = isSelected;
+		$scope.playerSelected = playerSelected;
 		$scope.playerSelect = playerSelect;
 		$scope.scoreSelect = scoreSelect;
 		$scope.playerName = playerName;
@@ -120,17 +120,17 @@
 			changeState("confirm", "Confirm");
 		}
 
-		function filterPlayers(player)
+		function playerSelected(player)
 		{
-			var allowed = true;
+			var selected = false;
 			_.each($scope.teams, function(team)
 			{
 				_.each(team.players, function(playerID)
 				{
-					if (playerID === player.playerID) allowed = false;
+					if (playerID === player.playerID) selected = true;
 				})
 			})
-			return allowed;
+			return selected;
 		}
 
 		// add the game

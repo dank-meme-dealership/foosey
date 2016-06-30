@@ -79,8 +79,9 @@
 				<div class="grid-container">
 					<div 
 						class="grid-item item"
-						ng-repeat="player in players | filter:filterPlayers"
-		  		  ng-click="playerSelect(player)">
+						ng-repeat="player in players"
+		  		  ng-click="playerSelect(player)"
+		  		  ng-disabled="playerSelected(player)">
 		  		  {{player.displayName | capitalize}}
 		  		</div>
 				</div>
