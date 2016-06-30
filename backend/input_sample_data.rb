@@ -28,6 +28,9 @@ league_id = api_league(league_name)[:leagueID]
 
 seasons = JSON.parse(File.read('seasons.json'))
 
+total_games = 0
+total_players = 0
+
 seasons.each do |season|
   puts "Starting season #{season['id']}"
 
@@ -48,6 +51,7 @@ seasons.each do |season|
       add_player(league_id, player['name'], '', true, true)
     end
   end
+  total_players += new_players
   puts 'done' if existing_players == 0
   puts "#{existing_players} existing players, #{new_players} new players" if existing_players > 0
 
@@ -60,6 +64,7 @@ seasons.each do |season|
     outcome[id(game['awayTeamName'], league_id)] = game['result']['goalsAwayTeam']
     add_game(outcome, league_id, timestamp)
   end
+  total_games += games['count']
   puts 'done'
 
   # Remove files when we're done
@@ -68,6 +73,8 @@ seasons.each do |season|
 
   puts "Done with season #{season['id']}"
 end
+
+puts "Finished all seasons. #{total_players} players and #{total_games} games added"
 
 # goodbye seasons
 FileUtils.rm Dir.glob('seasons.json')
