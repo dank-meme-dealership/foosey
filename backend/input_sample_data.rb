@@ -17,6 +17,15 @@ print 'Fetching seasons... '
 `wget http://api.football-data.org/v1/soccerseasons -O seasons.json >/dev/null 2>&1`
 puts 'done'
 
+print 'Adding league... '
+if api_league(league_name)[:error]
+  add_league(league_name)
+  puts 'done'
+else
+  puts 'already exists'
+end
+league_id = api_league(league_name)[:leagueID]
+
 seasons = JSON.parse(File.read('seasons.json'))
 
 seasons.each do |season|
@@ -27,15 +36,6 @@ seasons.each do |season|
 
   players = JSON.parse(File.read('players.json'))
   games = JSON.parse(File.read('games.json'))
-
-  print 'Adding league... '
-  if api_league(league_name)[:error]
-    add_league(league_name)
-    puts 'done'
-  else
-    puts 'already exists'
-  end
-  league_id = api_league(league_name)[:leagueID]
 
   print "Adding #{players['count']} players... "
   new_players = 0
