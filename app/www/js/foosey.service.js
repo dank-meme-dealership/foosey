@@ -164,7 +164,7 @@
 
     function getBadges()
     {
-      return $http.get(url + SettingsService.leagueID + '/badges');
+      return $http.get(url + SettingsService.leagueID + '/badges?id=' + SettingsService.playerID);
     }
 
     function removeGame(gameID)

@@ -164,7 +164,7 @@ namespace '/v1' do
     # Badges
     # All Badges
     get '/badges' do
-      json badges params['league_id'].to_i
+      json badges(params['league_id'].to_i, params['id'].to_i)
     end
 
     # All Games / Multiple Games

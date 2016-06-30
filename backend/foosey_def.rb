@@ -143,7 +143,7 @@ def app_dir
 end
 
 # returns array of players and their badges in a given league
-def badges(league_id)
+def badges(league_id, player_id)
   # get players
   players = player_ids league_id
   badges = Hash.new { |h, k| h[k] = [] }
@@ -218,6 +218,20 @@ def badges(league_id)
     Time.now.to_i - last_game[:timestamp] > 1_209_600 # 2 weeks
   end
   sleepers.each { |b| badges[b] << badge('💤', 'Snoozin\'') }
+
+  # nemesis and ally badges
+  if (player_id > 0)
+    nemeses = []
+    allies = []
+    you = api_player(player_id, true, league_id)
+    players.each do |p|
+      this_player = api_player(p, false, league_id)
+      nemeses << p if this_player[:displayName] == you[:nemesis]
+      allies << p if this_player[:displayName] == you[:ally]
+    end
+    nemeses.each { |b| badges[b] << badge('😈', 'Your nemesis\'') }
+    allies.each { |b| badges[b] << badge('😇', 'Your ally\'') }
+  end
 
   # build hash
   badges.collect do |k, v|
