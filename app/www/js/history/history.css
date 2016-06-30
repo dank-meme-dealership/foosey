@@ -1,7 +1,7 @@
 .game-score
 {
   text-align: center;
-  width: 95px;
+  min-width: 95px;
 }
 .game-item
 {
