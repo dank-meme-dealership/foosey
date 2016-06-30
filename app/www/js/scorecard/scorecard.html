@@ -90,8 +90,8 @@
   					Ally
   					<i class="ion-ios-information"></i>
   				</div>
-  				<div ng-show="player">{{player.ally | capitalize}} ({{player.allyCount}} games)</div>
-  				<div ng-show="!player">-</div>
+  				<div ng-show="player.ally">{{player.ally | capitalize}} ({{player.allyCount}} games)</div>
+  				<div ng-show="!player.ally">-</div>
   			</ion-item>
   			<!-- Nemesis -->
   			<ion-item class="stat-card">
@@ -99,8 +99,8 @@
   					Nemesis
   					<i class="ion-ios-information"></i>
   				</div>
-  				<div ng-show="player">{{player.nemesis | capitalize}} ({{player.nemesisCount}} games)</div>
-  				<div ng-show="!player">-</div>
+  				<div ng-show="player.nemesis">{{player.nemesis | capitalize}} ({{player.nemesisCount}} games)</div>
+  				<div ng-show="!player.nemesis">-</div>
   			</ion-item>
   		</div>
 
