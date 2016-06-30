@@ -254,7 +254,7 @@
 		{	
 			if (state) $scope.state = state;
 			if (title) $scope.title = title;
-			$ionicScrollDelegate.scrollTop(true);
+			if (state !== 'player-select') $ionicScrollDelegate.scrollTop(true);
 		}
 
 		function addMorePlayers()
