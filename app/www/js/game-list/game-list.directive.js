@@ -11,6 +11,7 @@
       scope       : {
         title : '=',
         list  : '=',
+        gameCount: '=',
         highlight: '='
       },
       controller  : controller,
