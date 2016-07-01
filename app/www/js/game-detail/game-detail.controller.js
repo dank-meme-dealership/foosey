@@ -10,6 +10,7 @@
   {
     $scope.settings = SettingsService;
     $scope.fetching = false;
+    $scope.disabled = true;
 
     $scope.remove = confirmRemove;
 
@@ -36,6 +37,10 @@
             var p2 = $scope.game[0].teams[1].players[0].playerID;
             fetchSimilarGames(p1, p2);
           }
+          else
+          {
+            $scope.disabled = false;
+          }
         });
     }
 
@@ -52,6 +57,7 @@
               return game.teams.length === 2 && game.teams[0].players.length === 1;
             });
           getRecord();
+          $scope.disabled = false;
         });
       });
     }
