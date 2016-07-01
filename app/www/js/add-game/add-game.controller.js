@@ -80,7 +80,7 @@
 		// function to select player
 		function playerSelect(player)
 		{
-			// if (playerSelected(player)) return;
+			if (playerSelected(player)) return;
 			$scope.canCancel = true;
 
 			team = $scope.teams[selectedPlayer.teamIndex];
