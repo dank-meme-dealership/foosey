@@ -13,7 +13,6 @@
 
 		$scope.settings = SettingsService;
 		$scope.gameTypes = gameTypes;
-		$scope.reset = reset;
 		$scope.useNowTime = true;
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;
@@ -29,6 +28,7 @@
 		$scope.playerSelect = playerSelect;
 		$scope.scoreSelect = scoreSelect;
 		$scope.playerName = playerName;
+		$scope.reset = reset;
 		$scope.submit = submit;
 		$scope.undo = undo;
 
@@ -80,6 +80,7 @@
 		// function to select player
 		function playerSelect(player)
 		{
+			if (playerSelected(player)) return;
 			$scope.canCancel = true;
 
 			team = $scope.teams[selectedPlayer.teamIndex];
@@ -251,7 +252,7 @@
 		}
 
 		function changeState(state, title)
-		{	
+		{
 			if (state) $scope.state = state;
 			if (title) $scope.title = title;
 			if (state !== 'player-select') $ionicScrollDelegate.scrollTop(true);
