@@ -21,7 +21,7 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="lib/angular-material/angular-material.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/animations.css" rel="stylesheet">
+    <link href="css/rotate.css" rel="stylesheet">
     <link href="js/add-game/add-game.css" rel="stylesheet">
     <link href="js/badges/badges.css" rel="stylesheet">
     <link href="js/history/history.css" rel="stylesheet">
@@ -78,6 +78,9 @@
     <script src="js/history/history.routes.js"></script>
     <script src="js/history/history.controller.js"></script>
 
+    <script src="js/keylistener/keylistener.module.js"></script>
+    <script src="js/keylistener/keylistener.directive.js"></script>    
+
     <script src="js/leaderboard/leaderboard.module.js"></script>
     <script src="js/leaderboard/leaderboard.routes.js"></script>
     <script src="js/leaderboard/leaderboard.controller.js"></script>
@@ -111,7 +114,7 @@
     <script src="js/team-stats/team-stats.controller.js"></script>
     
   </head>
-  <body ng-app="foosey" class="background-alt">
+  <body ng-app="foosey" class="background-alt" keylistener>
     <ion-nav-view></ion-nav-view>
   </body>
 </html>

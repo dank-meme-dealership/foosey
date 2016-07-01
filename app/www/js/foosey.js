@@ -10,6 +10,7 @@
 
       'addGame',
       'history',
+      'keylistener',
       'leaderboard',
       'login',
       'scorecard',

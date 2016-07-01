@@ -11,15 +11,15 @@
 		var service = {
 			//Properties
 			eloChartGames			: localStorage.getObject('eloChartGames', 30),
-			isAdmin						: localStorage.getObject('isAdmin', false),
+			isAdmin						: setting('isAdmin', false),
 			leagueID					: localStorage.getObject('leagueID', undefined),
 			loggedIn					: _.isInteger(localStorage.getObject('leagueID')),
-			noGamePlayers			: localStorage.getObject('noGamePlayers', true),
+			noGamePlayers			: setting('noGamePlayers', true),
 			playerID					: localStorage.getObject('playerID', undefined),
 			recentGames				: localStorage.getObject('recentGames', 3),
-			showBadges				: localStorage.getObject('showBadges', true),
-			showElo						: localStorage.getObject('showElo', true),
-			showRelTimes			: localStorage.getObject('showRelTimes', true),
+			showBadges				: setting('showBadges', true),
+			showElo						: setting('showElo', false),
+			showRelTimes			: setting('showRelTimes', true),
 			//Functions
 			logIn 						: logIn,
 			logOut						: logOut,
@@ -79,6 +79,12 @@
 		{
 			service[property] = value;
 			localStorage.setObject(property, value);
+		}
+
+		function setting(property, defaultValue)
+		{
+			var setValue = localStorage.getObject(property);
+			return _.isBoolean(setValue) ? setValue : defaultValue;
 		}
 	}
 })();
