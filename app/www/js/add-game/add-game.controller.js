@@ -62,6 +62,8 @@
 			selectedPlayer = { teamIndex: teamIndex, playerIndex: playerIndex };
 			selectedScoreIndex = undefined;
 			changeState("player-select", "Select Players");
+			if (SettingsService.addGameSelect) $scope.$broadcast('selectFilterBar');
+			if (SettingsService.addGameClear) $scope.filter.text = '';
 		}
 
 		function chooseScore(teamIndex)
@@ -103,27 +105,47 @@
 
 		function jump()
 		{
-			$scope.filter.text = '';
-			// document.getElementById("search").focus();
 			for (var t = 0; t < $scope.teams.length; t++)
 			{
-				for (var p = 0; p < $scope.teams[t].players.length; p++)
+				if (jumpPlayers(t)) return;
+				if (!SettingsService.addGameNames)
 				{
-					if ($scope.teams[t].players[p] === null)
-					{ 
-						choosePlayer(t, p);
-						return;
-					}
+					if (jumpScores(t)) return;
 				}
-				if ($scope.teams[t].score === null)
+			}
+			if (SettingsService.addGameNames)
+			{
+				for (var t = 0; t < $scope.teams.length; t++)
 				{
-					chooseScore(t);
-					return;
+					if (jumpScores(t)) return;
 				}
 			}
 			selectedPlayer = undefined;
 			selectedScoreIndex = undefined;
 			changeState("confirm", "Confirm");
+		}
+
+		function jumpPlayers(t)
+		{
+			for (var p = 0; p < $scope.teams[t].players.length; p++)
+			{
+				if ($scope.teams[t].players[p] === null)
+				{ 
+					choosePlayer(t, p);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function jumpScores(t)
+		{
+			if ($scope.teams[t].score === null)
+			{
+				chooseScore(t);
+				return true;
+			}
+			return false;
 		}
 
 		function playerSelected(player)
