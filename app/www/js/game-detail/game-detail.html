@@ -3,13 +3,13 @@
   
   <!-- trash game -->
   <ion-nav-buttons side="right">
-    <button class="button button-clear button-large ion-trash-a" ng-click="remove()" ng-disabled="disabled"></button>
+    <button class="button button-clear button-assertive" ng-click="remove()" ng-disabled="disabled">Remove</button>
   </ion-nav-buttons>
 
   <ion-content class="background" has-bouncing="true">
 
     <!-- This game -->
-    <game-list list="game"></game-list>
+    <game-list list="game" edit="true"></game-list>
 
     <!-- Disclaimer -->
     <div class="card" ng-show="game && !fetching">

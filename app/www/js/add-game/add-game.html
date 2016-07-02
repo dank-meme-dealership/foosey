@@ -1,5 +1,5 @@
 <ion-view>
-	<ion-nav-title>Add Game</ion-nav-title>
+	<ion-nav-title>{{adding ? 'Add' : 'Edit'}} Game</ion-nav-title>
 	
 	<!-- Cancel button to return to game select state -->
 	<ion-nav-buttons side="right">
@@ -7,7 +7,7 @@
     	class="button button-clear button-assertive" 
     	ng-click="reset()">
     	<div ng-if="canCancel">
-    		Clear
+    		{{adding ? 'Clear' : 'Revert'}}
     	</div>
     	<ion-spinner 
     		icon="lines" 
@@ -25,7 +25,8 @@
 	    	ng-click="gameSelect($index, gameType)" 
 	    	ng-repeat="gameType in gameTypes track by $index"
 	      ng-class="{active: type.name === gameType.name }"
-	      ng-show="gameType.totalPlayers <= players.length">
+	      ng-show="gameType.totalPlayers <= players.length"
+	      ng-disabled="state === 'saving'">
 	      {{gameType.name}}
 	    </a>
 	  </div>      
@@ -129,7 +130,9 @@
 					<ion-item class="center positive">Save</ion-item>
 				</div> -->
 				<div class="padding-sides">
-					<button class="button button-full no-margin positive" ng-show="!player.playerID" ng-click="submit()" ng-disabled="teams[0].score === teams[1].score">Save</button>
+					<button class="button button-full no-margin positive" ng-show="!player.playerID" ng-click="submit()" ng-disabled="teams[0].score === teams[1].score">
+						{{adding ? 'Save' : 'Update'}}
+					</button>
 				</div>
 			</div>
 
@@ -140,7 +143,7 @@
 				<div class="card">
 					<ion-item class="wrap">	
 						<div ng-show="saveStatus === 'saving'">
-							Adding Game...
+							{{adding ? 'Adding' : 'Updating'}} Game...
 						</div>
 						<div ng-show="saveStatus === 'success'">
 							{{response.message}}
@@ -173,10 +176,8 @@
 				</div>
 
 				<!-- Done button -->
-				<div ng-click="reset()" class="card">
-					<ion-item class="center positive" ng-click="reset()">
-						Add Another Game
-					</ion-item>
+				<div ng-click="cancel()" class="card" ng-show="adding">
+					<ion-item class="center positive">Add Another Game</ion-item>
 				</div>
 			</div>
 

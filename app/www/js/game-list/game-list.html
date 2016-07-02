@@ -29,5 +29,8 @@
         <span ng-show="title">{{game.timestamp | date}},</span> {{game.timestamp | time:settings.showRelTimes}}
       </div>
     </ion-item>
+    <ion-item ng-if="edit" class="text-center positive" ui-sref="app.edit-game({ gameID: games[0].gameID })">
+      Edit This Game
+    </ion-item>
   </ion-list>
 </div>

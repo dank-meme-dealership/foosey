@@ -18,6 +18,16 @@
             templateUrl: 'js/add-game/add-game.html'
           }
         }
+      })
+      .state('app.edit-game',
+      {
+        url: '/edit-game/:gameID',
+        views: {
+          menuContent: {
+            controller: 'AddGameController',
+            templateUrl: 'js/add-game/add-game.html'
+          }
+        }
       });
   }
 })();

@@ -12,7 +12,8 @@
         title : '=',
         list  : '=',
         gameCount: '=',
-        highlight: '='
+        highlight: '=',
+        edit: '='
       },
       controller  : controller,
       templateUrl : 'js/game-list/game-list.html'
