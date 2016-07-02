@@ -44,8 +44,11 @@
 			</div>
 		</div>
 
+		<!-- show loading while waiting -->
+		<ion-spinner ng-show="!teams" class="loading-dots" icon="lines"></ion-spinner>
+
 		<!-- Enough players -->
-		<div ng-show="players.length > 1">
+		<div ng-show="players.length > 1 && teams">
 
 			<!-- score at the top while selecting scores -->
 			<div class="card" ng-class="{'opaque': saveStatus === 'removed'}">

@@ -11,6 +11,7 @@
     $scope.settings = SettingsService;
     $scope.fetching = false;
     $scope.disabled = true;
+    $scope.game = undefined;
 
     $scope.remove = confirmRemove;
 

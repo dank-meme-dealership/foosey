@@ -38,7 +38,7 @@
     </div>
 
     <!-- show loading while waiting -->
-    <ion-spinner ng-show="!elos && !error" class="loading-dots" icon="lines"></ion-spinner>
+    <ion-spinner ng-show="!(elos.length >= 0)  && !error" class="loading-dots" icon="lines"></ion-spinner>
 
     <ion-slide-box on-slide-changed="changeSlide($index)" show-pager="false">
 

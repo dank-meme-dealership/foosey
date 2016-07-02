@@ -8,6 +8,9 @@
 
   <ion-content class="background" has-bouncing="true">
 
+    <!-- show loading while waiting -->
+    <ion-spinner ng-show="!game" class="loading-dots" icon="lines"></ion-spinner>
+
     <!-- This game -->
     <game-list list="game" edit="true"></game-list>
 
