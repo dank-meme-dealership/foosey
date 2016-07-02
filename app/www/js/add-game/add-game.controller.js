@@ -18,6 +18,8 @@
 		$scope.customDate = undefined;
 		$scope.scores = _.reverse(_.range(11));
 		$scope.canCancel = false;
+		$scope.filter = {};
+		$scope.filter.text = '';
 
 		$scope.addMorePlayers = addMorePlayers;
 		$scope.choosePlayer = choosePlayer;
@@ -100,6 +102,8 @@
 
 		function jump()
 		{
+			$scope.filter.text = '';
+			// document.getElementById("search").focus();
 			for (var t = 0; t < $scope.teams.length; t++)
 			{
 				for (var p = 0; p < $scope.teams[t].players.length; p++)
@@ -110,6 +114,9 @@
 						return;
 					}
 				}
+			}
+			for (var t = 0; t < $scope.teams.length; t++)
+			{
 				if ($scope.teams[t].score === null)
 				{
 					chooseScore(t);

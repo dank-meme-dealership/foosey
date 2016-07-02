@@ -34,7 +34,7 @@
 	<ion-content class="background" ng-class="{'has-subheader': players.length > 1}" has-bouncing="true">
 	
 		<!-- Need to add more players -->
-		<div class="card" ng-show="players.length < 2">
+		<div class="card" ng-if="players.length < 2">
 			<div class="item item-divider">
 				Not enough players to add a game
 			</div>
@@ -74,12 +74,18 @@
 		
 			<!-- Player select -->
 			<div ng-show="state === 'player-select'">
+
+				<!-- experimental filter bar -->
+				<div class="card" ng-if="settings.addGameFilter">
+					<input type="search" id="search" placeholder="Filter Players..." ng-model="filter.text">
+				</div>
+
 				<!-- show loading while waiting -->
 		  	<ion-spinner ng-show="!players" class="loading-dots" icon="lines"></ion-spinner>
 				<div class="grid-container">
 					<div 
 						class="grid-item item"
-						ng-repeat="player in players"
+						ng-repeat="player in players | filter:{ displayName: filter.text }"
 		  		  ng-click="playerSelect(player)"
 		  		  ng-disabled="playerSelected(player)">
 		  		  {{player.displayName | capitalize}}

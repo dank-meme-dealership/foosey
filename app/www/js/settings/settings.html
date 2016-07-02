@@ -42,6 +42,14 @@
       </ion-list>
     </div>
 
+    <!-- Experimental -->
+    <div class="card">
+      <ion-list>
+        <div class="item item-divider">Experimental</div>
+        <ion-toggle ng-change="settings.setProperty('addGameFilter', settings.addGameFilter)" ng-model="settings.addGameFilter" toggle-class="toggle-balanced">Add Game Filter Bar</ion-toggle>
+      </ion-list>
+    </div>
+
     <!-- Admin -->
     <div class="card" ng-show="settings.isAdmin">
       <div class="item item-divider">Admin</div>

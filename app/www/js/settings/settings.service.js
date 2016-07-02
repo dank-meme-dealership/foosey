@@ -10,6 +10,7 @@
 	{
 		var service = {
 			//Properties
+			addGameFilter			: setting('addGameFilter', false),
 			eloChartGames			: localStorage.getObject('eloChartGames', 30),
 			isAdmin						: setting('isAdmin', false),
 			leagueID					: localStorage.getObject('leagueID', undefined),
