@@ -14,8 +14,7 @@
       'leaderboard',
       'login',
       'scorecard',
-      'settings',
-      'teamStats'
+      'settings'
     ])
     .config(config)
     .run(run);

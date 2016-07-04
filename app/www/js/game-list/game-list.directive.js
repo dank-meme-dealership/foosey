@@ -28,7 +28,8 @@
   {
     $scope.settings = SettingsService;
 
-    $scope.show = show;
+    $scope.editGame = editGame;
+    $scope.gameDetail = gameDetail;
 
     $scope.$watchCollection('list', function(newVal)
     {
@@ -48,10 +49,15 @@
         }) : [];
     }
 
-    // show the action sheet for deleting games
-    function show(gameID) 
+    function editGame(gameID)
     {
-      $state.go('app.game-detail', { gameID: gameID });
-    };
+      $state.go($state.current.name + '-edit-game', { gameID: gameID });
+    }
+
+    function gameDetail(gameID)
+    {
+      var state = _.includes($state.current.name, 'game-detail') ? $state.current.name : $state.current.name + '-game-detail';
+      $state.go(state, { gameID: gameID });
+    }
   }
 })();

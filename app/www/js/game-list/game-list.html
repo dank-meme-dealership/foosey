@@ -11,7 +11,7 @@
     <ion-item ng-if="games.length === 0">
       No games to show.
     </ion-item>
-    <ion-item class="game-item" ng-class="{'highlight' : highlight === game.gameID}" ng-repeat="game in games" ng-click="show(game.gameID)">
+    <ion-item class="game-item" ng-class="{'highlight' : highlight === game.gameID}" ng-repeat="game in games" ng-click="gameDetail(game.gameID)">
       <div class="spaced-out">
         <div ng-repeat="team in game.teams" class="game-score">
           <div ng-repeat="player in team.players">
@@ -29,7 +29,7 @@
         <span ng-show="title">{{game.timestamp | date}},</span> {{game.timestamp | time:settings.showRelTimes}}
       </div>
     </ion-item>
-    <ion-item ng-if="edit" class="text-center positive" ui-sref="app.edit-game({ gameID: games[0].gameID })">
+    <ion-item ng-if="edit" class="text-center positive" ng-click="editGame(games[0].gameID)">
       Edit This Game
     </ion-item>
   </ion-list>

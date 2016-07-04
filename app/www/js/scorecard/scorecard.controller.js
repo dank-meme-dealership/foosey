@@ -20,7 +20,6 @@
 
 		$scope.info = info;
     $scope.refresh = refresh;
-    $scope.addAGame = addAGame;
 
 		// load on entering view 
     $scope.$on('$ionicView.beforeEnter', refresh);
@@ -123,10 +122,5 @@
         template: '<div style="text-align: center;">' + message + '</div>'
       });
 		}
-
-    function addAGame()
-    {
-      $state.go('app.add-game');
-    }
 	}
 })();

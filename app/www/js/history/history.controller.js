@@ -12,7 +12,6 @@
     var gamesToLoad = 30;
     $scope.loading = false;
 
-    $scope.addAGame = addAGame;
     $scope.loadMore = loadMore;
     $scope.refresh = refresh;
 
@@ -83,11 +82,6 @@
       $scope.$broadcast('scroll.refreshComplete');
       $scope.$broadcast('scroll.infiniteScrollComplete');
       $scope.loading = false;
-    }
-
-    function addAGame()
-    {
-      $state.go('app.add-game');
     }
   }
 })();
