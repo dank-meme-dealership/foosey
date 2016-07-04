@@ -71,8 +71,6 @@
 					<input type="search" id="search" placeholder="Filter Players..." ng-model="filter.text" focus-on="selectFilterBar">
 				</div>
 
-				<!-- show loading while waiting -->
-		  	<ion-spinner ng-show="!players" class="loading-dots" icon="lines"></ion-spinner>
 				<div class="grid-container">
 					<div 
 						class="grid-item item"
@@ -187,7 +185,7 @@
 		</div>
 
 		<!-- show loading while waiting -->
-		<ion-spinner ng-show="!teams" class="loading-dots" icon="lines"></ion-spinner>
+		<ion-spinner ng-show="!teams || !players" class="loading-dots" icon="lines"></ion-spinner>
 
 	</ion-content>
 </ion-view>
