@@ -220,7 +220,7 @@ def badges(league_id, player_id)
   sleepers.each { |b| badges[b] << badge('💤', 'Snoozin\'') }
 
   # nemesis and ally badges
-  if (player_id > 0)
+  if player_id > 0
     nemeses = []
     allies = []
     you = api_player(player_id, true, league_id)
@@ -229,8 +229,8 @@ def badges(league_id, player_id)
       nemeses << p if this_player[:displayName] == you[:nemesis]
       allies << p if this_player[:displayName] == you[:ally]
     end
-    nemeses.each { |b| badges[b] << badge('😈', 'Your nemesis') }
-    allies.each { |b| badges[b] << badge('😇', 'Your ally') }
+    nemeses.each { |b| badges[b] << badge('😈', 'Your Nemesis') }
+    allies.each { |b| badges[b] << badge('😇', 'Your Ally') }
   end
 
   # build hash
@@ -860,6 +860,11 @@ def remove_game(game_id, league_id)
                 WHERE GameID = :game_id
                 AND LeagueID = :league_id',
                game_id, league_id
+
+    slack_url = db.get_first_value 'SELECT Value FROM Config
+                                    WHERE Setting = "SlackUrl"'
+
+    message_slack("Game removed: #{game_id}", [], slack_url)
 
     recalc(league_id, timestamp)
   end

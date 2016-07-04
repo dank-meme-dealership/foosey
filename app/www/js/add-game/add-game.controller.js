@@ -192,6 +192,7 @@
 		// undo last game
 		function undo()
 		{
+			$scope.saveStatus = "removing";
 			FooseyService.removeGame($scope.gameToUndo).then(function successCallback(response)
 			{
 				$scope.saveStatus = "removed";

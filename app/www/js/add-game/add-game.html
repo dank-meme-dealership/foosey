@@ -148,6 +148,9 @@
 						<div ng-show="saveStatus === 'saving'">
 							{{adding ? 'Adding' : 'Updating'}} Game...
 						</div>
+						<div ng-show="saveStatus === 'removing'">
+							Removing Game...
+						</div>
 						<div ng-show="saveStatus === 'success'">
 							{{response.message}}
 						</div>
