@@ -16,7 +16,6 @@
 		$scope.player = undefined;
 		$scope.error = false;
     $scope.loading = false;
-    $scope.you = $stateParams.playerID == SettingsService.playerID;
 
 		$scope.info = info;
     $scope.refresh = refresh;
@@ -30,15 +29,22 @@
       if (!SettingsService.loggedIn) SettingsService.logOut();
       if (SettingsService.showBadges) BadgesService.updateBadges();
       $scope.loading = true;
+      resetYou();
       setUpPlayer();
       setUpRecentGames();
       $scope.$broadcast('scroll.refreshComplete');
     }
 
+    function resetYou()
+    {
+      $scope.you = _.isUndefined($stateParams.playerID) || $stateParams.playerID == SettingsService.playerID;
+      $scope.playerID = $scope.you ? SettingsService.playerID : $stateParams.playerID;
+    }
+
     function setUpPlayer()
     {
 			// set up the player
-			FooseyService.getPlayer($stateParams.playerID).then(
+			FooseyService.getPlayer($scope.playerID).then(
 				function(response){
 					$scope.player = response.data;
       		if (SettingsService.showElo) setUpChart();
@@ -48,7 +54,7 @@
     function setUpRecentGames()
     {
     	// set up the player
-			FooseyService.getPlayerGames($stateParams.playerID, SettingsService.recentGames).then(
+			FooseyService.getPlayerGames($scope.playerID, SettingsService.recentGames).then(
 				function(response){
 					$scope.recentGames = response.data;
 				});
@@ -61,7 +67,7 @@
 
 			if ($scope.settings.showElo)
 			{
-				FooseyService.getEloHistory($stateParams.playerID, SettingsService.eloChartGames).then(
+				FooseyService.getEloHistory($scope.playerID, SettingsService.eloChartGames).then(
 					function successCallback(response)
 					{
 						$scope.error = false;

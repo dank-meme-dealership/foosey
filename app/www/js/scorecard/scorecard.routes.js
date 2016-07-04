@@ -11,7 +11,7 @@
     $stateProvider
       .state('app.scorecard',
       {
-        url: '/scorecard/:playerID',
+        url: '/scorecard',
         views: {
           scorecard: {
             controller: 'ScorecardController',
