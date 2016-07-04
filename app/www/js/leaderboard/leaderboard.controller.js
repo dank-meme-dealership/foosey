@@ -16,7 +16,6 @@
     $scope.elos = undefined;
     $scope.winRates = undefined;
 
-    $scope.addAGame = addAGame;
     $scope.updateLeaderboard = updateLeaderboard;
     $scope.changeSlide = changeSlide;
     $scope.slideTo = slideTo;
@@ -133,11 +132,6 @@
     {
       $scope.loading = false;
       $scope.$broadcast('scroll.refreshComplete');
-    }
-
-    function addAGame()
-    {
-      $state.go('app.add-game');
     }
   }
 })();

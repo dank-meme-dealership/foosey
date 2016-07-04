@@ -13,19 +13,19 @@
       {
         url: '/add-game',
         views: {
-          menuContent: {
+          games: {
             controller: 'AddGameController',
             templateUrl: 'js/add-game/add-game.html'
           }
         }
       })
-      .state('app.edit-game',
+      .state('app.add-game-manage-players',
       {
-        url: '/edit-game/:gameID',
+        url: '/add-game/manage-players',
         views: {
-          menuContent: {
-            controller: 'AddGameController',
-            templateUrl: 'js/add-game/add-game.html'
+          games: {
+            controller: 'PlayerManageController',
+            templateUrl: 'js/player/player-manage.html'
           }
         }
       });

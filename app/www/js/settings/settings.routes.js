@@ -13,9 +13,19 @@
       {
         url: '/settings',
         views: {
-          menuContent: {
+          settings: {
             controller: 'SettingsController',
             templateUrl: 'js/settings/settings.html'
+          }
+        }
+      })
+      .state('app.settings-manage-players',
+      {
+        url: '/settings/manage-players',
+        views: {
+          settings: {
+            controller: 'PlayerManageController',
+            templateUrl: 'js/player/player-manage.html'
           }
         }
       });

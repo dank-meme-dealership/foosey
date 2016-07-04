@@ -15,7 +15,7 @@
         ng-class="{active: slide === 0}">{{settings.showElo ? 'Elo Rating' : 'Ranking'}}</a>    
       <a class="tab-item" ng-click="slideTo(1)"
         ng-class="{active: slide === 1}">Win Percentage</a>
-    </div>      
+    </div>
   </div>
 
   <ion-content class="background has-subheader" has-bouncing="true">
@@ -32,7 +32,7 @@
       <div class="item item-divider">
         No players have played yet
       </div>
-      <div class="item text-center positive" ng-click="addAGame()">
+      <div class="item text-center positive" ui-sref="app.add-game">
         Add your first game
       </div>
     </div>
@@ -48,7 +48,7 @@
           <ion-item 
             class="card"
             ng-repeat="player in elos" 
-            href="#/app/scorecard/{{player.playerID}}">
+            href="#/app/leaderboard/scorecard/{{player.playerID}}">
             <div class="spaced-out">
               <div>
                 <div class="rank">{{player.rank}}</div> 
