@@ -9,7 +9,7 @@
     // If they're logged in, default to leaderboard
     if (SettingsServiceProvider.$get().loggedIn)
     {
-      $urlRouterProvider.otherwise('/app/scorecard/' + SettingsServiceProvider.$get().playerID);
+      $urlRouterProvider.otherwise('/app/scorecard');
     } 
     // Otherwise, send them to the login page
     else 

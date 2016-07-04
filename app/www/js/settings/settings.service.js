@@ -44,7 +44,7 @@
         disableBack: true
       });
 
-			$state.go('app.scorecard', { 'playerID': league.player.playerID });
+			$state.go('app.scorecard');
 		}
 
 		function logOut()
