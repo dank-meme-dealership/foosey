@@ -133,6 +133,10 @@ ion-item.item.wrap
 {
   text-align: center;
 }
+.platform-android .bar-subheader
+{
+  top:93px !important;
+}
 .space:before
 {
   padding-right: 16px;
