@@ -57,6 +57,7 @@
     // infinite scroll
     function loadMore()
     {
+      if (loaded === 0 ) return;
       $scope.loading = true;
       
       FooseyService.getGames(gamesToLoad, loaded)

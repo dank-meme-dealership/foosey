@@ -75,6 +75,7 @@
 			setProperty('playerBadges', undefined);
 			setProperty('winRates', undefined);
 			setProperty('history', undefined);
+			setProperty('players', undefined);
 
       $state.go('login');
 		}
