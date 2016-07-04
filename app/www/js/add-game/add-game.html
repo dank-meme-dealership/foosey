@@ -33,19 +33,6 @@
 	</div>
 
 	<ion-content class="background" ng-class="{'has-subheader': players.length > 1}" has-bouncing="true">
-	
-		<!-- Need to add more players -->
-		<div class="card" ng-if="players.length < 2">
-			<div class="item item-divider">
-				Not enough players to add a game
-			</div>
-			<div class="item text-center positive" ui-sref="app.add-game-manage-players">
-				Add More Players
-			</div>
-		</div>
-
-		<!-- show loading while waiting -->
-		<ion-spinner ng-show="!teams" class="loading-dots" icon="lines"></ion-spinner>
 
 		<!-- Enough players -->
 		<div ng-show="players.length > 1 && teams">
@@ -188,6 +175,19 @@
 			</div>
 
 		</div>
+
+		<!-- Need to add more players -->
+		<div class="card" ng-if="players.length < 2">
+			<div class="item item-divider">
+				Not enough players to add a game
+			</div>
+			<div class="item text-center positive" ui-sref="app.add-game-manage-players">
+				Add More Players
+			</div>
+		</div>
+
+		<!-- show loading while waiting -->
+		<ion-spinner ng-show="!teams" class="loading-dots" icon="lines"></ion-spinner>
 
 	</ion-content>
 </ion-view>

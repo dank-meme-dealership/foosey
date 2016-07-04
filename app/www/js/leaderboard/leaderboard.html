@@ -22,24 +22,6 @@
     <!-- pull to refresh -->
     <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="updateLeaderboard()"></ion-refresher>
 
-    <!-- Show if error -->
-    <div ng-if="error" class="card center">
-      <ion-item>Can't connect to server :(</ion-item>
-    </div>
-
-    <!-- Need to add a game -->
-    <div class="card" ng-show="!loading && elos.length === 0">
-      <div class="item item-divider">
-        No players have played yet
-      </div>
-      <div class="item text-center positive" ui-sref="app.add-game">
-        Add your first game
-      </div>
-    </div>
-
-    <!-- show loading while waiting -->
-    <ion-spinner ng-show="!(elos.length >= 0)  && !error" class="loading-dots" icon="lines"></ion-spinner>
-
     <ion-slide-box on-slide-changed="changeSlide($index)" show-pager="false">
 
       <!-- ELO Ratings -->
@@ -96,5 +78,24 @@
       </ion-slide>
 
     </ion-slide-box>
+
+    <!-- show loading while waiting -->
+    <ion-spinner ng-show="!(elos.length >= 0)  && !error" class="loading-dots" icon="lines"></ion-spinner>
+
+    <!-- Show if error -->
+    <div ng-if="error" class="card center">
+      <ion-item>Can't connect to server :(</ion-item>
+    </div>
+
+    <!-- Need to add a game -->
+    <div class="card" ng-show="!loading && elos.length === 0">
+      <div class="item item-divider">
+        No players have played yet
+      </div>
+      <div class="item text-center positive" ui-sref="app.add-game">
+        Add your first game
+      </div>
+    </div>
+
   </ion-content>
 </ion-view>

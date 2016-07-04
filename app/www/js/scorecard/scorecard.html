@@ -13,19 +13,6 @@
     <!-- pull to refresh -->
     <ion-refresher pulling-text="Pull to refresh..." spinner="lines" on-refresh="refresh()"></ion-refresher>
 
-    <!-- show loading while waiting -->
-    <ion-spinner ng-show="!player" class="loading-dots" icon="lines"></ion-spinner>
-
-    <!-- Need to add a game -->
-    <div class="card" ng-show="player.gamesPlayed === 0">
-      <div class="item item-divider">
-        {{you ? 'You' : 'They'}} have not played yet
-      </div>
-      <div class="item text-center positive" ui-sref="app.add-game">
-        Add a game
-      </div>
-    </div>
-
     <div ng-show="player.gamesPlayed > 0">
 
       <!-- elo chart -->
@@ -39,14 +26,6 @@
         </div>
         <highchart ng-if="chart" id="chart1" config="chart"></highchart>
       </ion-item>
-
-      <!-- link to other stats -->
-      <!-- <ion-item class="card" href="#/app/team-stats">
-        <div class="spaced-out">
-          <div class="ion-stats-bars space">See team statistics</div>
-          <div class="ion-ios-arrow-forward"></div>
-        </div>
-      </ion-item> -->
 
       <!-- badge definitions -->
       <div class="card" ng-show="settings.showBadges && badges.myBadges(player.playerID).length > 0">
@@ -106,6 +85,19 @@
 
       <game-list title="'Recent Games'" list="recentGames"></game-list>
 
+    </div>
+
+    <!-- show loading while waiting -->
+    <ion-spinner ng-show="!player" class="loading-dots" icon="lines"></ion-spinner>
+
+    <!-- Need to add a game -->
+    <div class="card" ng-show="player.gamesPlayed === 0">
+      <div class="item item-divider">
+        {{you ? 'You' : 'They'}} have not played yet
+      </div>
+      <div class="item text-center positive" ui-sref="app.add-game">
+        Add a game
+      </div>
     </div>
 
 	</ion-content>
