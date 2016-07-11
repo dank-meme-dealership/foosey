@@ -1,3 +1,7 @@
+a.tab-item.tab-item-active 
+{
+  background: #DDD;
+}
 .app-container
 {
   height: 100%;
