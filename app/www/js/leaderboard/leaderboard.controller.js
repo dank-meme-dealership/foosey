@@ -90,7 +90,12 @@
       {
         if (players[i].gamesPlayed >= $scope.minimumQualified)
         {
-          players[i].rank = rank;
+          // same rank if same elo
+          if (i > 0 && players[i].elo === players[i - 1].elo)
+            players[i].rank = players[i - 1].rank;
+          else
+            players[i].rank = rank;
+          
           players[i].qualified = true;
           rank++;
           eloRank.push(players[i]);
