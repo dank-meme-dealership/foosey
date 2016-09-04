@@ -6,6 +6,12 @@ module Foosey
       @id = id
     end
 
+    def valid?
+      Foosey.database do |db|
+        db.execute('SELECT * FROM Game WHERE GameID = :id', id).empty? ? false : true
+      end
+    end
+
     def players
       @players ||= Foosey.database do |db|
         players = db.execute('SELECT PlayerID FROM Game WHERE GameID = :id', id).flatten
@@ -110,6 +116,13 @@ module Foosey
     end
 
     def to_h
+      unless valid?
+        return {
+          error: true,
+          message: 'Invalid game ID'
+        }
+      end
+
       {
         gameID: id,
         timestamp: timestamp,
