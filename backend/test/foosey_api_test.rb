@@ -1,6 +1,6 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env rspec
 
-require_relative '../foosey.rb'
+require_relative '../bin/foosey.rb'
 require 'rack/test'
 require 'rspec'
 require 'rspec/collection_matchers'
@@ -20,7 +20,7 @@ describe 'Foosey API' do
   include Rack::Test::Methods
 
   def app
-    Sinatra::Application
+    Foosey::API
   end
 
   before(:all) do

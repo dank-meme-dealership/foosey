@@ -7,9 +7,10 @@ module Foosey
     end
 
     def players
-      puts caller
       @players ||= Foosey.database do |db|
-        db.execute('SELECT PlayerID FROM Game WHERE GameID = :id', id).flatten
+        players = db.execute('SELECT PlayerID FROM Game WHERE GameID = :id', id).flatten
+        # don't cache if players is empty
+        players.empty? ? nil : players
       end
     end
 
@@ -109,7 +110,7 @@ module Foosey
     end
 
     def to_h
-      @h ||= {
+      {
         gameID: id,
         timestamp: timestamp,
         teams: teams

@@ -13,6 +13,8 @@ module Foosey
     def initialize(id)
       @id = id
 
+      return unless valid?
+
       Foosey.database do |db|
         db.results_as_hash = true
         p = db.get_first_row 'SELECT * FROM Player WHERE PlayerID = :id', id
@@ -34,6 +36,12 @@ module Foosey
 
     def active?
       @active
+    end
+
+    def valid?
+      Foosey.database do |db|
+        db.execute('SELECT * FROM Player WHERE PlayerID = :id', id).empty? ? false : true
+      end
     end
 
     def games
@@ -148,6 +156,12 @@ module Foosey
 
     def to_h(extended = false)
       @h ||= begin
+        unless valid?
+          return {
+            error: true,
+            message: 'Invalid player ID'
+          }
+        end
 
         win_rate = if games_played == 0
                      0

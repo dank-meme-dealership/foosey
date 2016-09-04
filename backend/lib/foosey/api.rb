@@ -1,30 +1,6 @@
 # foosey API calls
 # for more information see API.md
 
-# returns an api object for player elo history
-def api_stats_elo(player_id, league_id = 1)
-  database do |db|
-    db.results_as_hash = true
-    games = db.execute 'SELECT * FROM EloHistory
-                        JOIN (
-                          SELECT PlayerID, GameID, Timestamp FROM Game
-                        )
-                        USING (PlayerID, GameID)
-                        WHERE PlayerID = :player_id
-                        AND LeagueID = :league_id
-                        ORDER BY Timestamp DESC
-                        LIMIT 30;', player_id, league_id
-
-    return games.collect do |game|
-      {
-        gameID: game['GameID'],
-        timestamp: game['Timestamp'],
-        elo: game['Elo']
-      }
-    end
-  end
-end
-
 module Foosey
   class API < Sinatra::Base
     register Sinatra::Namespace
