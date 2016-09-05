@@ -14,6 +14,7 @@
 		$scope.adding = _.isUndefined($stateParams.gameID);
 		$scope.settings = SettingsService;
 		$scope.gameTypes = gameTypes;
+		$scope.useCustom = false;
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;
 		$scope.scores = _.reverse(_.range(11)); // scores 0-10
@@ -24,6 +25,7 @@
 		$scope.addMorePlayers = addMorePlayers;
 		$scope.choosePlayer = choosePlayer;
 		$scope.chooseScore = chooseScore;
+		$scope.enableCustom = enableCustom;
 		$scope.gameSelect = gameSelect;
 		$scope.isSelected = isSelected;
 		$scope.playerSelected = playerSelected;
@@ -40,43 +42,96 @@
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
-      setupPicker('date');
-      setupPicker('time');
       reset();
     });
 
+    // reset the game
+		function reset()
+		{
+			selectedPlayer = undefined;
+			selectedScoreIndex = undefined;
+			$scope.useCustom = !$scope.adding;
+
+			if ($scope.adding)
+			{
+				$scope.teams = emptyTeams(gameTypes[0]);
+				$scope.gameToUndo = undefined;
+				$scope.saveStatus = '';
+				$scope.response = undefined;
+				$scope.canCancel = false;
+				$scope.customTime = moment().format('hh:mm A');
+				$scope.customDate = moment().format('MM/DD/YYYY');
+				setupPicker('date', setDate);
+      	setupPicker('time', setTime);
+
+				choosePlayer(0, 0);
+			}
+			else
+			{
+				editGame();
+				$scope.canCancel = true;
+			}
+			getPlayers();
+		}
+
+		function editGame()
+		{
+			FooseyService.getGame($stateParams.gameID).then(
+				function(game)
+				{
+					_.each(game[0].teams, function(team)
+					{
+						team.players = _.map(team.players, 'playerID');
+					});
+					$scope.customTime = moment.unix(game[0].timestamp).format('hh:mm A');
+					$scope.customDate = moment.unix(game[0].timestamp).format('MM/DD/YYYY');
+					$scope.teams = game[0].teams;
+					$scope.type = gameTypes[game[0].teams[0].players.length - 1];
+					setupPicker('date', setDate);
+      		setupPicker('time', setTime);
+					jump();
+				})
+		}
+
 	  // set up pickers
-   	function setupPicker(type)
+   	function setupPicker(type, onSelect)
    	{
    		var MIN_MODAL_WIDTH = 600;
 	    $('#'+type).scroller($.extend({
 	      preset  : type,
-	      onSelect: type === 'date' ? setDate : setTime
-	    },{ 
-	    	theme: 'android-ics light', 
+	      onSelect: onSelect
+	    },{
+	    	theme: 'android-ics light',
 	    	mode: 'scroller', 
 	    	display: $(window).width() > MIN_MODAL_WIDTH ? 'modal' : 'bottom' 
-	    }));
+	    })).scroller('setDate', getCustomTime(), true);
    	}
 
    	function setDate(event, inst)
     {
-      console.log('set date: ' + inst.val);
       $scope.customDate = inst.val;
       $scope.$apply();
     }
 
     function setTime(event, inst)
     {
-      console.log('set time: ' + inst.val);
       $scope.customTime = inst.val;
       $scope.$apply();
+    }
+
+    function enableCustom()
+		{
+			$scope.useCustom = true;
+		}
+
+    function getCustomTime()
+    {
+    	return new Date($scope.customDate + ' ' + $scope.customTime);
     }
 
     // show date/time picker
    	function show(type)
 		{
-			console.log('Clicked');
 			$('#'+type).mobiscroll('show');
 		}
 
@@ -98,7 +153,7 @@
 		{
 			selectedPlayer = { teamIndex: teamIndex, playerIndex: playerIndex };
 			selectedScoreIndex = undefined;
-			changeState("player-select", "Select Players");
+			changeState('player-select', 'Select Players');
 			if (SettingsService.addGameSelect) $scope.$broadcast('selectFilterBar');
 			if (SettingsService.addGameClear) $scope.filter.text = '';
 		}
@@ -107,7 +162,7 @@
 		{
 			selectedScoreIndex = teamIndex;
 			selectedPlayer = undefined;
-			changeState("score-select", "Select Score");
+			changeState('score-select', 'Select Score');
 		}
 
 		function isSelected(teamIndex, playerIndex)
@@ -159,7 +214,7 @@
 			}
 			selectedPlayer = undefined;
 			selectedScoreIndex = undefined;
-			changeState("confirm", "Confirm");
+			changeState('confirm', 'Confirm');
 		}
 
 		function jumpPlayers(t)
@@ -201,12 +256,12 @@
 		// add the game
 		function submit()
 		{
-			changeState("saving", null);
-			$scope.saveStatus = "saving";
+			changeState('saving', null);
+			$scope.saveStatus = 'saving';
 			$scope.canCancel = false;
 
 			// set up game object
-			var timestamp = new Date($scope.customDate + ' ' + $scope.customTime).getTime()/1000
+			var timestamp = getCustomTime().getTime()/1000
 			var game = {
 				id: $stateParams.gameID,
 				teams: $scope.teams,
@@ -218,71 +273,30 @@
 			editOrAdd(game).then(function successCallback(response)
 			{
 				$scope.response = response.data;
-				$scope.saveStatus = "success";
+				$scope.saveStatus = 'success';
 				if ($scope.adding) $scope.gameToUndo = response.data.info.gameID;
 				else $ionicHistory.goBack();
 			}, function errorCallback(response)
 	    {
-	    	if ($scope.state === "saving")
-	      	$scope.saveStatus = "failed";
+	    	if ($scope.state === 'saving')
+	      	$scope.saveStatus = 'failed';
 	    });
 		}
 
 		// undo last game
 		function undo()
 		{
-			$scope.saveStatus = "removing";
+			$scope.saveStatus = 'removing';
 			FooseyService.removeGame($scope.gameToUndo).then(function successCallback(response)
 			{
-				$scope.saveStatus = "removed";
+				$scope.saveStatus = 'removed';
 				$scope.gameToUndo = undefined;
 				$scope.response = [];
 			}, function errorCallback(response)
 	    {
-	    	if ($scope.state === "saving")
-	      	$scope.saveStatus = "failed";
+	    	if ($scope.state === 'saving')
+	      	$scope.saveStatus = 'failed';
 	    });
-		}
-
-		// reset the game
-		function reset()
-		{
-			selectedPlayer = undefined;
-			selectedScoreIndex = undefined;
-			$scope.customTime = moment().format("hh:mm A");
-			$scope.customDate = moment().format("MM/DD/YYYY");
-
-			if ($scope.adding)
-			{
-				$scope.teams = emptyTeams(gameTypes[0]);
-				$scope.gameToUndo = undefined;
-				$scope.saveStatus = "";
-				$scope.response = undefined;
-				$scope.canCancel = false;
-
-				choosePlayer(0, 0);
-			}
-			else
-			{
-				editGame();
-				$scope.canCancel = true;
-			}
-			getPlayers();
-		}
-
-		function editGame()
-		{
-			FooseyService.getGame($stateParams.gameID).then(
-				function(game)
-				{
-					_.each(game[0].teams, function(team)
-					{
-						team.players = _.map(team.players, 'playerID');
-					})
-					$scope.teams = game[0].teams;
-					$scope.type = gameTypes[game[0].teams[0].players.length - 1];
-					jump();
-				})
 		}
 
 		// get players from server

@@ -60,18 +60,6 @@
 							</div>
 						</div>
 					</div>
-					<hr style="border-color:#CCC">
-					
-					<!-- custom dates and times -->
-					<div id="date"></div><div id="time"></div>
-					<div class="spaced-out">
-						<div class="player-button" ng-click="show('date')">
-							{{customDate}}
-						</div>
-						<div class="player-button" ng-click="show('time')">
-							{{customTime}}
-						</div>
-					</div>
 				</ion-item>
 			</div>
 		
@@ -109,6 +97,24 @@
 		
 			<!-- Confirm the game -->
 			<div ng-show="state === 'confirm'">
+
+				<!-- custom dates and times -->
+				<div class="card">
+					<div class="item center positive" ng-show="!useCustom" ng-click="enableCustom()">
+						Pick a custom date and time
+					</div>
+					<div class="date-time" ng-show="useCustom">
+						<div id="date"></div><div id="time"></div>
+						<div class="spaced-out">
+							<div class="player-button" ng-click="show('date')">
+								{{customDate}}
+							</div>
+							<div class="player-button" ng-click="show('time')">
+								{{customTime}}
+							</div>
+						</div>
+					</div>
+				</div>
 
 				<!-- Save button -->
 				<div class="padding-sides">

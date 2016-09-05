@@ -46,7 +46,6 @@
     <div class="card">
       <ion-list>
         <div class="item item-divider">Experimental Add Game Options</div>
-        <ion-toggle ng-change="settings.setProperty('addGameDateTime', settings.addGameDateTime)" ng-model="settings.addGameDateTime" toggle-class="toggle-balanced">Select Date/Time</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('addGameNames', settings.addGameNames)" ng-model="settings.addGameNames" toggle-class="toggle-balanced">Choose All Names First</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('addGameFilter', settings.addGameFilter)" ng-model="settings.addGameFilter" toggle-class="toggle-balanced">Show Filter Bar</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('addGameSelect', settings.addGameSelect)" ng-model="settings.addGameSelect" toggle-class="toggle-balanced" ng-disabled="!settings.addGameFilter"> * Auto Select Filter Bar</ion-toggle>
