@@ -1,6 +1,6 @@
 a.tab-item.tab-item-active 
 {
-  background: #DDD;
+  color: #3B88C3;
 }
 .app-container
 {
@@ -190,4 +190,12 @@ ion-item.item.wrap
 {
   font-weight: 500;
   font-size: 17px;
+}
+
+/*overides*/
+
+.toggle.toggle-balanced input:checked + .track
+{
+  background-color: #44735A;
+  border-color: #2C543F;
 }
