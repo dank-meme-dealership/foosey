@@ -40,8 +40,25 @@
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
+      setupDatePicker();
       reset();
     });
+
+   	function setupDatePicker()
+   	{
+   		var MIN_MODAL_WIDTH = 600;
+	    var options = {
+	      preset  : 'datetime',
+	      onSelect: setDate
+	    };
+
+	    // set up tapping
+	    $('#date_button').scroller($.extend(options, { 
+	    	theme: 'android-ics light', 
+	    	mode: 'scroller', 
+	    	display: $(window).width() > MIN_MODAL_WIDTH ? 'modal' : 'bottom' 
+	    }));
+   	}
 
 		// function to select game type
 		function gameSelect(index, type)
@@ -169,9 +186,12 @@
 			$scope.canCancel = false;
 
 			// set up game object
+			var timestampVal = $('#date_button').val();
+			var timestamp = timestampVal === '' ? undefined : new Date(timestampVal).getTime()/1000;
 			var game = {
 				id: $stateParams.gameID,
-				teams: $scope.teams
+				teams: $scope.teams,
+				timestamp: timestamp
 			}
 
 			var editOrAdd = $scope.adding ? FooseyService.addGame : FooseyService.editGame;
@@ -210,6 +230,7 @@
 		{
 			selectedPlayer = undefined;
 			selectedScoreIndex = undefined;
+			$('#date_button').val('');
 
 			if ($scope.adding)
 			{
@@ -312,6 +333,11 @@
 			if (title) $scope.title = title;
 			if (state !== 'player-select') $ionicScrollDelegate.scrollTop(true);
 		}
+
+		function setDate(event, inst)
+    {
+      console.log('set: ' + inst.val);
+    }
 
 		function addMorePlayers()
 		{

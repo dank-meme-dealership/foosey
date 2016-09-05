@@ -11,6 +11,7 @@
 		var service = {
 			//Properties
 			addGameClear			: setting('addGameClear', false),
+			addGameDateTime		: setting('addGameDateTime', false),
 			addGameFilter			: setting('addGameFilter', false),
 			addGameNames			: setting('addGameNames', false),
 			addGameSelect			: setting('addGameSelect', false),

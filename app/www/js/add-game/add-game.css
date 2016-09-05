@@ -1,3 +1,11 @@
+#date_button
+{
+  background-color: initial;
+  text-align: center;
+  font-size: 16px;
+  padding: 22px;
+  width: 100%;
+}
 .grid-container
 {
   margin: 5px;
