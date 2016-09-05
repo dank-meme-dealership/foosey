@@ -14,7 +14,6 @@
 		$scope.adding = _.isUndefined($stateParams.gameID);
 		$scope.settings = SettingsService;
 		$scope.gameTypes = gameTypes;
-		$scope.useNowTime = true;
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;
 		$scope.scores = _.reverse(_.range(11)); // scores 0-10
@@ -34,31 +33,52 @@
 		$scope.reset = reset;
 		$scope.submit = submit;
 		$scope.undo = undo;
+		$scope.show = show;
 
 		// load on entering view 
     $scope.$on('$ionicView.beforeEnter', function()
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
-      setupDatePicker();
+      setupPicker('date');
+      setupPicker('time');
       reset();
     });
 
-   	function setupDatePicker()
+	  // set up pickers
+   	function setupPicker(type)
    	{
    		var MIN_MODAL_WIDTH = 600;
-	    var options = {
-	      preset  : 'datetime',
-	      onSelect: setDate
-	    };
-
-	    // set up tapping
-	    $('#date_button').scroller($.extend(options, { 
+	    $('#'+type).scroller($.extend({
+	      preset  : type,
+	      onSelect: type === 'date' ? setDate : setTime
+	    },{ 
 	    	theme: 'android-ics light', 
 	    	mode: 'scroller', 
 	    	display: $(window).width() > MIN_MODAL_WIDTH ? 'modal' : 'bottom' 
 	    }));
    	}
+
+   	function setDate(event, inst)
+    {
+      console.log('set date: ' + inst.val);
+      $scope.customDate = inst.val;
+      $scope.$apply();
+    }
+
+    function setTime(event, inst)
+    {
+      console.log('set time: ' + inst.val);
+      $scope.customTime = inst.val;
+      $scope.$apply();
+    }
+
+    // show date/time picker
+   	function show(type)
+		{
+			console.log('Clicked');
+			$('#'+type).mobiscroll('show');
+		}
 
 		// function to select game type
 		function gameSelect(index, type)
@@ -186,8 +206,7 @@
 			$scope.canCancel = false;
 
 			// set up game object
-			var timestampVal = $('#date_button').val();
-			var timestamp = timestampVal === '' ? undefined : new Date(timestampVal).getTime()/1000;
+			var timestamp = new Date($scope.customDate + ' ' + $scope.customTime).getTime()/1000
 			var game = {
 				id: $stateParams.gameID,
 				teams: $scope.teams,
@@ -230,7 +249,8 @@
 		{
 			selectedPlayer = undefined;
 			selectedScoreIndex = undefined;
-			$('#date_button').val('');
+			$scope.customTime = moment().format("hh:mm A");
+			$scope.customDate = moment().format("MM/DD/YYYY");
 
 			if ($scope.adding)
 			{
@@ -239,10 +259,6 @@
 				$scope.saveStatus = "";
 				$scope.response = undefined;
 				$scope.canCancel = false;
-
-				$scope.useNowTime = true;
-				$scope.customDate = new Date();
-				$scope.customTime = $scope.customDate;
 
 				choosePlayer(0, 0);
 			}
@@ -333,11 +349,6 @@
 			if (title) $scope.title = title;
 			if (state !== 'player-select') $ionicScrollDelegate.scrollTop(true);
 		}
-
-		function setDate(event, inst)
-    {
-      console.log('set: ' + inst.val);
-    }
 
 		function addMorePlayers()
 		{
