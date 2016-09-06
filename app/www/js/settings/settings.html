@@ -7,9 +7,9 @@
     <div class="card">
       <ion-list>
         <div class="item item-divider">General</div>
-			  <ion-toggle ng-change="settings.setProperty('showElo', settings.showElo)" ng-model="settings.showElo" toggle-class="toggle-balanced">Show Ranking Points</ion-toggle>
-        <ion-toggle ng-change="settings.setProperty('showRelTimes', settings.showRelTimes)" ng-model="settings.showRelTimes" toggle-class="toggle-balanced">Show Relative Times</ion-toggle>
-        <ion-toggle ng-change="settings.setProperty('showBadges', settings.showBadges)" ng-model="settings.showBadges" toggle-class="toggle-balanced">Show Badges</ion-toggle>
+			  <ion-toggle ng-change="settings.setProperty('showElo', settings.showElo)" ng-model="settings.showElo" toggle-class="toggle-positive">Show Ranking Points</ion-toggle>
+        <ion-toggle ng-change="settings.setProperty('showRelTimes', settings.showRelTimes)" ng-model="settings.showRelTimes" toggle-class="toggle-positive">Show Relative Times</ion-toggle>
+        <ion-toggle ng-change="settings.setProperty('showBadges', settings.showBadges)" ng-model="settings.showBadges" toggle-class="toggle-positive">Show Badges</ion-toggle>
         <label class="item item-input item-select">
           <div class="input-label">
             {{ !player.selected ? 'Select a player' : 'You are' }}
@@ -23,7 +23,7 @@
     <div class="card">
       <ion-list>
         <div class="item item-divider">Leaderboard</div>
-        <ion-toggle ng-change="settings.setProperty('noGamePlayers', settings.noGamePlayers)" ng-model="settings.noGamePlayers" toggle-class="toggle-balanced">Show No-Game Players</ion-toggle>
+        <ion-toggle ng-change="settings.setProperty('noGamePlayers', settings.noGamePlayers)" ng-model="settings.noGamePlayers" toggle-class="toggle-positive">Show No-Game Players</ion-toggle>
       </ion-list>
     </div>
 
@@ -46,10 +46,10 @@
     <div class="card">
       <ion-list>
         <div class="item item-divider">Experimental Add Game Options</div>
-        <ion-toggle ng-change="settings.setProperty('addGameNames', settings.addGameNames)" ng-model="settings.addGameNames" toggle-class="toggle-balanced">Choose All Names First</ion-toggle>
-        <ion-toggle ng-change="settings.setProperty('addGameFilter', settings.addGameFilter)" ng-model="settings.addGameFilter" toggle-class="toggle-balanced">Show Filter Bar</ion-toggle>
-        <ion-toggle ng-change="settings.setProperty('addGameSelect', settings.addGameSelect)" ng-model="settings.addGameSelect" toggle-class="toggle-balanced" ng-disabled="!settings.addGameFilter"> * Auto Select Filter Bar</ion-toggle>
-        <ion-toggle ng-change="settings.setProperty('addGameClear', settings.addGameClear)" ng-model="settings.addGameClear" toggle-class="toggle-balanced" ng-disabled="!settings.addGameFilter"> * Clear Filter Bar On Tap</ion-toggle>
+        <ion-toggle ng-change="settings.setProperty('addGameNames', settings.addGameNames)" ng-model="settings.addGameNames" toggle-class="toggle-positive">Choose All Names First</ion-toggle>
+        <ion-toggle ng-change="settings.setProperty('addGameFilter', settings.addGameFilter)" ng-model="settings.addGameFilter" toggle-class="toggle-positive">Show Filter Bar</ion-toggle>
+        <ion-toggle ng-change="settings.setProperty('addGameSelect', settings.addGameSelect)" ng-model="settings.addGameSelect" toggle-class="toggle-positive" ng-disabled="!settings.addGameFilter"> * Auto Select Filter Bar</ion-toggle>
+        <ion-toggle ng-change="settings.setProperty('addGameClear', settings.addGameClear)" ng-model="settings.addGameClear" toggle-class="toggle-positive" ng-disabled="!settings.addGameFilter"> * Clear Filter Bar On Tap</ion-toggle>
       </ion-list>
     </div>
 

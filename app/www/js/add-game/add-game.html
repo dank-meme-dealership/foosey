@@ -107,7 +107,7 @@
 						<div id="date"></div><div id="time"></div>
 						<div class="spaced-out">
 							<div class="player-button" ng-click="show('date')">
-								{{customDate}}
+								{{customDate | toTimestamp | date}}
 							</div>
 							<div class="player-button" ng-click="show('time')">
 								{{customTime}}

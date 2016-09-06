@@ -8,6 +8,8 @@
 
 	function ScorecardController($scope, $state, $stateParams, $ionicPopup, scorecardInfo, FooseyService, SettingsService, BadgesService)
 	{
+    var chartBeToggled = false;
+
 		$scope.chart = undefined;
 		$scope.settings = SettingsService;
 		$scope.badges = BadgesService;
@@ -19,6 +21,7 @@
 
 		$scope.info = info;
     $scope.refresh = refresh;
+    $scope.toggleChart = toggleChart;
 
 		// load on entering view 
     $scope.$on('$ionicView.beforeEnter', refresh);
@@ -61,13 +64,14 @@
     }
 
 		// set up the charts for the scorecard page
-		function setUpChart()
+		function setUpChart(optional)
 		{
 			var subtitle = 'Data from the last ';
+      var eloChartGames = optional || SettingsService.eloChartGames;
 
 			if ($scope.settings.showElo)
 			{
-				FooseyService.getEloHistory($scope.playerID, SettingsService.eloChartGames).then(
+				FooseyService.getEloHistory($scope.playerID, eloChartGames).then(
 					function successCallback(response)
 					{
 						$scope.error = false;
@@ -120,6 +124,15 @@
 			  }
       }
 		}
+
+    // toggle chart between your preference and all time
+    // or 1,000,000 games if you've played that much. If
+    // you have, you may have a problem
+    function toggleChart()
+    {
+      chartBeToggled = !chartBeToggled;
+      setUpChart(chartBeToggled ? 1000000 : undefined);
+    }
 
 		function info(title, message)
 		{

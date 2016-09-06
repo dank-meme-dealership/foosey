@@ -16,7 +16,7 @@
     <div ng-show="player.gamesPlayed > 0">
 
       <!-- elo chart -->
-      <ion-item class="card" style="padding: 5px 5px 0 5px;" ng-show="settings.showElo">
+      <ion-item class="card" style="padding: 5px 5px 0 5px;" ng-show="settings.showElo" on-double-tap="toggleChart()">
         <div class="center chart-title">
           <span style="padding-right: 5px">Elo Rating: {{player.elo}}</span>
           <span ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">({{player.dailyChange | eloChange}} today)</span>

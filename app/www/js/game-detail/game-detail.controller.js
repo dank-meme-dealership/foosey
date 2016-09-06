@@ -25,6 +25,7 @@
 
     function loadGame()
     {
+      $scope.disabled = true;
       FooseyService.getGame($stateParams.gameID).then(
         function successCallback(response)
         {

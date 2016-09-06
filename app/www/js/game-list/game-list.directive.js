@@ -13,7 +13,8 @@
         list  : '=',
         gameCount: '=',
         highlight: '=',
-        edit: '='
+        edit: '=',
+        disabled: '='
       },
       controller  : controller,
       templateUrl : 'js/game-list/game-list.html'
@@ -51,7 +52,8 @@
 
     function editGame(gameID)
     {
-      $state.go($state.current.name + '-edit-game', { gameID: gameID });
+      if ($scope.disabled) alert('Wait one sec');
+      else $state.go($state.current.name + '-edit-game', { gameID: gameID });
     }
 
     function gameDetail(gameID)
