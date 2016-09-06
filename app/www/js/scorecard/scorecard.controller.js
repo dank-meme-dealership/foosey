@@ -4,9 +4,9 @@
 		.module('scorecard')
 		.controller('ScorecardController', ScorecardController);
 
-	ScorecardController.$inject = ['$scope', '$state', '$stateParams', '$ionicPopup', 'scorecardInfo', 'FooseyService', 'SettingsService', 'BadgesService'];
+	ScorecardController.$inject = ['$scope', '$state', '$stateParams', '$ionicPopup', 'scorecardInfo', 'localStorage', 'FooseyService', 'SettingsService', 'BadgesService'];
 
-	function ScorecardController($scope, $state, $stateParams, $ionicPopup, scorecardInfo, FooseyService, SettingsService, BadgesService)
+	function ScorecardController($scope, $state, $stateParams, $ionicPopup, scorecardInfo, localStorage, FooseyService, SettingsService, BadgesService)
 	{
     var chartBeToggled = false;
 
@@ -17,7 +17,7 @@
 		$scope.recentGames = undefined;
 		$scope.player = undefined;
 		$scope.error = false;
-    $scope.loading = false;
+    $scope.loading = 0;
 
 		$scope.info = info;
     $scope.refresh = refresh;
@@ -31,7 +31,6 @@
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
       if (SettingsService.showBadges) BadgesService.updateBadges();
-      $scope.loading = true;
       chartBeToggled = false;
       resetYou();
       setUpPlayer();
@@ -47,20 +46,28 @@
 
     function setUpPlayer()
     {
+      $scope.loading++;
+      $scope.player = localStorage.getObject('player');
 			// set up the player
 			FooseyService.getPlayer($scope.playerID).then(
 				function(response){
+          $scope.loading--;
 					$scope.player = response.data;
+          localStorage.setObject('player', $scope.player);
       		if (SettingsService.showElo) setUpChart();
 				});
     }
 
     function setUpRecentGames()
     {
+      $scope.loading++;
+      $scope.recentGames = localStorage.getObject('scorecardRecentGames');
     	// set up the player
 			FooseyService.getPlayerGames($scope.playerID, SettingsService.recentGames).then(
 				function(response){
+          $scope.loading--;
 					$scope.recentGames = response.data;
+          localStorage.setObject('scorecardRecentGames', $scope.recentGames);
 				});
     }
 
@@ -72,9 +79,11 @@
 
 			if ($scope.settings.showElo)
 			{
+        $scope.loading++;
 				FooseyService.getEloHistory($scope.playerID, eloChartGames).then(
 					function successCallback(response)
 					{
+            $scope.loading--;
 						$scope.error = false;
 
 						// Get chart data
@@ -86,6 +95,7 @@
             $scope.loading = false;
 					}, function errorCallback(response)
 					{
+            $scope.loading--;
 						$scope.error = true;
             $scope.loading = false;
 					});

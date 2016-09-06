@@ -44,7 +44,7 @@
         disableBack: true
       });
 
-			$state.go('app.scorecard');
+			$state.go('app.leaderboard');
 		}
 
 		function logOut()
