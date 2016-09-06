@@ -100,7 +100,7 @@ def api_stats_elo(player_id, league_id, limit = nil)
                         AND LeagueID = :league_id
                         ORDER BY Timestamp DESC', player_id, league_id
 
-    games = games.pop(limit) if limit
+    games = games.first(limit) if limit
 
     return games.collect do |game|
       {
