@@ -42,3 +42,5 @@ platforms/
 .rvmrc
 
 *.db-journal
+
+*.DS_Store
