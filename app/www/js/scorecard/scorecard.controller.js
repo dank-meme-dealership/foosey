@@ -32,6 +32,7 @@
       if (!SettingsService.loggedIn) SettingsService.logOut();
       if (SettingsService.showBadges) BadgesService.updateBadges();
       $scope.loading = true;
+      chartBeToggled = false;
       resetYou();
       setUpPlayer();
       setUpRecentGames();
@@ -64,10 +65,10 @@
     }
 
 		// set up the charts for the scorecard page
-		function setUpChart(optional)
+		function setUpChart(toggled)
 		{
-			var subtitle = 'Data from the last ';
-      var eloChartGames = optional || SettingsService.eloChartGames;
+			var subtitle = 'Data from ';
+      var eloChartGames = toggled ? 1000000 : SettingsService.eloChartGames;
 
 			if ($scope.settings.showElo)
 			{
@@ -78,7 +79,7 @@
 
 						// Get chart data
 						var chartData = response.data;
-						subtitle += chartData.length + (chartData.length === 1 ? ' game' : ' games');
+						subtitle += toggled ? 'all time' : 'the last ' + chartData.length + (chartData.length === 1 ? ' game' : ' games');
 
 						// Set up ELO Rating chart
 						$scope.chart = getEloChartOptions(_.map(chartData, 'elo').reverse(), _.map(chartData, 'date').reverse(), subtitle);
@@ -131,7 +132,7 @@
     function toggleChart()
     {
       chartBeToggled = !chartBeToggled;
-      setUpChart(chartBeToggled ? 1000000 : undefined);
+      setUpChart(chartBeToggled);
     }
 
 		function info(title, message)
