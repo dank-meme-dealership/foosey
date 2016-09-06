@@ -88,7 +88,7 @@ def api_player(player_id, extended, league_id)
 end
 
 # returns an api object for player elo history
-def api_stats_elo(player_id, limit, league_id)
+def api_stats_elo(player_id, league_id, limit = nil)
   database do |db|
     db.results_as_hash = true
     games = db.execute 'SELECT * FROM EloHistory
@@ -98,8 +98,9 @@ def api_stats_elo(player_id, limit, league_id)
                         USING (PlayerID, GameID)
                         WHERE PlayerID = :player_id
                         AND LeagueID = :league_id
-                        ORDER BY Timestamp DESC
-                        LIMIT :limit', player_id, league_id, limit
+                        ORDER BY Timestamp DESC', player_id, league_id
+
+    games = games.pop(limit) if limit
 
     return games.collect do |game|
       {
@@ -195,8 +196,7 @@ namespace '/v1' do
     get '/stats/elo/:id' do
       id = params['id'].to_i
       limit = params['limit'].to_i if params['limit']
-      limit ||= 30
-      json api_stats_elo(id, limit, params['league_id'].to_i)
+      json api_stats_elo(id, params['league_id'].to_i, limit)
     end
 
     # Players Elo History
@@ -204,12 +204,11 @@ namespace '/v1' do
       ids = params['ids'].split ',' if params['ids']
       ids ||= player_ids params['league_id'].to_i
       limit = params['limit'].to_i if params['limit']
-      limit ||= 30
 
       json(ids.collect do |id|
         {
           playerID: id,
-          elos: api_stats_elo(id, limit, params['league_id'].to_i)
+          elos: api_stats_elo(id, params['league_id'].to_i, limit)
         }
       end)
     end

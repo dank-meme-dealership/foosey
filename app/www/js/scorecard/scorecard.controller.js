@@ -68,7 +68,7 @@
 		function setUpChart(toggled)
 		{
 			var subtitle = 'Data from ';
-      var eloChartGames = toggled ? 1000000 : SettingsService.eloChartGames;
+      var eloChartGames = toggled ? undefined : SettingsService.eloChartGames;
 
 			if ($scope.settings.showElo)
 			{
