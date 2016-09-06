@@ -38,19 +38,16 @@
 
   		<!-- additional stats -->
   		<div class="card">
-        <div class="item item-divider">Stats</div>
-  			<!-- Last Active -->
+        <div class="item item-divider spaced-out">
+          <div>Stats</div>
+          <div>{{player.gamesPlayed}} {{player.gamesPlayed === 1 ? 'game' : 'games'}}</div>
+        </div>
+        <!-- Last Active -->
         <ion-item class="stat-card">
           <div>Last Active</div>
           <div ng-show="recentGames">{{recentGames[0].timestamp | date}}</div>
           <div ng-show="!recentGames">-</div>
         </ion-item>
-        <!-- Total Games -->
-  			<ion-item class="stat-card">
-  				<div>Total Games</div>
-  				<div ng-show="player">{{player.gamesPlayed }} games</div>
-  				<div ng-show="!player">-</div>
-  			</ion-item>
   			<!-- Total Singles -->
   			<ion-item class="stat-card">
   				<div>Singles</div>
@@ -69,7 +66,7 @@
   					Ally
   					<i class="ion-ios-information"></i>
   				</div>
-  				<div ng-show="player.ally">{{player.ally | capitalize}} ({{player.allyCount}} games)</div>
+  				<div ng-show="player.ally">{{player.ally | capitalize}} ({{player.allyCount}} wins)</div>
   				<div ng-show="!player.ally">-</div>
   			</ion-item>
   			<!-- Nemesis -->
@@ -78,12 +75,12 @@
   					Nemesis
   					<i class="ion-ios-information"></i>
   				</div>
-  				<div ng-show="player.nemesis">{{player.nemesis | capitalize}} ({{player.nemesisCount}} games)</div>
+  				<div ng-show="player.nemesis">{{player.nemesis | capitalize}} ({{player.nemesisCount}} losses)</div>
   				<div ng-show="!player.nemesis">-</div>
   			</ion-item>
   		</div>
 
-      <game-list title="'Recent Games'" list="recentGames"></game-list>
+      <game-list title="'Recent Games'" list="recentGames" game-count="true"></game-list>
 
     </div>
 
