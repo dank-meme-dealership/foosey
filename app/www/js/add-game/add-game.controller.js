@@ -21,6 +21,7 @@
 		$scope.canCancel = false;
 		$scope.filter = {};
 		$scope.filter.text = '';
+		$scope.type = undefined;
 
 		$scope.addMorePlayers = addMorePlayers;
 		$scope.choosePlayer = choosePlayer;
@@ -42,6 +43,9 @@
     {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.logOut();
+      
+      // this is here so clearing doesn't reset tab at top
+      $scope.type = undefined;
       reset();
     });
 
@@ -54,7 +58,7 @@
 
 			if ($scope.adding)
 			{
-				$scope.teams = emptyTeams(gameTypes[0]);
+				$scope.teams = emptyTeams($scope.type || gameTypes[0]);
 				$scope.gameToUndo = undefined;
 				$scope.saveStatus = '';
 				$scope.response = undefined;
