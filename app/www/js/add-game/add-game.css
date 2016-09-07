@@ -20,11 +20,6 @@
 {
   background: #CCCCCC;
 }
-.button.button-full.no-margin
-{
-  margin: 0;
-  border: 0;
-}
 .player-button
 {
   display: block;

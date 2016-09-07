@@ -42,6 +42,11 @@ a.tab-item.tab-item-active
 {
   font-weight: 700;
 }
+.button.button-full.no-margin
+{
+  margin: 0;
+  border: 0;
+}
 .button.button-positive
 {
   background: #3D485F;

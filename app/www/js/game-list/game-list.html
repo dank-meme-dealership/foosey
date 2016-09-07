@@ -1,8 +1,7 @@
 <div class="card" ng-repeat="games in dates">
   <ion-list>
     <div class="item item-divider spaced-out">
-      <div ng-if="title">{{title}}</div>
-      <div class="history-date" ng-if="!title">{{games[0].date | toTimestamp | date}}</div>
+      <div>{{title ? title : games[0].date | toTimestamp | date}}</div>
       <div ng-show="gameCount">{{games.length ? (games.length + (games.length === 1 ? ' game' : ' games')) : ''}}</div>
     </div>
     <ion-item ng-if="!games">
@@ -30,7 +29,7 @@
       </div>
     </ion-item>
     <div class="center" ng-if="edit">
-      <button class="button button-clear button-positive" ng-click="editGame(games[0].gameID)" ng-disabled="disabled">Edit This Game</button>
+      <button class="button button-full button-clear button-positive no-margin" ng-click="editGame(games[0].gameID)" ng-disabled="disabled">Edit This Game</button>
     </div>
   </ion-list>
 </div>
