@@ -47,13 +47,13 @@
     function setUpPlayer()
     {
       $scope.loading++;
-      $scope.player = localStorage.getObject('player');
+      $scope.player = localStorage.getObject('player' + $scope.playerID);
 			// set up the player
 			FooseyService.getPlayer($scope.playerID).then(
 				function(response){
           $scope.loading--;
 					$scope.player = response.data;
-          localStorage.setObject('player', $scope.player);
+          localStorage.setObject('player' + $scope.playerID, $scope.player);
       		if (SettingsService.showElo) setUpChart();
 				});
     }
@@ -61,13 +61,13 @@
     function setUpRecentGames()
     {
       $scope.loading++;
-      $scope.recentGames = localStorage.getObject('scorecardRecentGames');
+      $scope.recentGames = localStorage.getObject('scorecardRecentGames' + $scope.playerID);
     	// set up the player
 			FooseyService.getPlayerGames($scope.playerID, SettingsService.recentGames).then(
 				function(response){
           $scope.loading--;
 					$scope.recentGames = response.data;
-          localStorage.setObject('scorecardRecentGames', $scope.recentGames);
+          localStorage.setObject('scorecardRecentGames' + $scope.playerID, $scope.recentGames);
 				});
     }
 
