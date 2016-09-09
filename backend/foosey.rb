@@ -51,7 +51,7 @@ get '/foosey.db' do
 end
 
 get '/android' do
-  return File.read('foosey.apk')
+  return send_file('foosey.apk')
 end
 
 # options workaround as defined in sinatra-cross_origin gem
