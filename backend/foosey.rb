@@ -50,6 +50,10 @@ get '/foosey.db' do
   return File.read('foosey.db')
 end
 
+get '/android' do
+  return File.read('foosey.apk')
+end
+
 # options workaround as defined in sinatra-cross_origin gem
 options '*' do
   response.headers['Allow'] = 'HEAD,GET,PUT,POST,DELETE,OPTIONS'
