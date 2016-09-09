@@ -44,3 +44,5 @@ platforms/
 *.db-journal
 
 *.DS_Store
+
+*.keystore

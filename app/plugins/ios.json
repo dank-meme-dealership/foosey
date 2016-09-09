@@ -10,13 +10,13 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.matt.foosey"
         },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "com.matt.foosey"
+        },
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.matt.foosey"
         },
         "org.apache.cordova.statusbar": {
-            "PACKAGE_NAME": "com.matt.foosey"
-        },
-        "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.matt.foosey"
         }
     },
