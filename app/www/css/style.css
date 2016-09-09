@@ -200,3 +200,9 @@ ion-item.item.wrap
   font-weight: 500;
   font-size: 17px;
 }
+
+/*Overides*/
+.popup-container .popup 
+{
+  background-color: rgba(255, 255, 255, 1);
+}
