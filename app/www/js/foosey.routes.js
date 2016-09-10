@@ -18,7 +18,7 @@
     }
 
     // Ask about Android APK
-    if (ionic.Platform.isAndroid()) {
+    if (ionic.Platform.isAndroid() && window.location.hostname === 'foosey.futbol') {
       $ionicPopupProvider.$get().confirm({
         title: 'Download Foosey APK',
         template: '<div class="text-center">We have a native version of this application available for Android. Do you want to download it now?</div>',
