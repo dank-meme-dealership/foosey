@@ -42,7 +42,7 @@
     $scope.$on('$ionicView.beforeEnter', function()
     {
       // send to login screen if they haven't logged in yet
-      if (!SettingsService.loggedIn) SettingsService.logOut();
+      if (!SettingsService.loggedIn) SettingsService.reallyLogOut();
       
       // this is here so clearing doesn't reset tab at top
       $scope.type = undefined;

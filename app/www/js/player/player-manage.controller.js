@@ -26,7 +26,7 @@
     $scope.$on('$ionicView.beforeEnter', function()
     {
       // send to login screen if they haven't logged in yet
-      if (!SettingsService.loggedIn) SettingsService.logOut();
+      if (!SettingsService.loggedIn) SettingsService.reallyLogOut();
       BadgesService.updateBadges();
       loadPlayers();
     });

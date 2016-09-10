@@ -27,6 +27,7 @@
 			//Functions
 			logIn 						: logIn,
 			logOut						: logOut,
+			reallyLogOut			: reallyLogOut,
 			setProperty				: setProperty
 		}
 

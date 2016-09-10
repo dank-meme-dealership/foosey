@@ -29,7 +29,7 @@
     function refresh()
     {
       // send to login screen if they haven't logged in yet
-      if (!SettingsService.loggedIn) SettingsService.logOut();
+      if (!SettingsService.loggedIn) SettingsService.reallyLogOut();
       if (SettingsService.showBadges) BadgesService.updateBadges();
       chartBeToggled = false;
       resetYou();
