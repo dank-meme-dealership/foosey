@@ -46,3 +46,5 @@ platforms/
 *.DS_Store
 
 *.keystore
+
+app/plugins/

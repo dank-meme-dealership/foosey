@@ -148,6 +148,9 @@ def badges(league_id, player_id)
   players = player_ids league_id
   badges = Hash.new { |h, k| h[k] = [] }
 
+  # temporary badges go here
+  badges[4] << badge('🤵👰🏼', 'Hitched')
+
   # fire badge
   # best daily change
   best_change = players.group_by { |p| daily_elo_change(p, league_id) }.max
