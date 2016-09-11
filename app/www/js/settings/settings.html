@@ -56,6 +56,7 @@
     <!-- Admin -->
     <div class="card" ng-show="settings.isAdmin">
       <div class="item item-divider">Admin</div>
+      <ion-toggle ng-show="settings.isLocalhost()" ng-change="settings.setProperty('useLocalDb', settings.useLocalDb)" ng-model="settings.useLocalDb" toggle-class="toggle-positive">Use Local Database</ion-toggle>
       <ion-item ui-sref="app.settings-manage-players">
         <div style="float:left">Manage players</div>
         <div style="float:right" class="ion-ios-arrow-right"></div>

@@ -24,7 +24,9 @@
 			showBadges				: setting('showBadges', true),
 			showElo						: setting('showElo', false),
 			showRelTimes			: setting('showRelTimes', true),
+			useLocalDb				: setting('useLocalDb', isLocalhost()),
 			//Functions
+			isLocalhost				: isLocalhost,
 			logIn 						: logIn,
 			logOut						: logOut,
 			reallyLogOut			: reallyLogOut,
@@ -32,6 +34,11 @@
 		}
 
 		return service;
+
+		function isLocalhost()
+    {
+      return window.location.hostname === 'localhost';
+    }
 
 		function logIn(league)
 		{
