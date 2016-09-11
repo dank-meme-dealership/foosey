@@ -125,6 +125,7 @@ def api_league(league_name)
 
     return {
       error: false,
+      displayName: league['DisplayName'],
       leagueID: league['LeagueID'],
       leagueName: league_name
     }
@@ -353,6 +354,7 @@ namespace '/v1' do
     body = JSON.parse request.body.read
 
     league_name = body['leagueName']
+    display_name = body['displayName']
 
     if league_exists? league_name
       return json(
@@ -361,7 +363,7 @@ namespace '/v1' do
       )
     end
 
-    add_league(league_name)
+    add_league(league_name, display_name)
 
     json api_league league_name
   end

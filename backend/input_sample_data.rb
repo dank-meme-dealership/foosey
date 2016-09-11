@@ -21,7 +21,7 @@ league_name = 'soccer'
 
 print 'Adding league... '
 if api_league(league_name)[:error]
-  add_league(league_name)
+  add_league(league_name, league_name)
   puts 'done'
 else
   puts 'already exists'

@@ -14,6 +14,7 @@
     $scope.leagueChars = /[^0-9A-Za-z\-]/g;
     $scope.playerChars = /[^A-Za-z'. ]/g;
     $scope.settings = SettingsService;
+    $scope.validating = false;
 
     $scope.getStarted = getStarted;
     $scope.forgot = forgot;
@@ -23,6 +24,7 @@
     function getStarted()
     {
       var name = $scope.league.text.toLowerCase();
+      $scope.validating = true;
 
       FooseyService.getLeague(name).then(
         function(response)
@@ -68,7 +70,7 @@
             }
           }
         ]
-      });
+      }).then(doneValidating);
     }
 
     function forgot()
@@ -81,7 +83,12 @@
       $ionicPopup.alert({
         title: title,
         template: template
-      });
+      }).then(doneValidating);
+    }
+
+    function doneValidating(res)
+    {
+      $scope.validating = false;
     }
 
     function createLeaguePopup()

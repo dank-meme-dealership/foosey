@@ -21,8 +21,8 @@
             </label>
           </div>
 
-          <button class="button button-block button-positive" ng-click="getStarted()">
-            Get Started
+          <button class="button button-block button-positive" ng-click="getStarted()" ng-disabled="validating || !league.text">
+            {{ validating ? 'Looking up your league...' : 'Get Started' }}
           </button>
 
           <div class="row row-no-padding">
