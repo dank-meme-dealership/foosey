@@ -14,7 +14,7 @@
 .grid-item
 {
   float: left;
-  width: 90px;
+  min-width: 90px;
 }
 .grid-item.selected, .player-button.selected
 {
