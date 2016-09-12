@@ -175,6 +175,7 @@ def badges(league_id, player_id)
   monkeys = []
   bananas = []
   flexing = []
+  bandages = []
   players.select do |p|
     games = games_with_player(p, league_id)
     next if games.empty?
@@ -183,10 +184,12 @@ def badges(league_id, player_id)
     monkeys << p if last_game[:teams][0][:delta] < 0 && winner
     bananas << p if last_game[:teams][0][:delta] < 0 && !winner
     flexing << p if last_game[:teams][0][:delta] >= 10 && winner
+    bandages << p if last_game[:teams][0][:delta] >= 10 && !winner
   end
   monkeys.each { |b| badges[b] << badge('🙈', 'Gimpy Win') } unless monkeys.nil?
   bananas.each { |b| badges[b] << badge('🍌', 'Graceful Loss') } unless bananas.nil?
   flexing.each { |b| badges[b] << badge('💪🏼', 'Hefty Win') } unless flexing.nil?
+  bandages.each { |b| badges[b] << badge('🤕', 'Hospital Bound') } unless bandages.nil?
 
   # toilet badge
   # last skunk (lost w/ 0 points)
