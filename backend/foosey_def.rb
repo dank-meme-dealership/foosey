@@ -149,7 +149,7 @@ def badges(league_id, player_id)
   badges = Hash.new { |h, k| h[k] = [] }
 
   # temporary badges go here
-  badges[4] << badge('🤵👰🏼', 'Hitched')
+  badges[4] << badge('🤵🏼👰🏼', 'Hitched')
 
   # fire badge
   # best daily change
@@ -166,7 +166,7 @@ def badges(league_id, player_id)
   babies = players.select do |p|
     games_with_player(p, league_id).length.between?(10, 15)
   end
-  babies.each { |b| badges[b] << badge('👶', 'Newly Ranked') } unless babies.nil?
+  babies.each { |b| badges[b] << badge('👶🏼', 'Newly Ranked') } unless babies.nil?
 
   # monkey badge
   # won last game but elo went down
@@ -186,7 +186,7 @@ def badges(league_id, player_id)
   end
   monkeys.each { |b| badges[b] << badge('🙈', 'Gimpy Win') } unless monkeys.nil?
   bananas.each { |b| badges[b] << badge('🍌', 'Graceful Loss') } unless bananas.nil?
-  flexing.each { |b| badges[b] << badge('💪', 'Hefty Win') } unless flexing.nil?
+  flexing.each { |b| badges[b] << badge('💪🏼', 'Hefty Win') } unless flexing.nil?
 
   # toilet badge
   # last skunk (lost w/ 0 points)
