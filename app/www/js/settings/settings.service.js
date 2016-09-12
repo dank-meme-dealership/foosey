@@ -16,8 +16,9 @@
 			addGameSelect			: setting('addGameSelect', false),
 			eloChartGames			: localStorage.getObject('eloChartGames', 30),
 			isAdmin						: setting('isAdmin', false),
-			leagueID					: localStorage.getObject('leagueID', undefined),
-			loggedIn					: _.isInteger(localStorage.getObject('leagueID')),
+			league						: localStorage.getObject('league', undefined),
+			leagues						: localStorage.getArray('leagues'),
+			loggedIn					: userIsLoggedIn(),
 			noGamePlayers			: setting('noGamePlayers', true),
 			playerID					: localStorage.getObject('playerID', undefined),
 			recentGames				: localStorage.getObject('recentGames', 3),
@@ -40,14 +41,23 @@
       return window.location.hostname === 'localhost';
     }
 
+    function userIsLoggedIn()
+    {
+    	return _.isInteger(localStorage.getObject('league').leagueID) &&
+    				 localStorage.getArray('leagues').length > 0;
+    }
+
 		function logIn(league)
 		{
 			// set the leagueID to localStorage
-			setProperty('leagueID', league.leagueID);
+			setProperty('league', league);
 			setProperty('playerID', league.player.playerID);
 			setProperty('isAdmin', league.player.admin);
 			service.loggedIn = true;
+			addLeague(league);
 
+			// Clear the entire history
+			$ionicHistory.clearHistory();
 			$ionicHistory.nextViewOptions({
         disableBack: true
       });
@@ -73,6 +83,10 @@
         disableBack: true
       });
 
+			// remove the league from local storage
+      removeLeague(service.league);
+			setProperty('league', undefined);
+
 			// Completely log out player
 			service.loggedIn = false;
 			setProperty('isAdmin', false);
@@ -86,6 +100,25 @@
 			setProperty('players', undefined);
 
       $state.go('login');
+		}
+
+		function addLeague(league)
+		{
+			if (!_.includes(_.map(service.leagues, 'leagueID'), league.leagueID))
+			{
+				service.leagues.push(league);
+				setProperty('leagues', service.leagues);
+			}
+		}
+
+		function removeLeague(league)
+		{
+			var leagueIndex = _.indexOf(_.map(service.leagues, 'leagueID'), league.leagueID);
+			if (leagueIndex > -1)
+			{
+				service.leagues.splice(leagueIndex, 1);
+				setProperty('leagues', service.leagues);
+			}
 		}
 
 		function setProperty(property, value)

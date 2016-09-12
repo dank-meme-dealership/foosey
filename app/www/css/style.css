@@ -46,6 +46,7 @@ a.tab-item.tab-item-active
 {
   margin: 0;
   border: 0;
+  background-color: #FFF;
 }
 .button.button-positive
 {

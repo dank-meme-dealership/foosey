@@ -15,9 +15,9 @@
     $scope.addPlayer = addPlayer;
     $scope.loadPlayers = loadPlayers;
 
+    // load up add/edit player modal
     $ionicModal.fromTemplateUrl('js/player/player-edit.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
+      scope: $scope
     }).then(function(modal) {
       $scope.modal = modal;
     });
@@ -33,6 +33,8 @@
 
     function loadPlayers(response)
     {
+      // error means a player with the same displayName already exists
+      // display an error message
       if (response && response.data.error)
       {
         $ionicPopup.alert({

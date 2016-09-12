@@ -38,23 +38,23 @@
           else
           {
             $scope.league.leagueID = response.data.leagueID;
-            getPlayers(response.data.leagueID);
+            getPlayers(response.data);
           }
         });
     }
 
-    function getPlayers(leagueID)
+    function getPlayers(league)
     {
-      FooseyService.getAllPlayers(true, leagueID).then(
+      FooseyService.getAllPlayers(true, league.leagueID).then(
         function(response)
         {
           $scope.players = response;
-          $scope.league.player = response[0];
-          whoAreYou();
+          $scope.chosen = { player: response[0] };
+          whoAreYou(league);
         });
     }
 
-    function whoAreYou()
+    function whoAreYou(league)
     {
       $ionicPopup.show({
         title: 'Who are you?',
@@ -66,7 +66,8 @@
             text: '<b>Ok</b>',
             type: 'button-positive',
             onTap: function(e) {
-              SettingsService.logIn($scope.league);
+              league.player = $scope.chosen.player;
+              SettingsService.logIn(league);
             }
           }
         ]

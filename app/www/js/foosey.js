@@ -12,6 +12,7 @@
       'history',
       'keylistener',
       'leaderboard',
+      'leagues',
       'login',
       'scorecard',
       'settings'

@@ -1,0 +1,18 @@
+<ion-view>
+  <ion-nav-title>Switch Leagues</ion-nav-title>
+  <ion-content class="background">
+    <div class="card">
+      <ion-item ng-show="!settings.leagues.length > 0">No leagues?</ion-item>
+      <ion-item ng-repeat="league in settings.leagues" class="item-icon-left item-icon-right" ng-click="settings.logIn(league)">
+        <i class="icon ion-person-stalker"></i>
+        <div>{{league.displayName}}</div>
+        <div style="font-size: 14px;">{{league.leagueName}}</div>
+        <i class="icon ion-checkmark" ng-show="league.leagueID === settings.league.leagueID"></i>
+      </ion-item>
+    </div>
+    <div class="card">
+      <ion-item ui-sref="login" class="text-center positive">Sign into another league</ion-item>
+      <!-- <ion-item ui-sref="login" class="text-center positive">Create a new league</ion-item> -->
+    </div>
+  </ion-content>
+</ion-view>

@@ -36,13 +36,13 @@
 
     function addGame(game)
     {
-      return $http.post(url() + SettingsService.leagueID + '/games', game);
+      return $http.post(url() + SettingsService.league.leagueID + '/games', game);
     }
 
     // leagueID is optional
     function addPlayer(player, leagueID)
     {
-      var id = leagueID ? leagueID : SettingsService.leagueID;
+      var id = leagueID ? leagueID : SettingsService.league.leagueID;
       return $http.post(url() + id + '/players', player);
     }
 
@@ -53,12 +53,12 @@
 
     function editGame(game)
     {
-      return $http.put(url() + SettingsService.leagueID + '/games/' + game.id, game);
+      return $http.put(url() + SettingsService.league.leagueID + '/games/' + game.id, game);
     }
 
     function editPlayer(player)
     {
-      return $http.put(url() + SettingsService.leagueID + '/players/' + player.id, player);
+      return $http.put(url() + SettingsService.league.leagueID + '/players/' + player.id, player);
     }
 
     // filter is an argument to filter out inactive players
@@ -66,7 +66,7 @@
     // leagueID is also optional
     function getAllPlayers(filter, leagueID)
     {
-      var id = leagueID ? leagueID : SettingsService.leagueID;
+      var id = leagueID ? leagueID : SettingsService.league.leagueID;
       return $http.get(url() + id + '/players').then(
         function(response)
         {
@@ -82,22 +82,22 @@
 
     function getPlayer(playerID)
     {
-      return $http.get(url() + SettingsService.leagueID + '/players/' + playerID);
+      return $http.get(url() + SettingsService.league.leagueID + '/players/' + playerID);
     }
 
     function getPlayersByID(playerIDs)
     {
-      return $http.get(url() + SettingsService.leagueID + '/players?ids=' + playerIDs);
+      return $http.get(url() + SettingsService.league.leagueID + '/players?ids=' + playerIDs);
     }
 
     function getPlayerGames(playerID, limit)
     {
-      return $http.get(url() + SettingsService.leagueID + '/players/' + playerID + '/games' + (limit ? '?limit=' + limit : ''));
+      return $http.get(url() + SettingsService.league.leagueID + '/players/' + playerID + '/games' + (limit ? '?limit=' + limit : ''));
     }
 
     function getAllGames()
     {
-      return $http.get(url() + SettingsService.leagueID + '/games').then(
+      return $http.get(url() + SettingsService.league.leagueID + '/games').then(
         function (response)
         {
           return _.map(response.data, addDateInfo);
@@ -106,7 +106,7 @@
 
     function getGame(gameID)
     {
-      return $http.get(url() + SettingsService.leagueID + '/games/' + gameID).then(
+      return $http.get(url() + SettingsService.league.leagueID + '/games/' + gameID).then(
         function (response)
         {
           return _.map([response.data], addDateInfo);
@@ -115,7 +115,7 @@
 
     function getGamesByID(gameIDs)
     {
-      return $http.get(url() + SettingsService.leagueID + '/games?ids=' + gameIDs).then(
+      return $http.get(url() + SettingsService.league.leagueID + '/games?ids=' + gameIDs).then(
         function (response)
         {
           return _.map(response.data, addDateInfo);
@@ -124,7 +124,7 @@
 
     function getGames(limit, offset)
     {
-      return $http.get(url() + SettingsService.leagueID + '/games?limit=' + limit + '&offset=' + offset).then(
+      return $http.get(url() + SettingsService.league.leagueID + '/games?limit=' + limit + '&offset=' + offset).then(
         function (response)
         {
           return _.map(response.data, addDateInfo);
@@ -148,12 +148,12 @@
 
     function getAllEloHistory()
     {
-      return $http.get(url() + SettingsService.leagueID + '/stats/elo');
+      return $http.get(url() + SettingsService.league.leagueID + '/stats/elo');
     }
 
     function getEloHistory(playerID, limit)
     {
-      return $http.get(url() + SettingsService.leagueID + '/stats/elo/' + playerID + (limit ? '?limit=' + limit : '')).then(
+      return $http.get(url() + SettingsService.league.leagueID + '/stats/elo/' + playerID + (limit ? '?limit=' + limit : '')).then(
         function(response)
         {
           _.each(response.data, function(point)
@@ -166,12 +166,12 @@
 
     function getBadges()
     {
-      return $http.get(url() + SettingsService.leagueID + '/badges?id=' + SettingsService.playerID);
+      return $http.get(url() + SettingsService.league.leagueID + '/badges?id=' + SettingsService.playerID);
     }
 
     function removeGame(gameID)
     {
-      return $http.delete(url() + SettingsService.leagueID + '/games/' + gameID);
+      return $http.delete(url() + SettingsService.league.leagueID + '/games/' + gameID);
     }
 
     function update()

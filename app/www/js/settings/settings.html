@@ -61,7 +61,7 @@
         <div style="float:left">Manage players</div>
         <div style="float:right" class="ion-ios-arrow-right"></div>
       </ion-item>
-      <ion-item ng-if="settings.leagueID === 1" ng-click="update()">
+      <ion-item ng-if="settings.league.leagueID === 1" ng-click="update()">
         <div>Update Foosey Server</div>
       </ion-item>
     </div>
@@ -72,9 +72,11 @@
       </ion-item>
     </div> -->
 
-    <!-- Log out -->
+    <!-- Switch League -->
     <div class="card">
-      <ion-item ng-click="settings.logOut()" class="center positive">Switch Leagues</ion-item>
+      <ion-item ui-sref="app.settings-switch-leagues" class="text-center positive">Switch Leagues</ion-item>
+    <!-- Log Out -->
+      <ion-item ng-click="settings.logOut()" class="text-center assertive">Log out of {{settings.league.displayName}}</ion-item>
     </div>
 
 	</ion-content>
