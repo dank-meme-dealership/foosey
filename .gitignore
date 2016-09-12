@@ -48,3 +48,5 @@ platforms/
 *.keystore
 
 app/plugins/
+
+app/resources/
