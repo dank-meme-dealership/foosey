@@ -166,7 +166,7 @@ def badges(league_id, player_id)
   babies = players.select do |p|
     games_with_player(p, league_id).length.between?(10, 15)
   end
-  babies.each { |b| badges[b] << badge('👶🏼', 'Newly Ranked') } unless babies.nil?
+  babies.each { |b| badges[b] << badge('🍋', 'Newly Ranked') } unless babies.nil? #👶🏼
 
   # monkey badge
   # won last game but elo went down
@@ -179,7 +179,7 @@ def badges(league_id, player_id)
     winner = last_game[:teams][0][:players].any? { |a| a[:playerID] == p }
     badges[p] << badge('🙈', 'Monkey\'d') if last_game[:teams][0][:delta] < 0 && winner
     badges[p] << badge('🍌', 'Graceful Loss') if last_game[:teams][0][:delta] < 0 && !winner
-    badges[p] << badge('💪🏼', 'Hefty Win') if last_game[:teams][0][:delta] >= 10 && winner
+    badges[p] << badge('🍤', 'Hefty Win') if last_game[:teams][0][:delta] >= 10 && winner #💪🏼
     badges[p] << badge('🤕', 'Hospital Bound') if last_game[:teams][0][:delta] >= 10 && !winner
   end
 
