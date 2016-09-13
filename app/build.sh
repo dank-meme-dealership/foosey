@@ -9,13 +9,13 @@
 # update from repo
 git pull
 
+# build icons and splash screens
+ionic resources
+
 # clear out platforms and rebuild
 rm -rf platforms/
 ionic platform add ios
 ionic platform add android
-
-# build icons and splash screens
-ionic resources
 
 # build and sign android apk
 ionic build --release android
