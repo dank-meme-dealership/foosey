@@ -629,12 +629,12 @@ def add_player(league_id, name, slack_name = '', admin = false, active = true)
   end
 end
 
-def add_league(league_name)
+def add_league(league_name, display_name)
   database do |db|
     return db.execute 'INSERT INTO League
-                       (LeagueName)
-                       VALUES (:league_name)',
-                      league_name
+                       (LeagueName, DisplayName)
+                       VALUES (:league_name, :display_name)',
+                      league_name, display_name
   end
 end
 
