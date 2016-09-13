@@ -269,7 +269,7 @@
 			var game = {
 				id: $stateParams.gameID,
 				teams: $scope.teams,
-				timestamp: timestamp
+				timestamp: useCustom ? timestamp : undefined
 			}
 
 			var editOrAdd = $scope.adding ? FooseyService.addGame : FooseyService.editGame;
