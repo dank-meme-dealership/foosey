@@ -49,4 +49,5 @@ platforms/
 
 app/plugins/
 
-app/resources/
+app/resources/android
+app/resources/ios
