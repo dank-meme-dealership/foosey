@@ -124,6 +124,10 @@ ion-item.item.wrap
   white-space: normal;
   text-align: center;
 }
+ion-item
+{
+  cursor: pointer;
+}
 .item-complex .item-content, .item-radio .item-content
 {
   padding: 16px;
