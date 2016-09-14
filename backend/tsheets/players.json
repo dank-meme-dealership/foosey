@@ -1,0 +1,694 @@
+[
+  {
+    "userId": "<@U0JHXKDLK>",
+    "_id": "5736544ef3cedfd0ae2959cc",
+    "username": "Loren Morris",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "5736544ee9fec55756c282a8",
+        "mmr": 1045,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0ZK55H7D>",
+    "_id": "5736544ef3cedfd0ae2959cd",
+    "username": "David Murray",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "5736544ee9fec55756c282a9",
+        "mmr": 949,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U08LHQ0UE>",
+    "_id": "5736544ef3cedfd0ae2959ce",
+    "username": "Lance Schmidt",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "5736544ee9fec55756c282aa",
+        "mmr": 955,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0D8FJ0AD>",
+    "_id": "5736598ff3cedfd0ae2959d0",
+    "username": "Jeff Olsen",
+    "__v": 2,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "5736598fe9fec55756c282ad",
+        "mmr": 1000,
+        "season": "5",
+        "type": "C0P3DFGUB"
+      },
+      {
+        "_id": "573f5e9b1f4790966e69c68b",
+        "mmr": 846,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0GKV0XPS>",
+    "_id": "5736598ff3cedfd0ae2959d2",
+    "username": "",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "5736598fe9fec55756c282af",
+        "mmr": 1000,
+        "season": "5",
+        "type": "C0P3DFGUB"
+      }
+    ]
+  },
+  {
+    "userId": "<@U09HE8SHK>",
+    "_id": "573a0d3ff3cedfd0ae2959d9",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a0d3f1f4790966e69c66c",
+        "mmr": 963,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U03HR7QLQ>",
+    "_id": "573a0dccf3cedfd0ae2959db",
+    "username": "Uhl Albert",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a0dcc1f4790966e69c66f",
+        "mmr": 995,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0A2XV9NV>",
+    "_id": "573a5283f3cedfd0ae2959e0",
+    "username": "Paul Kreiner",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a52831f4790966e69c678",
+        "mmr": 1073,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U06N35EPK>",
+    "_id": "573cb64af3cedfd0ae2959e2",
+    "username": "Josh Tate",
+    "__v": 2,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573cb64a1f4790966e69c67d",
+        "mmr": 914,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57d1b3cb5d04d91b2838a21a",
+        "mmr": 981,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0B4LFC9M>",
+    "_id": "573cbabbf3cedfd0ae2959e3",
+    "username": "Josh Neider",
+    "__v": 2,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573cbabb1f4790966e69c67f",
+        "mmr": 934,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57d3391d5d04d91b2838a227",
+        "mmr": 980,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U19B10ZEE>",
+    "_id": "573ce639f3cedfd0ae2959e4",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573ce6391f4790966e69c682",
+        "mmr": 1003,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U08058KU1>",
+    "_id": "573f68c8f3cedfd0ae2959e6",
+    "username": "Dave Nielsen",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573f68c81f4790966e69c690",
+        "mmr": 1030,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0KQD34AC>",
+    "_id": "57447be1f3cedfd0ae2959e8",
+    "username": "Nick Dotson",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "57447be11f4790966e69c69f",
+        "mmr": 980,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U1X580BNW>",
+    "_id": "57a52866f3cedfd0ae2959f1",
+    "username": "Tyler Samples",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "57a528667bb406583db27102",
+        "mmr": 902,
+        "season": "6",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U1QKK609E>",
+    "_id": "57d30d11f3cedfd0ae2959f2",
+    "username": "Devin Shively",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "57d30d115d04d91b2838a221",
+        "mmr": 955,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U06MVCX63>",
+    "_id": "5748c5e4f3cedfd0ae2959ec",
+    "username": "J.D. Mullin",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "5748c5e41f4790966e69c6b4",
+        "mmr": 1006,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0A2DCESG>",
+    "_id": "577bfa23f3cedfd0ae2959f0",
+    "username": "Jesse Cook",
+    "__v": 1,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "577bfa234792845919273897",
+        "mmr": 966,
+        "season": "5",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0H4TPV0V>",
+    "_id": "5736598ff3cedfd0ae2959d1",
+    "username": "Malcolm Jackson",
+    "__v": 4,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "5736598fe9fec55756c282ae",
+        "mmr": 1000,
+        "season": "5",
+        "type": "C0P3DFGUB"
+      },
+      {
+        "_id": "573a47f91f4790966e69c676",
+        "mmr": 921,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57a4ec237bb406583db270f8",
+        "mmr": 937,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c895ec5d04d91b2838a208",
+        "mmr": 897,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U06N3SPNX>",
+    "_id": "5736598ff3cedfd0ae2959cf",
+    "username": "Drake Gebhart",
+    "__v": 4,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "5736598fe9fec55756c282ac",
+        "mmr": 1000,
+        "season": "5",
+        "type": "C0P3DFGUB"
+      },
+      {
+        "_id": "573a0d3f1f4790966e69c669",
+        "mmr": 1185,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57a905957bb406583db27105",
+        "mmr": 1004,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c86ca35d04d91b2838a1ff",
+        "mmr": 953,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U1LK2DH37>",
+    "_id": "57743b4ff3cedfd0ae2959ef",
+    "username": "Chad Weigle",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "57743b4f4792845919273886",
+        "mmr": 812,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57a393ea7bb406583db270f5",
+        "mmr": 875,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c86ca35d04d91b2838a1fe",
+        "mmr": 894,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U15D22PNH>",
+    "_id": "573a0dccf3cedfd0ae2959da",
+    "username": "Trevor Durán",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a0dcc1f4790966e69c66e",
+        "mmr": 838,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "579fc4e1fb69ab2e3c723760",
+        "mmr": 925,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c86ca35d04d91b2838a200",
+        "mmr": 949,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0ERN227M>",
+    "_id": "573b5e97f3cedfd0ae2959e1",
+    "username": "Katie Banbrook",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573b5e971f4790966e69c67a",
+        "mmr": 1011,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "579fc4e1fb69ab2e3c72375e",
+        "mmr": 1014,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c86ca35d04d91b2838a201",
+        "mmr": 993,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0CALLMGS>",
+    "_id": "5736544ef3cedfd0ae2959cb",
+    "username": "Justin Hersey",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "5736544ee9fec55756c282a7",
+        "mmr": 996,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57abb2d77bb406583db27108",
+        "mmr": 1064,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c87cfe5d04d91b2838a203",
+        "mmr": 1056,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0976J77Y>",
+    "_id": "573a2d16f3cedfd0ae2959de",
+    "username": "Joseph Patterson",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a2d161f4790966e69c673",
+        "mmr": 1309,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57a393ea7bb406583db270f6",
+        "mmr": 1113,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c87cfe5d04d91b2838a204",
+        "mmr": 1141,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0XR2D73M>",
+    "_id": "573a0dccf3cedfd0ae2959dd",
+    "username": "Shree Yalamanchili",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a0dcc1f4790966e69c671",
+        "mmr": 880,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "579fc4e1fb69ab2e3c72375d",
+        "mmr": 1053,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c87cfe5d04d91b2838a205",
+        "mmr": 985,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0GK12C0P>",
+    "_id": "573a47f9f3cedfd0ae2959df",
+    "username": "Derrick Hicks",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a47f91f4790966e69c675",
+        "mmr": 1053,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57a4ec237bb406583db270f9",
+        "mmr": 1052,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c87cfe5d04d91b2838a206",
+        "mmr": 1061,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U0CPALLLR>",
+    "_id": "573a0d3ff3cedfd0ae2959d8",
+    "username": "Daniel Ryan",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a0d3f1f4790966e69c66b",
+        "mmr": 1166,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57a51eb67bb406583db270fd",
+        "mmr": 1060,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c8963d5d04d91b2838a20a",
+        "mmr": 1035,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U1J1E63UG>",
+    "_id": "57644d85f3cedfd0ae2959ed",
+    "username": "David Hartsough",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "57644d851f4790966e69c6de",
+        "mmr": 909,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57a51eb67bb406583db270fe",
+        "mmr": 890,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c8963d5d04d91b2838a20b",
+        "mmr": 1026,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U06LXEA75>",
+    "_id": "573a0d3ff3cedfd0ae2959d7",
+    "username": "Nate McIntyre",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a0d3f1f4790966e69c66a",
+        "mmr": 1076,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57a905957bb406583db27104",
+        "mmr": 994,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57c9b3365d04d91b2838a20e",
+        "mmr": 963,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U06N3V823>",
+    "_id": "573a0dccf3cedfd0ae2959dc",
+    "username": "Bobby Barnett",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573a0dcc1f4790966e69c670",
+        "mmr": 1210,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "579fc4e1fb69ab2e3c72375f",
+        "mmr": 1132,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57ca03035d04d91b2838a215",
+        "mmr": 1115,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  },
+  {
+    "userId": "<@U092L0K2S>",
+    "_id": "573f9e06f3cedfd0ae2959e7",
+    "username": "Wai-man Fung",
+    "__v": 3,
+    "deleted": false,
+    "deletedAt": null,
+    "mmrs": [
+      {
+        "_id": "573f9e061f4790966e69c698",
+        "mmr": 975,
+        "season": "5",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57b74f6f7bb406583db27114",
+        "mmr": 985,
+        "season": "6",
+        "type": "C06K0GL2K"
+      },
+      {
+        "_id": "57d1ebb05d04d91b2838a21e",
+        "mmr": 1025,
+        "season": "7",
+        "type": "C06K0GL2K"
+      }
+    ]
+  }
+]
