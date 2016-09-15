@@ -285,7 +285,7 @@ def game_ids(league_id)
     # return id
     return db.execute('SELECT DISTINCT GameID FROM Game
                        WHERE LeagueID = :league_id
-                       ORDER BY Timestamp DESC',
+                       ORDER BY Timestamp DESC, GameID DESC',
                       league_id).flatten
   end
 end
@@ -296,7 +296,7 @@ def games_with_player(player_id, league_id)
     return db.execute('SELECT GameID From Game
                        WHERE PlayerID = :player_id
                        AND LeagueID = :league_id
-                       ORDER BY Timestamp DESC',
+                       ORDER BY Timestamp DESC, GameID DESC',
                       player_id, league_id).flatten
   end
 end
@@ -747,7 +747,7 @@ def recalc_elo(timestamp, league_id)
                                             AND e.LeagueID = :league_id
                                             AND g.LeagueID = :league_id
                                             AND Timestamp <= :timestamp
-                                            ORDER BY Timestamp DESC
+                                            ORDER BY Timestamp DESC, GameID DESC
                                             LIMIT 1',
                                            player_id, league_id, timestamp)
 
@@ -760,7 +760,7 @@ def recalc_elo(timestamp, league_id)
                 FROM Game
                 WHERE Timestamp >= :timestamp
                 AND LeagueID = :league_id
-                ORDER BY Timestamp',
+                ORDER BY Timestamp, GameID',
                timestamp, league_id) do |game_id|
       game = create_query_hash(db.execute2('SELECT PlayerID, Score
                                             FROM Game
