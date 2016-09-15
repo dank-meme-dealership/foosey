@@ -150,6 +150,8 @@ def badges(league_id, player_id)
 
   # temporary badges go here
   badges[4] << badge('🤵🏼👰🏼', 'Hitched')
+  badges[35] << badge('🤒', 'Weak')
+  badges[35] << badge('😭', 'Whimpering')
 
   # fire badge
   # best daily change
