@@ -17,7 +17,7 @@
 		$scope.useCustom = false;
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;
-		$scope.scores = _.reverse(_.range(11)); // scores 0-10
+		$scope.scores = [];
 		$scope.canCancel = false;
 		$scope.filter = {};
 		$scope.filter.text = '';
@@ -55,6 +55,7 @@
 			selectedPlayer = undefined;
 			selectedScoreIndex = undefined;
 			$scope.useCustom = !$scope.adding;
+			$scope.scores = _.reverse(_.range($scope.settings.addGameMaxScore + 1)); // scores 0 to n (need to add 1)
 
 			if ($scope.adding)
 			{

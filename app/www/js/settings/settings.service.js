@@ -12,6 +12,7 @@
 			//Properties
 			addGameClear			: setting('addGameClear', false),
 			addGameFilter			: setting('addGameFilter', false),
+			addGameMaxScore		: setting('addGameMaxScore', 10),
 			addGameNames			: setting('addGameNames', false),
 			addGameSelect			: setting('addGameSelect', false),
 			eloChartGames			: localStorage.getObject('eloChartGames', 30),
