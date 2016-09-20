@@ -149,7 +149,7 @@ def badges(league_id, player_id)
   badges = Hash.new { |h, k| h[k] = [] }
 
   # temporary badges go here
-  badges[4] << badge('🤵🏼👰🏼', 'Hitched')
+  # badges[4] << badge('🤵🏼👰🏼', 'Hitched') # Roger hitched
 
   # fire badge
   # best daily change
