@@ -151,6 +151,11 @@ def badges(league_id, player_id)
   # temporary badges go here
   # badges[4] << badge('🤵🏼👰🏼', 'Hitched') # Roger hitched
 
+  # plays a lot
+  players.each do |p|
+    badges[p] << badge('⚠️', 'Very Active') if games_this_week(p, league_id) > 50
+  end
+
   # fire badge
   # best daily change
   best_change = players.group_by { |p| daily_elo_change(p, league_id) }.max
@@ -367,6 +372,19 @@ def daily_elo_change(player_id, league_id)
   end
 end
 
+def games_this_week(player_id, league_id)
+  database do |db|
+    midnight = DateTime.new(Time.now.year, Time.now.month, Time.now.day,
+                            0, 0, 0, '-6').to_time.to_i
+    week_ago = midnight - 604800
+    return db.get_first_value('SELECT COUNT(GameID) FROM Game g
+                               WHERE g.PlayerID = :player_id
+                               AND g.LeagueID = :league_id
+                               AND g.Timestamp >= :week_ago',
+                              player_id, league_id, week_ago)
+  end
+end
+
 def extended_stats(player_id, league_id)
   database do |db|
     allies = Hash.new(0) # key -> player_id, value -> wins
@@ -419,7 +437,8 @@ def extended_stats(player_id, league_id)
       nemesis: name(nemesis[0], league_id),
       nemesisCount: nemesis[1],
       singlesWinRate: singles_win_rate.nan? ? nil : singles_win_rate,
-      singlesTotal: singles_games
+      singlesTotal: singles_games,
+      pastWeek: games_this_week(player_id, league_id)
     }
   end
 end

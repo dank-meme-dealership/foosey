@@ -48,6 +48,12 @@
           <div ng-show="recentGames">{{recentGames[0].timestamp | date}}</div>
           <div ng-show="!recentGames">-</div>
         </ion-item>
+        <!-- Past Week -->
+        <ion-item class="stat-card">
+          <div>Past Week</div>
+          <div ng-show="player">{{player.pastWeek + (player.gamesLastWeek === 1 ? ' game' : ' games')}}</div>
+          <div ng-show="!player">-</div>
+        </ion-item>
   			<!-- Total Singles -->
   			<ion-item class="stat-card">
   				<div>Singles</div>
