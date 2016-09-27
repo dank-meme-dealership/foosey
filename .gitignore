@@ -51,3 +51,5 @@ app/plugins/
 
 app/resources/android
 app/resources/ios
+
+app/node_modules/

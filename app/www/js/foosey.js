@@ -27,10 +27,10 @@
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
   }
 
-  run.$inject = ['$ionicPlatform'];
+  run.$inject = ['$ionicPlatform', '$ionicConfig'];
 
   // This establishes a few settings for Ionic
-  function run($ionicPlatform) 
+  function run($ionicPlatform, $ionicConfig) 
   {
     $ionicPlatform.ready(function() 
     {
@@ -43,5 +43,7 @@
         StatusBar.styleDefault();
       }
     });
+
+    $ionicConfig.scrolling.jsScrolling(false);
   }
 })();
