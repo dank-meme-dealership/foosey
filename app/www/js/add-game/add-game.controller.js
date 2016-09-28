@@ -8,16 +8,15 @@
 
 	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
 	{
-		var selectedPlayer = undefined;
-		var selectedScoreIndex = undefined;
-
+		$scope.selectedPlayer = undefined;
+		$scope.selectedScoreIndex = undefined;
 		$scope.adding = _.isUndefined($stateParams.gameID);
 		$scope.settings = SettingsService;
 		$scope.gameTypes = gameTypes;
 		$scope.useCustom = false;
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;
-		$scope.scores = [];
+		$scope.scores = [7, 8, 9, 4, 5, 6, 1, 2, 3];
 		$scope.canCancel = false;
 		$scope.filter = {};
 		$scope.filter.text = '';
@@ -37,6 +36,7 @@
 		$scope.submit = submit;
 		$scope.undo = undo;
 		$scope.show = show;
+		$scope.jump = jump;
 
 		// load on entering view 
     $scope.$on('$ionicView.beforeEnter', function()
@@ -52,10 +52,9 @@
     // reset the game
 		function reset()
 		{
-			selectedPlayer = undefined;
-			selectedScoreIndex = undefined;
+			$scope.selectedPlayer = undefined;
+			$scope.selectedScoreIndex = undefined;
 			$scope.useCustom = !$scope.adding;
-			$scope.scores = _.reverse(_.range($scope.settings.addGameMaxScore + 1)); // scores 0 to n (need to add 1)
 
 			if ($scope.adding)
 			{
@@ -156,8 +155,8 @@
 
 		function choosePlayer(teamIndex, playerIndex)
 		{
-			selectedPlayer = { teamIndex: teamIndex, playerIndex: playerIndex };
-			selectedScoreIndex = undefined;
+			$scope.selectedPlayer = { teamIndex: teamIndex, playerIndex: playerIndex };
+			$scope.selectedScoreIndex = undefined;
 			changeState('player-select', 'Select Players');
 			if (SettingsService.addGameSelect) $scope.$broadcast('selectFilterBar');
 			if (SettingsService.addGameClear) $scope.filter.text = '';
@@ -165,17 +164,18 @@
 
 		function chooseScore(teamIndex)
 		{
-			selectedScoreIndex = teamIndex;
-			selectedPlayer = undefined;
+			$scope.selectedScoreIndex = teamIndex;
+			$scope.selectedPlayer = undefined;
+			scoreSelect(null);
 			changeState('score-select', 'Select Score');
 		}
 
 		function isSelected(teamIndex, playerIndex)
 		{
-			return (selectedPlayer &&
-							selectedPlayer.teamIndex === teamIndex && 
-							selectedPlayer.playerIndex === playerIndex) ||
-						 (selectedScoreIndex === teamIndex &&
+			return ($scope.selectedPlayer &&
+							$scope.selectedPlayer.teamIndex === teamIndex && 
+							$scope.selectedPlayer.playerIndex === playerIndex) ||
+						 ($scope.selectedScoreIndex === teamIndex &&
 						 	playerIndex === -1);
 		}
 
@@ -185,8 +185,8 @@
 			if (playerSelected(player)) return;
 			$scope.canCancel = true;
 
-			team = $scope.teams[selectedPlayer.teamIndex];
-			team.players[selectedPlayer.playerIndex] = player.playerID;
+			team = $scope.teams[$scope.selectedPlayer.teamIndex];
+			team.players[$scope.selectedPlayer.playerIndex] = player.playerID;
 			
 			jump();
 		};
@@ -194,10 +194,8 @@
 		// function to select score
 		function scoreSelect(score)
 		{	
-			team = $scope.teams[selectedScoreIndex];
-			team.score = score;
-
-			jump();
+			team = $scope.teams[$scope.selectedScoreIndex];
+			team.score = team.score === null || score === null ? score : team.score + '' + score;
 		};
 
 		function jump()
@@ -217,8 +215,8 @@
 					if (jumpScores(t)) return;
 				}
 			}
-			selectedPlayer = undefined;
-			selectedScoreIndex = undefined;
+			$scope.selectedPlayer = undefined;
+			$scope.selectedScoreIndex = undefined;
 			changeState('confirm', 'Confirm');
 		}
 

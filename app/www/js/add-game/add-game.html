@@ -7,7 +7,7 @@
     	class="button button-clear button-assertive" 
     	ng-click="reset()">
     	<div ng-if="canCancel">
-    		{{adding ? 'Clear' : 'Revert'}}
+    		{{adding ? 'Start Over' : 'Revert'}}
     	</div>
     	<ion-spinner 
     		icon="lines" 
@@ -84,13 +84,29 @@
 			
 			<!-- Score select -->
 			<div ng-show="state === 'score-select'">
-				<div class="grid-container">
+				<div class="grid-container num-select">
 					<div 
 						class="grid-item item"
-						ng-class="{'bold': $index === 5 || $index === 0}"
 						ng-repeat="score in scores"
 		  		  ng-click="scoreSelect(score)">
 		  		  {{score}}
+		  		</div>
+		  		<div 
+		  			class="grid-item item assertive" 
+		  			ng-click="scoreSelect(null)" 
+		  			ng-disabled="teams[selectedScoreIndex].score === null">
+		  			Clear
+		  		</div>
+		  		<div 
+		  			class="grid-item item" 
+		  			ng-click="scoreSelect(0)">
+		  			0
+		  		</div>
+		  		<div 
+		  			class="grid-item item positive" 
+		  			ng-click="jump()" 
+		  			ng-disabled="teams[selectedScoreIndex].score === null">
+		  			Next
 		  		</div>
 				</div>
 			</div>

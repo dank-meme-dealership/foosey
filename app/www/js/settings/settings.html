@@ -46,10 +46,6 @@
     <div class="card">
       <ion-list>
         <div class="item item-divider">Experimental Add Game Options</div>
-        <div class="item item-input spaced-out">
-          <div class="input-label">Max Score</div>
-          <input class="text-right" ng-blur="validate('addGameMaxScore', settings.addGameMaxScore)" ng-model="settings.addGameMaxScore" type="tel">
-        </div>
         <ion-toggle ng-change="settings.setProperty('addGameNames', settings.addGameNames)" ng-model="settings.addGameNames" toggle-class="toggle-positive">Choose All Names First</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('addGameFilter', settings.addGameFilter)" ng-model="settings.addGameFilter" toggle-class="toggle-positive">Show Filter Bar</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('addGameSelect', settings.addGameSelect)" ng-model="settings.addGameSelect" toggle-class="toggle-positive" ng-disabled="!settings.addGameFilter"> * Auto Select Filter Bar</ion-toggle>

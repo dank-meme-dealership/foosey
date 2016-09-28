@@ -6,7 +6,7 @@
 }
 .grid-container
 {
-  margin: 5px;
+  padding: 0 5px;
   justify-content: center;
   flex-wrap: wrap;
   display: flex;
@@ -21,6 +21,11 @@
 .grid-item.selected, .player-button.selected
 {
   background: #CCCCCC;
+}
+.num-select
+{
+  max-width: 380px;
+  margin: auto;
 }
 .player-button
 {
