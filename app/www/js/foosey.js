@@ -45,6 +45,6 @@
       }
     });
 
-    $ionicConfig.scrolling.jsScrolling(false);
+    // $ionicConfig.scrolling.jsScrolling(false);
   }
 })();
