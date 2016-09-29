@@ -148,9 +148,6 @@ def badges(league_id, player_id)
   players = player_ids league_id
   badges = Hash.new { |h, k| h[k] = [] }
 
-  # temporary badges go here
-  # badges[4] << badge('🤵🏼👰🏼', 'Hitched') # Roger hitched
-
   # plays a lot
   players.each do |p|
     badges[p] << badge('⚠️', 'Very Active') if games_this_week(p, league_id) > 50
@@ -376,7 +373,7 @@ def games_this_week(player_id, league_id)
   database do |db|
     midnight = DateTime.new(Time.now.year, Time.now.month, Time.now.day,
                             0, 0, 0, '-6').to_time.to_i
-    week_ago = midnight - 604800
+    week_ago = midnight - 604_800
     return db.get_first_value('SELECT COUNT(GameID) FROM Game g
                                WHERE g.PlayerID = :player_id
                                AND g.LeagueID = :league_id
@@ -679,6 +676,11 @@ def edit_game(league_id, game_id, outcome, timestamp = nil, rec = true)
                     (:game_id, :player_id, :league_id, :score, :timestamp)',
                  game_id, player_id, league_id, score, timestamp
     end
+
+    slack_url = db.get_first_value 'SELECT Value FROM Config
+                                    WHERE Setting = "SlackUrl"'
+
+    message_slack("Game edited: #{game_to_s(game_id, false, league_id)}", [], slack_url) if league_id == 1
   end
 
   recalc(league_id) if rec
@@ -870,6 +872,8 @@ def remove_game(game_id, league_id)
                                     AND LeagueID = :league_id',
                                    game_id, league_id
 
+    removed = game_to_s(game_id, false, league_id)
+
     # remove the game
     db.execute 'DELETE FROM Game
                 WHERE GameID = :game_id
@@ -884,7 +888,7 @@ def remove_game(game_id, league_id)
     slack_url = db.get_first_value 'SELECT Value FROM Config
                                     WHERE Setting = "SlackUrl"'
 
-    message_slack("Game removed: #{game_id}", [], slack_url)
+    message_slack("Game removed: #{removed}", [], slack_url) if league_id == 1
 
     recalc(league_id, timestamp)
   end
