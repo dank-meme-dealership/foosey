@@ -893,3 +893,12 @@ def remove_game(game_id, league_id)
     recalc(league_id, timestamp)
   end
 end
+
+def set_slack_url(url)
+  database do |db|
+    db.execute 'UPDATE Config 
+                SET Value = :url
+                WHERE Setting = "SlackUrl"',
+                url
+  end
+end

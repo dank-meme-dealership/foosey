@@ -367,4 +367,11 @@ namespace '/v1' do
 
     json api_league league_name
   end
+
+  # set a new slack url
+  post '/slackurl' do
+    body = JSON.parse request.body.read
+
+    set_slack_url(body['url'])
+  end
 end
