@@ -1,14 +1,23 @@
-<input 
-  class="text-center" 
-  ng-model="newLeague.leagueName" 
-  ng-trim="false" 
-  ng-change="newLeague.leagueName = newLeague.leagueName.replace(leagueChars, '')"
-  placeholder="League Name"
-  type="text">
-<input
-  class="text-center"
-  ng-model="newLeague.playerName" 
-  ng-trim="false" 
-  ng-change="newLeague.playerName = newLeague.playerName.replace(playerChars, '')"
-  placeholder="Your Name"
-  type="text">
+<ion-modal-view class="background">
+  <ion-header-bar class="bar bar-header">
+    <h1 class="title">Create League</h1>
+    <button class="button button-clear button-assertive" ng-click="modal.hide()">Cancel</button>
+  </ion-header-bar>
+  <ion-content class="padding">
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">League Name</span>
+        <input class="text-right" placeholder="ex. disney-foos" ng-model="newLeague.leagueName" type="text">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Display Name</span>
+        <input class="text-right" placeholder="ex. Disneyland Foos" ng-model="newLeague.displayName" type="text">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Your Name</span>
+        <input class="text-right" placeholder="Mickey Mouse" ng-model="newLeague.playerName" type="text">
+      </label>
+      <button class="button button-full" ng-click="addLeague()" ng-disabled="false">Create League</button>
+    </div>
+  </ion-content>
+</ion-modal-view>

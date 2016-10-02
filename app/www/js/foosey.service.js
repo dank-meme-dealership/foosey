@@ -46,9 +46,9 @@
       return $http.post(url() + id + '/players', player);
     }
 
-    function addLeague(leagueName)
+    function addLeague(league)
     {
-      return $http.post(url() + 'leagues', { leagueName: leagueName });
+      return $http.post(url() + 'leagues', league);
     }
 
     function editGame(game)

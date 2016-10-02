@@ -4,12 +4,12 @@
     .module('login')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$scope', '$ionicPopup', 'FooseyService', 'SettingsService'];
+  LoginController.$inject = ['$scope', '$ionicPopup', '$ionicModal', 'FooseyService', 'SettingsService'];
 
-  function LoginController($scope, $ionicPopup, FooseyService, SettingsService)
+  function LoginController($scope, $ionicPopup, $ionicModal, FooseyService, SettingsService)
   {
     $scope.league = { text: '', leagueID: ''};
-    $scope.newLeague = { leagueName: '', playerName: '' };
+    $scope.newLeague = { leagueName: '', displayName: '', playerName: '' };
     $scope.players = [];
     $scope.leagueChars = /[^0-9A-Za-z\-]/g;
     $scope.playerChars = /[^A-Za-z'. ]/g;
@@ -20,6 +20,13 @@
     $scope.forgot = forgot;
     $scope.createLeaguePopup = createLeaguePopup;
     $scope.addLeague = addLeague;
+
+    // load up add/edit player modal
+    $ionicModal.fromTemplateUrl('js/login/new-league.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modal = modal;
+    });
 
     function getStarted()
     {
@@ -94,32 +101,13 @@
 
     function createLeaguePopup()
     {
-      $ionicPopup.show({
-        title: 'Create League',
-        subTitle: 'Enter a league name below',
-        templateUrl: 'js/login/new-league.html',
-        scope: $scope,
-        buttons: [
-          { text: 'Cancel' },
-          {
-            text: '<b>Save</b>',
-            type: 'button-positive',
-            onTap: function(e) {
-              if (!$scope.newLeague.leagueName || !$scope.newLeague.playerName) {
-                //don't allow the user to save unless he enters league name
-                e.preventDefault();
-              } else {
-                $scope.addLeague();
-              }
-            }
-          }
-        ]
-      });
+      $scope.modal.show();
     }
 
     function addLeague()
     {
-      FooseyService.addLeague($scope.newLeague.leagueName.toLowerCase()).then(
+      $scope.modal.hide();
+      FooseyService.addLeague($scope.newLeague).then(
         function(response)
         {
           $scope.newLeague.leagueName = '';
