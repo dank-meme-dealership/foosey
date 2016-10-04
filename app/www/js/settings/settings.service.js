@@ -13,6 +13,7 @@
 			addGameClear			: setting('addGameClear', false),
 			addGameFilter			: setting('addGameFilter', false),
 			addGameNames			: setting('addGameNames', false),
+			addGameScorePicker: setting('addGameScorePicker', false),
 			addGameSelect			: setting('addGameSelect', false),
 			eloChartGames			: localStorage.getObject('eloChartGames', 30),
 			isAdmin						: setting('isAdmin', false),

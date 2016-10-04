@@ -17,6 +17,7 @@
 		$scope.customTime = undefined;
 		$scope.customDate = undefined;
 		$scope.scores = [7, 8, 9, 4, 5, 6, 1, 2, 3];
+		$scope.scoresTen = _.reverse(_.range(11));
 		$scope.canCancel = false;
 		$scope.filter = {};
 		$scope.filter.text = '';
@@ -196,6 +197,9 @@
 		{	
 			team = $scope.teams[$scope.selectedScoreIndex];
 			team.score = team.score === null || score === null ? score : team.score + '' + score;
+
+			// if they want the normal picker, jump after setting score
+			if (parseInt(team.score) >= 0 && !SettingsService.addGameScorePicker) jump();
 		};
 
 		function jump()

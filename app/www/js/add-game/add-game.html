@@ -81,33 +81,36 @@
 		  		</div>
 				</div>
 			</div>
-			
+
 			<!-- Score select -->
 			<div ng-show="state === 'score-select'">
-				<div class="grid-container num-select">
+				<div class="grid-container" ng-class="{'num-select': settings.addGameScorePicker}">
 					<div 
 						class="grid-item item"
-						ng-repeat="score in scores"
+						ng-class="{'bold': !settings.addGameScorePicker && ($index === 5 || $index === 0)}"
+						ng-repeat="score in (settings.addGameScorePicker ? scores : scoresTen)"
 		  		  ng-click="scoreSelect(score)">
 		  		  {{score}}
 		  		</div>
-		  		<div 
-		  			class="grid-item item assertive" 
-		  			ng-click="scoreSelect(null)" 
-		  			ng-disabled="teams[selectedScoreIndex].score === null">
-		  			Clear
-		  		</div>
-		  		<div 
-		  			class="grid-item item" 
-		  			ng-click="scoreSelect(0)">
-		  			0
-		  		</div>
-		  		<div 
-		  			class="grid-item item positive" 
-		  			ng-click="jump()" 
-		  			ng-disabled="teams[selectedScoreIndex].score === null">
-		  			Next
-		  		</div>
+		  		<section class="bottom-buttons" ng-show="settings.addGameScorePicker">
+			  		<div 
+			  			class="grid-item item assertive" 
+			  			ng-click="scoreSelect(null)" 
+			  			ng-disabled="teams[selectedScoreIndex].score === null">
+			  			Clear
+			  		</div>
+			  		<div 
+			  			class="grid-item item" 
+			  			ng-click="scoreSelect(0)">
+			  			0
+			  		</div>
+			  		<div 
+			  			class="grid-item item positive" 
+			  			ng-click="jump()" 
+			  			ng-disabled="teams[selectedScoreIndex].score === null">
+			  			Next
+			  		</div>
+			  	</section>
 				</div>
 			</div>
 		
