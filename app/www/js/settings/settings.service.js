@@ -24,7 +24,7 @@
 			playerID					: localStorage.getObject('playerID', undefined),
 			recentGames				: localStorage.getObject('recentGames', 3),
 			showBadges				: setting('showBadges', true),
-			showElo						: setting('showElo', false),
+			showElo						: setting('showElo', true),
 			showRelTimes			: setting('showRelTimes', true),
 			useLocalDb				: setting('useLocalDb', isLocalhost()),
 			//Functions
