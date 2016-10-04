@@ -34,13 +34,13 @@
   // format date
   function date() 
   {
-    return function(input) {
+    return function(input, lowercase) {
       var day = roundDown(moment.unix(input));
       var daysFromToday = roundDown(moment()).diff(day, 'days');
       
       // Special cases
-      if (daysFromToday === 0) return 'Today';
-      if (daysFromToday === 1) return 'Yesterday';
+      if (daysFromToday === 0) return lowercase ? 'today' : 'Today';
+      if (daysFromToday === 1) return lowercase ? 'yesterday' : 'Yesterday';
       if (daysFromToday < 7) return day.format('dddd');
 
       return day.format('MMMM Do, YYYY');
@@ -98,15 +98,15 @@
   }
 
   // convert from 24-hour to am/pm
-  function time()
+  function time(dateFilter)
   {
-    return function(input, showRelTimes)
+    return function(input, showRelTimes, about)
     {
       var day = moment.unix(input);
       var daysFromToday = moment().diff(day, 'days');
       var absolutelyToday = daysFromToday === 0 && day.dayOfYear() === moment().dayOfYear();
 
-      return absolutelyToday && showRelTimes ? day.fromNow() : day.format('h:mma');
+      return absolutelyToday && showRelTimes ? day.fromNow() : (about ? dateFilter(input, true) + ' about ' : '') + day.format('h:mma');
     }
   }
 

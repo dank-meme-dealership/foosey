@@ -4,9 +4,9 @@
 		.module('addGame')
 		.controller('AddGameController', AddGameController);
 
-	AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicScrollDelegate', 'gameTypes', 'localStorage', 'FooseyService', 'SettingsService'];
+	AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicPopup', '$ionicScrollDelegate', 'gameTypes', '$filter', 'localStorage', 'FooseyService', 'SettingsService'];
 
-	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicScrollDelegate, gameTypes, localStorage, FooseyService, SettingsService)
+	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicPopup, $ionicScrollDelegate, gameTypes, $filter, localStorage, FooseyService, SettingsService)
 	{
 		$scope.selectedPlayer = undefined;
 		$scope.selectedScoreIndex = undefined;
@@ -256,8 +256,66 @@
 			return selected;
 		}
 
-		// add the game
+		// determine if the game about to be logged is the same
+		// as the last game that was just logged, then proceed
+		// to saving the game
 		function submit()
+		{
+			// when editing a game, we don't care about the equivalence
+			if ($scope.adding)
+			{
+				// get the last game logged
+				FooseyService.getGames(1, 0).then(
+					function(response)
+					{
+						// winners and losers from server
+						var game = response[0];
+						var winners = game.teams[0];
+						var losers = game.teams[1];
+
+						// winners and losers to be logged
+						var winnerFirst = $scope.teams[0].score > $scope.teams[1].score;
+						var winnersToBe = $scope.teams[winnerFirst ? 0 : 1];
+						var losersToBe = $scope.teams[winnerFirst ? 1 : 0];
+
+						// evaluate the game
+						if (winners.score === winnersToBe.score && losers.score === losersToBe.score && // scores are equal
+								_.isEqual(_.map(winners.players, 'playerID').sort(), winnersToBe.players.sort()) && // winners are equal
+								_.isEqual(_.map(losers.players, 'playerID').sort(), losersToBe.players.sort())) // losers are equal
+						{
+							// confirm that they want to save duplicate
+							confirmSave(game);
+						}
+						else
+						{
+							save();
+						}
+					});
+			}
+			else
+			{
+				save();
+			}
+		}
+
+		// confirm that they do want to save the duplicate
+		function confirmSave(game)
+		{
+			var confirmPopup = $ionicPopup.confirm({
+        title: 'Possible Duplicate Game',
+        template: 'This game is the same as another game that was logged ' + $filter('time')(game.timestamp, true, true) + '. Do you wish to proceed?'
+      });
+
+      // if yes, save the last game
+      confirmPopup.then(function(positive) {
+        if(positive) {
+          save();
+        }
+      });
+		}
+
+		// add the game
+		function save()
 		{
 			changeState('saving', null);
 			$scope.saveStatus = 'saving';
@@ -360,6 +418,7 @@
 			]
 		}
 
+		// change to a new state on the add game page
 		function changeState(state, title)
 		{
 			if (state) $scope.state = state;

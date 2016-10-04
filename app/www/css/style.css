@@ -211,3 +211,7 @@ ion-item
 {
   background-color: rgba(255, 255, 255, 1);
 }
+.popup-body 
+{
+  text-align: center;
+}
