@@ -147,6 +147,7 @@ def badges(league_id, player_id)
   # get players
   players = player_ids league_id
   badges = Hash.new { |h, k| h[k] = [] }
+  all_games = game_ids(league_id)
 
   # plays a lot
   players.each do |p|
@@ -168,7 +169,7 @@ def badges(league_id, player_id)
   babies = players.select do |p|
     games_with_player(p, league_id).length.between?(10, 15)
   end
-  babies.each { |b| badges[b] << badge('👶🏼', 'Newly Ranked') } unless babies.nil?
+  babies.each { |b| badges[b] << badge('👶🏼', 'Newly Ranked') } unless all_games.length < 100 || babies.nil?
 
   # monkey badge
   # won last game but elo went down
@@ -187,7 +188,7 @@ def badges(league_id, player_id)
 
   # toilet badge
   # last skunk (lost w/ 0 points)
-  toilet_game = game_ids(league_id).find do |g|
+  toilet_game = all_games.find do |g|
     api_game(g, league_id)[:teams][1][:score] == 0
   end
   toilets = api_game(toilet_game, league_id)[:teams][1][:players] if toilet_game
