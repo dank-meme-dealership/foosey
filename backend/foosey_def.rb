@@ -290,6 +290,59 @@ def game_ids(league_id)
   end
 end
 
+
+def all_games(league_id)
+  database do |db|
+    # return id
+    games = db.execute 'SELECT GameID, GROUP_CONCAT(g.PlayerID), GROUP_CONCAT(p.DisplayName), GROUP_CONCAT(g.Score), timestamp
+                        FROM Game g
+                        JOIN Player p using (PlayerID)
+                        WHERE g.LeagueID = :league_id
+                        GROUP BY g.GameID', league_id
+
+    the_games = []
+
+    games.each do |game|
+      game_id = game[0]
+      timestamp = game[4]
+
+      response = {
+        gameID: game_id,
+        timestamp: timestamp,
+        teams: []
+      }
+
+      game[1].split(",").each_with_index do |player_id, idx|
+        names = game[2].split(",")
+        scores = game[3].split(",")
+
+        i = response[:teams].index { |t| t[:score] == scores[idx] }
+
+        if i
+          # team exists in hash
+          response[:teams][i][:players] << {
+            playerID: player_id,
+            displayName: names[idx]
+          }
+        else
+          response[:teams] << {
+            players: [{
+              playerID: player_id,
+              displayName: names[idx]
+            }],
+            score: scores[idx],
+            delta: 0 #elo_change(player_id, game_id, league_id)
+          }
+        end
+      end
+
+      the_games << response
+    end
+
+    return the_games
+  end
+end
+
 # returns an array of game ids involving player with id player_id
 def games_with_player(player_id, league_id)
   database do |db|

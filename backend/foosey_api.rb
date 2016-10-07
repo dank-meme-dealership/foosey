@@ -184,6 +184,7 @@ namespace '/v1' do
       ids ||= []
 
       json ids.collect { |id| api_game(id, params['league_id'].to_i) }
+      # json all_games(params['league_id'].to_i)
     end
 
     # One Game
