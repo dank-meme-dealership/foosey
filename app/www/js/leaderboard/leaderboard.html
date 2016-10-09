@@ -38,7 +38,9 @@
               </div> 
               <div class="spaced-out">
                 <badges player="player" ng-if="settings.showBadges"></badges>
-                <div ng-show="player.disqualified">{{minimumQualified - player.gamesPlayed}} games left to play</div>
+                <div ng-show="player.disqualified">
+                  {{minimumQualified - player.gamesPlayed}} 
+                  {{minimumQualified - player.gamesPlayed === 1 ? 'game' : 'games'}} left to play</div>
                 <div ng-show="settings.showElo && player.qualified"><b>{{player.elo}}</b></div>
                 <div 
                   ng-show="settings.showElo && player.qualified && !_.isUndefined(player.dailyChange)"
