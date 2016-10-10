@@ -55,13 +55,13 @@
 
     function getRecord()
     {
-      $scope.teams = _.clone($scope.game[0].teams);
+      $scope.teams = _.clone($scope.games[0].teams);
       $scope.teams[0].wins = 0;
       $scope.teams[1].wins = 0;
       _.each($scope.games, function(game)
       {
         // the first team is always the winner so add a win to whoever it's for
-        game.teams[0].score > game.teams[1].score ? $scope.teams[0].wins++ : $scope.teams[1].wins++;
+        game.teams[0].players[0].playerID === $scope.teams[0].players[0].playerID ? $scope.teams[0].wins++ : $scope.teams[1].wins++;
       });
     }
 

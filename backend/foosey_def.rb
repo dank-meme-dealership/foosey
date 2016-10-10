@@ -341,6 +341,8 @@ def history(league_id, ids)
         end
       end
 
+      response[:teams] = response[:teams].sort! { |a, b|  b[:score] <=> a[:score]}
+
       the_games << response
     end
 
