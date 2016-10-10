@@ -291,20 +291,26 @@ def game_ids(league_id)
 end
 
 
-def all_games(league_id)
+def history(league_id, ids)
   database do |db|
-    # return id
     games = db.execute 'SELECT GameID, GROUP_CONCAT(g.PlayerID), GROUP_CONCAT(p.DisplayName), GROUP_CONCAT(g.Score), timestamp
                         FROM Game g
                         JOIN Player p using (PlayerID)
                         WHERE g.LeagueID = :league_id
-                        GROUP BY g.GameID', league_id
+                        GROUP BY g.GameID', 
+                        league_id
 
     the_games = []
 
     games.each do |game|
       game_id = game[0]
+      player_ids = game[1].split(",")
+      names = game[2].split(",")
+      scores = game[3].split(",")
       timestamp = game[4]
+
+      # skip to next game if doesn't contain the same players
+      next if ids != player_ids.sort.join(',')
 
       response = {
         gameID: game_id,
@@ -312,9 +318,7 @@ def all_games(league_id)
         teams: []
       }
 
-      game[1].split(",").each_with_index do |player_id, idx|
-        names = game[2].split(",")
-        scores = game[3].split(",")
+      player_ids.each_with_index do |player_id, idx|
 
         i = response[:teams].index { |t| t[:score] == scores[idx] }
 
@@ -331,7 +335,7 @@ def all_games(league_id)
               displayName: names[idx]
             }],
             score: scores[idx],
-            delta: 0 #elo_change(player_id, game_id, league_id)
+            delta: elo_change(player_id, game_id, league_id)
           }
         end
       end

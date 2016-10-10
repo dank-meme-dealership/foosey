@@ -169,6 +169,11 @@ namespace '/v1' do
       json badges(params['league_id'].to_i, params['id'].to_i)
     end
 
+    # History
+    get '/history' do
+      json history(params['league_id'].to_i, params['ids'])
+    end
+
     # All Games / Multiple Games
     get '/games' do
       # set params and their defaults1
