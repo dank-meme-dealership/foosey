@@ -18,6 +18,7 @@
       getPlayer         : getPlayer,
       getPlayersByID    : getPlayersByID,
       getPlayerGames    : getPlayerGames,
+      getHistory        : getHistory,
       getAllGames       : getAllGames,
       getGame           : getGame,
       getGamesByID      : getGamesByID,
@@ -93,6 +94,15 @@
     function getPlayerGames(playerID, limit)
     {
       return $http.get(url() + SettingsService.league.leagueID + '/players/' + playerID + '/games' + (limit ? '?limit=' + limit : ''));
+    }
+
+    function getHistory(playerIDs)
+    {
+      return $http.get(url() + SettingsService.league.leagueID + '/history?ids=' + playerIDs).then(
+        function (response)
+        {
+          return _.map(response.data, addDateInfo);
+        });
     }
 
     function getAllGames()

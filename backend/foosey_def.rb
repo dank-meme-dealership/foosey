@@ -297,7 +297,8 @@ def history(league_id, ids)
                         FROM Game g
                         JOIN Player p using (PlayerID)
                         WHERE g.LeagueID = :league_id
-                        GROUP BY g.GameID', 
+                        GROUP BY g.GameID
+                        ORDER BY timestamp DESC', 
                         league_id
 
     the_games = []
@@ -310,7 +311,7 @@ def history(league_id, ids)
       timestamp = game[4]
 
       # skip to next game if doesn't contain the same players
-      next if ids != player_ids.sort.join(',')
+      next if ids.split(',').sort != player_ids.sort
 
       response = {
         gameID: game_id,
@@ -320,22 +321,22 @@ def history(league_id, ids)
 
       player_ids.each_with_index do |player_id, idx|
 
-        i = response[:teams].index { |t| t[:score] == scores[idx] }
+        i = response[:teams].index { |t| t[:score] == scores[idx].to_i }
 
         if i
           # team exists in hash
           response[:teams][i][:players] << {
-            playerID: player_id,
+            playerID: player_id.to_i,
             displayName: names[idx]
           }
         else
           response[:teams] << {
             players: [{
-              playerID: player_id,
+              playerID: player_id.to_i,
               displayName: names[idx]
             }],
-            score: scores[idx],
-            delta: elo_change(player_id, game_id, league_id)
+            score: scores[idx].to_i,
+            delta: elo_change(player_id, game_id, league_id).to_i
           }
         end
       end

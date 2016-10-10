@@ -9,7 +9,7 @@
   function GameDetailController($scope, $stateParams, $ionicPopup, $ionicHistory, FooseyService, SettingsService)
   {
     $scope.settings = SettingsService;
-    $scope.fetching = false;
+    $scope.showRecord = false;
     $scope.disabled = true;
     $scope.game = undefined;
 
@@ -30,48 +30,38 @@
         function successCallback(response)
         {
           $scope.game = response;
-          // only two people in game
-          if ($scope.game[0].teams.length === 2 && $scope.game[0].teams[0].players.length === 1)
-          {
-            $scope.teams = _.clone($scope.game[0].teams);
-            $scope.fetching = true;
-            var p1 = $scope.game[0].teams[0].players[0].playerID;
-            var p2 = $scope.game[0].teams[1].players[0].playerID;
-            fetchSimilarGames(p1, p2);
-          }
-          else
-          {
-            $scope.disabled = false;
-          }
+
+          // Only get the record for singles games
+          $scope.showRecord = response[0].teams[0].players.length === 1;
+
+          // get playerIDs and fetch similar games
+          var playerIDs = _.map(response[0].teams[0].players, 'playerID').join(',') + ',' + 
+                          _.map(response[0].teams[1].players, 'playerID').join(',');
+          fetchSimilarGames(playerIDs);
         });
     }
 
-    function fetchSimilarGames(p1, p2)
+    function fetchSimilarGames(playerIDs)
     {
-      FooseyService.getPlayerGames(p1).then(
-      function successCallback(response1)
-      {
-        FooseyService.getPlayerGames(p2).then(
-        function successCallback(response2)
+      FooseyService.getHistory(playerIDs).then(
+        function successCallback(response)
         {
-          $scope.games = _.filter(_.intersectionBy(response1.data, response2.data, 'gameID'), function(game)
-            {
-              return game.teams.length === 2 && game.teams[0].players.length === 1;
-            });
-          getRecord();
+          $scope.games = response;
           $scope.disabled = false;
+
+          if ($scope.showRecord) getRecord();
         });
-      });
     }
 
     function getRecord()
     {
+      $scope.teams = _.clone($scope.game[0].teams);
       $scope.teams[0].wins = 0;
       $scope.teams[1].wins = 0;
       _.each($scope.games, function(game)
       {
         // the first team is always the winner so add a win to whoever it's for
-        game.teams[0].players[0].playerID === $scope.teams[0].players[0].playerID ? $scope.teams[0].wins++ : $scope.teams[1].wins++;
+        game.teams[0].score > game.teams[1].score ? $scope.teams[0].wins++ : $scope.teams[1].wins++;
       });
     }
 

@@ -11,16 +11,8 @@
     <!-- This game -->
     <game-list list="game" edit="true" disabled="disabled"></game-list>
 
-    <!-- Disclaimer -->
-    <div class="card" ng-show="game && !fetching">
-      <div class="item item-divider">Not Available</div>
-        <ion-item ng-show="!games">
-          No history for {{game[0].teams.length * game[0].teams[0].players.length}} person games yet!
-        </ion-item>
-    </div>
-
     <!-- Record -->
-    <div class="card" ng-show="fetching">
+    <div class="card" ng-show="showRecord">
       <ion-list>
         <div class="item item-divider">Win Record</div>
         <ion-item ng-show="!teams">
@@ -40,7 +32,7 @@
     </div>
 
     <!-- Past Games -->
-    <game-list title="'Past Games'" list="games" game-count="true" highlight="game[0].gameID" ng-show="fetching"></game-list>
+    <game-list title="'Past Games'" list="games" game-count="true" highlight="game[0].gameID"></game-list>
 
     <!-- show loading while waiting -->
     <ion-spinner ng-show="!game" class="loading-dots" icon="lines"></ion-spinner>
