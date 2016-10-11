@@ -53,19 +53,19 @@ module Foosey
       # fire badge
       # best daily change
       best_change = players.group_by(&:daily_elo_change).max
-      best_change.last.each { |b| badges[b.id] << badge('🔥', 'On Fire') } unless best_change.nil? || best_change.first < 10
+      best_change.last.each { |b| badges[b.id] << Badge::FIRE } unless best_change.nil? || best_change.first < 10
 
       # poop badge
       # worst daily change
       worst_change = players.group_by(&:daily_elo_change).min
-      worst_change.last.each { |b| badges[b.id] << badge('💩', 'Rough Day') } unless worst_change.nil? || worst_change.first > -10
+      worst_change.last.each { |b| badges[b.id] << Badge::POOP } unless worst_change.nil? || worst_change.first > -10
 
       # baby badge
       # 10-15 games played
       babies = players.select do |p|
         p.game_ids.length.between?(10, 15)
       end
-      babies.each { |b| badges[b.id] << badge('👶🏼', 'Newly Ranked') } unless babies.nil? || game_ids.length < 100
+      babies.each { |b| badges[b.id] << Badge::BABY } unless babies.nil? || game_ids.length < 100
 
       # monkey badge
       # won last game but elo went down
@@ -75,10 +75,10 @@ module Foosey
         next if p.game_ids
         last_game = Game.new(p.game_ids.last)
         winner = last_game[:teams][0][:players].any? { |a| a[:playerID] == p }
-        badges[p.id] << badge('🙈', 'Monkey\'d') if last_game.winner_ids.include?(p.id) && last_game.delta(p.id) < 0
-        badges[p.id] << badge('🍌', 'Graceful Loss') if last_game.loser_ids.include?(p.id) && last_game.delta(p.id) > 0
-        badges[p.id] << badge('💪🏼', 'Hefty Win') if last_game.winner_ids.include?(p.id) && last_game.delta(p.id) >= 10
-        badges[p.id] << badge('🤕', 'Hospital Bound') if last_game.loser_ids.include?(p.id) && last_game.delta(p.id) <= -10
+        badges[p.id] << Badge::MONKEY if last_game.winner_ids.include?(p.id) && last_game.delta(p.id) < 0
+        badges[p.id] << Badge::BANANA if last_game.loser_ids.include?(p.id) && last_game.delta(p.id) > 0
+        badges[p.id] << Badge::FLEX if last_game.winner_ids.include?(p.id) && last_game.delta(p.id) >= 10
+        badges[p.id] << Badge::BANDAGE if last_game.loser_ids.include?(p.id) && last_game.delta(p.id) <= -10
       end
 
       # toilet badge
@@ -88,7 +88,7 @@ module Foosey
         game.score(game.loser_ids.first) == 0
       end
       toilets = Game.new(toilet_game).loser_ids if toilet_game
-      toilets.each { |b| badges[b] << badge('🚽', 'Get Rekt') } unless toilets.nil?
+      toilets.each { |b| badges[b] << Badge::TOILET } unless toilets.nil?
 
       # win streak badges
       # 5 and 10 current win streak
@@ -102,9 +102,8 @@ module Foosey
       end
 
       win_streaks.each do |p, s|
-        badges[p.id] << badge("#{s}⃣", "#{s}-Win Streak") if s.between?(3, 9)
-        badges[p.id] << badge('🔟', "#{s}-Win Streak") if s == 10
-        badges[p.id] << badge('💰', "#{s}-Win Streak") if s > 10
+        badges[p.id] << Badge::STREAKS[s] if s.between?(3, 10)
+        badges[p.id] << { emoji: "\u{1F4B0}", definition: "#{s}-Win Streak" } if s > 10
       end
 
       # zzz badge
@@ -114,7 +113,7 @@ module Foosey
         last_game = Game.new(p.game_ids.last)
         Time.now.to_i - last_game.timestamp > 1_209_600 # 2 weeks
       end
-      sleepers.each { |b| badges[b.id] << badge('💤', 'Snoozin\'') }
+      sleepers.each { |b| badges[b.id] << Badge::ZZZ }
 
       # build hash
       @badges = badges.collect do |k, v|
