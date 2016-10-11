@@ -32,7 +32,6 @@
 .grid-item.selected, .player-button.selected
 {
   background: #CCCCCC;
-  cursor: default;
 }
 .num-select
 {
