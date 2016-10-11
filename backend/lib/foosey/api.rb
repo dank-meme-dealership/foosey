@@ -60,7 +60,7 @@ module Foosey
         # Badges
         # All Players
         get '/badges' do
-          json badges
+          json League.new(params['league_id']).badges
         end
 
         # All Games / Multiple Games
