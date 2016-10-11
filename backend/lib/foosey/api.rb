@@ -24,211 +24,212 @@ module Foosey
     end
 
     namespace '/v1' do
-      # Player Information
-      # All Players / Multiple Players
-      get '/players' do
-        # set ids to params, or all player ids
-        ids = params['ids'].split ',' if params['ids']
-        ids ||= League.new.players
-        json ids.collect { |id| Player.new(id).to_h }
-      end
-
-      # One Player
-      get '/players/:id' do
-        id = params['id'].to_i
-        json Player.new(id).to_h true
-      end
-
-      # Game Information
-      # Games a Player Has Played In
-      get '/players/:id/games' do
-        id = params['id'].to_i
-        limit = params['limit'].to_i if params['limit']
-        offset = params['offset'].to_i if params['offset']
-        ids = Player.new(id).games
-        limit ||= ids.length
-        offset ||= 0
-
-        ids = ids[offset, limit]
-        # fix if offset is too high, return empty array
-        ids ||= []
-
-        json ids.collect { |i| Game.new(i).to_h }
-      end
-
-      # Badges
-      # All Players
-      get '/badges' do
-        json badges
-      end
-
-      # All Games / Multiple Games
-      get '/games' do
-        # set params and their defaults1
-        ids = params['ids'].split ',' if params['ids']
-        limit = params['limit'].to_i if params['limit']
-        offset = params['offset'].to_i if params['offset']
-        ids ||= League.new.games
-        limit ||= ids.length
-        offset ||= 0
-
-        ids = ids[offset, limit]
-        # fix if offset is too high, return empty array
-        ids ||= []
-
-        json ids.collect { |id| Game.new(id).to_h }
-      end
-
-      # One Game
-      get '/games/:id' do
-        id = params['id'].to_i
-        json Game.new(id).to_h
-      end
-
-      # Statistics
-      # Player Elo History
-      get '/stats/elo/:id' do
-        id = params['id'].to_i
-        json Player.new(id).elo_history
-      end
-
-      # Players Elo History
-      get '/stats/elo' do
-        ids = params['ids'].split ',' if params['ids']
-        ids ||= League.new.players
-
-        json(ids.collect do |id|
-          {
-            playerID: id,
-            elos: Player.new(id).elo_history
-          }
-        end)
-      end
-
-      # Adding Objects
-      # Add Game
-      post '/games' do
-        body = JSON.parse request.body.read
-
-        outcome = {}
-        body['teams'].each do |team|
-          team['players'].each { |p| outcome[p] = team['score'] }
+      namespace '/:league_id' do
+        # Player Information
+        # All Players / Multiple Players
+        get '/players' do
+          # set ids to params, or all player ids
+          ids = params['ids'].split ',' if params['ids']
+          ids ||= League.new(params['league_id']).player_ids
+          json ids.collect { |id| Player.new(id).to_h }
         end
 
-        #TODO: change to :league_id here
-        game = Game.create(outcome, 1, body['timestamp'])
+        # One Player
+        get '/players/:id' do
+          id = params['id'].to_i
+          json Player.new(id).to_h true
+        end
 
-        puts game.inspect
+        # Game Information
+        # Games a Player Has Played In
+        get '/players/:id/games' do
+          id = params['id'].to_i
+          limit = params['limit'].to_i if params['limit']
+          offset = params['offset'].to_i if params['offset']
+          ids = Player.new(id).game_ids
+          limit ||= ids.length
+          offset ||= 0
 
-        json(
-          error: false,
-          message: 'Game added.',
-          info: {
-            gameID: game.id,
-            players: game.players.collect do |player_id|
-              player = Player.new(player_id)
-              {
-                name: player.display_name,
-                elo: player.elo,
-                delta: game.delta(player_id)
-              }
-            end
-          }
-        )
-      end
+          ids = ids[offset, limit]
+          # fix if offset is too high, return empty array
+          ids ||= []
 
-      # Add Player
-      post '/players' do
-        body = JSON.parse request.body.read
+          json ids.collect { |i| Game.new(i).to_h }
+        end
 
-        # set some default values
-        admin = body['admin']
-        admin = false if admin.nil?
-        active = body['active']
-        active = true if active.nil?
+        # Badges
+        # All Players
+        get '/badges' do
+          json badges
+        end
 
-        add_player(body['displayName'], body['slackName'], admin, active)
+        # All Games / Multiple Games
+        get '/games' do
+          # set params and their defaults1
+          ids = params['ids'].split ',' if params['ids']
+          limit = params['limit'].to_i if params['limit']
+          offset = params['offset'].to_i if params['offset']
+          ids ||= League.new(params['league_id']).game_ids
+          limit ||= ids.length
+          offset ||= 0
 
-        json(
-          error: false,
-          message: 'Player added.'
-        )
-      end
+          ids = ids[offset, limit]
+          # fix if offset is too high, return empty array
+          ids ||= []
 
-      # Editing Objects
-      # Edit Game
-      put '/games/:id' do
-        id = params['id'].to_i
-        body = JSON.parse request.body.read
+          json ids.collect { |id| Game.new(id).to_h }
+        end
 
-        unless valid_game? id
-          return json(
-            error: true,
-            message: 'Invalid game ID: #{id}'
+        # One Game
+        get '/games/:id' do
+          id = params['id'].to_i
+          json Game.new(id).to_h
+        end
+
+        # Statistics
+        # Player Elo History
+        get '/stats/elo/:id' do
+          id = params['id'].to_i
+          json Player.new(id).elo_history
+        end
+
+        # Players Elo History
+        get '/stats/elo' do
+          ids = params['ids'].split ',' if params['ids']
+          ids ||= League.new(params['league_id']).player_ids
+
+          json(ids.collect do |id|
+            {
+              playerID: id,
+              elos: Player.new(id).elo_history
+            }
+          end)
+        end
+
+        # Adding Objects
+        # Add Game
+        post '/games' do
+          body = JSON.parse request.body.read
+
+          outcome = {}
+          body['teams'].each do |team|
+            team['players'].each { |p| outcome[p] = team['score'] }
+          end
+
+          game = Game.create(outcome, params['league_id'], body['timestamp'])
+
+          puts game.inspect
+
+          json(
+            error: false,
+            message: 'Game added.',
+            info: {
+                gameID: game.id,
+                player_ids: game.player_ids.collect do |player_id|
+                player = Player.new(player_id)
+                {
+                  name: player.display_name,
+                  elo: player.elo,
+                  delta: game.delta(player_id)
+                }
+              end
+            }
           )
         end
 
-        outcome = {}
-        body['teams'].each do |team|
-          team['players'].each { |p| outcome[p] = team['score'] }
-        end
+        # Add Player
+        post '/players' do
+          body = JSON.parse request.body.read
 
-        edit_game(id, outcome, body['timestamp'])
+          # set some default values
+          admin = body['admin']
+          admin = false if admin.nil?
+          active = body['active']
+          active = true if active.nil?
 
-        json(
-          error: false,
-          message: 'Game updated.'
-        )
-      end
+          add_player(body['displayName'], body['slackName'], admin, active)
 
-      # Edit Player
-      put '/players/:id' do
-        id = params['id'].to_i
-        body = JSON.parse request.body.read
-
-        unless valid_player? id
-          return json(
-            error: true,
-            message: 'Invalid player ID: #{id}'
+          json(
+            error: false,
+            message: 'Player added.'
           )
         end
 
-        edit_player(id, body['displayName'], body['slackName'],
-                    body['admin'], body['active'])
+        # Editing Objects
+        # Edit Game
+        put '/games/:id' do
+          id = params['id'].to_i
+          body = JSON.parse request.body.read
 
-        json(
-          error: false,
-          message: 'Player updated.'
-        )
-      end
+          unless valid_game? id
+            return json(
+              error: true,
+              message: 'Invalid game ID: #{id}'
+            )
+          end
 
-      # Removing Objects
-      # Remove Game
-      delete '/games/:id' do
-        id = params['id'].to_i
+          outcome = {}
+          body['teams'].each do |team|
+            team['players'].each { |p| outcome[p] = team['score'] }
+          end
 
-        unless valid_game? id
-          return json(
-            error: true,
-            message: 'Invalid game ID: #{id}'
+          edit_game(id, outcome, body['timestamp'])
+
+          json(
+            error: false,
+            message: 'Game updated.'
           )
         end
 
-        remove_game(id)
+        # Edit Player
+        put '/players/:id' do
+          id = params['id'].to_i
+          body = JSON.parse request.body.read
 
-        json(
-          error: false,
-          message: 'Game removed.'
-        )
-      end
+          unless valid_player? id
+            return json(
+              error: true,
+              message: 'Invalid player ID: #{id}'
+            )
+          end
 
-      post '/recalc' do
-        recalc(0, false)
+          edit_player(id, body['displayName'], body['slackName'],
+                      body['admin'], body['active'])
 
-        json(
-          error: false,
-          message: 'Stats recalculated.'
-        )
+          json(
+            error: false,
+            message: 'Player updated.'
+          )
+        end
+
+        # Removing Objects
+        # Remove Game
+        delete '/games/:id' do
+          id = params['id'].to_i
+
+          unless valid_game? id
+            return json(
+              error: true,
+              message: 'Invalid game ID: #{id}'
+            )
+          end
+
+          remove_game(id)
+
+          json(
+            error: false,
+            message: 'Game removed.'
+          )
+        end
+
+        post '/recalc' do
+          recalc(0, false)
+
+          json(
+            error: false,
+            message: 'Stats recalculated.'
+          )
+        end
       end
     end
   end

@@ -44,9 +44,9 @@ module Foosey
       end
     end
 
-    def games
+    def game_ids
       @games ||= Foosey.database do |db|
-        db.execute('SELECT DISTINCT GameID FROM Game WHERE PlayerID = :id', id).flatten
+        db.execute('SELECT DISTINCT GameID FROM Game WHERE PlayerID = :id ORDER BY Timestamp', id).flatten
       end
     end
 
@@ -61,7 +61,7 @@ module Foosey
                             USING (PlayerID, GameID)
                             WHERE PlayerID = :player_id
                             ORDER BY Timestamp DESC
-                            LIMIT 30;', id
+                            LIMIT :games', id, games
 
         games.collect do |game|
           {
@@ -76,8 +76,7 @@ module Foosey
     # not caching this because it changes so often
     def daily_elo_change
       Foosey.database do |db|
-        midnight = DateTime.new(Time.now.year, Time.now.month, Time.now.day,
-                                0, 0, 0, 0).to_time.to_i
+        midnight = DateTime.new(Time.now.year, Time.now.month, Time.now.day).to_time.to_i
         prev = db.get_first_value('SELECT e.Elo FROM EloHistory e
                                    JOIN Game g
                                    USING (GameID, PlayerID)
@@ -113,25 +112,25 @@ module Foosey
         doubles_games = 0
         doubles_wins = 0
 
-        games.each do |game_id|
+        game_ids.each do |game_id|
           game = Game.new game_id
 
           if game.singles?
             singles_games += 1
-            if game.winners.include? id
+            if game.winner_ids.include? id
               # this player won
               singles_wins += 1
             else
               # this player lost
-              enemy = game.winners.first
+              enemy = game.winner_ids.first
               nemeses[enemy] += 1
             end
           elsif game.doubles?
             doubles_games += 1
-            if game.winners.include? id
+            if game.winner_ids.include? id
               # this player won
               doubles_wins += 1
-              ally = game.winners.find { |p| p != id }
+              ally = game.winner_ids.find { |p| p != id }
               allies[ally] += 1
             end
           end

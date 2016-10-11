@@ -12,7 +12,7 @@ module Foosey
       end
     end
 
-    def players
+    def player_ids
       @players ||= Foosey.database do |db|
         players = db.execute('SELECT PlayerID FROM Game WHERE GameID = :id', id).flatten
         # don't cache if players is empty
@@ -58,12 +58,12 @@ module Foosey
     def teams
       @teams ||= begin
         rval = []
-        players.each do |player_id|
+        player_ids.each do |player_id|
           player = Player.new player_id
           i = rval.index { |t| t[:score] == score(player_id) }
           if i
             # team exists in hash
-            rval[i][:players] << {
+            rval[i][:player_ids] << {
               playerID: player.id,
               displayName: player.display_name
             }
@@ -83,7 +83,7 @@ module Foosey
       end
     end
 
-    def winners
+    def winner_ids
       @winners ||= Foosey.database do |db|
         db.execute('SELECT PlayerID FROM Game
                     WHERE GameID = :id
@@ -95,7 +95,7 @@ module Foosey
       end
     end
 
-    def losers
+    def loser_ids
       @losers ||= Foosey.database do |db|
         db.execute('SELECT PlayerID FROM Game
                     WHERE GameID = :id
@@ -108,11 +108,11 @@ module Foosey
     end
 
     def singles?
-      @singles ||= players.length == 2
+      @singles ||= player_ids.length == 2
     end
 
     def doubles?
-      @doubles ||= players.length == 4
+      @doubles ||= player_ids.length == 4
     end
 
     def to_h
@@ -139,7 +139,7 @@ module Foosey
     def info=(info)
       # get old timestamp and players involved for caching/recalc
       old_timestamp = timestamp || info[:timestamp]
-      old_players = players || []
+      old_players = player_ids || []
 
       Foosey.database do |db|
         db.transaction
@@ -226,7 +226,7 @@ module Foosey
 
       # temporary array of hashes to keep track of player elo
       elos = {}
-      player_ids = League.new(league_id).players
+      player_ids = League.new(league_id).player_ids
       player_ids.each do |player_id|
         elos[player_id] = db.get_first_value('SELECT Elo FROM EloHistory e
                                               JOIN Game g USING (GameID, PlayerID)
