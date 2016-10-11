@@ -188,7 +188,7 @@
 		// function to select player
 		function playerSelect(player)
 		{
-			if (playerSelected(player)) return;
+			if (playerSelected(player) || $scope.loadRecentPlayers) return;
 			$scope.canCancel = true;
 
 			team = $scope.teams[$scope.selectedPlayer.teamIndex];
@@ -395,7 +395,6 @@
 		// set up some recent players
 		function getRecentPlayers()
 		{
-			$scope.recentPlayers = undefined;
 			FooseyService.getPlayerGames(SettingsService.playerID, 10).then(
 				function(response)
 				{

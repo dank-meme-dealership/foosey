@@ -77,14 +77,14 @@
 						<div class="item item-divider">Recent Players</div>
 						<div class="grid-container">
 							<div 
-								class="grid-item item"
+								class="grid-item player-item item"
 								ng-repeat="player in recentPlayers track by $index"
 				  		  ng-click="playerSelect(player)"
-				  		  ng-disabled="playerSelected(player)"
+				  		  ng-disabled="playerSelected(player) || loadRecentPlayers"
 				  		  ng-if="$index < 6">
 				  		  {{player.displayName | capitalize}} 
 				  		</div>
-				  		<div class="grid-item item" ng-show="loadRecentPlayers">Loading...</div>
+				  		<div class="grid-item item" ng-show="loadRecentPlayers && !recentPlayers">Loading...</div>
 				  		<div class="grid-item item" ng-show="!loadRecentPlayers && recentPlayers.length === 0">No Recent Players!</div>
 				  	</div>
 			  	</ion-list>
@@ -96,7 +96,7 @@
 						<div class="item item-divider">All Players</div>
 						<div class="grid-container">
 							<div 
-								class="grid-item item"
+								class="grid-item player-item item"
 								ng-repeat="player in players | filter:{ displayName: filter.text } track by $index"
 				  		  ng-click="playerSelect(player)"
 				  		  ng-disabled="playerSelected(player)">
