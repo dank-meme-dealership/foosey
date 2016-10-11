@@ -22,6 +22,8 @@
   min-width: 90px;
   flex-grow: 1;
   max-width: 190px;
+  border: 0px;
+  padding: 10px;
 }
 .grid-item.selected, .player-button.selected
 {
@@ -31,6 +33,10 @@
 {
   max-width: 380px;
   margin: auto;
+}
+.num-select .grid-item
+{
+  padding: 16px;
 }
 .player-button
 {
@@ -54,4 +60,9 @@
 .opaque, .grid-item[disabled]
 {
   opacity: 0.3;
+}
+
+.card.recent-players .item:last-child
+{
+  margin-bottom: 5px;
 }

@@ -22,6 +22,9 @@
 		$scope.filter = {};
 		$scope.filter.text = '';
 		$scope.type = undefined;
+		$scope.players = undefined;
+		$scope.recentPlayers = undefined;
+		$scope.loadRecentPlayers = true;
 
 		$scope.addMorePlayers = addMorePlayers;
 		$scope.choosePlayer = choosePlayer;
@@ -56,6 +59,7 @@
 			$scope.selectedPlayer = undefined;
 			$scope.selectedScoreIndex = undefined;
 			$scope.useCustom = !$scope.adding;
+			$scope.loadRecentPlayers = SettingsService.addGameRecents;
 
 			if ($scope.adding)
 			{
@@ -77,6 +81,7 @@
 				$scope.canCancel = true;
 			}
 			getPlayers();
+			if ($scope.loadRecentPlayers) getRecentPlayers();
 		}
 
 		function editGame()
@@ -368,7 +373,7 @@
 		function getPlayers()
 		{
 			// load from local storage
-			$scope.players = localStorage.getObject('players');
+			$scope.players = localStorage.getArray('players');
 
 			// load from server
 			FooseyService.getAllPlayers(true).then(
@@ -383,8 +388,35 @@
 		    		});
 		    	}
 
-		    	localStorage.setObject('players', $scope.players);
+		    	localStorage.setArray('players', $scope.players);
 		  	});
+		}
+
+		// set up some recent players
+		function getRecentPlayers()
+		{
+			$scope.recentPlayers = undefined;
+			FooseyService.getPlayerGames(SettingsService.playerID, 10).then(
+				function(response)
+				{
+					var recents = [];
+					_.each(response.data, function(game)
+					{
+						_.each(game.teams, function(team)
+						{
+							_.each(team.players, function(player)
+							{
+								recents = _.unionBy(recents, [player], 'playerID');
+							}); 
+						});
+					});
+					var you = _.remove(recents, function(p) 
+						{ 
+							return p.playerID === SettingsService.playerID 
+						});
+					$scope.recentPlayers = _.union(you, recents);
+					$scope.loadRecentPlayers = false;
+				});
 		}
 
 		// return true if none of the players have been selected yet

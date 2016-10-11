@@ -71,14 +71,39 @@
 					<input type="search" id="search" placeholder="Filter Players..." ng-model="filter.text" focus-on="selectFilterBar">
 				</div>
 
-				<div class="grid-container">
-					<div 
-						class="grid-item item"
-						ng-repeat="player in players | filter:{ displayName: filter.text }"
-		  		  ng-click="playerSelect(player)"
-		  		  ng-disabled="playerSelected(player)">
-		  		  {{player.displayName | capitalize}}
-		  		</div>
+				<!-- Recent Players -->
+				<div class="card recent-players" ng-if="settings.addGameRecents">
+					<ion-list>
+						<div class="item item-divider">Recent Players</div>
+						<div class="grid-container">
+							<div 
+								class="grid-item item"
+								ng-repeat="player in recentPlayers track by $index"
+				  		  ng-click="playerSelect(player)"
+				  		  ng-disabled="playerSelected(player)"
+				  		  ng-if="$index < 6">
+				  		  {{player.displayName | capitalize}} 
+				  		</div>
+				  		<div class="grid-item item" ng-show="loadRecentPlayers">Loading...</div>
+				  		<div class="grid-item item" ng-show="!loadRecentPlayers && recentPlayers.length === 0">No Recent Players!</div>
+				  	</div>
+			  	</ion-list>
+				</div>
+
+				<!-- All Players -->
+				<div class="card">
+					<ion-list>
+						<div class="item item-divider">All Players</div>
+						<div class="grid-container">
+							<div 
+								class="grid-item item"
+								ng-repeat="player in players | filter:{ displayName: filter.text } track by $index"
+				  		  ng-click="playerSelect(player)"
+				  		  ng-disabled="playerSelected(player)">
+				  		  {{player.displayName | capitalize}}
+				  		</div>
+				  	</div>
+			  	</ion-list>
 				</div>
 			</div>
 
