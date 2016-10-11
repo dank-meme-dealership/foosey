@@ -4,9 +4,9 @@
 		.module('addGame')
 		.controller('AddGameController', AddGameController);
 
-	AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicPopup', '$ionicScrollDelegate', 'gameTypes', '$filter', 'localStorage', 'FooseyService', 'SettingsService'];
+	AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicModal', '$ionicPopup', '$ionicScrollDelegate', 'gameTypes', '$filter', 'localStorage', 'FooseyService', 'SettingsService'];
 
-	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicPopup, $ionicScrollDelegate, gameTypes, $filter, localStorage, FooseyService, SettingsService)
+	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicModal, $ionicPopup, $ionicScrollDelegate, gameTypes, $filter, localStorage, FooseyService, SettingsService)
 	{
 		$scope.selectedPlayer = undefined;
 		$scope.selectedScoreIndex = undefined;
@@ -27,6 +27,7 @@
 		$scope.loadRecentPlayers = true;
 
 		$scope.addMorePlayers = addMorePlayers;
+		$scope.addPlayer = addPlayer;
 		$scope.choosePlayer = choosePlayer;
 		$scope.chooseScore = chooseScore;
 		$scope.enableCustom = enableCustom;
@@ -41,6 +42,7 @@
 		$scope.undo = undo;
 		$scope.show = show;
 		$scope.jump = jump;
+		$scope.openModal = openModal;
 
 		// load on entering view 
     $scope.$on('$ionicView.beforeEnter', function()
@@ -52,6 +54,13 @@
       $scope.type = undefined;
       reset();
     });
+
+	//load add player modal
+	$ionicModal.fromTemplateUrl('js/player/player-add.html', {
+		scope: $scope
+	}).then(function (modal) {
+		$scope.modal = modal;
+	});
 
     // reset the game
 		function reset()
@@ -466,5 +475,22 @@
 		{
 			$state.go('app.manage-players');
 		}
+		// adds a player (function accesible to all players via add-game screen)
+		function addPlayer(player)
+		{
+			FooseyService.addPlayer(
+			{
+				displayName: !player.displayName ? '' : player.displayName,
+				slackName: !player.slackName ? '' : player.slackName,
+				admin: false,
+				active: true
+			}).then(getPlayers);
+			$scope.modal.hide();
+		}
+
+		function openModal() {
+			$scope.player = {};
+			$scope.modal.show();
+		};
 	}
 })();

@@ -1,0 +1,15 @@
+<ion-modal-view class="background">
+  <ion-header-bar class="bar bar-header">
+    <h1 class="title">{{player.displayName}}</h1>
+    <button class="button button-clear button-assertive" ng-click="modal.hide()">Cancel</button>
+  </ion-header-bar>
+  <ion-content class="padding">
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">Display Name</span>
+        <input class="text-right" placeholder="(required)" ng-model="player.displayName" type="text">
+      </label>
+      <button class="button button-full" ng-show="!player.playerID" ng-click="addPlayer(player)" ng-disabled="!player.displayName">Add Player</button>
+    </div>
+  </ion-content>
+</ion-modal-view>
