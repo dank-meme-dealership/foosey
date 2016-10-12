@@ -63,7 +63,7 @@ module Foosey
           i = rval.index { |t| t[:score] == score(player_id) }
           if i
             # team exists in hash
-            rval[i][:player_ids] << {
+            rval[i][:players] << {
               playerID: player.id,
               displayName: player.display_name
             }
