@@ -480,13 +480,13 @@
 		{
 			$state.go('app.manage-players');
 		}
+		
 		// adds a player (function accesible to all players via add-game screen)
 		function addPlayer(player)
 		{
 			FooseyService.addPlayer(
 			{
 				displayName: !player.displayName ? '' : player.displayName,
-				slackName: !player.slackName ? '' : player.slackName,
 				admin: false,
 				active: true
 			}).then(getPlayers);

@@ -72,7 +72,6 @@
       FooseyService.addPlayer(
       {
         displayName: !player.displayName ? '' : player.displayName,
-        slackName: !player.slackName ? '' : player.slackName,
         admin: _.isUndefined(player.admin) ? false : player.admin,
         active: true
       }).then(loadPlayers);
