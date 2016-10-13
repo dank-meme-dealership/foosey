@@ -374,6 +374,15 @@ namespace '/v1' do
     json api_league league_name
   end
 
+  # info we need to pass to the user
+  get '/info' do
+    json(
+      updateIOS: 'Please open TestFlight to download the latest update.',
+      updateAndroid: 'Please visit http://foosey.futbol in a browser to download the latest APK.',
+      version: '0.65'
+    )
+  end
+
   # set a new slack url
   post '/slackurl' do
     body = JSON.parse request.body.read

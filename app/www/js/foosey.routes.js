@@ -4,8 +4,8 @@
     .module('foosey')
     .config(config);
 
-  function config($urlRouterProvider, $ionicPopupProvider, SettingsServiceProvider) 
-  { 
+  function config($urlRouterProvider, $ionicPopupProvider, SettingsServiceProvider, FooseyServiceProvider) 
+  {
     // If they're logged in, default to leaderboard
     if (SettingsServiceProvider.$get().loggedIn)
     {
@@ -31,5 +31,25 @@
         ]
       });
     }
+
+    // Check version and info
+    FooseyServiceProvider.$get().info().then(
+      function(response)
+      {
+        if (response.data.version !== SettingsServiceProvider.$get().version)
+        {
+          var updateText = '';
+
+          // Decide what to tell the user
+          if (ionic.Platform.isIOS()) updateText = response.data.updateIOS;
+          else if (ionic.Platform.isAndroid()) updateText = response.data.updateAndroid;
+          else return; // anything other than iOS or Android not supported
+
+          $ionicPopupProvider.$get().alert({
+            template: '<div class="text-center">' + updateText + '</div>',
+            title: 'Update Available'
+          });
+        }
+      });
   }
 })();

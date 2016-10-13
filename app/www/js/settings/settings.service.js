@@ -9,12 +9,15 @@
 	function SettingsService($state, $ionicPopup, $ionicHistory, localStorage)
 	{
 		var service = {
+			//App Version
+			version						: '0.65',
+
 			//Properties
 			addGameClear			: setting('addGameClear', false),
 			addGameFilter			: setting('addGameFilter', false),
 			addGameNames			: setting('addGameNames', false),
 			addGameRecents		: setting('addGameRecents', true),
-			addGameScorePicker: setting('addGameScorePicker', false),
+			addGamePicker 		: setting('addGamePicker', gamePicker()),
 			addGameSelect			: setting('addGameSelect', false),
 			eloChartGames			: localStorage.getObject('eloChartGames', 30),
 			isAdmin						: setting('isAdmin', false),
@@ -37,6 +40,13 @@
 		}
 
 		return service;
+
+		// Quick hack before team settings
+		// Only league 9 should default to score picker
+		function gamePicker()
+		{
+			return localStorage.getObject('league').leagueID === 9;
+		}
 
 		function isLocalhost()
     {
@@ -63,6 +73,9 @@
 			$ionicHistory.nextViewOptions({
         disableBack: true
       });
+
+      // Hack in score picker setting
+      setProperty('addGamePicker', gamePicker());
 
 			$state.go('app.leaderboard');
 		}

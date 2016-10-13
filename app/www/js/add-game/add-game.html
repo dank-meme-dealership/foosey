@@ -119,12 +119,12 @@
 				<div class="grid-container num-select">
 					<div 
 						class="grid-item item"
-						ng-class="{'bold': !settings.addGameScorePicker && ($index === 5 || $index === 0)}"
-						ng-repeat="score in (settings.addGameScorePicker ? scores : scoresTen)"
+						ng-class="{'bold': !settings.addGamePicker && ($index === 5 || $index === 0)}"
+						ng-repeat="score in (settings.addGamePicker ? scores : scoresTen)"
 		  		  ng-click="scoreSelect(score)">
 		  		  {{score}}
 		  		</div>
-		  		<section class="bottom-buttons" ng-show="settings.addGameScorePicker">
+		  		<section class="bottom-buttons" ng-show="settings.addGamePicker">
 			  		<div 
 			  			class="grid-item item assertive" 
 			  			ng-click="scoreSelect(null)" 
