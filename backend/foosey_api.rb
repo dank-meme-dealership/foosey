@@ -1,6 +1,8 @@
 # foosey API calls
 # for more information see API.md
 
+VERSION = '0.65'.freeze
+
 # returns an api object for game with id game_id
 def api_game(game_id, league_id)
   database do |db|
@@ -379,7 +381,7 @@ namespace '/v1' do
     json(
       updateIOS: 'Please open TestFlight to download the latest update.',
       updateAndroid: 'Please visit http://foosey.futbol in a browser to download the latest APK.',
-      version: '0.65'
+      version: VERSION
     )
   end
 
@@ -387,6 +389,6 @@ namespace '/v1' do
   post '/slackurl' do
     body = JSON.parse request.body.read
 
-    set_slack_url(body['url'])
+    slack_url(body['url'])
   end
 end

@@ -290,24 +290,24 @@ def game_ids(league_id)
   end
 end
 
-
 def history(league_id, ids)
   database do |db|
-    games = db.execute 'SELECT GameID, GROUP_CONCAT(g.PlayerID), GROUP_CONCAT(p.DisplayName), GROUP_CONCAT(g.Score), timestamp
+    games = db.execute 'SELECT GameID, GROUP_CONCAT(g.PlayerID), GROUP_CONCAT(p.DisplayName),
+                        GROUP_CONCAT(g.Score), timestamp
                         FROM Game g
                         JOIN Player p using (PlayerID)
                         WHERE g.LeagueID = :league_id
                         GROUP BY g.GameID
-                        ORDER BY timestamp DESC', 
-                        league_id
+                        ORDER BY timestamp DESC',
+                       league_id
 
     the_games = []
 
     games.each do |game|
       game_id = game[0]
-      player_ids = game[1].split(",")
-      names = game[2].split(",")
-      scores = game[3].split(",")
+      player_ids = game[1].split(',')
+      names = game[2].split(',')
+      scores = game[3].split(',')
       timestamp = game[4]
 
       # skip to next game if doesn't contain the same players
@@ -320,7 +320,6 @@ def history(league_id, ids)
       }
 
       player_ids.each_with_index do |player_id, idx|
-
         i = response[:teams].index { |t| t[:score] == scores[idx].to_i }
 
         if i
@@ -341,7 +340,7 @@ def history(league_id, ids)
         end
       end
 
-      response[:teams] = response[:teams].sort! { |a, b|  b[:score] <=> a[:score]}
+      response[:teams] = response[:teams].sort! { |a, b| b[:score] <=> a[:score] }
 
       the_games << response
     end
@@ -954,11 +953,11 @@ def remove_game(game_id, league_id)
   end
 end
 
-def set_slack_url(url)
+def slack_url(url)
   database do |db|
-    db.execute 'UPDATE Config 
+    db.execute 'UPDATE Config
                 SET Value = :url
                 WHERE Setting = "SlackUrl"',
-                url
+               url
   end
 end
