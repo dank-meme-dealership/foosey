@@ -10,7 +10,7 @@
 	{
 		var service = {
 			//App Version
-			version						: '0.65',
+			version						: '0.66',
 
 			//Properties
 			addGameClear			: setting('addGameClear', false),

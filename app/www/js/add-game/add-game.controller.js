@@ -213,7 +213,7 @@
 			team.score = team.score === null || score === null ? score : team.score + '' + score;
 
 			// if they want the normal picker, jump after setting score
-			if (parseInt(team.score) >= 0 && !SettingsService.addGameScorePicker) jump();
+			if (parseInt(team.score) >= 0 && !SettingsService.addGamePicker) jump();
 		};
 
 		function jump()
