@@ -3,6 +3,9 @@
 
 	<ion-content class="background" has-bouncing="true">
 		
+    <!-- Only show the leagues picker if there is more than one league -->
+    <leagues ng-show="settings.leagues.length > 1"></leagues>
+
     <!-- General -->
     <div class="card">
       <ion-list>
@@ -42,13 +45,20 @@
       </ion-list>
     </div>
 
-    <!-- Experimental Add Game Settings -->
+    <!-- Add Game Settings -->
     <div class="card">
       <ion-list>
-        <div class="item item-divider">Experimental Add Game Options</div>
+        <div class="item item-divider">Add Game</div>
         <ion-toggle ng-change="settings.setProperty('addGameRecents', settings.addGameRecents)" ng-model="settings.addGameRecents" toggle-class="toggle-positive">Recent Players</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('addGamePicker', settings.addGamePicker)" ng-model="settings.addGamePicker" toggle-class="toggle-positive">Score Picker</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('addGameNames', settings.addGameNames)" ng-model="settings.addGameNames" toggle-class="toggle-positive">Choose All Names First</ion-toggle>
+      </ion-list>
+    </div>
+
+    <!-- Experimental Add Game Settings -->
+    <div class="card">
+      <ion-list>
+        <div class="item item-divider">Experimental Options</div>
         <ion-toggle ng-change="settings.setProperty('addGameFilter', settings.addGameFilter)" ng-model="settings.addGameFilter" toggle-class="toggle-positive">Show Filter Bar</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('addGameSelect', settings.addGameSelect)" ng-model="settings.addGameSelect" toggle-class="toggle-positive" ng-disabled="!settings.addGameFilter"> * Auto Select Filter Bar</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('addGameClear', settings.addGameClear)" ng-model="settings.addGameClear" toggle-class="toggle-positive" ng-disabled="!settings.addGameFilter"> * Clear Filter Bar On Tap</ion-toggle>
@@ -74,9 +84,9 @@
       </ion-item>
     </div> -->
 
-    <!-- Switch League -->
+    <!-- Manage Leagues -->
     <div class="card">
-      <ion-item ui-sref="app.settings-switch-leagues" class="text-center positive">Switch Leagues</ion-item>
+      <ion-item ui-sref="app.settings-switch-leagues" class="text-center positive">Manage Leagues</ion-item>
     <!-- Log Out -->
       <ion-item ng-click="settings.logOut()" class="text-center assertive">Log out of {{settings.league.displayName}}</ion-item>
     </div>
