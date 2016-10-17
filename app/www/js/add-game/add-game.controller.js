@@ -162,8 +162,20 @@
 
 			$scope.type = _.clone(type);
 			var newTeams = _.clone($scope.teams);
-			newTeams[0].players = type.playersPerTeam === 1 ? newTeams[0].players.slice(0, 1) : newTeams[0].players.slice(0, 1).concat([null]);
-			newTeams[1].players = type.playersPerTeam === 1 ? newTeams[1].players.slice(0, 1) : newTeams[1].players.slice(0, 1).concat([null]);
+
+			// if choose names first, rotate names on teams
+			if (SettingsService.addGameNames)
+			{
+				var player2 = newTeams[0].players.slice(1, 2);
+				newTeams[0].players = type.playersPerTeam === 1 ? newTeams[0].players.slice(0, 1) : newTeams[0].players.slice(0, 1).concat(newTeams[1].players.slice(0, 1));
+				newTeams[1].players = type.playersPerTeam === 1 ? player2 : [null, null];
+			}
+			// otherwise extend teams to allow additional players or cut last players
+			else
+			{
+				newTeams[0].players = type.playersPerTeam === 1 ? newTeams[0].players.slice(0, 1) : newTeams[0].players.slice(0, 1).concat([null]);
+				newTeams[1].players = type.playersPerTeam === 1 ? newTeams[1].players.slice(0, 1) : newTeams[1].players.slice(0, 1).concat([null]);
+			}
 			$scope.teams = newTeams;
 			jump();
 		}

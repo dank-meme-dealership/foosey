@@ -68,18 +68,19 @@
 			service.loggedIn = true;
 			addLeague(league);
 
-			// Clear the entire history
-			$ionicHistory.clearHistory();
-			$ionicHistory.nextViewOptions({
-        disableBack: true
-      });
-
       // Hack in score picker setting
       setProperty('addGamePicker', gamePicker());
 
       clearCache();
 
+			// Nav to leaderboard
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
 			$state.go('app.leaderboard');
+
+			// Clear the entire history
+			$ionicHistory.clearHistory();
 		}
 
 		function logOut()
