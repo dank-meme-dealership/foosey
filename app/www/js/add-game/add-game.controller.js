@@ -382,7 +382,7 @@
 		function getPlayers()
 		{
 			// load from local storage
-			$scope.players = localStorage.getArray('players');
+			$scope.players = localStorage.getObject('players');
 
 			// load from server
 			FooseyService.getAllPlayers(true).then(
@@ -397,7 +397,7 @@
 		    		});
 		    	}
 
-		    	localStorage.setArray('players', $scope.players);
+		    	localStorage.setObject('players', $scope.players);
 		  	});
 		}
 
@@ -405,7 +405,7 @@
 		function getRecentPlayers()
 		{
 			// load from local storage
-			$scope.recentPlayers = localStorage.getArray('recentPlayers');
+			$scope.recentPlayers = localStorage.getObject('recentPlayers');
 
 			// load from server
 			FooseyService.getPlayerGames(SettingsService.playerID, 10).then(
@@ -429,7 +429,7 @@
 					$scope.recentPlayers = _.union(you, recents);
 					$scope.loadRecentPlayers = false;
 
-					localStorage.setArray('recentPlayers', $scope.recentPlayers);
+					localStorage.setObject('recentPlayers', $scope.recentPlayers);
 				});
 		}
 

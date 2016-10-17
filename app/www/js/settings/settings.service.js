@@ -77,6 +77,8 @@
       // Hack in score picker setting
       setProperty('addGamePicker', gamePicker());
 
+      clearCache();
+
 			$state.go('app.leaderboard');
 		}
 
@@ -107,14 +109,18 @@
 			setProperty('isAdmin', false);
 			setProperty('playerID', undefined);
 
-			// Clear league specific cache
+			clearCache();
+
+      $state.go('login');
+		}
+
+		function clearCache()
+		{
 			setProperty('elos', undefined);
 			setProperty('playerBadges', undefined);
 			setProperty('winRates', undefined);
 			setProperty('history', undefined);
 			setProperty('players', undefined);
-
-      $state.go('login');
 		}
 
 		function addLeague(league)
