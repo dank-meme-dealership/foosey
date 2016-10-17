@@ -121,6 +121,7 @@
 			setProperty('winRates', undefined);
 			setProperty('history', undefined);
 			setProperty('players', undefined);
+			setProperty('recentPlayers', undefined);
 		}
 
 		function addLeague(league)
