@@ -382,7 +382,8 @@
 		function getPlayers()
 		{
 			// load from local storage
-			$scope.players = localStorage.getObject('players');
+			var players = localStorage.getObject('players');
+			$scope.players = _.isArray(players) ? players : [];
 
 			// load from server
 			FooseyService.getAllPlayers(true).then(
@@ -405,7 +406,8 @@
 		function getRecentPlayers()
 		{
 			// load from local storage
-			$scope.recentPlayers = localStorage.getObject('recentPlayers');
+			var recentPlayers = localStorage.getObject('recentPlayers');
+			$scope.recentPlayers = _.isArray(recentPlayers) ? recentPlayers : [];
 
 			// load from server
 			FooseyService.getPlayerGames(SettingsService.playerID, 10).then(
