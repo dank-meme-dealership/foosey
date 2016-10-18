@@ -67,6 +67,7 @@
     // reset the game
 		function reset()
 		{
+			$ionicScrollDelegate.scrollTop(true);
 			$scope.selectedPlayer = undefined;
 			$scope.selectedScoreIndex = undefined;
 			$scope.useCustom = !$scope.adding;
