@@ -25,7 +25,7 @@
 
     function setPlayer(playerID)
     {
-      var player = _.find($scope.players, function(player){ return player.playerID === playerID; });
+      var player = _.find($scope.players.active, function(player){ return player.playerID === playerID; });
       SettingsService.setProperty('playerID', playerID);
       SettingsService.setProperty('isAdmin', player.admin);
     }

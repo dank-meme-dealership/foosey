@@ -1,7 +1,7 @@
 <div class="card">
   <div class="item item-divider">Your Leagues</div>
   <ion-item ng-show="!settings.leagues.length > 0">No leagues?</ion-item>
-  <ion-item ng-repeat="league in settings.leagues" class="item-icon-left item-icon-right" ng-click="settings.logIn(league)">
+  <ion-item ng-repeat="league in settings.leagues" class="item-icon-left item-icon-right" ng-click="selectLeague(league)">
     <i class="icon ion-person-stalker"></i>
     <div>{{league.displayName}}</div>
     <div style="font-size: 14px;">{{league.leagueName}}</div>

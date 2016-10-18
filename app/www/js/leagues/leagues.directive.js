@@ -16,11 +16,19 @@
     return directive;
   }
 
-  controller.$inject = ['$scope', 'SettingsService'];
+  controller.$inject = ['$scope', 'SettingsService', 'PlayerService'];
 
-  function controller($scope, SettingsService)
+  function controller($scope, SettingsService, PlayerService)
   {
     $scope.settings = SettingsService;
+
+    $scope.selectLeague = selectLeague;
+
+    function selectLeague(league)
+    {
+      SettingsService.logIn(league);
+      PlayerService.updatePlayers();
+    }
   }
 
 })();
