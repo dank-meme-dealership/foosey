@@ -5,15 +5,9 @@
 	<ion-nav-buttons side="right">
     <button 
     	class="button button-clear button-assertive" 
-    	ng-click="reset()">
-    	<div ng-if="canCancel">
-    		{{adding ? 'Start Over' : 'Revert'}}
-    	</div>
-    	<ion-spinner 
-    		icon="lines" 
-    		class="dark"
-    		ng-if="saveStatus === 'saving'">
-    	</ion-spinner>
+    	ng-click="reset()"
+    	ng-if="canCancel">
+    	{{adding ? 'Start Over' : 'Revert'}}
 		</button>
   </ion-nav-buttons>
   <!-- Add Player button when adding game -->
@@ -174,8 +168,8 @@
 				</div>
 
 				<!-- Save button -->
-				<div class="padding-sides">
-					<button class="button button-full no-margin positive" ng-show="!player.playerID" ng-click="submit()" ng-disabled="teams[0].score === teams[1].score">
+				<div class="padding-sides" ng-show="!player.playerID" >
+					<button class="button button-full no-margin positive" ng-click="submit()" ng-disabled="teams[0].score === teams[1].score">
 						{{adding ? 'Save' : 'Update'}}
 					</button>
 				</div>
@@ -218,14 +212,18 @@
 					</ion-item>
 				</div>
 
-				<!-- Undo button -->
-				<div ng-click="undo()" class="card" ng-show="gameToUndo" >
-					<ion-item class="center assertive">Undo</ion-item>
+				<!-- Undo button -->				
+				<div class="padding-sides" ng-show="gameToUndo">
+					<button class="button button-full assertive" ng-click="undo()">
+						Undo
+					</button>
 				</div>
 
 				<!-- Done button -->
-				<div ng-click="reset()" class="card" ng-show="adding">
-					<ion-item class="center positive">Add Another Game</ion-item>
+				<div class="padding-sides" ng-show="adding">
+					<button class="button button-full positive" ng-click="reset()" ng-disabled="saveStatus === 'saving'">
+						Add Another Game
+					</button>
 				</div>
 			</div>
 

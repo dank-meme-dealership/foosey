@@ -290,6 +290,10 @@
 		// to saving the game
 		function submit()
 		{
+			// move to saving state
+			changeState('saving', null);
+			$scope.saveStatus = 'saving';
+
 			// when editing a game, we don't care about the equivalence
 			if ($scope.adding)
 			{
@@ -336,9 +340,15 @@
       });
 
       // if yes, save the last game
-      confirmPopup.then(function(positive) {
-        if(positive) {
+      confirmPopup.then(function(positive) 
+      {
+        if(positive) 
+        {
           save();
+        }
+        else
+        {
+        	changeState('confirm', null);
         }
       });
 		}
@@ -346,8 +356,7 @@
 		// add the game
 		function save()
 		{
-			changeState('saving', null);
-			$scope.saveStatus = 'saving';
+			// disallow cancelling at this point
 			$scope.canCancel = false;
 
 			// set up game object
