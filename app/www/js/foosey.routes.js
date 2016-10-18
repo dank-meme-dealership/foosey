@@ -36,7 +36,7 @@
     FooseyServiceProvider.$get().info().then(
       function(response)
       {
-        if (response.data.version !== SettingsServiceProvider.$get().version)
+        if (response.data.version > SettingsServiceProvider.$get().version)
         {
           var updateText = '';
 

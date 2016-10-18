@@ -1,7 +1,7 @@
 # foosey API calls
 # for more information see API.md
 
-VERSION = '0.68'.freeze
+VERSION = 0.69.freeze
 
 # returns an api object for game with id game_id
 def api_game(game_id, league_id)
