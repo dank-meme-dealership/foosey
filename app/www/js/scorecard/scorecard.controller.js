@@ -117,9 +117,7 @@
           categories: dates
         },
         yAxis: {
-          title: {
-            text: 'Elo'
-          }
+          title: undefined        
         },
         series: [{
           name: 'Elo',
