@@ -4,9 +4,9 @@
     .module('login')
     .controller('LoginController', LoginController);
 
-  LoginController.$inject = ['$scope', '$ionicPopup', '$ionicModal', 'FooseyService', 'SettingsService'];
+  LoginController.$inject = ['$scope', '$state', '$ionicPopup', '$ionicModal', '$ionicHistory', 'FooseyService', 'SettingsService'];
 
-  function LoginController($scope, $ionicPopup, $ionicModal, FooseyService, SettingsService)
+  function LoginController($scope, $state, $ionicPopup, $ionicModal, $ionicHistory, FooseyService, SettingsService)
   {
     $scope.league = { text: '', leagueID: ''};
     $scope.newLeague = { leagueName: '', displayName: '', playerName: '' };
@@ -75,6 +75,11 @@
             onTap: function(e) {
               league.player = $scope.chosen.player;
               SettingsService.logIn(league);
+              // Nav to leaderboard
+              $ionicHistory.nextViewOptions({
+                disableBack: true
+              });
+              $state.go('app.leaderboard');
             }
           }
         ]

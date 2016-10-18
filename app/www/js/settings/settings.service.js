@@ -73,12 +73,6 @@
 
       clearCache();
 
-			// Nav to leaderboard
-      $ionicHistory.nextViewOptions({
-        disableBack: true
-      });
-			$state.go('app.leaderboard');
-
 			// Clear the entire history
 			$ionicHistory.clearHistory();
 		}

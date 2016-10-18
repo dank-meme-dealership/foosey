@@ -25,24 +25,24 @@
   	</ion-nav-buttons>
 
   <!-- Header bar for different game types -->
-	<div class="bar bar-subheader background" ng-if="players.length > 1">
+	<div class="bar bar-subheader background" ng-if="players.active.length > 1">
 	  <div class="tabs">
 	    <a 
 	    	class="tab-item" 
 	    	ng-click="gameSelect($index, gameType)" 
 	    	ng-repeat="gameType in gameTypes track by $index"
 	      ng-class="{active: type.name === gameType.name }"
-	      ng-show="gameType.totalPlayers <= players.length"
+	      ng-show="gameType.totalPlayers <= players.active.length"
 	      ng-disabled="state === 'saving'">
 	      {{gameType.name}}
 	    </a>
 	  </div>      
 	</div>
 
-	<ion-content class="background" ng-class="{'has-subheader': players.length > 1}" has-bouncing="true">
+	<ion-content class="background" ng-class="{'has-subheader': players.active.length > 1}" has-bouncing="true">
 
 		<!-- Enough players -->
-		<div ng-show="players.length > 1 && teams">
+		<div ng-show="players.active.length > 1 && teams">
 
 			<!-- score at the top while selecting scores -->
 			<div class="card" ng-class="{'opaque': saveStatus === 'removed'}">
@@ -85,14 +85,14 @@
 						<div class="grid-container">
 							<div 
 								class="grid-item player-item item"
-								ng-repeat="player in recentPlayers track by $index"
+								ng-repeat="player in players.recent track by $index"
 				  		  ng-click="playerSelect(player)"
 				  		  ng-disabled="playerSelected(player) || loadRecentPlayers"
-				  		  ng-if="$index < 6">
-				  		  {{player.displayName | capitalize}} 
+				  		  ng-if="$index < players.recentCount"
+				  		  ng-bind="player.displayName | capitalize">
 				  		</div>
-				  		<div class="grid-item item" ng-show="loadRecentPlayers && !recentPlayers">Loading...</div>
-				  		<div class="grid-item item" ng-show="!loadRecentPlayers && recentPlayers.length === 0">No Recent Players!</div>
+				  		<div class="grid-item item" ng-show="loadRecentPlayers && !players.recent">Loading...</div>
+				  		<div class="grid-item item" ng-show="!loadRecentPlayers && players.recent.length === 0">No Recent Players!</div>
 				  	</div>
 			  	</ion-list>
 				</div>
@@ -104,10 +104,10 @@
 						<div class="grid-container">
 							<div 
 								class="grid-item player-item item"
-								ng-repeat="player in players | filter:{ displayName: filter.text } track by $index"
+								ng-repeat="player in players.active | filter:{ displayName: filter.text } track by $index"
 				  		  ng-click="playerSelect(player)"
-				  		  ng-disabled="playerSelected(player)">
-				  		  {{player.displayName | capitalize}}
+				  		  ng-disabled="playerSelected(player)"
+				  		  ng-bind="player.displayName | capitalize">
 				  		</div>
 				  	</div>
 			  	</ion-list>
@@ -157,11 +157,15 @@
 					<div class="date-time" ng-show="useCustom">
 						<div id="date"></div><div id="time"></div>
 						<div class="spaced-out">
-							<div class="player-button" ng-click="show('date')">
-								{{customDate | toTimestamp | date}}
+							<div 
+								class="player-button" 
+								ng-click="show('date')"
+								ng-bind="customDate | toTimestamp | date">
 							</div>
-							<div class="player-button" ng-click="show('time')">
-								{{customTime}}
+							<div 
+								class="player-button" 
+								ng-click="show('time')"
+								ng-bind="customTime">
 							</div>
 						</div>
 					</div>
@@ -226,7 +230,7 @@
 		</div>
 
 		<!-- Need to add more players -->
-		<div class="card" ng-if="players.length < 2">
+		<div class="card" ng-if="players.active.length < 2">
 			<div class="item item-divider">
 				Not enough players to add a game
 			</div>
@@ -236,7 +240,7 @@
 		</div>
 
 		<!-- show loading while waiting -->
-		<ion-spinner ng-show="!teams || !players" class="loading-dots" icon="lines"></ion-spinner>
+		<ion-spinner ng-show="!teams" class="loading-dots" icon="lines"></ion-spinner>
 
 	</ion-content>
 </ion-view>

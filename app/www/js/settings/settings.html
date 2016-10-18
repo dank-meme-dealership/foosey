@@ -4,7 +4,7 @@
 	<ion-content class="background" has-bouncing="true">
 		
     <!-- Only show the leagues picker if there is more than one league -->
-    <leagues ng-show="settings.leagues.length > 1"></leagues>
+    <leagues ng-show="settings.leagues.length > 1" manage="true"></leagues>
 
     <!-- General -->
     <div class="card">
@@ -17,7 +17,7 @@
           <div class="input-label">
             {{ !player.selected ? 'Select a player' : 'You are' }}
           </div>
-          <select ng-model="settings.playerID" ng-change="setPlayer(settings.playerID)" ng-options="player.playerID as player.displayName for player in playerSelections"></select>
+          <select ng-model="settings.playerID" ng-change="setPlayer(settings.playerID)" ng-options="player.playerID as player.displayName for player in players.active"></select>
         </label>
       </ion-list>
 		</div>
@@ -84,9 +84,7 @@
       </ion-item>
     </div> -->
 
-    <!-- Manage Leagues -->
     <div class="card">
-      <ion-item ui-sref="app.settings-switch-leagues" class="text-center positive">Manage Leagues</ion-item>
     <!-- Log Out -->
       <ion-item ng-click="settings.logOut()" class="text-center assertive">Log out of {{settings.league.displayName}}</ion-item>
     </div>

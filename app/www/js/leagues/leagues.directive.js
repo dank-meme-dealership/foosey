@@ -8,6 +8,7 @@
   {
     var directive = {
       restrict    : 'EA',
+      scope       : { manage: '=' },
       controller  : controller,
       templateUrl : 'js/leagues/leagues.html'
     }

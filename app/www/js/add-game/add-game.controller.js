@@ -4,14 +4,15 @@
 		.module('addGame')
 		.controller('AddGameController', AddGameController);
 
-	AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicModal', '$ionicPopup', '$ionicScrollDelegate', 'gameTypes', '$filter', 'localStorage', 'FooseyService', 'SettingsService'];
+	// AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicModal', '$ionicPopup', '$ionicScrollDelegate', 'gameTypes', '$filter', 'localStorage', 'FooseyService', 'PlayerService', 'SettingsService'];
 
-	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicModal, $ionicPopup, $ionicScrollDelegate, gameTypes, $filter, localStorage, FooseyService, SettingsService)
+	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicModal, $ionicPopup, $ionicScrollDelegate, gameTypes, $filter, localStorage, FooseyService, PlayerService, SettingsService)
 	{
 		$scope.selectedPlayer = undefined;
 		$scope.selectedScoreIndex = undefined;
 		$scope.adding = _.isUndefined($stateParams.gameID);
 		$scope.settings = SettingsService;
+		$scope.players = PlayerService;
 		$scope.gameTypes = gameTypes;
 		$scope.useCustom = false;
 		$scope.customTime = undefined;
@@ -22,8 +23,6 @@
 		$scope.filter = {};
 		$scope.filter.text = '';
 		$scope.type = undefined;
-		$scope.players = undefined;
-		$scope.recentPlayers = undefined;
 		$scope.loadRecentPlayers = true;
 
 		$scope.addMorePlayers = addMorePlayers;
@@ -55,12 +54,12 @@
       reset();
     });
 
-	//load add player modal
-	$ionicModal.fromTemplateUrl('js/player/player-add.html', {
-		scope: $scope
-	}).then(function (modal) {
-		$scope.modal = modal;
-	});
+		//load add player modal
+		$ionicModal.fromTemplateUrl('js/player/player-add.html', {
+			scope: $scope
+		}).then(function (modal) {
+			$scope.modal = modal;
+		});
 
     // reset the game
 		function reset()
@@ -68,7 +67,7 @@
 			$scope.selectedPlayer = undefined;
 			$scope.selectedScoreIndex = undefined;
 			$scope.useCustom = !$scope.adding;
-			$scope.loadRecentPlayers = SettingsService.addGameRecents;
+			$scope.loadRecentPlayers = SettingsService.addGameRecents; // set if we should load recent players based on setting
 
 			if ($scope.adding)
 			{
@@ -89,7 +88,7 @@
 				editGame();
 				$scope.canCancel = true;
 			}
-			getPlayers();
+			PlayerService.updatePlayers();
 			if ($scope.loadRecentPlayers) getRecentPlayers();
 		}
 
@@ -390,77 +389,20 @@
 	    });
 		}
 
-		// get players from server
-		function getPlayers()
-		{
-			// load from local storage
-			var players = localStorage.getObject('players');
-			$scope.players = _.isArray(players) ? players : [];
-
-			// load from server
-			FooseyService.getAllPlayers(true).then(
-				function (players)
-	    	{ 
-		    	// only overwrite if they haven't selected one yet
-		    	if (noneSelected())
-		    	{
-		    		$scope.players = players;
-		    		$scope.players.sort(function(a, b){
-		    			return a.displayName.localeCompare(b.displayName);
-		    		});
-		    	}
-
-		    	localStorage.setObject('players', $scope.players);
-		  	});
-		}
-
 		// set up some recent players
 		function getRecentPlayers()
 		{
-			// load from local storage
-			var recentPlayers = localStorage.getObject('recentPlayers');
-			$scope.recentPlayers = _.isArray(recentPlayers) ? recentPlayers : [];
-
-			// load from server
-			FooseyService.getPlayerGames(SettingsService.playerID, 10).then(
-				function(response)
+			PlayerService.updateRecentPlayers(SettingsService.playerID).then(
+				function()
 				{
-					var recents = [];
-					_.each(response.data, function(game)
-					{
-						_.each(game.teams, function(team)
-						{
-							_.each(team.players, function(player)
-							{
-								recents = _.unionBy(recents, [player], 'playerID');
-							}); 
-						});
-					});
-					var you = _.remove(recents, function(p) 
-						{ 
-							return p.playerID === SettingsService.playerID 
-						});
-					$scope.recentPlayers = _.union(you, recents);
 					$scope.loadRecentPlayers = false;
-
-					localStorage.setObject('recentPlayers', $scope.recentPlayers);
-				});
-		}
-
-		// return true if none of the players have been selected yet
-		function noneSelected()
-		{
-			for (var i = 0; i < $scope.players.length; i++)
-			{
-				if ($scope.players[i].selected) return false;
-			}
-			return true;
+				})
 		}
 
 		function playerName(id)
 		{
 			var name = undefined;
-			_.each($scope.players, function(player)
+			_.each(PlayerService.all, function(player)
 			{
 				if (player.playerID === id) name = player.displayName;
 			});
@@ -503,7 +445,7 @@
 				displayName: !player.displayName ? '' : player.displayName,
 				admin: false,
 				active: true
-			}).then(getPlayers);
+			}).then(PlayerService.updatePlayers);
 			$scope.modal.hide();
 		}
 

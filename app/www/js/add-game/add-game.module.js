@@ -2,6 +2,7 @@
 {
   angular
     .module('addGame', [
-      'focusOn'
+      'focusOn',
+      'player'
     ]);
 })();
