@@ -4,9 +4,9 @@
     .module('player')
     .factory('PlayerService', PlayerService);
 
-  PlayerService.$inject = ['localStorage', 'FooseyService', 'SettingsService'];
+  PlayerService.$inject = ['localStorage', 'FooseyService'];
 
-  function PlayerService(localStorage, FooseyService, SettingsService)
+  function PlayerService(localStorage, FooseyService)
   {
     var recentPlayersGames = 10;
     var recentCount = 6;
@@ -31,11 +31,11 @@
       return _.isArray(array) ? array : [];
     }
 
-    // filter is an argument to filter out inactive players
-    // true will filter to just active players, false will not
-    function updatePlayers()
+    // type is an argument to return the type of players
+    // e.g. all, active, inactive; default all
+    function updatePlayers(type)
     {
-      FooseyService.getAllPlayers().then(
+      return FooseyService.getAllPlayers().then(
         function (players)
         { 
           // all players
@@ -52,6 +52,8 @@
           // inactive players
           service.inactive = _.filter(service.all, function(player){ return player.active });
           localStorage.setObject('inactivePlayers', service.inactive);
+
+          return service[type] || service.all;
         });
     }
 
@@ -79,6 +81,8 @@
           service.recent = _.union(you, recents);
 
           localStorage.setObject('recentPlayers', service.recent);
+
+          return service.recent;
         });
     }
   }

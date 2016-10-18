@@ -4,9 +4,9 @@
     .module('leaderboard')
     .controller('LeaderboardController', LeaderboardController);
 
-  LeaderboardController.$inject = ['$scope', '$state', 'localStorage', '$ionicSlideBoxDelegate', 'FooseyService', 'SettingsService', 'BadgesService'];
+  LeaderboardController.$inject = ['$scope', '$state', 'localStorage', '$ionicSlideBoxDelegate', 'PlayerService', 'SettingsService', 'BadgesService'];
 
-  function LeaderboardController($scope, $state, localStorage, $ionicSlideBoxDelegate, FooseyService, SettingsService, BadgesService) 
+  function LeaderboardController($scope, $state, localStorage, $ionicSlideBoxDelegate, PlayerService, SettingsService, BadgesService) 
   {
     $scope.settings = SettingsService;
     $scope.badges = BadgesService;
@@ -54,7 +54,7 @@
       $scope.loading = true;
 
       // load from server
-      FooseyService.getAllPlayers(true).then(
+      PlayerService.updatePlayers('active').then(
         function successCallback(players)
         { 
           // Remove people from the leaderboard who haven't played or are inactive
