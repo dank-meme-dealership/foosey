@@ -4,7 +4,7 @@
 		.module('addGame')
 		.controller('AddGameController', AddGameController);
 
-	// AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicModal', '$ionicPopup', '$ionicScrollDelegate', 'gameTypes', '$filter', 'localStorage', 'FooseyService', 'PlayerService', 'SettingsService'];
+	AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicModal', '$ionicPopup', '$ionicScrollDelegate', 'gameTypes', '$filter', 'localStorage', 'FooseyService', 'PlayerService', 'SettingsService'];
 
 	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicModal, $ionicPopup, $ionicScrollDelegate, gameTypes, $filter, localStorage, FooseyService, PlayerService, SettingsService)
 	{
@@ -24,6 +24,7 @@
 		$scope.filter.text = '';
 		$scope.type = undefined;
 		$scope.loadRecentPlayers = true;
+		$scope.gameID = $stateParams.gameID;
 
 		$scope.addMorePlayers = addMorePlayers;
 		$scope.addPlayer = addPlayer;
@@ -37,8 +38,10 @@
 		$scope.scoreSelect = scoreSelect;
 		$scope.playerName = playerName;
 		$scope.reset = reset;
+		$scope.resetToAdding = resetToAdding;
 		$scope.submit = submit;
 		$scope.undo = undo;
+		$scope.edit = edit;
 		$scope.show = show;
 		$scope.jump = jump;
 		$scope.openModal = openModal;
@@ -92,9 +95,19 @@
 			if ($scope.loadRecentPlayers) getRecentPlayers();
 		}
 
+		// this function is solely here for the purpose
+		// of returning back from editting the game from
+		// the add game tab, since we don't want to go to
+		// any other states but here.
+		function resetToAdding()
+		{
+			$scope.adding = true;
+			reset();
+		}
+
 		function editGame()
 		{
-			FooseyService.getGame($stateParams.gameID).then(
+			FooseyService.getGame($scope.gameID).then(
 				function(game)
 				{
 					_.each(game[0].teams, function(team)
@@ -183,7 +196,7 @@
 		{
 			$scope.selectedPlayer = { teamIndex: teamIndex, playerIndex: playerIndex };
 			$scope.selectedScoreIndex = undefined;
-			changeState('player-select', 'Select Players');
+			changeState('player-select');
 			if (SettingsService.addGameSelect) $scope.$broadcast('selectFilterBar');
 			if (SettingsService.addGameClear) $scope.filter.text = '';
 		}
@@ -193,7 +206,7 @@
 			$scope.selectedScoreIndex = teamIndex;
 			$scope.selectedPlayer = undefined;
 			scoreSelect(null);
-			changeState('score-select', 'Select Score');
+			changeState('score-select');
 		}
 
 		function isSelected(teamIndex, playerIndex)
@@ -246,7 +259,7 @@
 			}
 			$scope.selectedPlayer = undefined;
 			$scope.selectedScoreIndex = undefined;
-			changeState('confirm', 'Confirm');
+			changeState('confirm');
 		}
 
 		function jumpPlayers(t)
@@ -291,7 +304,7 @@
 		function submit()
 		{
 			// move to saving state
-			changeState('saving', null);
+			changeState('saving');
 			$scope.saveStatus = 'saving';
 
 			// when editing a game, we don't care about the equivalence
@@ -348,7 +361,7 @@
         }
         else
         {
-        	changeState('confirm', null);
+        	changeState('confirm');
         }
       });
 		}
@@ -362,7 +375,7 @@
 			// set up game object
 			var timestamp = getCustomTime().getTime()/1000
 			var game = {
-				id: $stateParams.gameID,
+				id: $scope.gameID,
 				teams: $scope.teams,
 				timestamp: $scope.useCustom ? timestamp : undefined
 			}
@@ -373,8 +386,21 @@
 			{
 				$scope.response = response.data;
 				$scope.saveStatus = 'success';
-				if ($scope.adding) $scope.gameToUndo = response.data.info.gameID;
-				else $ionicHistory.goBack();
+				// simply added a game
+				if ($scope.adding) 
+				{
+					$scope.gameToUndo = response.data.info.gameID;
+				}
+				// edited a recently added game from add game tab
+				else if ($scope.gameToUndo)
+				{
+					$scope.adding = true;
+				}
+				// just editted a game elsewhere
+				else 
+				{
+					$ionicHistory.goBack();
+				}
 			}, function errorCallback(response)
 	    {
 	    	if ($scope.state === 'saving')
@@ -396,6 +422,13 @@
 	    	if ($scope.state === 'saving')
 	      	$scope.saveStatus = 'failed';
 	    });
+		}
+
+		function edit()
+		{
+			$scope.gameID = $scope.gameToUndo;
+			$scope.adding = false;
+			reset();
 		}
 
 		// set up some recent players
@@ -434,10 +467,9 @@
 		}
 
 		// change to a new state on the add game page
-		function changeState(state, title)
+		function changeState(state)
 		{
 			if (state) $scope.state = state;
-			if (title) $scope.title = title;
 			if (state !== 'player-select') $ionicScrollDelegate.scrollTop(true);
 		}
 

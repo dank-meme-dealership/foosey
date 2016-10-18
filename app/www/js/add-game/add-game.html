@@ -7,15 +7,21 @@
     	class="button button-clear button-assertive" 
     	ng-click="reset()"
     	ng-if="canCancel">
-    	{{adding ? 'Start Over' : 'Revert'}}
+    	{{adding ? 'Start Over' : 'Reset'}}
 		</button>
   </ion-nav-buttons>
   <!-- Add Player button when adding game -->
   <ion-nav-buttons side="left">
+  	<button 
+	  	class="button button-clear assertive"
+		  ng-click="resetToAdding()"
+		  ng-if="!adding && gameToUndo">
+      Cancel
+    </button>
 	  <button 
 	  	class="button button-clear button-positive"
 		  ng-click="openModal()"
-		  ng-if="adding">
+		  ng-if="adding && state !== 'confirm' && state !== 'saving'">
       Add Player
     </button>
   </ion-nav-buttons>
@@ -219,7 +225,14 @@
 					</button>
 				</div>
 
-				<!-- Done button -->
+				<!-- Undo button -->				
+				<div class="padding-sides" ng-show="gameToUndo">
+					<button class="button button-full positive" ng-click="edit()">
+						Edit This Game
+					</button>
+				</div>
+
+				<!-- Add another game button -->
 				<div class="padding-sides" ng-show="adding">
 					<button class="button button-full positive" ng-click="reset()" ng-disabled="saveStatus === 'saving'">
 						Add Another Game
