@@ -15,15 +15,16 @@
     		ng-if="saveStatus === 'saving'">
     	</ion-spinner>
 		</button>
-  	</ion-nav-buttons>
-  	<ion-nav-buttons side="left">
+  </ion-nav-buttons>
+  <!-- Add Player button when adding game -->
+  <ion-nav-buttons side="left">
 	  <button 
 	  	class="button button-clear button-positive"
 		  ng-click="openModal()"
 		  ng-if="adding">
       Add Player
     </button>
-  	</ion-nav-buttons>
+  </ion-nav-buttons>
 
   <!-- Header bar for different game types -->
 	<div class="bar bar-subheader background" ng-if="players.active.length > 1">

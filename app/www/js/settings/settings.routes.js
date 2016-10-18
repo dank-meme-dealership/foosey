@@ -28,6 +28,16 @@
             templateUrl: 'js/player/player-manage.html'
           }
         }
+      })
+      .state('app.settings-manage-leagues',
+      {
+        url: '/settings/manage-leagues',
+        views: {
+          settings: {
+            controller: 'ManageLeaguesController',
+            templateUrl: 'js/leagues/manage-leagues.html'
+          }
+        }
       });
   }
 })();

@@ -2,6 +2,7 @@
 {
   angular
     .module('settings', [
-      'player'
+      'player',
+      'leagues'
     ]);
 })();
