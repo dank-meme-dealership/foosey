@@ -5,42 +5,46 @@
 	<ion-nav-buttons side="right">
     <button 
     	class="button button-clear button-assertive" 
-    	ng-click="reset()">
-    	<div ng-if="canCancel">
-    		{{adding ? 'Start Over' : 'Revert'}}
-    	</div>
-    	<ion-spinner 
-    		icon="lines" 
-    		class="dark"
-    		ng-if="saveStatus === 'saving'">
-    	</ion-spinner>
+    	ng-click="reset()"
+    	ng-if="canCancel">
+    	{{adding ? 'Start Over' : 'Reset'}}
 		</button>
-  	</ion-nav-buttons>
-  	<ion-nav-buttons side="left">
+  </ion-nav-buttons>
+  <!-- Add Player button when adding game -->
+  <ion-nav-buttons side="left">
+  	<button 
+	  	class="button button-clear assertive"
+		  ng-click="resetToAdding()"
+		  ng-if="!adding && gameToUndo">
+      Cancel
+    </button>
 	  <button 
-	  	class="button button-clear ion-person-add"
-		ng-click="openModal()"></button>
-  	</ion-nav-buttons>
+	  	class="button button-clear button-positive"
+		  ng-click="openModal()"
+		  ng-if="adding && state !== 'confirm' && state !== 'saving'">
+      Add Player
+    </button>
+  </ion-nav-buttons>
 
   <!-- Header bar for different game types -->
-	<div class="bar bar-subheader background" ng-if="players.length > 1">
+	<div class="bar bar-subheader background" ng-if="players.active.length > 1">
 	  <div class="tabs">
 	    <a 
 	    	class="tab-item" 
 	    	ng-click="gameSelect($index, gameType)" 
 	    	ng-repeat="gameType in gameTypes track by $index"
 	      ng-class="{active: type.name === gameType.name }"
-	      ng-show="gameType.totalPlayers <= players.length"
+	      ng-show="gameType.totalPlayers <= players.active.length"
 	      ng-disabled="state === 'saving'">
 	      {{gameType.name}}
 	    </a>
 	  </div>      
 	</div>
 
-	<ion-content class="background" ng-class="{'has-subheader': players.length > 1}" has-bouncing="true">
+	<ion-content class="background" ng-class="{'has-subheader': players.active.length > 1}" has-bouncing="true">
 
 		<!-- Enough players -->
-		<div ng-show="players.length > 1 && teams">
+		<div ng-show="players.active.length > 1 && teams">
 
 			<!-- score at the top while selecting scores -->
 			<div class="card" ng-class="{'opaque': saveStatus === 'removed'}">
@@ -82,15 +86,15 @@
 						<div class="item item-divider">Recent Players</div>
 						<div class="grid-container">
 							<div 
-								class="grid-item item"
-								ng-repeat="player in recentPlayers track by $index"
+								class="grid-item player-item item"
+								ng-repeat="player in players.recent track by $index"
 				  		  ng-click="playerSelect(player)"
-				  		  ng-disabled="playerSelected(player)"
-				  		  ng-if="$index < 6">
-				  		  {{player.displayName | capitalize}} 
+				  		  ng-disabled="playerSelected(player) || loadRecentPlayers"
+				  		  ng-if="$index < players.recentCount"
+				  		  ng-bind="player.displayName | capitalize">
 				  		</div>
-				  		<div class="grid-item item" ng-show="loadRecentPlayers">Loading...</div>
-				  		<div class="grid-item item" ng-show="!loadRecentPlayers && recentPlayers.length === 0">No Recent Players!</div>
+				  		<div class="grid-item item" ng-show="loadRecentPlayers && !players.recent">Loading...</div>
+				  		<div class="grid-item item" ng-show="!loadRecentPlayers && players.recent.length === 0">No Recent Players!</div>
 				  	</div>
 			  	</ion-list>
 				</div>
@@ -101,11 +105,11 @@
 						<div class="item item-divider">All Players</div>
 						<div class="grid-container">
 							<div 
-								class="grid-item item"
-								ng-repeat="player in players | filter:{ displayName: filter.text } track by $index"
+								class="grid-item player-item item"
+								ng-repeat="player in players.active | filter:{ displayName: filter.text } track by $index"
 				  		  ng-click="playerSelect(player)"
-				  		  ng-disabled="playerSelected(player)">
-				  		  {{player.displayName | capitalize}}
+				  		  ng-disabled="playerSelected(player)"
+				  		  ng-bind="player.displayName | capitalize">
 				  		</div>
 				  	</div>
 			  	</ion-list>
@@ -117,12 +121,12 @@
 				<div class="grid-container num-select">
 					<div 
 						class="grid-item item"
-						ng-class="{'bold': !settings.addGameScorePicker && ($index === 5 || $index === 0)}"
-						ng-repeat="score in (settings.addGameScorePicker ? scores : scoresTen)"
+						ng-class="{'bold': !settings.addGamePicker && ($index === 5 || $index === 0)}"
+						ng-repeat="score in (settings.addGamePicker ? scores : scoresTen)"
 		  		  ng-click="scoreSelect(score)">
 		  		  {{score}}
 		  		</div>
-		  		<section class="bottom-buttons" ng-show="settings.addGameScorePicker">
+		  		<section class="bottom-buttons" ng-show="settings.addGamePicker">
 			  		<div 
 			  			class="grid-item item assertive" 
 			  			ng-click="scoreSelect(null)" 
@@ -155,19 +159,23 @@
 					<div class="date-time" ng-show="useCustom">
 						<div id="date"></div><div id="time"></div>
 						<div class="spaced-out">
-							<div class="player-button" ng-click="show('date')">
-								{{customDate | toTimestamp | date}}
+							<div 
+								class="player-button" 
+								ng-click="show('date')"
+								ng-bind="customDate | toTimestamp | date">
 							</div>
-							<div class="player-button" ng-click="show('time')">
-								{{customTime}}
+							<div 
+								class="player-button" 
+								ng-click="show('time')"
+								ng-bind="customTime">
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<!-- Save button -->
-				<div class="padding-sides">
-					<button class="button button-full no-margin positive" ng-show="!player.playerID" ng-click="submit()" ng-disabled="teams[0].score === teams[1].score">
+				<div class="padding-sides" ng-show="!player.playerID" >
+					<button class="button button-full no-margin positive" ng-click="submit()" ng-disabled="teams[0].score === teams[1].score">
 						{{adding ? 'Save' : 'Update'}}
 					</button>
 				</div>
@@ -210,21 +218,32 @@
 					</ion-item>
 				</div>
 
-				<!-- Undo button -->
-				<div ng-click="undo()" class="card" ng-show="gameToUndo" >
-					<ion-item class="center assertive">Undo</ion-item>
+				<!-- Undo button -->				
+				<div class="padding-sides" ng-show="gameToUndo">
+					<button class="button button-full assertive" ng-click="undo()">
+						Undo
+					</button>
 				</div>
 
-				<!-- Done button -->
-				<div ng-click="reset()" class="card" ng-show="adding">
-					<ion-item class="center positive">Add Another Game</ion-item>
+				<!-- Undo button -->				
+				<div class="padding-sides" ng-show="gameToUndo">
+					<button class="button button-full positive" ng-click="edit()">
+						Edit This Game
+					</button>
+				</div>
+
+				<!-- Add another game button -->
+				<div class="padding-sides" ng-show="adding">
+					<button class="button button-full positive" ng-click="reset()" ng-disabled="saveStatus === 'saving'">
+						Add Another Game
+					</button>
 				</div>
 			</div>
 
 		</div>
 
 		<!-- Need to add more players -->
-		<div class="card" ng-if="players.length < 2">
+		<div class="card" ng-if="players.active.length < 2">
 			<div class="item item-divider">
 				Not enough players to add a game
 			</div>
@@ -234,7 +253,7 @@
 		</div>
 
 		<!-- show loading while waiting -->
-		<ion-spinner ng-show="!teams || !players" class="loading-dots" icon="lines"></ion-spinner>
+		<ion-spinner ng-show="!teams" class="loading-dots" icon="lines"></ion-spinner>
 
 	</ion-content>
 </ion-view>

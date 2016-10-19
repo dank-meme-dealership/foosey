@@ -25,6 +25,10 @@
   border: 0px;
   padding: 10px;
 }
+.grid-item.player-item
+{
+  font-weight: bold;
+}
 .grid-item.selected, .player-button.selected
 {
   background: #CCCCCC;

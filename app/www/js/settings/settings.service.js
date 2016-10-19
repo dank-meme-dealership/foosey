@@ -9,12 +9,15 @@
 	function SettingsService($state, $ionicPopup, $ionicHistory, localStorage)
 	{
 		var service = {
+			//App Version
+			version						: 0.69,
+
 			//Properties
 			addGameClear			: setting('addGameClear', false),
 			addGameFilter			: setting('addGameFilter', false),
 			addGameNames			: setting('addGameNames', false),
 			addGameRecents		: setting('addGameRecents', true),
-			addGameScorePicker: setting('addGameScorePicker', false),
+			addGamePicker 		: setting('addGamePicker', gamePicker()),
 			addGameSelect			: setting('addGameSelect', false),
 			eloChartGames			: localStorage.getObject('eloChartGames', 30),
 			isAdmin						: setting('isAdmin', false),
@@ -38,6 +41,13 @@
 
 		return service;
 
+		// Quick hack before team settings
+		// Only league 9 should default to score picker
+		function gamePicker()
+		{
+			return localStorage.getObject('league').leagueID === 9;
+		}
+
 		function isLocalhost()
     {
       return window.location.hostname === 'localhost';
@@ -58,13 +68,13 @@
 			service.loggedIn = true;
 			addLeague(league);
 
+      // Hack in score picker setting
+      setProperty('addGamePicker', gamePicker());
+
+      clearCache();
+
 			// Clear the entire history
 			$ionicHistory.clearHistory();
-			$ionicHistory.nextViewOptions({
-        disableBack: true
-      });
-
-			$state.go('app.leaderboard');
 		}
 
 		function logOut()
@@ -94,14 +104,19 @@
 			setProperty('isAdmin', false);
 			setProperty('playerID', undefined);
 
-			// Clear league specific cache
+			clearCache();
+
+      $state.go('login');
+		}
+
+		function clearCache()
+		{
 			setProperty('elos', undefined);
 			setProperty('playerBadges', undefined);
 			setProperty('winRates', undefined);
 			setProperty('history', undefined);
 			setProperty('players', undefined);
-
-      $state.go('login');
+			setProperty('recentPlayers', undefined);
 		}
 
 		function addLeague(league)

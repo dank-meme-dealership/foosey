@@ -4,12 +4,11 @@
     .module('player')
     .controller('PlayerManageController', PlayerManageController);
 
-  PlayerManageController.$inject = ['$scope', '$ionicModal', '$ionicPopup', 'FooseyService', 'SettingsService', 'BadgesService'];
+  PlayerManageController.$inject = ['$scope', '$ionicModal', '$ionicPopup', 'FooseyService', 'SettingsService', 'BadgesService', 'PlayerService'];
 
-  function PlayerManageController($scope, $ionicModal, $ionicPopup, FooseyService, SettingsService, BadgesService)
+  function PlayerManageController($scope, $ionicModal, $ionicPopup, FooseyService, SettingsService, BadgesService, PlayerService)
   {
-    $scope.activePlayers = undefined;
-    $scope.inactivePlayers = undefined;
+    $scope.players = PlayerService;
 
     $scope.openModal = openModal;
     $scope.addPlayer = addPlayer;
@@ -44,21 +43,7 @@
       }
 
       // load from server
-      FooseyService.getAllPlayers(false).then(
-        function onSuccess(players)
-        {
-          var allPlayers = players.sort(function(a, b){
-            return a.displayName.localeCompare(b.displayName);
-          });
-          // filter the player selections that you can choose to just the active players
-          $scope.activePlayers = _.filter(allPlayers, function(player){ return player.active });
-          $scope.inactivePlayers = _.filter(allPlayers, function(player){ return !player.active });
-        }, function errorCallback(response)
-        {
-          console.log(response);
-          $scope.activePlayers = [];
-          $scope.inactivePlayers = [];
-        });
+      PlayerService.updatePlayers();
     }
 
     function openModal() 
@@ -72,7 +57,6 @@
       FooseyService.addPlayer(
       {
         displayName: !player.displayName ? '' : player.displayName,
-        slackName: !player.slackName ? '' : player.slackName,
         admin: _.isUndefined(player.admin) ? false : player.admin,
         active: true
       }).then(loadPlayers);

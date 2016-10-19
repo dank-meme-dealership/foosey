@@ -4,14 +4,15 @@
 		.module('addGame')
 		.controller('AddGameController', AddGameController);
 
-	AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicModal', '$ionicPopup', '$ionicScrollDelegate', 'gameTypes', '$filter', 'localStorage', 'FooseyService', 'SettingsService'];
+	AddGameController.$inject = ['$scope', '$state', '$stateParams', '$ionicHistory', '$ionicModal', '$ionicPopup', '$ionicScrollDelegate', 'gameTypes', '$filter', 'localStorage', 'FooseyService', 'PlayerService', 'SettingsService'];
 
-	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicModal, $ionicPopup, $ionicScrollDelegate, gameTypes, $filter, localStorage, FooseyService, SettingsService)
+	function AddGameController($scope, $state, $stateParams, $ionicHistory, $ionicModal, $ionicPopup, $ionicScrollDelegate, gameTypes, $filter, localStorage, FooseyService, PlayerService, SettingsService)
 	{
 		$scope.selectedPlayer = undefined;
 		$scope.selectedScoreIndex = undefined;
 		$scope.adding = _.isUndefined($stateParams.gameID);
 		$scope.settings = SettingsService;
+		$scope.players = PlayerService;
 		$scope.gameTypes = gameTypes;
 		$scope.useCustom = false;
 		$scope.customTime = undefined;
@@ -22,9 +23,8 @@
 		$scope.filter = {};
 		$scope.filter.text = '';
 		$scope.type = undefined;
-		$scope.players = undefined;
-		$scope.recentPlayers = undefined;
 		$scope.loadRecentPlayers = true;
+		$scope.gameID = $stateParams.gameID;
 
 		$scope.addMorePlayers = addMorePlayers;
 		$scope.addPlayer = addPlayer;
@@ -38,8 +38,10 @@
 		$scope.scoreSelect = scoreSelect;
 		$scope.playerName = playerName;
 		$scope.reset = reset;
+		$scope.resetToAdding = resetToAdding;
 		$scope.submit = submit;
 		$scope.undo = undo;
+		$scope.edit = edit;
 		$scope.show = show;
 		$scope.jump = jump;
 		$scope.openModal = openModal;
@@ -55,20 +57,21 @@
       reset();
     });
 
-	//load add player modal
-	$ionicModal.fromTemplateUrl('js/player/player-add.html', {
-		scope: $scope
-	}).then(function (modal) {
-		$scope.modal = modal;
-	});
+		//load add player modal
+		$ionicModal.fromTemplateUrl('js/player/player-add.html', {
+			scope: $scope
+		}).then(function (modal) {
+			$scope.modal = modal;
+		});
 
     // reset the game
 		function reset()
 		{
+			$ionicScrollDelegate.scrollTop(true);
 			$scope.selectedPlayer = undefined;
 			$scope.selectedScoreIndex = undefined;
 			$scope.useCustom = !$scope.adding;
-			$scope.loadRecentPlayers = SettingsService.addGameRecents;
+			$scope.loadRecentPlayers = SettingsService.addGameRecents; // set if we should load recent players based on setting
 
 			if ($scope.adding)
 			{
@@ -89,13 +92,23 @@
 				editGame();
 				$scope.canCancel = true;
 			}
-			getPlayers();
+			PlayerService.updatePlayers();
 			if ($scope.loadRecentPlayers) getRecentPlayers();
+		}
+
+		// this function is solely here for the purpose
+		// of returning back from editting the game from
+		// the add game tab, since we don't want to go to
+		// any other states but here.
+		function resetToAdding()
+		{
+			$scope.adding = true;
+			reset();
 		}
 
 		function editGame()
 		{
-			FooseyService.getGame($stateParams.gameID).then(
+			FooseyService.getGame($scope.gameID).then(
 				function(game)
 				{
 					_.each(game[0].teams, function(team)
@@ -162,8 +175,20 @@
 
 			$scope.type = _.clone(type);
 			var newTeams = _.clone($scope.teams);
-			newTeams[0].players = type.playersPerTeam === 1 ? newTeams[0].players.slice(0, 1) : newTeams[0].players.slice(0, 1).concat([null]);
-			newTeams[1].players = type.playersPerTeam === 1 ? newTeams[1].players.slice(0, 1) : newTeams[1].players.slice(0, 1).concat([null]);
+
+			// if choose names first, rotate names on teams
+			if (SettingsService.addGameNames)
+			{
+				var player2 = newTeams[0].players.slice(1, 2);
+				newTeams[0].players = type.playersPerTeam === 1 ? newTeams[0].players.slice(0, 1) : newTeams[0].players.slice(0, 1).concat(newTeams[1].players.slice(0, 1));
+				newTeams[1].players = type.playersPerTeam === 1 ? player2 : [null, null];
+			}
+			// otherwise extend teams to allow additional players or cut last players
+			else
+			{
+				newTeams[0].players = type.playersPerTeam === 1 ? newTeams[0].players.slice(0, 1) : newTeams[0].players.slice(0, 1).concat([null]);
+				newTeams[1].players = type.playersPerTeam === 1 ? newTeams[1].players.slice(0, 1) : newTeams[1].players.slice(0, 1).concat([null]);
+			}
 			$scope.teams = newTeams;
 			jump();
 		}
@@ -172,7 +197,7 @@
 		{
 			$scope.selectedPlayer = { teamIndex: teamIndex, playerIndex: playerIndex };
 			$scope.selectedScoreIndex = undefined;
-			changeState('player-select', 'Select Players');
+			changeState('player-select');
 			if (SettingsService.addGameSelect) $scope.$broadcast('selectFilterBar');
 			if (SettingsService.addGameClear) $scope.filter.text = '';
 		}
@@ -182,7 +207,7 @@
 			$scope.selectedScoreIndex = teamIndex;
 			$scope.selectedPlayer = undefined;
 			scoreSelect(null);
-			changeState('score-select', 'Select Score');
+			changeState('score-select');
 		}
 
 		function isSelected(teamIndex, playerIndex)
@@ -197,7 +222,7 @@
 		// function to select player
 		function playerSelect(player)
 		{
-			if (playerSelected(player)) return;
+			if (playerSelected(player) || $scope.loadRecentPlayers) return;
 			$scope.canCancel = true;
 
 			team = $scope.teams[$scope.selectedPlayer.teamIndex];
@@ -213,7 +238,7 @@
 			team.score = team.score === null || score === null ? score : team.score + '' + score;
 
 			// if they want the normal picker, jump after setting score
-			if (parseInt(team.score) >= 0 && !SettingsService.addGameScorePicker) jump();
+			if (parseInt(team.score) >= 0 && !SettingsService.addGamePicker) jump();
 		};
 
 		function jump()
@@ -235,7 +260,7 @@
 			}
 			$scope.selectedPlayer = undefined;
 			$scope.selectedScoreIndex = undefined;
-			changeState('confirm', 'Confirm');
+			changeState('confirm');
 		}
 
 		function jumpPlayers(t)
@@ -279,6 +304,10 @@
 		// to saving the game
 		function submit()
 		{
+			// move to saving state
+			changeState('saving');
+			$scope.saveStatus = 'saving';
+
 			// when editing a game, we don't care about the equivalence
 			if ($scope.adding)
 			{
@@ -325,9 +354,15 @@
       });
 
       // if yes, save the last game
-      confirmPopup.then(function(positive) {
-        if(positive) {
+      confirmPopup.then(function(positive) 
+      {
+        if(positive) 
+        {
           save();
+        }
+        else
+        {
+        	changeState('confirm');
         }
       });
 		}
@@ -335,14 +370,13 @@
 		// add the game
 		function save()
 		{
-			changeState('saving', null);
-			$scope.saveStatus = 'saving';
+			// disallow cancelling at this point
 			$scope.canCancel = false;
 
 			// set up game object
 			var timestamp = getCustomTime().getTime()/1000
 			var game = {
-				id: $stateParams.gameID,
+				id: $scope.gameID,
 				teams: $scope.teams,
 				timestamp: $scope.useCustom ? timestamp : undefined
 			}
@@ -353,8 +387,21 @@
 			{
 				$scope.response = response.data;
 				$scope.saveStatus = 'success';
-				if ($scope.adding) $scope.gameToUndo = response.data.info.gameID;
-				else $ionicHistory.goBack();
+				// simply added a game
+				if ($scope.adding) 
+				{
+					$scope.gameToUndo = response.data.info.gameID;
+				}
+				// edited a recently added game from add game tab
+				else if ($scope.gameToUndo)
+				{
+					$scope.adding = true;
+				}
+				// just editted a game elsewhere
+				else 
+				{
+					$ionicHistory.goBack();
+				}
 			}, function errorCallback(response)
 	    {
 	    	if ($scope.state === 'saving')
@@ -378,70 +425,27 @@
 	    });
 		}
 
-		// get players from server
-		function getPlayers()
+		function edit()
 		{
-			// load from local storage
-			$scope.players = localStorage.getArray('players');
-
-			// load from server
-			FooseyService.getAllPlayers(true).then(
-				function (players)
-	    	{ 
-		    	// only overwrite if they haven't selected one yet
-		    	if (noneSelected())
-		    	{
-		    		$scope.players = players;
-		    		$scope.players.sort(function(a, b){
-		    			return a.displayName.localeCompare(b.displayName);
-		    		});
-		    	}
-
-		    	localStorage.setArray('players', $scope.players);
-		  	});
+			$scope.gameID = $scope.gameToUndo;
+			$scope.adding = false;
+			reset();
 		}
 
 		// set up some recent players
 		function getRecentPlayers()
 		{
-			$scope.recentPlayers = undefined;
-			FooseyService.getPlayerGames(SettingsService.playerID, 10).then(
-				function(response)
+			PlayerService.updateRecentPlayers(SettingsService.playerID).then(
+				function()
 				{
-					var recents = [];
-					_.each(response.data, function(game)
-					{
-						_.each(game.teams, function(team)
-						{
-							_.each(team.players, function(player)
-							{
-								recents = _.unionBy(recents, [player], 'playerID');
-							}); 
-						});
-					});
-					var you = _.remove(recents, function(p) 
-						{ 
-							return p.playerID === SettingsService.playerID 
-						});
-					$scope.recentPlayers = _.union(you, recents);
 					$scope.loadRecentPlayers = false;
-				});
-		}
-
-		// return true if none of the players have been selected yet
-		function noneSelected()
-		{
-			for (var i = 0; i < $scope.players.length; i++)
-			{
-				if ($scope.players[i].selected) return false;
-			}
-			return true;
+				})
 		}
 
 		function playerName(id)
 		{
 			var name = undefined;
-			_.each($scope.players, function(player)
+			_.each(PlayerService.all, function(player)
 			{
 				if (player.playerID === id) name = player.displayName;
 			});
@@ -464,10 +468,9 @@
 		}
 
 		// change to a new state on the add game page
-		function changeState(state, title)
+		function changeState(state)
 		{
 			if (state) $scope.state = state;
-			if (title) $scope.title = title;
 			if (state !== 'player-select') $ionicScrollDelegate.scrollTop(true);
 		}
 
@@ -475,16 +478,16 @@
 		{
 			$state.go('app.manage-players');
 		}
+		
 		// adds a player (function accesible to all players via add-game screen)
 		function addPlayer(player)
 		{
 			FooseyService.addPlayer(
 			{
 				displayName: !player.displayName ? '' : player.displayName,
-				slackName: !player.slackName ? '' : player.slackName,
 				admin: false,
 				active: true
-			}).then(getPlayers);
+			}).then(PlayerService.updatePlayers);
 			$scope.modal.hide();
 		}
 

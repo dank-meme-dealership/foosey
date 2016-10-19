@@ -26,6 +26,7 @@
       getEloHistory     : getEloHistory,
       getBadges         : getBadges,
       getLeague         : getLeague,
+      info              : info,
       removeGame        : removeGame,
       update            : update
     }
@@ -177,6 +178,11 @@
     function getBadges()
     {
       return $http.get(url() + SettingsService.league.leagueID + '/badges?id=' + SettingsService.playerID);
+    }
+
+    function info()
+    {
+      return $http.get(url() + 'info');
     }
 
     function removeGame(gameID)

@@ -2,11 +2,11 @@
 {
   angular
     .module('leagues')
-    .controller('SwitchLeaguesController', SwitchLeaguesController);
+    .controller('ManageLeaguesController', ManageLeaguesController);
 
-  SwitchLeaguesController.$inject = ['$scope', 'SettingsService'];
+  ManageLeaguesController.$inject = ['$scope', 'SettingsService'];
 
-  function SwitchLeaguesController($scope, SettingsService)
+  function ManageLeaguesController($scope, SettingsService)
   {
     $scope.settings = SettingsService;
 
