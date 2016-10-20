@@ -118,21 +118,19 @@ module Foosey
 
           game = Game.create(outcome, params['league_id'], body['timestamp'])
 
-          puts game.inspect
-
           json(
             error: false,
             message: 'Game added.',
             info: {
-                gameID: game.id,
-                player_ids: game.player_ids.collect do |player_id|
-                player = Player.new(player_id)
-                {
-                  name: player.display_name,
-                  elo: player.elo,
-                  delta: game.delta(player_id)
-                }
-              end
+              gameID: game.id,
+              player_ids: game.player_ids.collect do |player_id|
+              player = Player.new(player_id)
+              {
+                name: player.display_name,
+                elo: player.elo,
+                delta: game.delta(player_id)
+              }
+            end
             }
           )
         end
@@ -161,23 +159,29 @@ module Foosey
           id = params['id'].to_i
           body = JSON.parse request.body.read
 
-          unless valid_game? id
-            return json(
-              error: true,
-              message: 'Invalid game ID: #{id}'
-            )
-          end
-
-          outcome = {}
+          info = {}
           body['teams'].each do |team|
-            team['players'].each { |p| outcome[p] = team['score'] }
+            team['players'].each { |p| info[p] = team['score'] }
           end
+          info[:league_id] = params['league_id']
+          info[:timestamp] = body['timestamp']
 
-          edit_game(id, outcome, body['timestamp'])
+          game = Game.new(id).info = info
 
           json(
             error: false,
-            message: 'Game updated.'
+            message: 'Game added.',
+            info: {
+              gameID: game.id,
+              player_ids: game.player_ids.collect do |player_id|
+                player = Player.new(player_id)
+                {
+                    name: player.display_name,
+                    elo: player.elo,
+                    delta: game.delta(player_id)
+                }
+              end
+            }
           )
         end
 
