@@ -80,6 +80,7 @@
     function getEloRank(players)
     {
       var eloRank = [];
+      var snoozers = [];
       var unranked = [];
       var rank = 1;
 
@@ -88,7 +89,8 @@
       // set rank and if they're qualified
       for (var i = 0; i < players.length; i++)
       {
-        if (players[i].gamesPlayed >= $scope.minimumQualified)
+        // qualified, not snoozin
+        if (players[i].qualified && !players[i].snoozin)
         {
           // same rank if same elo
           if (eloRank.length > 0 && players[i].elo === _.last(eloRank).elo)
@@ -96,23 +98,25 @@
           else
             players[i].rank = rank;
           
-          players[i].qualified = true;
           rank++;
           eloRank.push(players[i]);
         }
+        // qualified, snoozin
+        else if (players[i].qualified && players[i].snoozin)
+        {
+          players[i].rank = '-';
+          snoozers.push(players[i]);
+        }
+        // disqualified
         else
         {
-          players[i].disqualified = true;
           players[i].rank = '-';
           unranked.push(players[i]);
         }
       }
 
-      // add unranked to bottom
-      for (var i = 0; i < unranked.length; i++)
-      {
-        eloRank.push(unranked[i]);
-      }
+      // add snoozers and unranked to bottom
+      eloRank = eloRank.concat(snoozers).concat(unranked);
 
       return eloRank;
     }

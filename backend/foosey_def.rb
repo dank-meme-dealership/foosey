@@ -215,10 +215,7 @@ def badges(league_id, player_id)
   # zzz badge
   # hasn't played a game in 2 weeks
   sleepers = players.select do |p|
-    games = games_with_player(p, league_id)
-    next if games.length < 10
-    last_game = api_game(games.first, league_id)
-    Time.now.to_i - last_game[:timestamp] > 1_209_600 # 2 weeks
+    player_snoozin(p, league_id)
   end
   sleepers.each { |b| badges[b] << badge('💤', 'Snoozin\'') }
 
@@ -250,6 +247,13 @@ def badge(emoji, definition)
     emoji: emoji,
     definition: definition
   }
+end
+
+def player_snoozin(player_id, league_id)
+  games = games_with_player(player_id, league_id)
+  return false if games.length < 10
+  last_game = api_game(games.first, league_id)
+  Time.now.to_i - last_game[:timestamp] > 1_209_600 # 2 weeks
 end
 
 # returns the respective elo deltas given two ratings and two scores
