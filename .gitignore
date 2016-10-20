@@ -1,6 +1,7 @@
 # foosey files
 /backend/foosey.db
 
+*.idea/
 *.gem
 *.rbc
 /.config

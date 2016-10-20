@@ -13,12 +13,12 @@ require 'sqlite3'
 unless File.exist?('foosey.db')
   begin
     sql = File.read('InitializeDatabase.sqlite')
-    db = SQLite3::Database.new 'foosey.db'
-    db.execute_batch sql
+    database = SQLite3::Database.new 'foosey.db'
+    database.execute_batch sql
   rescue SQLite3::Exception => e
     puts e
   ensure
-    db.close if db
+    database.close if database
   end
 end
 
@@ -40,7 +40,13 @@ also_reload "#{script_dir}/foosey_def.rb"
 also_reload "#{script_dir}/foosey_slack.rb"
 also_reload "#{script_dir}/foosey_api.rb"
 
-recalc(1, 0, false) if ARGV.include? 'recalc'
+if ARGV.include? 'recalc'
+  database do |db|
+    db.execute('SELECT LeagueID FROM League').each do |id|
+      recalc(id, 0, false)
+    end
+  end
+end
 
 get '/' do
   redirect 'https://github.com/brikr/foosey/blob/master/API.md'
