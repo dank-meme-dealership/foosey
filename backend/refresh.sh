@@ -10,6 +10,6 @@ pkill -f foosey.rb
 
 sleep 5
 
-nohup ruby foosey.rb &
+nohup ruby foosey.rb recalc &
 
 exit 0
