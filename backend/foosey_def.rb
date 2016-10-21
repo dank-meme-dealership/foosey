@@ -157,12 +157,12 @@ def badges(league_id, player_id)
   # fire badge
   # best daily change
   best_change = players.group_by { |p| daily_elo_change(p, league_id) }.max
-  best_change.last.each { |b| badges[b] << badge('🔥', 'On Fire') } if !best_change.nil? && best_change.first >= 20
+  best_change.last.each { |b| badges[b] << badge('🔥', 'On Fire') } if !best_change.nil? && best_change.first >= 10
 
   # poop badge
   # worst daily change
   worst_change = players.group_by { |p| daily_elo_change(p, league_id) }.min
-  worst_change.last.each { |b| badges[b] << badge('💩', 'Rough Day') } if !worst_change.nil? && worst_change.first <= -20
+  worst_change.last.each { |b| badges[b] << badge('💩', 'Rough Day') } if !worst_change.nil? && worst_change.first <= -10
 
   # baby badge
   # 10-15 games played
@@ -182,8 +182,8 @@ def badges(league_id, player_id)
     winner = last_game[:teams][0][:players].any? { |a| a[:playerID] == p }
     badges[p] << badge('🙈', 'Monkey\'d') if last_game[:teams][0][:delta] < 0 && winner
     badges[p] << badge('🍌', 'Graceful Loss') if last_game[:teams][0][:delta] < 0 && !winner
-    badges[p] << badge('💪🏼', 'Hefty Win') if last_game[:teams][0][:delta] >= 20 && winner
-    badges[p] << badge('🤕', 'Hospital Bound') if last_game[:teams][0][:delta] >= 20 && !winner
+    badges[p] << badge('💪🏼', 'Hefty Win') if last_game[:teams][0][:delta] >= 10 && winner
+    badges[p] << badge('🤕', 'Hospital Bound') if last_game[:teams][0][:delta] >= 10 && !winner
   end
 
   # toilet badge
