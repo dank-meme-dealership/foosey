@@ -1,7 +1,7 @@
 # foosey API calls
 # for more information see API.md
 
-VERSION = 0.69.freeze
+VERSION = 0.70
 
 # returns an api object for game with id game_id
 def api_game(game_id, league_id)
@@ -80,7 +80,9 @@ def api_player(player_id, extended, league_id)
       gamesPlayed: player['GamesPlayed'],
       dailyChange: daily_elo_change(player['PlayerID'], league_id),
       admin: player['Admin'] == 1,
-      active: player['Active'] == 1
+      active: player['Active'] == 1,
+      qualified: player['GamesPlayed'] >= 10,
+      snoozin: player_snoozin(player_id, league_id)
     }
 
     player.merge! extended_stats(player_id, league_id) if extended
