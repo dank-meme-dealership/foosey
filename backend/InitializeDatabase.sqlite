@@ -67,6 +67,6 @@ VALUES ("MinimumQualified", 10);
 INSERT INTO Config
 VALUES ("WinWeight", 1.2);
 INSERT INTO Config
-VALUES ("KFactor", 100);
+VALUES ("KFactor", 50);
 INSERT INTO Config
 VALUES ("MaxScore", 10);
