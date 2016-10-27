@@ -55,8 +55,10 @@
 
       // load from server
       PlayerService.updatePlayers('active').then(
-        function successCallback(players)
-        { 
+        function successCallback(response)
+        {
+          var players = _.clone(response);
+
           // Remove people from the leaderboard who haven't played or are inactive
           if (!SettingsService.noGamePlayers) players = _.filter(players, hasPlayed)
 

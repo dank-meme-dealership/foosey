@@ -45,7 +45,7 @@
         <!-- Last Active -->
         <ion-item class="stat-card">
           <div>Last Active</div>
-          <div ng-show="recentGames">{{recentGames[0].timestamp | date}}</div>
+          <div ng-show="recentGames">{{recentGames[0].timestamp ? (recentGames[0].timestamp | date) : '-'}}</div>
           <div ng-show="!recentGames">-</div>
         </ion-item>
         <!-- Past Week -->
