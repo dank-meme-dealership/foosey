@@ -36,9 +36,11 @@ script_dir = File.dirname(__FILE__).to_s
 load "#{script_dir}/foosey_def.rb"
 load "#{script_dir}/foosey_slack.rb"
 load "#{script_dir}/foosey_api.rb"
+load "#{script_dir}/input_tsheets_data.rb"
 also_reload "#{script_dir}/foosey_def.rb"
 also_reload "#{script_dir}/foosey_slack.rb"
 also_reload "#{script_dir}/foosey_api.rb"
+also_reload "#{script_dir}/input_tsheets_data.rb"
 
 if ARGV.include? 'recalc'
   database do |db|
@@ -58,6 +60,10 @@ end
 
 get '/android' do
   return send_file 'foosey.apk', type: :apk, filename: 'foosey.apk'
+end
+
+get '/tsheets' do
+  return json(message: add_tsheets)
 end
 
 # options workaround as defined in sinatra-cross_origin gem
