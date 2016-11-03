@@ -315,6 +315,9 @@
 				FooseyService.getGames(1, 0).then(
 					function(response)
 					{
+						// if no games logged, just save
+						if (response.length === 0) save();
+
 						// winners and losers from server
 						var game = response[0];
 						var winners = game.teams[0];
