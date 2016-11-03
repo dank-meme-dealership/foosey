@@ -316,7 +316,11 @@
 					function(response)
 					{
 						// if no games logged, just save
-						if (response.length === 0) save();
+						if (response.length === 0) 
+						{
+							save();
+							return;
+						}
 
 						// winners and losers from server
 						var game = response[0];
