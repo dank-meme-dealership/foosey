@@ -9,7 +9,6 @@
   function GameDetailController($scope, $stateParams, $ionicPopup, $ionicHistory, FooseyService, SettingsService)
   {
     $scope.settings = SettingsService;
-    $scope.showRecord = false;
     $scope.disabled = true;
     $scope.game = undefined;
 
@@ -31,9 +30,6 @@
         {
           $scope.game = response;
 
-          // Only get the record for singles games
-          $scope.showRecord = response[0].teams[0].players.length === 1;
-
           // get playerIDs and fetch similar games
           var playerIDs = _.map(response[0].teams[0].players, 'playerID').join(',') + ',' + 
                           _.map(response[0].teams[1].players, 'playerID').join(',');
@@ -49,7 +45,7 @@
           $scope.games = response;
           $scope.disabled = false;
 
-          if ($scope.showRecord) getRecord();
+          getRecord();
         });
     }
 
