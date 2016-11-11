@@ -314,8 +314,12 @@ def history(league_id, ids)
       scores = game[3].split(',')
       timestamp = game[4]
 
+      looking_for = ids.split(',')
       # skip to next game if doesn't contain the same players
-      next if ids.split(',').sort != player_ids.sort
+      # skip if a doubles game and teams don't match
+      next if looking_for.sort != player_ids.sort ||
+              (looking_for.length == 4 &&
+              scores[player_ids.index(looking_for[0])] != scores[player_ids.index(looking_for[1])])
 
       response = {
         gameID: game_id,
