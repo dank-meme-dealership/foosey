@@ -14,7 +14,7 @@
     <!-- Record -->
     <div class="card">
       <ion-list>
-        <div class="item item-divider">Win Record</div>
+        <div class="item item-divider">Win Record <span ng-show="settings.showElo">and Total Change</span></div>
         <ion-item ng-show="!teams">
           Loading...
         </ion-item>
@@ -23,6 +23,8 @@
             <div ng-repeat="team in teams" class="game-score">
               <div ng-repeat="player in team.players">
                 <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</span>
+                <span ng-class="{'elo-green': team.totalChange > 0, 'elo-red': team.totalChange < 0}" ng-show="settings.showElo">
+                  ({{team.totalChange | eloChange}})</span>
               </div>
               <div><strong>{{team.wins >= 0 ? team.wins : '-'}}</strong></div>
             </div>
