@@ -1,13 +1,6 @@
 <ion-view>
   <ion-nav-title>Leaderboard</ion-nav-title>
   
-  <!-- show loading on the top right if loading -->
-  <ion-nav-buttons side="right">
-    <button class="button button-clear" ng-if="loading">
-      <ion-spinner icon="lines" class="dark"></ion-spinner>
-    </button>
-  </ion-nav-buttons>
-  
   <!-- Header bar for different leaderboards -->
   <div class="bar bar-subheader background">
     <div class="tabs">
@@ -82,7 +75,7 @@
     </ion-slide-box>
 
     <!-- show loading while waiting -->
-    <ion-spinner ng-show="!(elos.length >= 0)  && !error" class="loading-dots" icon="lines"></ion-spinner>
+    <ion-spinner ng-show="!(elos.length >= 0) && !error" class="loading-dots" icon="lines"></ion-spinner>
 
     <!-- Show if error -->
     <div ng-if="error" class="card center">

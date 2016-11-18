@@ -11,7 +11,6 @@
     $scope.settings = SettingsService;
     $scope.badges = BadgesService;
     $scope.slide = 0;
-    $scope.loading = true;
     $scope.minimumQualified = 10;
     $scope.elos = undefined;
     $scope.winRates = undefined;
@@ -51,7 +50,6 @@
       // load from local storage
       $scope.elos = localStorage.getObject('elos');
       $scope.winRates = localStorage.getObject('winRates');
-      $scope.loading = true;
 
       // load from server
       PlayerService.updatePlayers('active').then(
@@ -141,7 +139,6 @@
     // turns off spinner and notifies
     function done()
     {
-      $scope.loading = false;
       $scope.$broadcast('scroll.refreshComplete');
     }
   }

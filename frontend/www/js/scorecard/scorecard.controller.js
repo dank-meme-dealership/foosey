@@ -17,7 +17,6 @@
 		$scope.recentGames = undefined;
 		$scope.player = undefined;
 		$scope.error = false;
-    $scope.loading = 0;
 
 		$scope.info = info;
     $scope.refresh = refresh;
@@ -46,12 +45,10 @@
 
     function setUpPlayer()
     {
-      $scope.loading++;
       $scope.player = localStorage.getObject('player' + $scope.playerID);
 			// set up the player
 			FooseyService.getPlayer($scope.playerID).then(
 				function(response){
-          $scope.loading--;
 					$scope.player = response.data;
           localStorage.setObject('player' + $scope.playerID, $scope.player);
       		if (SettingsService.showElo) setUpChart();
@@ -60,12 +57,10 @@
 
     function setUpRecentGames()
     {
-      $scope.loading++;
       $scope.recentGames = localStorage.getObject('scorecardRecentGames' + $scope.playerID);
     	// set up the player
 			FooseyService.getPlayerGames($scope.playerID, SettingsService.recentGames).then(
 				function(response){
-          $scope.loading--;
 					$scope.recentGames = response.data;
           localStorage.setObject('scorecardRecentGames' + $scope.playerID, $scope.recentGames);
 				});
@@ -79,11 +74,9 @@
 
 			if ($scope.settings.showElo)
 			{
-        $scope.loading++;
 				FooseyService.getEloHistory($scope.playerID, eloChartGames).then(
 					function successCallback(response)
 					{
-            $scope.loading--;
 						$scope.error = false;
 
 						// Get chart data
@@ -92,12 +85,9 @@
 
 						// Set up ELO Rating chart
 						$scope.chart = getEloChartOptions(_.map(chartData, 'elo').reverse(), _.map(chartData, 'date').reverse(), subtitle);
-            $scope.loading = false;
 					}, function errorCallback(response)
 					{
-            $scope.loading--;
 						$scope.error = true;
-            $scope.loading = false;
 					});
 			}
 		}

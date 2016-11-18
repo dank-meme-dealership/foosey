@@ -10,7 +10,6 @@
   {
     var loaded = 0;
     var gamesToLoad = 30;
-    $scope.loading = false;
 
     $scope.loadMore = loadMore;
     $scope.refresh = refresh;
@@ -28,7 +27,6 @@
     {
       // load from local storage
       $scope.games = localStorage.getObject('history');
-      $scope.loading = true;
       loaded = 0;
 
       // get most recent games and group by the date
@@ -58,7 +56,6 @@
     function loadMore()
     {
       if (loaded === 0 ) return;
-      $scope.loading = true;
       
       FooseyService.getGames(gamesToLoad, loaded)
       .then(function successCallback(response)
@@ -82,7 +79,6 @@
     {
       $scope.$broadcast('scroll.refreshComplete');
       $scope.$broadcast('scroll.infiniteScrollComplete');
-      $scope.loading = false;
     }
   }
 })();
