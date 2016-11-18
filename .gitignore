@@ -48,9 +48,9 @@ platforms/
 
 *.keystore
 
-app/plugins/
+frontend/plugins/
 
-app/resources/android
-app/resources/ios
+frontend/resources/android
+frontend/resources/ios
 
-app/node_modules/
+frontend/node_modules/
