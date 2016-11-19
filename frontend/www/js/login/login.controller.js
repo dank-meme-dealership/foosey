@@ -132,6 +132,7 @@
             {
               league.player = response.data;
               SettingsService.logIn(league);
+              $state.go('app.leaderboard');
             })
           }
         });
