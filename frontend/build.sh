@@ -9,8 +9,7 @@
 # update from repo
 git pull
 
-# clear out platforms and rebuild
-rm -rf platforms/
+# add platforms if they don't exist
 ionic platform add ios
 ionic platform add android
 
