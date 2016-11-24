@@ -21,6 +21,7 @@
 		$scope.info = info;
     $scope.refresh = refresh;
     $scope.toggleChart = toggleChart;
+    $scope.compare = compare;
 
 		// load on entering view 
     $scope.$on('$ionicView.beforeEnter', refresh);
@@ -131,6 +132,11 @@
     {
       chartBeToggled = !chartBeToggled;
       setUpChart(chartBeToggled);
+    }
+
+    function compare()
+    {
+      location.href = '#/app/leaderboard/scorecard/' + $scope.player.playerID + '/compare'
     }
 
 		function info(title, message)

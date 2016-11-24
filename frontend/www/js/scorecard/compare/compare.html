@@ -1,0 +1,32 @@
+<ion-view>
+  <ion-nav-title>You vs. {{them.displayName}}</ion-nav-title>
+
+  <ion-content class="background" has-bouncing="true">
+
+    <!-- Record -->
+<!--     <div class="card">
+      <ion-list>
+        <div class="item item-divider">Win Record <span ng-show="settings.showElo">and Total Change</span></div>
+        <ion-item ng-show="!teams">
+          Loading...
+        </ion-item>
+        <ion-item class="game-item" ng-if="teams">
+          <div class="spaced-out">
+            <div ng-repeat="team in teams" class="game-score">
+              <div ng-repeat="player in team.players">
+                <span ng-class="{'bold' : player.playerID === settings.playerID }">{{player.displayName | capitalize}}</span>
+                <span ng-class="{'elo-green': team.totalChange > 0, 'elo-red': team.totalChange < 0}" ng-show="settings.showElo">
+                  ({{team.totalChange | eloChange}})</span>
+              </div>
+              <div><strong>{{team.wins >= 0 ? team.wins : '-'}}</strong></div>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div> -->
+
+    <!-- Past Games -->
+    <game-list title="'Past Games'" list="games" game-count="true" highlight="game[0].gameID"></game-list>
+
+  </ion-content>
+</ion-view>

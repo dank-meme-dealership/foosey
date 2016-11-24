@@ -2,6 +2,7 @@
 {
   angular
     .module('leaderboard', [
-      'badges'
+      'badges',
+      'compare'
     ]);
 })();

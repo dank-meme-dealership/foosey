@@ -1,6 +1,11 @@
 <ion-view>
 	<ion-nav-title>{{you ? 'You' : player.displayName}}</ion-nav-title>
 
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-positive" ng-if="!you" ng-click="compare()">Compare</button>
+  </ion-nav-buttons>
+
+
 	<ion-content class="background" has-bouncing="true">
 
     <!-- pull to refresh -->

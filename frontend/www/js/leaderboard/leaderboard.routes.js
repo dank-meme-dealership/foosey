@@ -29,6 +29,16 @@
           }
         }
       })
+      .state('app.leaderboard-scorecard-compare',
+      {
+        url: '/leaderboard/scorecard/:playerID/compare',
+        views: {
+          leaderboard: {
+            controller: 'CompareController',
+            templateUrl: 'js/scorecard/compare/compare.html'
+          }
+        }
+      })
       .state('app.leaderboard-scorecard-game-detail',
       {
         url: '/leaderboard/scorecard/game-detail/:gameID',

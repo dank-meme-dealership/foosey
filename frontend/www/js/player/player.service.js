@@ -18,6 +18,7 @@
       recent              : getArrayFromCache('recentPlayers'),
       recentCount         : recentCount,
 
+      getByID             : getByID,
       updatePlayers       : updatePlayers,
       updateRecentPlayers : updateRecentPlayers
     };
@@ -29,6 +30,11 @@
     {
       var array = localStorage.getObject(property);
       return _.isArray(array) ? array : [];
+    }
+
+    function getByID(id)
+    {
+      return _.find(service.all, { 'playerID': id });
     }
 
     // type is an argument to return the type of players
