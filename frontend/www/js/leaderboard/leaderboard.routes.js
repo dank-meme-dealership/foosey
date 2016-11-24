@@ -39,6 +39,26 @@
           }
         }
       })
+      .state('app.leaderboard-scorecard-compare-game-detail',
+      {
+        url: '/leaderboard/scorecard/game-detail/:gameID',
+        views: {
+          leaderboard: {
+            controller: 'GameDetailController',
+            templateUrl: 'js/game-detail/game-detail.html'
+          }
+        }
+      })
+      .state('app.leaderboard-scorecard-compare-game-detail-edit-game',
+      {
+        url: '/leaderboard/scorecard/game-detail/:gameID/edit',
+        views: {
+          leaderboard: {
+            controller: 'AddGameController',
+            templateUrl: 'js/add-game/add-game.html'
+          }
+        }
+      })
       .state('app.leaderboard-scorecard-game-detail',
       {
         url: '/leaderboard/scorecard/game-detail/:gameID',
