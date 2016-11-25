@@ -4,13 +4,12 @@
     .module('history')
     .controller('HistoryController', HistoryController);
 
-  HistoryController.$inject = ['$scope', '$state', 'localStorage', 'FooseyService', 'SettingsService'];
+  HistoryController.$inject = ['$scope', '$state', 'localStorage', 'HistoryService', 'SettingsService'];
 
-  function HistoryController($scope, $state, localStorage, FooseyService, SettingsService)
+  function HistoryController($scope, $state, localStorage, HistoryService, SettingsService)
   {
-    var loaded = 0;
-    var gamesToLoad = 30;
-
+    $scope.history = HistoryService;
+    $scope.filter = filter;
     $scope.loadMore = loadMore;
     $scope.refresh = refresh;
 
@@ -22,59 +21,21 @@
       refresh();
     });
 
-    // refresh page function
-    function refresh()
+    function filter()
     {
-      // load from local storage
-      $scope.games = localStorage.getObject('history');
-      loaded = 0;
-
-      // get most recent games and group by the date
-      FooseyService.getGames(gamesToLoad, 0)
-      .then(function successCallback(response) 
-      { 
-        // get games from server
-        $scope.games = response;
-        loaded += response.length;
-
-        // store them to local storage
-        localStorage.setObject('history', $scope.games);
-
-        // see if we can load more games or not
-        $scope.allLoaded = response.length === 0;
-
-        $scope.error = false;
-        done();
-      }, function errorCallback(response)
-      {
-        $scope.error = true;
-        done();
-      });
+      console.log('Filter yo');
     }
 
-    // infinite scroll
     function loadMore()
     {
-      if (loaded === 0 ) return;
-      
-      FooseyService.getGames(gamesToLoad, loaded)
-      .then(function successCallback(response)
-      {
-        // if no games have been loaded yet, we can't do anything
-        if (!$scope.games) return;
-
-        // push new games to the end of the games list
-        $scope.games.push.apply($scope.games, response);
-        loaded += response.length;
-
-        // see if we can load more games or not
-        $scope.allLoaded = response.length === 0;
-
-        done();
-      })
+      HistoryService.loadMore().then(done);
     }
 
-    // turns off spinner and notifies
+    function refresh()
+    {
+      HistoryService.refresh().then(done); 
+    }
+
     function done()
     {
       $scope.$broadcast('scroll.refreshComplete');
