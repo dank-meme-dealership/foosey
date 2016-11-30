@@ -1,6 +1,7 @@
 .breakdown-list-header 
 {
   font-weight: bold;
+  white-space: normal;
 }
 .elo-breakdown .list
 {

@@ -32,7 +32,7 @@
 
         <!-- Elo breakdown list -->
         <div class="elo-breakdown" ng-click="toggleBreakdown()">
-          <div class="breakdown-list-header center">
+          <div class="breakdown-list-header text-center">
             Breakdown over last {{recentGames.length + (recentGames.length === 1 ? ' game' : ' games')}} 
             <span ng-class="{'elo-green': totalDamage > 0, 'elo-red': totalDamage < 0}">&nbsp;({{totalDamage | eloChange}})</span>
           </div>
