@@ -1,7 +1,14 @@
 .breakdown-list-header 
 {
   font-weight: bold;
+  text-align: center;
   white-space: normal;
+}
+.breakdown-list-subheader
+{
+  margin-top: 8px;
+  white-space: normal;
+  text-align: center;
 }
 .elo-breakdown .list
 {

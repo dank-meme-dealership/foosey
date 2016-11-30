@@ -32,9 +32,12 @@
 
         <!-- Elo breakdown list -->
         <div class="elo-breakdown" ng-click="toggleBreakdown()">
-          <div class="breakdown-list-header text-center">
+          <div class="breakdown-list-header">
             Breakdown over last {{recentGames.length + (recentGames.length === 1 ? ' game' : ' games')}} 
-            <span ng-class="{'elo-green': totalDamage > 0, 'elo-red': totalDamage < 0}">&nbsp;({{totalDamage | eloChange}})</span>
+            <span ng-class="{'elo-green': totalDamage > 0, 'elo-red': totalDamage < 0}">({{totalDamage | eloChange}})</span>
+          </div>
+          <div class="breakdown-list-subheader">
+            The totals on the right are your points lost or gained against these players.
           </div>
           <ion-list>
             <ion-item ng-repeat="player in breakdown">
