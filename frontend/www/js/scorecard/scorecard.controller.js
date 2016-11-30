@@ -72,24 +72,30 @@
 
     function setUpBreakdown()
     {
-      var breakdown = [
-        {
-          name: 'Peter',
-          elo: -37, 
-        },
-        {
-          name: 'Adam',
-          elo: 20
-        },
-        {
-          name: 'Roger',
-          elo: 7
-        }
-      ];
+      var breakdown = [];
 
       _.each($scope.recentGames, function(game)
       {
-        // do the real things
+        // the first team is always the winner so add a win to whoever it's for
+        var winner = _.includes(_.map(game.teams[0].players, 'playerID'), $scope.playerID);
+        var enemies = game.teams[winner ? 1 : 0].players;
+        var damage = game.teams[winner ? 0 : 1].delta;
+        _.each(enemies, function(enemy)
+        {
+          var existing = _.find(breakdown, ['playerID', enemy.playerID]);
+          if (existing)
+          {
+            existing.elo += damage;
+          }
+          else
+          {
+            breakdown.push({
+              name: enemy.displayName,
+              playerID: enemy.playerID,
+              elo: damage
+            });
+          }
+        });
       });
 
       breakdown = _.sortBy(breakdown, 'elo').reverse();
