@@ -28,7 +28,11 @@
 
     function loadMore()
     {
-      HistoryService.loadMore().then(done);
+      // this is necessary because the loadMore function may just
+      // return if there are no games loaded yet, so we can't expect
+      // a promise, so we must check for one.
+      var loadMore = HistoryService.loadMore();
+      if (loadMore) loadMore.then(done);
     }
 
     function refresh()
