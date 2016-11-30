@@ -77,7 +77,7 @@
       _.each($scope.recentGames, function(game)
       {
         // the first team is always the winner so add a win to whoever it's for
-        var winner = _.includes(_.map(game.teams[0].players, 'playerID'), $scope.playerID);
+        var winner = _.includes(_.map(game.teams[0].players, 'playerID'), parseInt($scope.playerID));
         var enemies = game.teams[winner ? 1 : 0].players;
         var damage = game.teams[winner ? 0 : 1].delta;
         _.each(enemies, function(enemy)
