@@ -19,7 +19,8 @@
         {
           $scope.games = response;
 
-          getRecord();
+          // pnly attempt to get the record if there are games played
+          if (response.length > 0) getRecord();
         });
 
     function getRecord()

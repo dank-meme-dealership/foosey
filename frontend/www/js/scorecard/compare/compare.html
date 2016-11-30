@@ -7,8 +7,11 @@
     <div class="card">
       <ion-list>
         <div class="item item-divider">Win Record <span ng-show="settings.showElo">and Total Change</span></div>
-        <ion-item ng-show="!teams">
+        <ion-item ng-show="!games">
           Loading...
+        </ion-item>
+        <ion-item ng-show="games.length === 0">
+          No record to show.
         </ion-item>
         <ion-item class="game-item" ng-if="teams">
           <div class="spaced-out">
