@@ -14,27 +14,37 @@
     <div ng-show="player.gamesPlayed > 0">
 
       <!-- elo chart -->
-      <ion-item class="card" style="padding: 5px 5px 0 5px;" ng-show="settings.showElo" on-double-tap="toggleChart()">
-        <div class="center chart-title">
-          <span style="padding-right: 5px">Elo Rating: {{player.elo}}</span>
-          <span ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">({{player.dailyChange | eloChange}} today)</span>
-        </div>
-        <div class="padding center" ng-show="!chart">
-          {{ error ? 'Can\'t connect to server :(' : 'Loading Elo Chart...' }}
-        </div>
+      <ion-item class="card" style="padding: 5px 5px 0 5px;" ng-show="settings.showElo">
+        
+        <!-- actual elo chart -->
+        <div on-double-tap="toggleChart()">
+          <div class="center chart-title">
+            <span style="padding-right: 5px">Elo Rating: {{player.elo}}</span>
+            <span ng-class="{'elo-green': player.dailyChange > 0, 'elo-red': player.dailyChange < 0}">({{player.dailyChange | eloChange}} today)</span>
+          </div>
+          <div class="padding center" ng-show="!chart">
+            {{ error ? 'Can\'t connect to server :(' : 'Loading Elo Chart...' }}
+          </div>
 
-        <!-- Chart -->
-        <highchart ng-if="chart" id="chart1" config="chart"></highchart>
+          <!-- Chart -->
+          <highchart ng-if="chart" id="chart1" config="chart"></highchart>
+        </div>
 
         <!-- Elo breakdown list -->
-        <div class="elo-breakdown">
-          <div class="breakdown-list-header">In Games Against:</div>
+        <div class="elo-breakdown" ng-click="toggleBreakdown()">
+          <div class="breakdown-list-header center">
+            Breakdown over last {{recentGames.length + (recentGames.length === 1 ? ' game' : ' games')}} 
+            <span ng-class="{'elo-green': totalDamage > 0, 'elo-red': totalDamage < 0}">&nbsp;({{totalDamage | eloChange}})</span>
+          </div>
           <ion-list>
             <ion-item ng-repeat="player in breakdown">
               <div class="spaced-out">
                 <div>{{player.name}}</div> 
-                <div ng-class="{'elo-green': player.elo > 0, 'elo-red': player.elo < 0}">
-                  {{player.elo | eloChange}}
+                <div>
+                  {{player.games.length + (player.games.length === 1 ? ' game' : ' games')}}
+                  <span ng-class="{'elo-green': player.elo > 0, 'elo-red': player.elo < 0}">
+                    ({{player.elo | eloChange}})
+                  </span>
                 </div>
               </div>
             </ion-item>

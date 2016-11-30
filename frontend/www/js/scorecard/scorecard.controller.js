@@ -4,9 +4,9 @@
 		.module('scorecard')
 		.controller('ScorecardController', ScorecardController);
 
-	ScorecardController.$inject = ['$scope', '$state', '$stateParams', '$ionicPopup', 'scorecardInfo', 'localStorage', 'FooseyService', 'SettingsService', 'BadgesService'];
+	ScorecardController.$inject = ['$scope', '$state', '$stateParams', '$ionicPopup', '$ionicScrollDelegate', 'scorecardInfo', 'localStorage', 'FooseyService', 'SettingsService', 'BadgesService'];
 
-	function ScorecardController($scope, $state, $stateParams, $ionicPopup, scorecardInfo, localStorage, FooseyService, SettingsService, BadgesService)
+	function ScorecardController($scope, $state, $stateParams, $ionicPopup, $ionicScrollDelegate, scorecardInfo, localStorage, FooseyService, SettingsService, BadgesService)
 	{
     var chartBeToggled = false;
 
@@ -73,33 +73,39 @@
     function setUpBreakdown()
     {
       var breakdown = [];
+      var totalDamage = 0;
 
       _.each($scope.recentGames, function(game)
       {
         // the first team is always the winner so add a win to whoever it's for
         var winner = _.includes(_.map(game.teams[0].players, 'playerID'), parseInt($scope.playerID));
         var enemies = game.teams[winner ? 1 : 0].players;
-        var damage = game.teams[winner ? 0 : 1].delta;
+        var damage = parseFloat(game.teams[winner ? 0 : 1].delta) / enemies.length;
         _.each(enemies, function(enemy)
         {
           var existing = _.find(breakdown, ['playerID', enemy.playerID]);
           if (existing)
           {
             existing.elo += damage;
+            existing.games.push(game);
           }
           else
           {
             breakdown.push({
               name: enemy.displayName,
               playerID: enemy.playerID,
-              elo: damage
+              elo: damage,
+              games: [game]
             });
           }
+          // increment total damage
+          totalDamage += damage;
         });
       });
 
       breakdown = _.sortBy(breakdown, 'elo').reverse();
 
+      $scope.totalDamage = totalDamage;
       $scope.breakdown = breakdown;
     }
 
@@ -166,6 +172,9 @@
     {
       $scope.showBreakdown = !$scope.showBreakdown;
       $('.elo-breakdown').slideToggle();
+
+      // scroll to the top when collapsing the breakdown
+      if (!$scope.showBreakdown) $ionicScrollDelegate.scrollTop(true);
     }
 
     // toggle chart between your preference and all time

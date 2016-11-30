@@ -1,7 +1,12 @@
 .breakdown-list-header 
 {
-  margin-left: 16px;
   font-weight: bold;
+}
+.elo-breakdown .list
+{
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  margin-top: 16px;
 }
 .chart-title
 {
@@ -38,13 +43,4 @@
 
 .elo-breakdown {
   display: none;
-}
-
-/*OVERRIDES*/
-
-.elo-breakdown-button.button.button-clear.button-positive.activated
-{
-  background: #FFF;
-  border-color: transparent;
-  opacity: 1;
 }

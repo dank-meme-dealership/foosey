@@ -206,7 +206,14 @@ ion-item
   font-size: 17px;
 }
 
-/*Overides*/
+/*OVERRIDES*/
+
+.button.button-clear.activated
+{
+  background: #FFF;
+  border-color: transparent;
+  opacity: 1;
+}
 .popup-container .popup 
 {
   background-color: rgba(255, 255, 255, 1);
