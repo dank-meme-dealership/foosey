@@ -1,3 +1,8 @@
+.breakdown-list-header 
+{
+  margin-left: 16px;
+  font-weight: bold;
+}
 .chart-title
 {
   font-size: 20px;
@@ -27,4 +32,19 @@
 {
   display: flex;
   justify-content: space-between;
+}
+
+/*ANIMATIONS*/
+
+.elo-breakdown {
+  display: none;
+}
+
+/*OVERRIDES*/
+
+.elo-breakdown-button.button.button-clear.button-positive.activated
+{
+  background: #FFF;
+  border-color: transparent;
+  opacity: 1;
 }

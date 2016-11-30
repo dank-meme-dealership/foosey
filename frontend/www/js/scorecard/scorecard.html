@@ -22,7 +22,32 @@
         <div class="padding center" ng-show="!chart">
           {{ error ? 'Can\'t connect to server :(' : 'Loading Elo Chart...' }}
         </div>
+
+        <!-- Chart -->
         <highchart ng-if="chart" id="chart1" config="chart"></highchart>
+
+        <!-- Elo breakdown list -->
+        <div class="elo-breakdown">
+          <div class="breakdown-list-header">In Games Against:</div>
+          <ion-list>
+            <ion-item ng-repeat="player in breakdown">
+              <div class="spaced-out">
+                <div>{{player.name}}</div> 
+                <div ng-class="{'elo-green': player.elo > 0, 'elo-red': player.elo < 0}">
+                  {{player.elo | eloChange}}
+                </div>
+              </div>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- Elo breakdown button -->
+        <div class="center" ng-if="chart">
+          <div class="elo-breakdown-button button button-clear button-positive" ng-click="toggleBreakdown()">
+            Elo Breakdown
+            <i ng-class="{'ion-arrow-up-b' : showBreakdown, 'ion-arrow-down-b' : !showBreakdown}"></i>
+          </div>
+        </div>
       </ion-item>
 
       <!-- badge definitions -->
@@ -47,11 +72,11 @@
           <div ng-show="!recentGames">-</div>
         </ion-item>
         <!-- Past Week -->
-        <!-- <ion-item class="stat-card">
+        <ion-item class="stat-card" ng-show="you">
           <div>Past Week</div>
           <div ng-show="player">{{player.pastWeek + (player.pastWeek === 1 ? ' game' : ' games')}}</div>
           <div ng-show="!player">-</div>
-        </ion-item> -->
+        </ion-item>
   			<!-- Total Singles -->
   			<ion-item class="stat-card">
   				<div>Singles</div>

@@ -17,9 +17,11 @@
 		$scope.recentGames = undefined;
 		$scope.player = undefined;
 		$scope.error = false;
+    $scope.showBreakdown = false;
 
 		$scope.info = info;
     $scope.refresh = refresh;
+    $scope.toggleBreakdown = toggleBreakdown;
     $scope.toggleChart = toggleChart;
     $scope.compare = compare;
 
@@ -64,18 +66,46 @@
 				function(response){
 					$scope.recentGames = response.data;
           localStorage.setObject('scorecardRecentGames' + $scope.playerID, $scope.recentGames);
+          setUpBreakdown();
 				});
+    }
+
+    function setUpBreakdown()
+    {
+      var breakdown = [
+        {
+          name: 'Peter',
+          elo: -37, 
+        },
+        {
+          name: 'Adam',
+          elo: 20
+        },
+        {
+          name: 'Roger',
+          elo: 7
+        }
+      ];
+
+      _.each($scope.recentGames, function(game)
+      {
+        // do the real things
+      });
+
+      breakdown = _.sortBy(breakdown, 'elo').reverse();
+
+      $scope.breakdown = breakdown;
     }
 
 		// set up the charts for the scorecard page
 		function setUpChart(toggled)
 		{
 			var subtitle = 'Data from ';
-      var eloChartGames = toggled ? undefined : SettingsService.eloChartGames;
+      var recentGames = toggled ? undefined : SettingsService.recentGames;
 
 			if ($scope.settings.showElo)
 			{
-				FooseyService.getEloHistory($scope.playerID, eloChartGames).then(
+				FooseyService.getEloHistory($scope.playerID, recentGames).then(
 					function successCallback(response)
 					{
 						$scope.error = false;
@@ -124,6 +154,13 @@
 			  }
       }
 		}
+
+    // toggle showing the breakdown of elo
+    function toggleBreakdown()
+    {
+      $scope.showBreakdown = !$scope.showBreakdown;
+      $('.elo-breakdown').slideToggle();
+    }
 
     // toggle chart between your preference and all time
     // or 1,000,000 games if you've played that much. If
