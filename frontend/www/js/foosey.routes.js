@@ -18,19 +18,19 @@
     }
 
     // Ask about Android APK
-    if (ionic.Platform.isAndroid() && window.location.hostname === 'foosey.futbol') {
-      $ionicPopupProvider.$get().confirm({
-        title: 'Download Foosey APK',
-        template: '<div class="text-center">We have a native version of this application available for Android. Do you want to download it now?</div>',
-        buttons: [
-          { text: 'Not Now' },
-          { 
-            text: 'Sure', 
-            onTap: function() { window.location.replace('http://api.foosey.futbol/android'); }
-          }
-        ]
-      });
-    }
+    // if (ionic.Platform.isAndroid() && window.location.hostname === 'foosey.futbol') {
+    //   $ionicPopupProvider.$get().confirm({
+    //     title: 'Download Foosey APK',
+    //     template: '<div class="text-center">We have a native version of this application available for Android. Do you want to download it now?</div>',
+    //     buttons: [
+    //       { text: 'Not Now' },
+    //       { 
+    //         text: 'Sure', 
+    //         onTap: function() { window.location.replace('http://api.foosey.futbol/android'); }
+    //       }
+    //     ]
+    //   });
+    // }
 
     // Check version and info
     FooseyServiceProvider.$get().info().then(
