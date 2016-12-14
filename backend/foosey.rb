@@ -25,6 +25,9 @@ end
 # FOOS
 set :port, 4005
 
+# who the fuck took this line out of the CORS plugin
+register Sinatra::CrossOrigin
+
 configure do
   enable :cross_origin
   set :allow_methods, [:get, :post, :options, :delete, :put]
