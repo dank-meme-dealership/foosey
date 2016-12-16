@@ -363,7 +363,7 @@ namespace '/v1' do
   post '/leagues' do
     body = JSON.parse request.body.read
 
-    league_name = body['leagueName']
+    league_name = body['leagueName'].downcase
     display_name = body['displayName']
 
     if league_exists? league_name
