@@ -44,7 +44,8 @@
 		// Only league 9 should default to score picker
 		function gamePicker()
 		{
-			return localStorage.getObject('league').leagueID === 9;
+			return localStorage.getObject('league').leagueID === 9 ||
+						 localStorage.getObject('league').leagueID === 34;
 		}
 
 		function isLocalhost()
