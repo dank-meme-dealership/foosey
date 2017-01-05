@@ -214,10 +214,12 @@ def badges(league_id, player_id)
 
   # zzz badge
   # hasn't played a game in 2 weeks
-  sleepers = players.select do |p|
-    player_snoozin(p, league_id)
+  if league_id == 1
+    sleepers = players.select do |p|
+      player_snoozin(p, league_id)
+    end
+    sleepers.each { |b| badges[b] << badge('💤', 'Snoozin\'') }
   end
-  sleepers.each { |b| badges[b] << badge('💤', 'Snoozin\'') }
 
   # nemesis and ally badges
   if player_id > 0
