@@ -82,7 +82,7 @@ def api_player(player_id, extended, league_id)
       admin: player['Admin'] == 1,
       active: player['Active'] == 1,
       qualified: player['GamesPlayed'] >= 10,
-      snoozin: player_snoozin(player_id, league_id)
+      snoozin: league_id == 1 && player_snoozin(player_id, league_id)
     }
 
     player.merge! extended_stats(player_id, league_id) if extended
