@@ -29,7 +29,7 @@
       info              : info,
       removeGame        : removeGame,
       update            : update
-    }
+    };
 
     function url()
     {

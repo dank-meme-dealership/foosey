@@ -36,7 +36,7 @@
 			logOut						: logOut,
 			reallyLogOut			: reallyLogOut,
 			setProperty				: setProperty
-		}
+		};
 
 		return service;
 

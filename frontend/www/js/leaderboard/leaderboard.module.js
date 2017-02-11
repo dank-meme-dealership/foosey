@@ -3,6 +3,7 @@
   angular
     .module('leaderboard', [
       'badges',
-      'compare'
+      'compare',
+      'league-stats'
     ]);
 })();
