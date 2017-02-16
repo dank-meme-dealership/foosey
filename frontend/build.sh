@@ -11,15 +11,11 @@ git pull
 
 # add platforms if they don't exist
 ionic platform add ios
-ionic platform add android
-
-# build icons and splash screens
-ionic resources
 
 # build and sign android apk
-ionic build --release android
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore foosey.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk foosey
-build-tools/zipalign -f 4 platforms/android/build/outputs/apk/android-release-unsigned.apk ../backend/foosey.apk
+# ionic build --release android
+# jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore foosey.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk foosey
+# build-tools/zipalign -f 4 platforms/android/build/outputs/apk/android-release-unsigned.apk ../backend/foosey.apk
 
 # build for ios and open xcode for signing
 ionic build ios
