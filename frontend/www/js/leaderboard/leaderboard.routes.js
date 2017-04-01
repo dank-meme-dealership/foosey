@@ -1,16 +1,11 @@
-(function()
-{
+(function() {
   angular
-    .module('leaderboard')
+    .module('foosey.leaderboard')
     .config(config);
 
-  config.$inject = ['$stateProvider'];
-
-  function config($stateProvider) 
-  {
+  function config($stateProvider) {
     $stateProvider
-      .state('app.leaderboard', 
-      {
+      .state('app.leaderboard', {
         url: '/leaderboard',
         views: {
           leaderboard: {
@@ -19,8 +14,7 @@
           }
         }
       })
-      .state('app.leaderboard-scorecard', 
-      {
+      .state('app.leaderboard-scorecard', {
         url: '/leaderboard/scorecard/:playerID',
         views: {
           leaderboard: {
@@ -29,8 +23,7 @@
           }
         }
       })
-      .state('app.leaderboard-scorecard-compare',
-      {
+      .state('app.leaderboard-scorecard-compare', {
         url: '/leaderboard/scorecard/:playerID/compare',
         views: {
           leaderboard: {
@@ -39,8 +32,7 @@
           }
         }
       })
-      .state('app.leaderboard-scorecard-compare-game-detail',
-      {
+      .state('app.leaderboard-scorecard-compare-game-detail', {
         url: '/leaderboard/scorecard/game-detail/:gameID',
         views: {
           leaderboard: {
@@ -49,8 +41,7 @@
           }
         }
       })
-      .state('app.leaderboard-scorecard-compare-game-detail-edit-game',
-      {
+      .state('app.leaderboard-scorecard-compare-game-detail-edit-game', {
         url: '/leaderboard/scorecard/game-detail/:gameID/edit',
         views: {
           leaderboard: {
@@ -59,8 +50,7 @@
           }
         }
       })
-      .state('app.leaderboard-scorecard-game-detail',
-      {
+      .state('app.leaderboard-scorecard-game-detail', {
         url: '/leaderboard/scorecard/game-detail/:gameID',
         views: {
           leaderboard: {
@@ -69,8 +59,7 @@
           }
         }
       })
-      .state('app.leaderboard-scorecard-game-detail-edit-game',
-      {
+      .state('app.leaderboard-scorecard-game-detail-edit-game', {
         url: '/leaderboard/scorecard/game-detail/:gameID/edit',
         views: {
           leaderboard: {

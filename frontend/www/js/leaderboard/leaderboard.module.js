@@ -1,9 +1,8 @@
-(function()
-{
+(function() {
   angular
-    .module('leaderboard', [
+    .module('foosey.leaderboard', [
       'foosey.badges',
       'compare',
-      'league-stats'
+      'foosey.leaderboard.leagueStats'
     ]);
 })();

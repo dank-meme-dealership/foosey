@@ -11,7 +11,7 @@
       'foosey.addGame',
       'history',
       'keylistener',
-      'leaderboard',
+      'foosey.leaderboard',
       'leagues',
       'login',
       'scorecard',
