@@ -3,6 +3,6 @@
   angular
     .module('settings', [
       'player',
-      'leagues'
+      'foosey.leagues'
     ]);
 })();

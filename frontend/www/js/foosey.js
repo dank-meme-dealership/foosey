@@ -12,7 +12,6 @@
       'history',
       'keylistener',
       'foosey.leaderboard',
-      'leagues',
       'login',
       'scorecard',
       'settings'
