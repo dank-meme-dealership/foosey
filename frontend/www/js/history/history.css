@@ -1,22 +1,17 @@
-.game-score
-{
+.game-score {
   text-align: center;
   min-width: 95px;
 }
-.game-item
-{
+.game-item {
   padding: 8px 16px;
 }
-.game-item.item-complex .item-content
-{
+.game-item.item-complex .item-content {
   padding: 0;
 }
-.history-date
-{
+.history-date {
   font-size: 18px;
 }
-.time
-{
+.time {
   text-align: right;
   font-size: 14px;
   color: #AAA;

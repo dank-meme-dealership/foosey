@@ -1,54 +1,1 @@
-.breakdown-list-header 
-{
-  font-weight: bold;
-  text-align: center;
-  white-space: normal;
-}
-.breakdown-list-subheader
-{
-  margin-top: 8px;
-  white-space: normal;
-  text-align: center;
-}
-.elo-breakdown .list
-{
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  margin-top: 16px;
-}
-.chart-title
-{
-  font-size: 20px;
-  line-height: 25px;
-  margin-top: 5px;
-}
-.player-header
-{
-	padding: 20px;
-}
-.player-stat
-{
-	font-weight: bold;
-	font-size: 36px;
-  line-height: normal;
-	text-align: center;
-}
-.player-title
-{
-	font-size: 60px;
-  padding-bottom: 30px;
-  font-weight: bold;
-  text-align: center;
-  text-shadow: 2px 2px #000000;
-}
-.stat-card
-{
-  display: flex;
-  justify-content: space-between;
-}
-
-/*ANIMATIONS*/
-
-.elo-breakdown {
-  display: none;
-}
+.breakdown-list-header {  font-weight: bold;  text-align: center;  white-space: normal;}.breakdown-list-subheader {  margin-top: 8px;  white-space: normal;  text-align: center;}.elo-breakdown .list {  border-top: 1px solid #ccc;  border-bottom: 1px solid #ccc;  margin-top: 16px;}.chart-title {  font-size: 20px;  line-height: 25px;  margin-top: 5px;}.player-header {  padding: 20px;}.player-stat {  font-weight: bold;  font-size: 36px;  line-height: normal;  text-align: center;}.player-title {  font-size: 60px;  padding-bottom: 30px;  font-weight: bold;  text-align: center;  text-shadow: 2px 2px #000000;}.stat-card {  display: flex;  justify-content: space-between;}/*ANIMATIONS*/.elo-breakdown {  display: none;}

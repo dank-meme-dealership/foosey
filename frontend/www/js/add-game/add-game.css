@@ -1,23 +1,19 @@
-.bottom-buttons
-{
+.bottom-buttons {
   width: 100%;
   display: flex;
 }
-.date-time
-{
+.date-time {
   font-size: 16px;
   text-align: center;
   padding: 3px 16px 4px;
 }
-.grid-container
-{
+.grid-container {
   padding: 0 5px;
   justify-content: center;
   flex-wrap: wrap;
   display: flex;
 }
-.grid-item
-{
+.grid-item {
   float: left;
   min-width: 90px;
   flex-grow: 1;
@@ -25,48 +21,39 @@
   border: 0px;
   padding: 10px;
 }
-.grid-item.player-item
-{
+.grid-item.player-item {
   font-weight: bold;
 }
-.grid-item.selected, .player-button.selected
-{
+.grid-item.selected, .player-button.selected {
   background: #CCCCCC;
 }
-.num-select
-{
+.num-select {
   max-width: 380px;
   margin: auto;
 }
-.num-select .grid-item
-{
+.num-select .grid-item {
   padding: 16px;
 }
-.player-button
-{
+.player-button {
   display: block;
   margin: 2px;
   min-width: 125px;
   padding: 10px 5px;
   cursor: pointer;
 }
-.player-button[disabled]
-{
+.player-button[disabled] {
   cursor: default !important;
   pointer-events: none;
 }
 
 /*Make game opaque on remove*/
-.opaque ion-item.item
-{
+.opaque ion-item.item {
   background-color: rgba(255, 255, 255, 0.3);
 }
-.opaque, .grid-item[disabled]
-{
+.opaque, .grid-item[disabled] {
   opacity: 0.3;
 }
 
-.card.recent-players .item:last-child
-{
+.card.recent-players .item:last-child {
   margin-bottom: 5px;
 }

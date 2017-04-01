@@ -1,10 +1,8 @@
-img.foosey-header
-{
+img.foosey-header {
   margin-top: 15px;
   max-width:100%;
   max-height:100%;
 }
-.login .scroll
-{
+.login .scroll {
   height: 100%;
 }
