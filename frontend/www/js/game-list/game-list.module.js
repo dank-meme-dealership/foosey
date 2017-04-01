@@ -1,5 +1,4 @@
-(function()
-{
+(function() {
   angular
-    .module('gameList', []);
+    .module('foosey.gameList', []);
 })();

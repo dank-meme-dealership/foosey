@@ -1,8 +1,7 @@
-(function()
-{
+(function() {
   angular
     .module('history', [
-      'gameDetail',
-      'gameList'
+      'foosey.gameDetail',
+      'foosey.gameList'
     ]);
 })();

@@ -1,7 +1,6 @@
-(function()
-{
+(function() {
   angular
-    .module('gameDetail', [
-      'gameList'
+    .module('foosey.gameDetail', [
+      'foosey.gameList'
     ]);
 })();
