@@ -2,6 +2,6 @@
 {
   angular
     .module('player', [
-      'badges'
+      'foosey.badges'
     ]);
 })();

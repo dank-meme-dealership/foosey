@@ -2,7 +2,7 @@
 {
   angular
     .module('leaderboard', [
-      'badges',
+      'foosey.badges',
       'compare',
       'league-stats'
     ]);

@@ -1,7 +1,7 @@
 (function()
 {
   angular
-    .module('badges')
+    .module('foosey.badges')
     .factory('BadgesService', BadgesService);
 
   BadgesService.$inject = ['localStorage', 'FooseyService'];
