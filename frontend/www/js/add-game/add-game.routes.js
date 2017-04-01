@@ -1,16 +1,11 @@
-(function()
-{
+(function() {
   angular
-    .module('addGame')
+    .module('foosey.addGame')
     .config(config);
 
-  config.$inject = ['$stateProvider'];
-
-  function config($stateProvider) 
-  {
+  function config($stateProvider) {
     $stateProvider
-      .state('app.add-game',
-      {
+      .state('app.add-game', {
         url: '/add-game',
         views: {
           games: {
@@ -19,8 +14,7 @@
           }
         }
       })
-      .state('app.add-game-manage-players',
-      {
+      .state('app.add-game-manage-players', {
         url: '/add-game/manage-players',
         views: {
           games: {

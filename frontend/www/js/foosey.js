@@ -2,13 +2,13 @@
 {
   angular
     .module('foosey', [
-      'ionic', 
+      'ionic',
       'ionic.utils',
 
       'ngIOS9UIWebViewPatch',
       'sc.twemoji',
 
-      'addGame',
+      'foosey.addGame',
       'history',
       'keylistener',
       'leaderboard',
@@ -23,22 +23,22 @@
   config.$inject = ['$httpProvider'];
 
   function config($httpProvider)
-  {        
+  {
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
   }
 
   run.$inject = ['$ionicPlatform', '$ionicConfig'];
 
   // This establishes a few settings for Ionic
-  function run($ionicPlatform, $ionicConfig) 
+  function run($ionicPlatform, $ionicConfig)
   {
-    $ionicPlatform.ready(function() 
+    $ionicPlatform.ready(function()
     {
-      if(window.cordova && window.cordova.plugins.Keyboard) 
+      if(window.cordova && window.cordova.plugins.Keyboard)
       {
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
       }
-      if(window.StatusBar) 
+      if(window.StatusBar)
       {
         StatusBar.styleDefault();
       }

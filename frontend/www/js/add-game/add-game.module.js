@@ -1,7 +1,6 @@
-(function()
-{
+(function() {
   angular
-    .module('addGame', [
+    .module('foosey.addGame', [
       'focusOn',
       'player'
     ]);
