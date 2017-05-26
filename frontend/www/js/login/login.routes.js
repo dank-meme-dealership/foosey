@@ -1,17 +1,15 @@
-(function()
-{
+(function () {
   angular
     .module('login')
     .config(config);
 
-  function config($stateProvider, $urlRouterProvider) 
-  {
+  function config($stateProvider) {
     $stateProvider
       .state('login',
-      {
-        url: '/login',
-        controller: 'LoginController',
-        templateUrl: 'js/login/login.html'
-      });
+        {
+          url: '/login',
+          controller: 'LoginController',
+          templateUrl: 'js/login/login.html'
+        });
   }
 })();

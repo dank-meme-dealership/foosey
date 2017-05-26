@@ -1,4 +1,4 @@
-(function() {
+(function () {
   angular
     .module('foosey.leaderboard.leagueStats', [])
     .component('leagueStats', {
@@ -12,7 +12,7 @@
     $ctrl.players = PlayerService;
     $ctrl.games = localStorage.getArray('allGames');
 
-    FooseyService.getAllGames().then(function(response) {
+    FooseyService.getAllGames().then(function (response) {
       $ctrl.games = response;
       localStorage.setArray('allGames', $ctrl.games);
     });

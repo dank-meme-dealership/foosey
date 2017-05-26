@@ -1,4 +1,4 @@
-(function() {
+(function () {
   angular
     .module('foosey.leaderboard', [
       'foosey.badges',

@@ -1,16 +1,16 @@
-(function() {
+(function () {
   angular
     .module('ionic.utils', [])
     .factory('localStorage', localStorage);
 
   function localStorage($window) {
     return {
-      set       : set,
-      get       : get,
-      setObject : setObject,
-      getObject : getObject,
-      setArray  : setArray,
-      getArray  : getArray
+      set: set,
+      get: get,
+      setObject: setObject,
+      getObject: getObject,
+      setArray: setArray,
+      getArray: getArray
     };
 
     function set(key, value) {

@@ -1,5 +1,4 @@
-(function()
-{
-	angular
+(function () {
+  angular
     .module('login', []);
 })();

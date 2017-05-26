@@ -1,16 +1,13 @@
-(function()
-{
+(function () {
   angular
     .module('settings')
     .config(config);
 
   config.$inject = ['$stateProvider'];
 
-  function config($stateProvider) 
-  {
+  function config($stateProvider) {
     $stateProvider
-      .state('app.settings',
-      {
+      .state('app.settings', {
         url: '/settings',
         views: {
           settings: {
@@ -19,8 +16,7 @@
           }
         }
       })
-      .state('app.settings-manage-players',
-      {
+      .state('app.settings-manage-players', {
         url: '/settings/manage-players',
         views: {
           settings: {
@@ -29,8 +25,7 @@
           }
         }
       })
-      .state('app.settings-manage-leagues',
-      {
+      .state('app.settings-manage-leagues', {
         url: '/settings/manage-leagues',
         views: {
           settings: {

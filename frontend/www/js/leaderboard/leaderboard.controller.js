@@ -1,5 +1,4 @@
-(function()
-{
+(function () {
   angular
     .module('foosey.leaderboard')
     .controller('LeaderboardController', LeaderboardController);
@@ -17,7 +16,7 @@
     $scope.slideTo = slideTo;
 
     // load on entering view
-    $scope.$on('$ionicView.beforeEnter', function() {
+    $scope.$on('$ionicView.beforeEnter', function () {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.reallyLogOut();
       updateLeaderboard();

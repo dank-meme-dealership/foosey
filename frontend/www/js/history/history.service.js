@@ -1,4 +1,4 @@
-(function() {
+(function () {
   angular
     .module('history')
     .factory('HistoryService', HistoryService);
@@ -8,10 +8,10 @@
     var gamesToLoad = 30;
 
     var service = {
-      allLoaded : false,
-      games     : localStorage.getObject('history'),
-      refresh   : refresh,
-      loadMore  : loadMore
+      allLoaded: false,
+      games: localStorage.getObject('history'),
+      refresh: refresh,
+      loadMore: loadMore
     };
 
     return service;

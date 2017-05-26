@@ -1,4 +1,4 @@
-(function() {
+(function () {
   angular
     .module('foosey.gameDetail')
     .controller('GameDetailController', GameDetailController);
@@ -11,7 +11,7 @@
     $scope.remove = confirmRemove;
 
     // load on entering view 
-    $scope.$on('$ionicView.beforeEnter', function() {
+    $scope.$on('$ionicView.beforeEnter', function () {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.reallyLogOut();
       loadGame();
@@ -24,7 +24,7 @@
 
         // get playerIDs and fetch similar games
         var playerIDs = _.map(response[0].teams[0].players, 'playerID').join(',') + ',' +
-                        _.map(response[0].teams[1].players, 'playerID').join(',');
+          _.map(response[0].teams[1].players, 'playerID').join(',');
         fetchSimilarGames(playerIDs);
       });
     }
@@ -44,7 +44,7 @@
       $scope.teams[1].wins = 0;
       $scope.teams[0].totalChange = 0;
       $scope.teams[1].totalChange = 0;
-      _.each($scope.games, function(game) {
+      _.each($scope.games, function (game) {
         // the first team is always the winner so add a win to whoever it's for
         var winner = game.teams[0].players[0].playerID === $scope.teams[0].players[0].playerID;
         $scope.teams[winner ? 0 : 1].wins++;
@@ -61,8 +61,8 @@
       });
 
       // if yes, delete the last game
-      confirmPopup.then(function(positive) {
-        if(positive) {
+      confirmPopup.then(function (positive) {
+        if (positive) {
           remove();
         }
       });
@@ -70,7 +70,7 @@
 
     // Remove game
     function remove() {
-      FooseyService.removeGame($stateParams.gameID).then(function() {
+      FooseyService.removeGame($stateParams.gameID).then(function () {
         $ionicHistory.goBack();
       });
     }

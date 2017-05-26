@@ -1,17 +1,16 @@
-(function() {
+(function () {
   angular
     .module('history')
     .controller('HistoryController', HistoryController);
 
-  function HistoryController($scope, HistoryService, SettingsService)
-  {
+  function HistoryController($scope, HistoryService, SettingsService) {
     $scope.history = HistoryService;
     $scope.filter = filter;
     $scope.loadMore = loadMore;
     $scope.refresh = refresh;
 
     // load on entering view 
-    $scope.$on('$ionicView.beforeEnter', function() {
+    $scope.$on('$ionicView.beforeEnter', function () {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.reallyLogOut();
       refresh();
@@ -30,7 +29,7 @@
     }
 
     function refresh() {
-      HistoryService.refresh().then(done); 
+      HistoryService.refresh().then(done);
     }
 
     function done() {

@@ -1,29 +1,26 @@
-(function()
-{
+(function () {
   angular
     .module('player')
     .directive('playerList', playerList);
 
-  function playerList()
-  {
+  function playerList() {
     var directive = {
-      restrict    : 'EA',
-      scope       : {
-        title : '=',
-        list  : '=',
+      restrict: 'EA',
+      scope: {
+        title: '=',
+        list: '=',
         reload: '='
       },
-      controller  : controller,
-      templateUrl : 'js/player/player-list.html'
-    }
+      controller: controller,
+      templateUrl: 'js/player/player-list.html'
+    };
 
     return directive;
   }
 
   controller.$inject = ['$scope', '$ionicModal', 'FooseyService', 'SettingsService'];
 
-  function controller($scope, $ionicModal, FooseyService, SettingsService)
-  {
+  function controller($scope, $ionicModal, FooseyService, SettingsService) {
     $scope.settings = SettingsService;
 
     $scope.openModal = openModal;
@@ -33,31 +30,28 @@
     $ionicModal.fromTemplateUrl('js/player/player-edit.html', {
       scope: $scope,
       animation: 'slide-in-up'
-    }).then(function(modal) {
+    }).then(function (modal) {
       $scope.modal = modal;
     });
 
-    function openModal(player) 
-    {
+    function openModal(player) {
       $scope.player = _.clone(player);
       $scope.modal.show();
-    };
+    }
 
-    function editPlayer(player)
-    {
+    function editPlayer(player) {
       FooseyService.editPlayer(
-      {
-        id: player.playerID.toString(),
-        displayName: !player.displayName ? '' : player.displayName,
-        slackName: !player.slackName ? '' : player.slackName,
-        admin: player.admin,
-        active: player.active
-      }).then($scope.reload);
+        {
+          id: player.playerID.toString(),
+          displayName: !player.displayName ? '' : player.displayName,
+          slackName: !player.slackName ? '' : player.slackName,
+          admin: player.admin,
+          active: player.active
+        }).then($scope.reload);
       $scope.modal.hide();
     }
 
-    function toggleActive(player)
-    {
+    function toggleActive(player) {
       player.active = !player.active;
       editPlayer(player);
     }

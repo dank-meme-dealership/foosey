@@ -1,4 +1,4 @@
-(function() {
+(function () {
   angular
     .module('keylistener')
     .directive('keylistener', keylistener);
@@ -14,7 +14,7 @@
     function link() {
       var captured = [];
 
-      $document.bind('keydown', function(e) {
+      $document.bind('keydown', function (e) {
         $rootScope.$broadcast('keydown', e);
         $rootScope.$broadcast('keydown:' + e.which, e);
 
@@ -36,7 +36,7 @@
     function nerd() {
       captured = [];
       document.getElementsByTagName('body')[0].className += ' nerd';
-      $ionicPopup.alert({title:'You\'re a nerd 🤓', buttons:[{text: 'I know', type: 'button-positive'}]});
+      $ionicPopup.alert({title: 'You\'re a nerd 🤓', buttons: [{text: 'I know', type: 'button-positive'}]});
     }
   }
 })();

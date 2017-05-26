@@ -1,31 +1,30 @@
-(function() {
+(function () {
   angular
     .module('foosey')
     .factory('FooseyService', FooseyService);
 
-  function FooseyService($http, SettingsService)
-  {
+  function FooseyService($http, SettingsService) {
     return {
-      addGame           : addGame,
-      addPlayer         : addPlayer,
-      addLeague         : addLeague,
-      editGame          : editGame,
-      editPlayer        : editPlayer,
-      getAllPlayers     : getAllPlayers,
-      getPlayer         : getPlayer,
-      getPlayersByID    : getPlayersByID,
-      getPlayerGames    : getPlayerGames,
-      getHistory        : getHistory,
-      getAllGames       : getAllGames,
-      getGame           : getGame,
-      getGamesByID      : getGamesByID,
-      getGames          : getGames,
-      getEloHistory     : getEloHistory,
-      getBadges         : getBadges,
-      getLeague         : getLeague,
-      info              : info,
-      removeGame        : removeGame,
-      update            : update
+      addGame: addGame,
+      addPlayer: addPlayer,
+      addLeague: addLeague,
+      editGame: editGame,
+      editPlayer: editPlayer,
+      getAllPlayers: getAllPlayers,
+      getPlayer: getPlayer,
+      getPlayersByID: getPlayersByID,
+      getPlayerGames: getPlayerGames,
+      getHistory: getHistory,
+      getAllGames: getAllGames,
+      getGame: getGame,
+      getGamesByID: getGamesByID,
+      getGames: getGames,
+      getEloHistory: getEloHistory,
+      getBadges: getBadges,
+      getLeague: getLeague,
+      info: info,
+      removeGame: removeGame,
+      update: update
     };
 
     function url() {
@@ -59,10 +58,10 @@
     // leagueID is also optional
     function getAllPlayers(filter, leagueID) {
       var id = leagueID ? leagueID : SettingsService.league.leagueID;
-      return $http.get(url() + id + '/players').then(function(response) {
+      return $http.get(url() + id + '/players').then(function (response) {
         response.data = _.sortBy(response.data, 'displayName');
         if (!filter) return response.data;
-        response = _.filter(response.data, function(player) {
+        response = _.filter(response.data, function (player) {
           return player.active;
         });
         return response;
@@ -130,7 +129,7 @@
 
     function getEloHistory(playerID, limit) {
       return $http.get(url() + SettingsService.league.leagueID + '/stats/elo/' + playerID + (limit ? '?limit=' + limit : '')).then(function (response) {
-        _.each(response.data, function(point) {
+        _.each(response.data, function (point) {
           point.date = moment.unix(point.timestamp).format("MM/DD");
         });
         return response;

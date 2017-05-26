@@ -1,4 +1,4 @@
-(function() {
+(function () {
   angular
     .module('foosey.leagues', [])
     .component('leagues', {
@@ -9,8 +9,7 @@
       }
     });
 
-  function controller(SettingsService, PlayerService)
-  {
+  function controller(SettingsService, PlayerService) {
     var $ctrl = this;
 
     $ctrl.settings = SettingsService;
