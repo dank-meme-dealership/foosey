@@ -545,7 +545,7 @@ def elo_change(player_id, game_id, league_id)
                        AND e.LeagueID = :league_id
                        AND g.LeagueID = :league_id
                        AND g.Timestamp <= :timestamp
-                       ORDER BY g.Timestamp DESC
+                       ORDER BY g.Timestamp DESC, g.GameID DESC
                        LIMIT 2',
                       player_id, league_id, timestamp).flatten
 
