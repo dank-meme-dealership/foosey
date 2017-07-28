@@ -1,0 +1,73 @@
+table {
+  margin: 10px;
+}
+
+th {
+  cursor: pointer;
+}
+
+/* Doesn't work like I want it to */
+/* It does look better though ¯\_(ツ)_/¯ */
+progress {
+  background: white;
+}
+
+input {
+  width: 50px;
+  margin: 10px;
+  text-align: center;
+  border: 1px solid #dfdfdf;
+}
+
+.elo-review-container h2, h3 {
+  margin: 3px;
+}
+
+.elo-review-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 650px;
+}
+
+.elo-review {
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.player-row td {
+  border: 1px solid black;
+  padding: 5px;
+  width: 150px;
+  text-align: center;
+}
+
+.light-text {
+  color: #a2a2a2;
+}
+
+tr.player-1 { background: #92c3ff; }
+tr.player-2 { background: #ff9abb; }
+tr.player-3 { background: #b5ff80; }
+tr.player-4 { background: #ffed61; }
+tr.player-8 { background: #ffd6a2; }
+tr.player-9 { background: #a981ff; }
+tr.player-10 { background: #8cffce; }
+tr.player-12 { background: #84a1ff; }
+tr.player-13 { background: #3cf8ff; }
+tr.player-14 { background: #ffa05c; }
+tr.player-18 { background: #ff5a8d; }
+tr.player-19 { background: #ff9c1c; }
+tr.player-21 { background: #fffce1; }
+tr.player-22 { background: #e3fffd; }
+tr.player-35 { background: #c66f5a; }
+tr.player-37 { background: #50ff81; }
+tr.player-95 { background: #ffb5e7; }
+tr.player-319 { background: #7be0ff; }
+tr.player-x { background: #27ffa9; }
+tr.player-y { background: #a2ff2d; }
+tr.player-z { background: #b45bff; }
+

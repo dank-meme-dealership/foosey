@@ -1,0 +1,30 @@
+<div class="elo-review-container">
+  <h2>WhiteCloud Foosey Elo</h2>
+  <h3>Games Counted: {{$ctrl.gameIndex}}</h3>
+
+  <p class="light-text">This experiment will show you how the elo ratings moved over time for every player, you can adjust the settings if you'd like, these defaults just produce an interesting result.</p>
+
+  <div>
+    Minimum Games Required: <input class="wait-time" type="text" ng-model="$ctrl.MIN_QUALIFIED" placeholder="0" ng-disabled="$ctrl.gameIndex < $ctrl.allGames.length">
+  </div>
+
+  <div>
+    Delay (ms): <input class="wait-time" type="text" ng-model="$ctrl.DELAY" placeholder="0">
+    <button ng-click="$ctrl.init()" ng-disabled="$ctrl.gameIndex < $ctrl.allGames.length">Go {{ $ctrl.players.length ? 'Again' : '' }}</button>
+  </div>
+
+  <table ng-show="$ctrl.players.length">
+    <tr>
+      <th ng-click="$ctrl.changeSort('name')">Name</th>
+      <th ng-click="$ctrl.changeSort('elo')">Elo</th>
+      <th ng-click="$ctrl.changeSort('games')">Games Played</th>
+      <th ng-click="$ctrl.changeSort('elo')">Relative Skill</th>
+    </tr>
+    <tr class="player-row player-{{player.playerID}}" ng-repeat="player in $ctrl.players">
+      <td ng-bind="player.name"></td>
+      <td ng-bind="player.elo"></td>
+      <td ng-bind="player.games"></td>
+      <td><progress max="{{$ctrl.maxSkill}}" value="{{player.skill}}"></progress></td>
+    </tr>
+  </table>
+</div>
