@@ -13,10 +13,19 @@ progress {
 }
 
 input {
-  width: 50px;
   margin: 10px;
   text-align: center;
   border: 1px solid #dfdfdf;
+}
+
+input[type="text"] {
+  width: 50px;
+}
+
+button {
+  border: 1px solid #ccc;
+  background: #c9d5e4;
+  border-radius: 5px;
 }
 
 .elo-review-container h2, h3 {
@@ -47,6 +56,12 @@ input {
 
 .light-text {
   color: #a2a2a2;
+}
+
+.error-message {
+  padding: 20px;
+  color: red;
+  font-weight: bold;
 }
 
 tr.player-1 { background: #92c3ff; }

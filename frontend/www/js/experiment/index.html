@@ -9,14 +9,17 @@
   <link href="style.css" rel="stylesheet">
   <link href="components/elo-review/elo-review.css" rel="stylesheet">
 
+  <!--Share some libs with the foosey app-->
   <script src="../../lib/angular/angular.min.js"></script>
   <script src="../../lib/lodash/lodash.min.js"></script>
 
-  <script src="foosey-review.app.js"></script>
+  <!--This tool-->
+  <script src="foosey-experiments.app.js"></script>
+  <script src="common/services/foosey-limited-api.service.js"></script>
   <script src="components/elo-review/elo-review.component.js"></script>
-  <script src="components/elo-review/elo-review.constant.js"></script>
+
 </head>
-<body ng-app="foosey.review">
+<body ng-app="foosey.experiments">
   <div class="review-container">
     <elo-review></elo-review>
   </div>

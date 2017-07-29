@@ -4,16 +4,26 @@
 
   <p class="light-text">This experiment will show you how the elo ratings moved over time for every player, you can adjust the settings if you'd like, these defaults just produce an interesting result.</p>
 
-  <div>
-    Minimum Games Required: <input class="wait-time" type="text" ng-model="$ctrl.MIN_QUALIFIED" placeholder="0" ng-disabled="$ctrl.gameIndex < $ctrl.allGames.length">
+  <!--Form-->
+  <div class="form">
+    <div>
+      League ID: <input class="wait-time" type="text" ng-model="$ctrl.options.leagueID">
+    </div>
+
+    <label><input type="checkbox" ng-model="$ctrl.options.hideActive">Hide inactive players</label>
+
+    <div>
+      Minimum Games Required: <input class="wait-time" type="text" ng-model="$ctrl.options.minQualified">
+    </div>
+
+    <div>
+      Delay (ms): <input class="wait-time" type="text" ng-model="$ctrl.options.delay">
+      <button ng-click="$ctrl.runExperiment()" ng-disabled="$ctrl.loading">Run Experiment</button>
+    </div>
   </div>
 
-  <div>
-    Delay (ms): <input class="wait-time" type="text" ng-model="$ctrl.DELAY" placeholder="0">
-    <button ng-click="$ctrl.init()" ng-disabled="$ctrl.gameIndex < $ctrl.allGames.length">Go {{ $ctrl.players.length ? 'Again' : '' }}</button>
-  </div>
-
-  <table ng-show="$ctrl.players.length">
+  <!--Not laoding, no errors, have players, let's show some shiz-->
+  <table ng-show="!$ctrl.loading && !$ctrl.error && $ctrl.players.length">
     <tr>
       <th ng-click="$ctrl.changeSort('name')">Name</th>
       <th ng-click="$ctrl.changeSort('elo')">Elo</th>
@@ -27,4 +37,10 @@
       <td><progress max="{{$ctrl.maxSkill}}" value="{{player.skill}}"></progress></td>
     </tr>
   </table>
+
+  <!--Message to user-->
+  <div ng-class="{'error-message': $ctrl.notice.error}" ng-bind="$ctrl.notice.message" ng-if="$ctrl.notice.message"></div>
+
+  <!--Loader-->
+  <div class="loader" ng-if="$ctrl.loading"></div>
 </div>
