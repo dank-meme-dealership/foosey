@@ -64,25 +64,25 @@ button {
   font-weight: bold;
 }
 
+tr.player-0 { background: #b45bff; }
 tr.player-1 { background: #92c3ff; }
 tr.player-2 { background: #ff9abb; }
 tr.player-3 { background: #b5ff80; }
 tr.player-4 { background: #ffed61; }
-tr.player-8 { background: #ffd6a2; }
-tr.player-9 { background: #a981ff; }
-tr.player-10 { background: #8cffce; }
-tr.player-12 { background: #84a1ff; }
-tr.player-13 { background: #3cf8ff; }
-tr.player-14 { background: #ffa05c; }
-tr.player-18 { background: #ff5a8d; }
-tr.player-19 { background: #ff9c1c; }
-tr.player-21 { background: #fffce1; }
-tr.player-22 { background: #e3fffd; }
-tr.player-35 { background: #c66f5a; }
-tr.player-37 { background: #50ff81; }
-tr.player-95 { background: #ffb5e7; }
-tr.player-319 { background: #7be0ff; }
-tr.player-x { background: #27ffa9; }
-tr.player-y { background: #a2ff2d; }
-tr.player-z { background: #b45bff; }
+tr.player-5 { background: #ffd6a2; }
+tr.player-6 { background: #a981ff; }
+tr.player-7 { background: #8cffce; }
+tr.player-8 { background: #969eba; }
+tr.player-9 { background: #3cf8ff; }
+tr.player-10 { background: #ffa05c; }
+tr.player-11 { background: #ff5a8d; }
+tr.player-12 { background: #ff9c1c; }
+tr.player-13 { background: #fffce1; }
+tr.player-14 { background: #e3fffd; }
+tr.player-15 { background: #c66f5a; }
+tr.player-16 { background: #50ff81; }
+tr.player-17 { background: #ffb5e7; }
+tr.player-18 { background: #7be0ff; }
+tr.player-19 { background: #27ffa9; }
+tr.player-20 { background: #a2ff2d; }
 

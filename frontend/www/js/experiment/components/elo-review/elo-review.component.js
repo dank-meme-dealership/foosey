@@ -127,8 +127,7 @@
         }
       });
 
-      // filter out indices in the array that would be blank
-      // (most likely deleted games), and then sort by timestamp
+      // filter out any games that don't have any eligible players and then sort by timestamp
       return _.sortBy(_.filter(games, 'players.length'), 'timestamp');
     }
 
@@ -145,7 +144,14 @@
 
         // doesn't exist yet, so just add this player now with the current elo
         if (index < 0) {
-          $ctrl.players.push(_.extend(player, {name: $ctrl.playerNameLookUp[player.playerID], games: 1}));
+          $ctrl.players.push(_.extend(player, {
+            name: $ctrl.playerNameLookUp[player.playerID],
+            games: 1,
+
+            // we only have 21 unique colors in elo-review.css
+            // feel free to add more and then update this value
+            index: $ctrl.players.length % 21
+          }));
         }
 
         // does exist, update the elo
@@ -159,7 +165,7 @@
 
       setBars();
 
-      // then wait DELAY and do the next game
+      // then wait the delay amount and do the next game
       if ($ctrl.gameIndex < $ctrl.allGames.length) {
         $ctrl.nextScheduled = $timeout(setNextGame, $ctrl.options.delay);
       }
@@ -179,7 +185,7 @@
     }
 
     /**
-     * Resert some things :)
+     * Reset some things :)
      */
     function reset() {
       $ctrl.notice = {};

@@ -2,7 +2,8 @@
   <h2>WhiteCloud Foosey Elo</h2>
   <h3>Games Counted: {{$ctrl.gameIndex}}</h3>
 
-  <p class="light-text">This experiment will show you how the elo ratings moved over time for every player, you can adjust the settings if you'd like, these defaults just produce an interesting result.</p>
+  <p class="light-text">This experiment will show you how the elo ratings moved over time for every player, you can
+    adjust the settings if you'd like, these defaults just produce an interesting result.</p>
 
   <!--Form-->
   <div class="form">
@@ -10,7 +11,9 @@
       League ID: <input class="wait-time" type="text" ng-model="$ctrl.options.leagueID">
     </div>
 
-    <label><input type="checkbox" ng-model="$ctrl.options.hideActive">Hide inactive players</label>
+    <label>
+      <input type="checkbox" ng-model="$ctrl.options.hideActive">Hide inactive players
+    </label>
 
     <div>
       Minimum Games Required: <input class="wait-time" type="text" ng-model="$ctrl.options.minQualified">
@@ -22,7 +25,7 @@
     </div>
   </div>
 
-  <!--Not laoding, no errors, have players, let's show some shiz-->
+  <!--Not loading, no errors, have players, let's show some shiz-->
   <table ng-show="!$ctrl.loading && !$ctrl.error && $ctrl.players.length">
     <tr>
       <th ng-click="$ctrl.changeSort('name')">Name</th>
@@ -30,16 +33,19 @@
       <th ng-click="$ctrl.changeSort('games')">Games Played</th>
       <th ng-click="$ctrl.changeSort('elo')">Relative Skill</th>
     </tr>
-    <tr class="player-row player-{{player.playerID}}" ng-repeat="player in $ctrl.players">
+    <tr class="player-row player-{{player.index}}" ng-repeat="player in $ctrl.players">
       <td ng-bind="player.name"></td>
       <td ng-bind="player.elo"></td>
       <td ng-bind="player.games"></td>
-      <td><progress max="{{$ctrl.maxSkill}}" value="{{player.skill}}"></progress></td>
+      <td>
+        <progress max="{{$ctrl.maxSkill}}" value="{{player.skill}}"></progress>
+      </td>
     </tr>
   </table>
 
   <!--Message to user-->
-  <div ng-class="{'error-message': $ctrl.notice.error}" ng-bind="$ctrl.notice.message" ng-if="$ctrl.notice.message"></div>
+  <div ng-class="{'error-message': $ctrl.notice.error}" ng-bind="$ctrl.notice.message"
+       ng-if="$ctrl.notice.message"></div>
 
   <!--Loader-->
   <div class="loader" ng-if="$ctrl.loading"></div>
