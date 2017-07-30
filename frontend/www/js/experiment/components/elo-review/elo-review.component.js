@@ -15,7 +15,7 @@
 
     // default form actions
     $ctrl.options = {
-      hideActive: false,
+      hideActive: true,
       delay: 70,
       minQualified: 100,
       sortBy: 'elo',
