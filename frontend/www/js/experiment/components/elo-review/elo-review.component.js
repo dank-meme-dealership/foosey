@@ -41,7 +41,7 @@
 
         // if there are players, get the games
         if (_.valuesIn($ctrl.playerNameLookUp).length) {
-          notify('Fetching games...');
+          notify('Fetching elo history...');
           api.getAllEloHistory($ctrl.options.leagueID).then(function (eloStats) {
             $ctrl.allGames = fixGameData(eloStats.data);
 
@@ -51,7 +51,7 @@
               $ctrl.loading = false;
               setNextGame();
             } else {
-              notify('No games for this league, does it exist?', true);
+              notify('No games for this league, try reducing the minimum number of games required.', true);
             }
           });
         } else {
