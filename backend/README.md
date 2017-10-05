@@ -19,3 +19,6 @@ Foosey uses the following gems:
 - `sinatra-namespace`
 - `sinatra-reloader`
 - `sqlite3`
+
+## Setting up the db locally for dev purposes
+To set up the database, navigate in a terminal to the backend directory. Download the database data by running `./dbFresh.sh`. Then get the database running by typing `ruby foosey.rb`. 
