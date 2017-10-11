@@ -1,177 +1,198 @@
 a.tab-item {
-  color: #606B84;
-}
-a.tab-item.tab-item-active  {
-  color: #004BAB;
-}
-.app-container {
-  height: 100%;
-  max-width: 1024px;
-  margin: auto;
-}
-.background {
-  background: #45526D;
-}
-.background-alt {
-  background-color: #0E181D;
-}
-.background-foos {
-  background: url(../img/foos.jpg) no-repeat center;
-  background-size: cover;
-  color: #FFFFFF;
-}
-.background-menu {
-  background: #333B44;
-}
-.bar.bar-stable {
-  background-color : #ffffff;
-}
-.bar-subheader {
-  padding: 0;
-}
-.bold {
-  font-weight: 700;
-}
-.button.button-full.no-margin {
-  margin: 0;
-  border: 0;
-  background-color: #FFF;
-}
-.button.button-positive {
-  background: #3D485F;
-  border-color: #242A38;
-}
-.button.button-positive.activated {
-  background: #373E48;
-  border-color: #242A38;
-}
-.button-large,
-.button-large .icon:before {
-  font-size: 20px !important;
-  margin-right: 2px;
-}
-.card, .list-inset {
-  margin: 10px;
-}
-.card .item.item-input input  {
-  padding-right: 24px;
-}
-.center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.divider {
-  height: 1px;
-  background: #ddd;
-  margin: 7px 0;
-}
-.elo-red {
-  color: red;
-}
-.elo-green {
-  color: green;
-}
-.header-text {
-  font-size: 16px;
-  padding: 7px 5px;
-}
-.highlight  {
-  background: #f5f5dc;
-}
-hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: 1px solid #ccc;
-  padding: 0;
-}
-div.grid-item {
-  margin: 5px;
-  text-align: center;
-}
-input[type=search] {
-  width: 100%;
-  padding: 5px 15px;
-}
-ion-item.item.wrap  {
-  white-space: normal;
-  text-align: center;
-}
-ion-item {
-  cursor: pointer;
-}
-.item-complex .item-content, .item-radio .item-content {
-  padding: 16px;
-}
-.loading-dots {
-  margin: 0px calc((100% - 26px)/2);
-}
-.loading-text {
-  text-align: center;
-  color: white;
-  font-size: 28px;
-  margin-top: 42px;
-}
-.padding-sides {
-  padding: 0 10px;
-}
-.platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button {
-  text-align: center;
-}
-.platform-android .bar-subheader {
-  top:93px !important;
-}
-.space:before {
-  padding-right: 16px;
-}
-.space-around {
-  display: flex;
-  justify-content: space-around;
-}
-.spaced-out {
-  display: flex;
-  justify-content: space-between;
-}
-.dark.spinner svg  {
-  stroke: gray;
-  fill: gray;
-}
-.spinner svg  {
-  stroke: white;
-  fill: white;
-}
-.tab-item.active {
-  font-weight: 500;
-  border-bottom: 3px solid;
-}
-.tab-title {
-  font-size: 11px;
-}
-.tabs {
-  padding-top: 1px 0;
-}
-.icon-pulling {
-  color: white;
-}
-.text-pulling {
-  color: white;
-}
-.title {
-  font-weight: 500;
-  font-size: 17px;
-}
-
-/*OVERRIDES*/
-
-.button.button-clear.activated {
-  background: #FFF;
-  border-color: transparent;
-  opacity: 1;
-}
-.popup-container .popup  {
-  background-color: rgba(255, 255, 255, 1);
-}
-.popup-body  {
-  text-align: center;
-}
+    color: #E3C598;
+  }
+  .card,
+  .item-complex .item-content{
+    background-color: #F7EFD4;
+  }
+  a.tab-item.tab-item-active  {
+    color: #F59A44;
+  }
+  .background {
+    background: #472C25;
+  }
+  .background-alt {
+    background-color: #d4c2b2;
+  }
+  .background-foos {
+    background: url(../img/foos.jpg) no-repeat center;
+    background-size: cover;
+    color: #FFFFFF;
+  }
+  .card .item{
+    background-color: #F7EFD4;
+  }
+  .background-menu {
+    background: #d4c2b2;
+  }
+  .bar.bar-stable {
+    background-color : #FFFFFF;
+  }
+  .item.item-divider {
+    background-color: #D4C2B2;
+  }
+  .button.button-full.no-margin {
+    margin: 0;
+    border: 0;
+    background-color: #FFF;
+  }
+  .button.button-positive {
+    background: #F7EFD4;
+    border-color: transparent;
+    color: #F59A44;
+  }
+  .positive {
+    color: #F59A44;
+  }
+  .item-select select {
+    background-color: #F7EFD4;
+  }
+  .button.button-positive.activated {
+    background: rgb(202, 195, 172);
+    border-color: transparent;
+    color: rgb(241, 117, 0);
+  }
+  .divider {
+    height: 1px;
+    background: #ddd;
+    margin: 7px 0;
+  }
+  .elo-red {
+    color: red;
+  }
+  .elo-green {
+    color: green;
+  }
+  .highlight  {
+    background: #f5f5dc;
+  }
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    padding: 0;
+  }
+  .loading-text {
+    text-align: center;
+    color: white;
+    font-size: 28px;
+    margin-top: 42px;
+  }
+  .dark.spinner svg  {
+    stroke: gray;
+    fill: gray;
+  }
+  .spinner svg  {
+    stroke: white;
+    fill: white;
+  }
+  .icon-pulling {
+    color: white;
+  }
+  .text-pulling {
+    color: white;
+  }
+  /*common-css*/
+  
+  .app-container {
+    height: 100%;
+    max-width: 1024px;
+    margin: auto;
+  }
+  .bar-subheader {
+    padding: 0;
+  }
+  .bold {
+    font-weight: 700;
+  }
+  .button-large,
+  .button-large .icon:before {
+    font-size: 20px !important;
+    margin-right: 2px;
+  }
+  .card, .list-inset {
+    margin: 10px;
+  }
+  .card .item.item-input input  {
+    padding-right: 24px;
+  }
+  .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .header-text {
+    font-size: 16px;
+    padding: 7px 5px;
+  }
+  div.grid-item {
+    margin: 5px;
+    text-align: center;
+  }
+  input[type=search] {
+    width: 100%;
+    padding: 5px 15px;
+  }
+  ion-item.item.wrap  {
+    white-space: normal;
+    text-align: center;
+  }
+  ion-item {
+    cursor: pointer;
+  }
+  .item-complex .item-content, .item-radio .item-content {
+    padding: 16px;
+  }
+  .loading-dots {
+    margin: 0px calc((100% - 26px)/2);
+  }
+  .title {
+    font-weight: 500;
+    font-size: 17px;
+  }
+  .tab-item.active {
+    font-weight: 500;
+    border-bottom: 3px solid;
+  }
+  .tab-title {
+    font-size: 11px;
+  }
+  .tabs {
+    padding-top: 1px 0;
+  }
+  .padding-sides {
+    padding: 0 10px;
+  }
+  .platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button {
+    text-align: center;
+  }
+  .platform-android .bar-subheader {
+    top:93px !important;
+  }
+  .space:before {
+    padding-right: 16px;
+  }
+  .space-around {
+    display: flex;
+    justify-content: space-around;
+  }
+  .spaced-out {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /*OVERRIDES*/
+  
+  .button.button-clear.activated {
+    background: #FFF;
+    border-color: transparent;
+    opacity: 1;
+  }
+  .popup-container .popup  {
+    background-color: rgba(255, 255, 255, 1);
+  }
+  .popup-body  {
+    text-align: center;
+  }
+  
