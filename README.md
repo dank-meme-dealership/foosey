@@ -1,6 +1,6 @@
 # Foosey
 
-##What is it?
+## What is it?
 
 Foosey is a project for keeping track of the foosball scores at the office.
 
