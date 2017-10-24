@@ -1,7 +1,7 @@
 # foosey API calls
 # for more information see API.md
 
-VERSION = 0.81
+VERSION = 0.85
 
 # returns an api object for game with id game_id
 def api_game(game_id, league_id)
