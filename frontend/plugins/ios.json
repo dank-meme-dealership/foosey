@@ -1,24 +1,30 @@
 {
-    "prepare_queue": {
-        "installed": [],
-        "uninstalled": []
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.matt.foosey"
     },
-    "config_munge": {
-        "files": {}
+    "cordova-plugin-ionic-keyboard": {
+      "PACKAGE_NAME": "com.matt.foosey"
     },
-    "installed_plugins": {
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.matt.foosey"
-        },
-        "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "com.matt.foosey"
-        },
-        "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.matt.foosey"
-        },
-        "org.apache.cordova.statusbar": {
-            "PACKAGE_NAME": "com.matt.foosey"
-        }
+    "cordova-plugin-ionic-webview": {
+      "PACKAGE_NAME": "com.matt.foosey"
     },
-    "dependent_plugins": {}
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.matt.foosey"
+    },
+    "ionic-plugin-keyboard": {
+      "PACKAGE_NAME": "com.matt.foosey"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.matt.foosey"
+    }
+  },
+  "dependent_plugins": {}
 }

@@ -2,8 +2,28 @@
 <html>
   <head>
 
+    <!--HACK REMOVE THIS SHIT-->
+    <style>
+      .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) {
+        height: calc(44px + constant(safe-area-inset-top)) !important;
+      }
+
+
+      .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > * {
+        margin-top: constant(safe-area-inset-top) !important;
+      }
+
+      div.tab-nav.tabs {
+        height: calc(49px + constant(safe-area-inset-bottom)) !important;
+      }
+
+      ion-content.padding.scroll-content.ionic-scroll.has-header.has-tabs {
+        top: calc(64px + constant(safe-area-inset-top)) !important;
+      }
+    </style>
+
     <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, width=device-width, height=device-height, viewport-fit=cover">
 
     <!-- remove safari web elements if saved to homescreen -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,7 +38,7 @@
     <title>Foosey</title>
 
     <!-- CSS -->
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="lib/ionic/css/ionic.min.css" rel="stylesheet">
     <link href="lib/angular-material/angular-material.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="css/rotate.css" rel="stylesheet">

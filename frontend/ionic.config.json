@@ -1,4 +1,17 @@
 {
   "name": "Foosey",
-  "app_id": "48a498ec"
+  "app_id": "48a498ec",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic1",
+  "gulp": {
+    "enabled": false
+  },
+  "watchPatterns": [
+    "scss/**/*",
+    "www/**/*",
+    "!www/lib/**/*",
+    "!www/**/*.map"
+  ]
 }
