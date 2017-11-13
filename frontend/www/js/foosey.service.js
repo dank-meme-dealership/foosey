@@ -28,7 +28,8 @@
     };
 
     function url() {
-      return SettingsService.useLocalDb ? "http://localhost:4005/v1/" : "http://api.foosey.futbol/v1/";
+      return "http://api.foosey.futbol/v1/";
+      // return "http://localhost:4005/v1/";
     }
 
     function addGame(game) {
