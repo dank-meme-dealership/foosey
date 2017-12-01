@@ -831,6 +831,9 @@ def recalc_elo(timestamp, league_id)
     # temporary array of hashes to keep track of player elo
     elos = {}
     ladder = {}
+    # find the last rung on the ladder so we can set any future players to be on the bottom of the ladder
+    last_rung = db.get_first_value('select Ladder from EloHistory where Ladder is not null order by Ladder desc limit 1')
+    last_rung ||= 0
     player_ids(league_id).each do |player_id|
       elos[player_id] = db.get_first_value('SELECT Elo FROM EloHistory e
                                             JOIN Game g USING (GameID, PlayerID)
@@ -842,7 +845,7 @@ def recalc_elo(timestamp, league_id)
                                             LIMIT 1',
                                            player_id, league_id, timestamp)
 
-      ladder[player_id] = db.get_first_value('SELECT Elo FROM EloHistory e
+      ladder[player_id] = db.get_first_value('SELECT Ladder FROM EloHistory e
                                             JOIN Game g USING (GameID, PlayerID)
                                             WHERE PlayerID = :player_id
                                             AND e.LeagueID = :league_id
@@ -854,7 +857,10 @@ def recalc_elo(timestamp, league_id)
 
       # in case they had no games before timestamp
       elos[player_id] ||= 1200
-      ladder[player_id] ||= 1
+      if ladder[player_id] == nil
+        ladder[player_id] = last_rung + 1
+        last_rung += 1
+      end
     end
 
     # for each game
@@ -869,13 +875,15 @@ def recalc_elo(timestamp, league_id)
                                             WHERE GameID = :game_id
                                             ORDER BY Score', game_id))
 
-      # calculate the elo change
+      # calculate the leaderboard rankings
       case game.length
-      when 2
+        when 2
+          score_a = game[0]['Score']
+          score_b = game[1]['Score']
+
+        # elo
         rating_a = elos[game[0]['PlayerID']]
         rating_b = elos[game[1]['PlayerID']]
-        score_a = game[0]['Score']
-        score_b = game[1]['Score']
       when 4
         rating_a = ((elos[game[0]['PlayerID']] +
                      elos[game[1]['PlayerID']]) / 2).round
@@ -899,10 +907,11 @@ def recalc_elo(timestamp, league_id)
         when 4
           elos[player['PlayerID']] += idx < 2 ? delta_a : delta_b
         end
+
         db.execute 'INSERT INTO EloHistory
                     VALUES (:game_id, :player_id, :league_id, :elo, :ladder)',
                    game_id, player['PlayerID'], league_id,
-                   elos[player['PlayerID']], 1
+                   elos[player['PlayerID']], ladder[player['PlayerID']]
       end
     end
 
