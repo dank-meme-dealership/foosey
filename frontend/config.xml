@@ -89,10 +89,11 @@
     <icon src="resources/ios/icon/icon-small@3x.png" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <allow-navigation href="http://172.20.10.9:8100" />
-    <engine name="ios" spec="^4.5.3" />
+    <engine name="ios" spec="^4.5.4" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <plugin name="cordova-plugin-device" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.4" />
-    <plugin name="cordova-plugin-statusbar" spec="git+https://github.com/apache/cordova-plugin-statusbar.git" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.3.0" />
+    <allow-navigation href="http://10.121.63.58:8100" />
 </widget>
