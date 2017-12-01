@@ -57,6 +57,8 @@ def game_to_s(game_id, date, league_id)
 end
 
 def message_slack(text, attach, url)
+  return;
+
   data = {
     username: 'Foosey',
     channel: '#foosey',
@@ -828,6 +830,7 @@ def recalc_elo(timestamp, league_id)
 
     # temporary array of hashes to keep track of player elo
     elos = {}
+    ladder = {}
     player_ids(league_id).each do |player_id|
       elos[player_id] = db.get_first_value('SELECT Elo FROM EloHistory e
                                             JOIN Game g USING (GameID, PlayerID)
@@ -839,8 +842,19 @@ def recalc_elo(timestamp, league_id)
                                             LIMIT 1',
                                            player_id, league_id, timestamp)
 
+      ladder[player_id] = db.get_first_value('SELECT Elo FROM EloHistory e
+                                            JOIN Game g USING (GameID, PlayerID)
+                                            WHERE PlayerID = :player_id
+                                            AND e.LeagueID = :league_id
+                                            AND g.LeagueID = :league_id
+                                            AND Timestamp <= :timestamp
+                                            ORDER BY Timestamp DESC, GameID DESC
+                                            LIMIT 1',
+                                          player_id, league_id, timestamp)
+
       # in case they had no games before timestamp
       elos[player_id] ||= 1200
+      ladder[player_id] ||= 1
     end
 
     # for each game
@@ -886,9 +900,9 @@ def recalc_elo(timestamp, league_id)
           elos[player['PlayerID']] += idx < 2 ? delta_a : delta_b
         end
         db.execute 'INSERT INTO EloHistory
-                    VALUES (:game_id, :player_id, :league_id, :elo)',
+                    VALUES (:game_id, :player_id, :league_id, :elo, :ladder)',
                    game_id, player['PlayerID'], league_id,
-                   elos[player['PlayerID']]
+                   elos[player['PlayerID']], 1
       end
     end
 
