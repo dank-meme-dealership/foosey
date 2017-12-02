@@ -23,6 +23,7 @@
       loggedIn: userIsLoggedIn(),
       noGamePlayers: setting('noGamePlayers', true),
       playerID: localStorage.getObject('playerID', undefined),
+      rankingLadder: localStorage.getObject('rankingLadder', false),
       recentGames: localStorage.getObject('recentGames', 30),
       showBadges: setting('showBadges', true),
       showElo: setting('showElo', true),

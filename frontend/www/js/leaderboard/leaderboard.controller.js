@@ -76,8 +76,8 @@
       for (var i = 0; i < players.length; i++) {
         // qualified, not snoozin
         if (players[i].qualified && !players[i].snoozin) {
-          // same rank if same elo
-          if (eloRank.length > 0 && players[i].elo === _.last(eloRank).elo)
+          // same rank if same elo (don't do this for ladder ranking, no ties there)
+          if (eloRank.length > 0 && players[i].elo === _.last(eloRank).elo && !SettingsService.rankingLadder)
             players[i].rank = _.last(eloRank).rank;
           else
             players[i].rank = rank;
@@ -108,7 +108,12 @@
     }
 
     function sortElos(a, b) {
-      return b.elo - a.elo;
+      if (SettingsService.rankingLadder) {
+        return a.ladder - b.ladder;
+      }
+      else {
+        return b.elo - a.elo;
+      }
     }
 
     function sortWinRate(a, b) {

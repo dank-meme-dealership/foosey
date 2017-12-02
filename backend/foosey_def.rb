@@ -942,19 +942,20 @@ def recalc_elo(timestamp, league_id)
       end
     end
 
+    # TODO: Talk about if this is even necessary
     # clean up ladder
     # set inactive players to null and shift everyone else so no gaps
-    next_rung = 1
-    ladder = ladder.sort_by { |_key, ladder_value| ladder_value }.to_h
-    ladder.each do |player_id, _ladder_value|
-      active = db.get_first_value('SELECT Active FROM Player WHERE PlayerID = :player_id', player_id)
-      if active == 1
-        ladder[player_id] = next_rung
-        next_rung += 1
-      else
-        ladder[player_id] = nil
-      end
-    end
+    # next_rung = 1
+    # ladder = ladder.sort_by { |_key, ladder_value| ladder_value }.to_h
+    # ladder.each do |player_id, _ladder_value|
+    #   active = db.get_first_value('SELECT Active FROM Player WHERE PlayerID = :player_id', player_id)
+    #   if active == 1
+    #     ladder[player_id] = next_rung
+    #     next_rung += 1
+    #   else
+    #     ladder[player_id] = nil
+    #   end
+    # end
 
     # update the player table
     player_ids(league_id).each do |player_id|
