@@ -57,8 +57,6 @@ def game_to_s(game_id, date, league_id)
 end
 
 def message_slack(text, attach, url)
-  return;
-
   data = {
     username: 'Foosey',
     channel: '#foosey',
@@ -832,7 +830,9 @@ def recalc_elo(timestamp, league_id)
     elos = {}
     ladder = {}
     # find the last rung on the ladder so we can set any future players to be on the bottom of the ladder
-    last_rung = db.get_first_value('select Ladder from EloHistory where Ladder is not null order by Ladder desc limit 1')
+    last_rung = db.get_first_value('SELECT Ladder FROM EloHistory
+                                    WHERE Ladder is not null
+                                    ORDER by Ladder desc limit 1')
     last_rung ||= 0
     player_ids(league_id).each do |player_id|
       elos[player_id] = db.get_first_value('SELECT Elo FROM EloHistory e
@@ -853,11 +853,11 @@ def recalc_elo(timestamp, league_id)
                                             AND Timestamp <= :timestamp
                                             ORDER BY Timestamp DESC, GameID DESC
                                             LIMIT 1',
-                                          player_id, league_id, timestamp)
+                                             player_id, league_id, timestamp)
 
       # in case they had no games before timestamp
       elos[player_id] ||= 1200
-      if ladder[player_id] == nil
+      if ladder[player_id].nil?
         ladder[player_id] = last_rung + 1
         last_rung += 1
       end
@@ -877,13 +877,40 @@ def recalc_elo(timestamp, league_id)
 
       # calculate the leaderboard rankings
       case game.length
-        when 2
-          score_a = game[0]['Score']
-          score_b = game[1]['Score']
+      when 2
+        score_a = game[0]['Score']
+        score_b = game[1]['Score']
 
         # elo
         rating_a = elos[game[0]['PlayerID']]
         rating_b = elos[game[1]['PlayerID']]
+
+        # ladder
+        old_a = ladder[game[0]['PlayerID']]
+        old_b = ladder[game[1]['PlayerID']]
+        ladder_jump = ((old_a - old_b).abs / 2.0).ceil
+
+        # player a is lower on the ladder and they won
+        if old_a > old_b && score_a > score_b
+          new_a = ladder[game[0]['PlayerID']] - ladder_jump
+          ladder.each do |player_id, ladder_value|
+            if ladder_value < old_a && ladder_value >= new_a
+              ladder[player_id] += 1
+            end
+          end
+          ladder[game[0]['PlayerID']] = new_a
+        end
+
+        # player b is lower on the ladder and they won
+        if old_b > old_a && score_b > score_a
+          new_b = ladder[game[1]['PlayerID']] - ladder_jump
+          ladder.each do |player_id, ladder_value|
+            if ladder_value < old_b && ladder_value >= new_b
+              ladder[player_id] += 1
+            end
+          end
+          ladder[game[1]['PlayerID']] = new_b
+        end
       when 4
         rating_a = ((elos[game[0]['PlayerID']] +
                      elos[game[1]['PlayerID']]) / 2).round
@@ -915,10 +942,26 @@ def recalc_elo(timestamp, league_id)
       end
     end
 
-    elos.each do |player_id, elo|
-      db.execute 'UPDATE Player SET Elo = :elo
+    # clean up ladder
+    # set inactive players to null and shift everyone else so no gaps
+    next_rung = 1
+    ladder = ladder.sort_by { |_key, ladder_value| ladder_value }.to_h
+    ladder.each do |player_id, _ladder_value|
+      active = db.get_first_value('SELECT Active FROM Player WHERE PlayerID = :player_id', player_id)
+      if active == 1
+        ladder[player_id] = next_rung
+        next_rung += 1
+      else
+        ladder[player_id] = nil
+      end
+    end
+
+    # update the player table
+    player_ids(league_id).each do |player_id|
+      db.execute 'UPDATE Player
+                  SET Elo = :elo, Ladder = :ladder
                   WHERE PlayerID = :player_id',
-                 elo, player_id
+                 elos[player_id], ladder[player_id], player_id
     end
 
     # end transaction
