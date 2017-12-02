@@ -50,13 +50,13 @@
 
           // active players
           service.active = _.filter(service.all, function (player) {
-            return player.active
+            return player.active;
           });
           localStorage.setObject('activePlayers', service.active);
 
           // inactive players
           service.inactive = _.filter(service.all, function (player) {
-            return !player.active
+            return !player.active;
           });
           localStorage.setObject('inactivePlayers', service.inactive);
 

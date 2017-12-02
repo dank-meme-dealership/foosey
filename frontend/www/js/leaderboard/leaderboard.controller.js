@@ -74,10 +74,15 @@
 
       // set rank and if they're qualified
       for (var i = 0; i < players.length; i++) {
-        // qualified, not snoozin
-        if (players[i].qualified && !players[i].snoozin) {
-          // same rank if same elo (don't do this for ladder ranking, no ties there)
-          if (eloRank.length > 0 && players[i].elo === _.last(eloRank).elo && !SettingsService.rankingLadder)
+        // ladder mode just has one kind of ranking
+        if (SettingsService.rankingLadder) {
+          players[i].rank = rank++;
+          eloRank.push(players[i]);
+        }
+        // elo ratings for qualified, not snoozin
+        else if (players[i].qualified && !players[i].snoozin) {
+          // same rank if same elo
+          if (eloRank.length > 0 && players[i].elo === _.last(eloRank).elo)
             players[i].rank = _.last(eloRank).rank;
           else
             players[i].rank = rank;
