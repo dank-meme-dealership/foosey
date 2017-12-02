@@ -9,7 +9,6 @@ $stdout.sync = true
 script_dir = File.dirname(__FILE__).to_s
 load "#{script_dir}/foosey.rb"
 
-
 league_name = 'warcraft2'
 display_name = 'Warcraft 2'
 
@@ -74,7 +73,7 @@ games.each do |game|
     end
     timestamp = DateTime.rfc3339(game['ctime']).to_time.to_i
 
-    unless outcome.all? {|k, v| !v.nil? && !k.nil?}
+    unless outcome.all? { |k, v| !v.nil? && !k.nil? }
       # puts "SKIP: Game: #{added_games + skipped_games} id: #{game['_id']} p1: #{p1} p2: #{p2} p3: #{p3} p4: #{p4}"
       added_games -= 1
       skipped_games += 1
@@ -106,4 +105,3 @@ end
 print "\n"
 
 "Finished. #{total_players} players and #{total_games} games added"
-
