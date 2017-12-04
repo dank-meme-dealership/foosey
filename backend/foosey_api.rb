@@ -80,6 +80,7 @@ def api_player(player_id, extended, league_id)
       gamesPlayed: player['GamesPlayed'],
       ladder: player['Ladder'],
       dailyChange: daily_elo_change(player['PlayerID'], league_id),
+      # ladderMove: daily_ladder_move(player['PlayerID'], league_id),
       admin: player['Admin'] == 1,
       active: player['Active'] == 1,
       qualified: player['GamesPlayed'] >= 10,

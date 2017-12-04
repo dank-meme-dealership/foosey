@@ -57,7 +57,6 @@ def game_to_s(game_id, date, league_id)
 end
 
 def message_slack(text, attach, url)
-  return
   data = {
     username: 'Foosey',
     channel: '#foosey',
@@ -434,6 +433,40 @@ def daily_elo_change(player_id, league_id)
     # corner cases
     return 0 unless today
     return today - 1200 unless prev
+
+    return today - prev
+  end
+end
+
+def daily_ladder_move(player_id, league_id)
+  database do |db|
+    midnight = DateTime.new(Time.now.year, Time.now.month, Time.now.day,
+                            0, 0, 0, '-6').to_time.to_i
+    prev = db.get_first_value('SELECT e.Ladder FROM EloHistory e
+                               JOIN Game g
+                               USING (GameID, PlayerID)
+                               WHERE e.PlayerID = :player_id
+                               AND e.LeagueID = :league_id
+                               AND g.LeagueID = :league_id
+                               AND g.Timestamp < :midnight
+                               ORDER BY g.Timestamp DESC
+                               LIMIT 1',
+                              player_id, league_id, midnight)
+
+    today = db.get_first_value('SELECT e.Ladder FROM EloHistory e
+                                JOIN Game g
+                                USING (GameID, PlayerID)
+                                WHERE e.PlayerID = :player_id
+                                AND e.LeagueID = :league_id
+                                AND g.LeagueID = :league_id
+                                AND g.Timestamp >= :midnight
+                                ORDER BY g.Timestamp DESC
+                                LIMIT 1',
+                               player_id, league_id, midnight)
+
+    # corner cases
+    return 0 unless today
+    return 0 unless prev
 
     return today - prev
   end
