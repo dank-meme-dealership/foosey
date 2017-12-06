@@ -1,7 +1,7 @@
 /*fixes bar on iPhone X*/
 .bar-subheader .tabs {
   height: 49px !important;
-  padding-bottom: 0;
+  padding-bottom: 0 !important;
 }
 .bottom-buttons {
   width: 100%;
