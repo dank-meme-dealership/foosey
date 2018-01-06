@@ -255,7 +255,7 @@ def player_snoozin(player_id, league_id)
   games = games_with_player(player_id, league_id)
   return false if games.length < 10
   last_game = api_game(games.first, league_id)
-  Time.now.to_i - last_game[:timestamp] > 1_209_600 # 2 weeks
+  Time.now.to_i - last_game[:timestamp] > 2_419_200 # 4 weeks
 end
 
 # returns the respective elo deltas given two ratings and two scores
