@@ -8,7 +8,7 @@
   function SettingsService($state, $ionicPopup, $ionicHistory, localStorage) {
     var service = {
       //App Version
-      version: 0.86,
+      version: 0.89,
 
       //Properties
       addGameClear: setting('addGameClear', false),
