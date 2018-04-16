@@ -13,7 +13,7 @@
       //Properties
       addGameClear: setting('addGameClear', false),
       addGameFilter: setting('addGameFilter', false),
-      addGameNames: setting('addGameNames', false),
+      addGameNames: setting('addGameNames', true),
       addGameRecents: setting('addGameRecents', true),
       addGamePicker: setting('addGamePicker', gamePicker()),
       addGameSelect: setting('addGameSelect', false),
