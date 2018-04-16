@@ -1,4 +1,4 @@
-<ion-view>
+<ion-view id="settings">
   <ion-nav-title>Settings</ion-nav-title>
 
 	<ion-content class="background" has-bouncing="true">
@@ -13,12 +13,14 @@
 			  <ion-toggle ng-change="settings.setProperty('showElo', settings.showElo)" ng-model="settings.showElo" toggle-class="toggle-positive">Show Ranking Points</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('showRelTimes', settings.showRelTimes)" ng-model="settings.showRelTimes" toggle-class="toggle-positive">Show Relative Times</ion-toggle>
         <ion-toggle ng-change="settings.setProperty('showBadges', settings.showBadges)" ng-model="settings.showBadges" toggle-class="toggle-positive">Show Badges</ion-toggle>
-        <label class="item item-input item-select">
-          <div class="input-label">
-            {{ !player.selected ? 'Select a player' : 'You are' }}
-          </div>
-          <select ng-model="settings.playerID" ng-change="setPlayer(settings.playerID)" ng-options="player.playerID as player.displayName for player in players.active"></select>
-        </label>
+        <ion-item class="item spaced-out" ng-click="setPlayer()">
+          <span>You are</span>
+          <span>
+              <ion-spinner class="dark pick-player" icon="lines" ng-if="loading"></ion-spinner>
+            <span ng-if="!loading">{{ player.displayName }}</span>
+            <i class="icon ion-chevron-right padding-left"></i>
+          </span>
+        </ion-item>
       </ion-list>
 		</div>
 

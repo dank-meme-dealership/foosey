@@ -3,9 +3,9 @@
     .module('settings')
     .controller('SettingsController', SettingsController);
 
-  SettingsController.$inject = ['$scope', 'FooseyService', 'SettingsService', 'PlayerService'];
+  SettingsController.$inject = ['$scope', '$state', 'FooseyService', 'SettingsService', 'PlayerService'];
 
-  function SettingsController($scope, FooseyService, SettingsService, PlayerService) {
+  function SettingsController($scope, $state, FooseyService, SettingsService, PlayerService) {
     $scope.settings = SettingsService;
     $scope.players = PlayerService;
 
@@ -17,15 +17,15 @@
     $scope.$on('$ionicView.beforeEnter', function () {
       // send to login screen if they haven't logged in yet
       if (!SettingsService.loggedIn) SettingsService.reallyLogOut();
-      PlayerService.updatePlayers();
+      $scope.loading = $scope.player === undefined;
+      PlayerService.updatePlayers('active').then(function (players){
+        $scope.player = _.find(players, {playerID: SettingsService.playerID});
+        $scope.loading = false;
+      });
     });
 
-    function setPlayer(playerID) {
-      var player = _.find($scope.players.active, function (player) {
-        return player.playerID === playerID;
-      });
-      SettingsService.setProperty('playerID', playerID);
-      SettingsService.setProperty('isAdmin', player.admin);
+    function setPlayer() {
+      $state.go('app.settings-choose-player');
     }
 
     function update() {

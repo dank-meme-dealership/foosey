@@ -10,9 +10,6 @@
     "cordova-plugin-device": {
       "PACKAGE_NAME": "com.matt.foosey"
     },
-    "cordova-plugin-ionic-keyboard": {
-      "PACKAGE_NAME": "com.matt.foosey"
-    },
     "cordova-plugin-ionic-webview": {
       "PACKAGE_NAME": "com.matt.foosey"
     },
@@ -20,9 +17,6 @@
       "PACKAGE_NAME": "com.matt.foosey"
     },
     "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.matt.foosey"
-    },
-    "ionic-plugin-keyboard": {
       "PACKAGE_NAME": "com.matt.foosey"
     }
   },

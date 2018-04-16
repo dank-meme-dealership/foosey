@@ -1,3 +1,22 @@
-<div class="center">
-  <select class="item" ng-model="chosen.player" ng-options="player.displayName for player in players"></select>
-</div>
+<ion-view id="pick-player" view-title="Who are you?" cache-view="false">
+  <ion-nav-bar class="bar bar-stable">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content class="background">
+    <ion-spinner ng-show="$ctrl.loading" class="loading-dots" icon="lines"></ion-spinner>
+
+    <ion-list>
+      <ion-item 
+        class="card item login-item" 
+        ng-repeat="player in $ctrl.players" 
+        ng-click="$ctrl.tapPlayer(player)"
+        ng-class="{'active': $ctrl.selected.playerID === player.playerID}">
+        <span>{{ player.displayName }}</span>
+        <span class="login-button positive" ng-click="$ctrl.logIn(player)")>
+          LOG IN
+        </span>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

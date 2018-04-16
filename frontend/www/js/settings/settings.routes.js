@@ -33,6 +33,16 @@
             templateUrl: 'js/leagues/manage-leagues.html'
           }
         }
+      })
+      .state('app.settings-choose-player', {
+        url: '/settings/choose-player',
+        views: {
+          settings: {
+            controller: 'SettingsPickPlayerController',
+            controllerAs: '$ctrl',
+            templateUrl: 'js/login/pick-player.html'
+          }
+        }
       });
   }
 })();

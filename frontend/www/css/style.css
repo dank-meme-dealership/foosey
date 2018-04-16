@@ -122,6 +122,11 @@ ion-item {
 .platform-android .bar-subheader {
   top:93px !important;
 }
+#settings .spinner.pick-player {
+  position: absolute;
+  top: 13px;
+  right: 40px;
+}
 .space:before {
   padding-right: 16px;
 }

@@ -27,9 +27,9 @@
     });
 
     function getStarted() {
+      // validate that the league exists on the server
       var name = $scope.league.text.toLowerCase();
       $scope.validating = true;
-
       FooseyService.getLeague(name).then(
         function (response) {
           if (response.data.error) {
@@ -38,43 +38,10 @@
             return;
           }
           else {
-            $scope.league.leagueID = response.data.leagueID;
-            getPlayers(response.data);
+            $state.go('choose-player', {name: $scope.league.text});
+            doneValidating();
           }
         });
-    }
-
-    function getPlayers(league) {
-      FooseyService.getAllPlayers(true, league.leagueID).then(
-        function (response) {
-          $scope.players = response;
-          $scope.chosen = {player: response[0]};
-          whoAreYou(league);
-        });
-    }
-
-    function whoAreYou(league) {
-      $ionicPopup.show({
-        title: 'Who are you?',
-        templateUrl: 'js/login/pick-player.html',
-        scope: $scope,
-        buttons: [
-          {text: 'Cancel'},
-          {
-            text: '<b>Ok</b>',
-            type: 'button-positive',
-            onTap: function (e) {
-              league.player = $scope.chosen.player;
-              SettingsService.logIn(league);
-              // Nav to leaderboard
-              $ionicHistory.nextViewOptions({
-                disableBack: true
-              });
-              $state.go('app.leaderboard');
-            }
-          }
-        ]
-      }).then(doneValidating);
     }
 
     function forgot() {
