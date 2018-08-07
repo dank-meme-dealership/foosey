@@ -11,6 +11,7 @@
 
       $ctrl.tapPlayer = tapPlayer;
       $ctrl.logIn = logIn;
+      $ctrl.cancel = cancel;
 
       $scope.$on('$ionicView.afterEnter', function () {
         $ctrl.loading = true;
@@ -45,6 +46,14 @@
           disableBack: true
         });
         $state.go('app.leaderboard');
+      }
+
+      function cancel() {
+        $ionicHistory.nextViewOptions({
+          disableAnimate: true,
+          historyRoot: true
+        });
+        $state.go('login');
       }
     }
 })();

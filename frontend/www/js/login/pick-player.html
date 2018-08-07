@@ -1,7 +1,8 @@
 <ion-view id="pick-player" view-title="Who are you?" cache-view="false">
   <ion-nav-bar class="bar bar-stable">
-    <ion-nav-back-button>
-    </ion-nav-back-button>
+    <ion-nav-buttons side="left">
+      <button class="button button-clear button-positive" ng-click="$ctrl.cancel()">Cancel</button>
+    </ion-nav-buttons>
   </ion-nav-bar>
   <ion-content class="background">
     <ion-spinner ng-show="$ctrl.loading" class="loading-dots" icon="lines"></ion-spinner>
