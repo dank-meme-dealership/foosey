@@ -42,8 +42,10 @@
     // Quick hack before team settings
     // Only league 9 should default to score picker
     function gamePicker() {
-      return localStorage.getObject('league').leagueID === 9 ||
-        localStorage.getObject('league').leagueID === 34;
+      var leagueId = localStorage.getObject('league').leagueID;
+      return leagueId === 9 || // bsu-pingpong
+      leagueId === 34 || // wca-darts
+      leagueId === 41; // wca-cornhole
     }
 
     function isLocalhost() {
