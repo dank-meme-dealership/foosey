@@ -381,7 +381,7 @@ namespace '/v1' do
     json api_league league_name
   end
 
-  get '/leagues/:id' do
+  get '/leagueid/:id' do
     league_id = params['id']
     json api_league_id league_id
   end
