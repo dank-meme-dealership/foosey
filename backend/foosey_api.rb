@@ -138,6 +138,26 @@ def api_league(league_name)
   end
 end
 
+def api_league_id(league_id)
+  database do |db|
+    db.results_as_hash = true
+    league = db.get_first_row 'SELECT * FROM League
+                               WHERE LeagueID = :league_id', league_id
+
+    return {
+      error: true,
+      message: "Invalid league id: #{league_id}"
+    } if league.nil?
+
+    return {
+      error: false,
+      displayName: league['DisplayName'],
+      leagueID: league['LeagueID'],
+      leagueName: league['LeagueName']
+    }
+  end
+end
+
 namespace '/v1' do
   namespace '/:league_id' do
     # Player Information
@@ -359,6 +379,11 @@ namespace '/v1' do
   get '/leagues/:name' do
     league_name = params['name']
     json api_league league_name
+  end
+
+  get '/leagues/:id' do
+    league_id = params['id']
+    json api_league_id league_id
   end
 
   # add a new league
