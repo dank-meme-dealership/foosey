@@ -713,6 +713,8 @@ def add_game(outcome, league_id, timestamp)
     unless (league_id != 1 && league_id != 41) || slack_url.empty?
       text = "Game added: #{game_to_s(game_id, false, league_id)}"
       attachments = [{
+        author_name: "See the leaderboard",
+        author_link: "http://foosey.futbol/#/redirect/" + (league_id == 1 ? "wca-dev" : "wca-cornhole"),
         fields: players.collect do |p|
           delta = p[:delta] >= 0 ? "+#{p[:delta]}" : p[:delta]
           {
@@ -1052,7 +1054,7 @@ def remove_game(game_id, league_id)
     slack_url = db.get_first_value 'SELECT Value FROM Config
                                     WHERE Setting = "SlackUrl"'
 
-    message_slack("Game removed: #{removed}", [], slack_url, league_id) if league_id == 1 || league_id == 41
+    message_slack("Game removed: #{removed}", [], slack_url, league_id) if league_id == 1 || league_id ==
 
     recalc(league_id, timestamp)
   end
