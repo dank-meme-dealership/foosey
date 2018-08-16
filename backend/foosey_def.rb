@@ -56,13 +56,13 @@ def game_to_s(game_id, date, league_id)
   end
 end
 
-def message_slack(text, attach, url)
+def message_slack(text, attach, url, league_id)
   data = {
-    username: 'Foosey',
+    username: league_id == 1 ? 'Foosey' : 'Foosey for Cornhole',
     channel: '#foosey',
     text: text,
     attachments: attach,
-    icon_url: 'http://foosey.futbol/icon.png'
+    icon_url: league_id == 1 ? 'http://foosey.futbol/icon.png' : 'https://i2.wp.com/tailorspot.com/wp-content/uploads/2015/09/TailorSpot_Cornhole_Bag_Turquoise1.jpg'
   }
 
   uri = URI.parse(url)
@@ -710,7 +710,7 @@ def add_game(outcome, league_id, timestamp)
     slack_url = db.get_first_value 'SELECT Value FROM Config
                                     WHERE Setting = "SlackUrl"'
 
-    unless league_id != 1 || slack_url.empty?
+    unless (league_id != 1 && league_id != 41) || slack_url.empty?
       text = "Game added: #{game_to_s(game_id, false, league_id)}"
       attachments = [{
         fields: players.collect do |p|
@@ -722,7 +722,7 @@ def add_game(outcome, league_id, timestamp)
           }
         end
       }]
-      message_slack(text, attachments, slack_url)
+      message_slack(text, attachments, slack_url, league_id)
     end
 
     return {
@@ -784,7 +784,7 @@ def edit_game(league_id, game_id, outcome, timestamp = nil, rec = true)
     slack_url = db.get_first_value 'SELECT Value FROM Config
                                     WHERE Setting = "SlackUrl"'
 
-    message_slack("Game edited: #{game_to_s(game_id, false, league_id)}", [], slack_url) if league_id == 1
+    message_slack("Game edited: #{game_to_s(game_id, false, league_id)}", [], slack_url, league_id) if league_id == 1 || league_id == 41
   end
 
   recalc(league_id) if rec
@@ -1052,7 +1052,7 @@ def remove_game(game_id, league_id)
     slack_url = db.get_first_value 'SELECT Value FROM Config
                                     WHERE Setting = "SlackUrl"'
 
-    message_slack("Game removed: #{removed}", [], slack_url) if league_id == 1
+    message_slack("Game removed: #{removed}", [], slack_url, league_id) if league_id == 1 || league_id == 41
 
     recalc(league_id, timestamp)
   end
