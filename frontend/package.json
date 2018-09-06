@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Foos, yo",
   "devDependencies": {
-    "@ionic/app-scripts": "^3.0.0"
+    "@ionic/app-scripts": "^3.0.0",
+    "@ionic/v1-toolkit": "1.0.8"
   },
   "cordovaPlugins": [
     "cordova-plugin-statusbar",

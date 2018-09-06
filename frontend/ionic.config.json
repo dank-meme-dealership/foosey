@@ -1,6 +1,5 @@
 {
   "name": "Foosey",
-  "app_id": "48a498ec",
   "integrations": {
     "cordova": {}
   },
@@ -13,5 +12,6 @@
     "www/**/*",
     "!www/lib/**/*",
     "!www/**/*.map"
-  ]
+  ],
+  "pro_id": "48a498ec"
 }
