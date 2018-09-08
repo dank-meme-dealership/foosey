@@ -1054,7 +1054,7 @@ def remove_game(game_id, league_id)
     slack_url = db.get_first_value 'SELECT Value FROM Config
                                     WHERE Setting = "SlackUrl"'
 
-    message_slack("Game removed: #{removed}", [], slack_url, league_id) if league_id == 1 || league_id ==
+    message_slack("Game removed: #{removed}", [], slack_url, league_id) if league_id == 1 || league_id == 41
 
     recalc(league_id, timestamp)
   end
