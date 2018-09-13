@@ -45,7 +45,8 @@
       var leagueId = localStorage.getObject('league').leagueID;
       return leagueId === 9 || // bsu-pingpong
       leagueId === 34 || // wca-darts
-      leagueId === 41; // wca-cornhole
+      leagueId === 41 || // wca-cornhole
+      leagueId === 41; // cp-pingpong
     }
 
     function isLocalhost() {
