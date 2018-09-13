@@ -46,7 +46,7 @@
       return leagueId === 9 || // bsu-pingpong
       leagueId === 34 || // wca-darts
       leagueId === 41 || // wca-cornhole
-      leagueId === 41; // cp-pingpong
+      leagueId === 50; // cp-pingpong
     }
 
     function isLocalhost() {
