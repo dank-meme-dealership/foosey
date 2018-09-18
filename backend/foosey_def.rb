@@ -973,13 +973,11 @@ def recalc_elo(timestamp, league_id)
 
       # insert into history table
       game.each_with_index do |player, idx|
-        mult = player['GamesPlayed'] > 25 ? 1 : 5
-
         case game.length
         when 2
-          elos[player['PlayerID']] += (idx < 1 ? delta_a : delta_b) * mult
+          elos[player['PlayerID']] += idx < 1 ? delta_a : delta_b
         when 4
-          elos[player['PlayerID']] += (idx < 2 ? delta_a : delta_b) * mult
+          elos[player['PlayerID']] += idx < 2 ? delta_a : delta_b
         end
 
         db.execute 'INSERT INTO EloHistory
