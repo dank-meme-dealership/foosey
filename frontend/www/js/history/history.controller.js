@@ -26,7 +26,7 @@
       // a promise, so we must check for one.
       if (HistoryService.loaded > 0) {
         var shouldLoadMore = HistoryService.loadMore();
-        if (shouldLoadMore) loadMore.then(done);
+        if (shouldLoadMore) shouldLoadMore.then(done);
       }
     }
 

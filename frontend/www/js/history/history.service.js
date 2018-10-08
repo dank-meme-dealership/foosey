@@ -48,6 +48,8 @@
 
         // see if we can load more games or not
         service.allLoaded = response.length === 0;
+
+        return response;
       });
     }
   }
