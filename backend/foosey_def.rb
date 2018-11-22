@@ -149,6 +149,10 @@ def badges(league_id, player_id)
   badges = Hash.new { |h, k| h[k] = [] }
   all_games = game_ids(league_id)
 
+  # tournament hack
+  badges[9] << badge('🏆', 'ThanksCloud WhiteGiving Champ')   #peter
+  badges[19] << badge('🏆', 'ThanksCloud WhiteGiving Champ')  #justin
+
   # plays a lot
   players.each do |p|
     badges[p] << badge('⚠️', 'Very Active') if games_this_week(p, league_id) > 50
