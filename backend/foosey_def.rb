@@ -216,8 +216,7 @@ def badges(league_id, player_id)
 
   win_streaks.each do |p, s|
     badges[p] << badge("#{s}⃣", "#{s}-Win Streak") if s.between?(3, 9)
-    badges[p] << badge('🔟', "#{s}-Win Streak") if s == 10
-    badges[p] << badge('💰', "#{s}-Win Streak") if s > 10
+    badges[p] << badge('💰', "#{s}-Win Streak") if s >= 10
   end
 
   # zzz badge
