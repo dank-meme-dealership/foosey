@@ -158,9 +158,9 @@ def badges(league_id, player_id)
   # badges[8] << badge('🥉', 'Dec 6th - 3rd Place')  #greg
 
   # plays a lot
-  players.each do |p|
-    badges[p] << badge('⚽', 'Determined') if games_this_week(p, league_id) > 50
-  end
+  # players.each do |p|
+  #   badges[p] << badge('⚽', 'Determined') if games_this_week(p, league_id) > 50
+  # end
 
   # fire badge
   # best daily change
