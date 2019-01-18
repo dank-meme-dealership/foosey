@@ -150,12 +150,12 @@ def badges(league_id, player_id)
   all_games = game_ids(league_id)
 
   # tournament hack
-  # badges[12] << badge('🏆', 'Dec 6th Champs')   #adam
-  # badges[36] << badge('🏆', 'Dec 6th Champs')  #colin
-  # badges[9] << badge('🥈', 'Dec 6th - 2nd Place')   #peter
-  # badges[453] << badge('🥈', 'Dec 6th - 2nd Place')  #james
-  # badges[13] << badge('🥉', 'Dec 6th - 3rd Place')   #erich
-  # badges[8] << badge('🥉', 'Dec 6th - 3rd Place')  #greg
+  badges[1] << badge('🏆', 'Jan 18th Champs')   #matt
+  badges[453] << badge('🏆', 'Jan 18th Champs')  #james
+  badges[9] << badge('🥈', 'Jan 18th - 2nd Place')   #peter
+  badges[319] << badge('🥈', 'Jan 18th - 2nd Place')  #mike
+  badges[13] << badge('🥉', 'Jan 18th - 3rd Place')   #erich
+  badges[21] << badge('🥉', 'Jan 18th - 3rd Place')  #randall
 
   # plays a lot
   # players.each do |p|
