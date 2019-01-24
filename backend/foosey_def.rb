@@ -175,7 +175,7 @@ def badges(league_id, player_id)
   # baby badge
   # 10-15 games played
   babies = players.select do |p|
-    games_with_player(p, league_id, 20).length.between?(10, 15)
+    games_with_player(p, league_id).length.between?(10, 15)
   end
   babies.each { |b| badges[b] << badge('👶🏼', 'Newly Ranked') } unless all_games.length < 100 || babies.nil?
 
@@ -206,7 +206,7 @@ def badges(league_id, player_id)
   # 5 and 10 current win streak
   win_streaks = {}
   players.each do |p|
-    games = games_with_player(p, league_id, 20)
+    games = games_with_player(p, league_id)
     last_wins = games.take_while do |g|
       game = api_game(g, league_id)
       game[:teams][0][:players].any? { |a| a[:playerID] == p }
@@ -216,8 +216,7 @@ def badges(league_id, player_id)
 
   win_streaks.each do |p, s|
     badges[p] << badge("#{s}⃣", "#{s}-Win Streak") if s.between?(3, 9)
-    badges[p] << badge('💰', "#{s}-Win Streak") if s.between?(10, 19)
-    badges[p] << badge('👑', '20+ Win Streak') if s >= 20
+    badges[p] << badge('💰', "#{s}-Win Streak") if s >= 10
   end
 
   # zzz badge
@@ -260,7 +259,7 @@ def badge(emoji, definition)
 end
 
 def player_snoozin(player_id, league_id)
-  games = games_with_player(player_id, league_id, 1)
+  games = games_with_player(player_id, league_id)
   return false if games.length < 10
   last_game = api_game(games.first, league_id)
   Time.now.to_i - last_game[:timestamp] > 2_419_200 # 4 weeks
@@ -368,14 +367,14 @@ def history(league_id, ids)
 end
 
 # returns an array of game ids involving player with id player_id
-def games_with_player(player_id, league_id, limit)
+def games_with_player(player_id, league_id, limit = nil)
   database do |db|
     return db.execute('SELECT GameID From Game
                        WHERE PlayerID = :player_id
                        AND LeagueID = :league_id
-                       ORDER BY Timestamp DESC, GameID DESC
-                       LIMIT :limit',
-                      player_id, league_id, limit).flatten
+                       ORDER BY Timestamp DESC, GameID DESC'
+                       + (limit.nil? '' : ('LIMIT ' + limit)),
+                      player_id, league_id).flatten
   end
 end
 

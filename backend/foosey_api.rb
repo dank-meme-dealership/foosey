@@ -181,8 +181,8 @@ namespace '/v1' do
     get '/players/:id/games' do
       id = params['id'].to_i
       limit = params['limit'].to_i if params['limit']
-      limit ||= 1000 # return no more than 1000 items
-      ids = games_with_player(id, params['league_id'].to_i, limit)
+      ids = games_with_player(id, params['league_id'].to_i)
+      limit ||= ids.length
 
       ids = ids[0, limit]
 
