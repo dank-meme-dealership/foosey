@@ -184,7 +184,7 @@ def badges(league_id, player_id)
   # flexing badge
   # won last game and gained 10+ elo
   players.select do |p|
-    games = games_with_player(p, league_id)
+    games = games_with_player(p, league_id, 1)
     next if games.empty?
     last_game = api_game(games.first, league_id)
     winner = last_game[:teams][0][:players].any? { |a| a[:playerID] == p }
@@ -367,12 +367,13 @@ def history(league_id, ids)
 end
 
 # returns an array of game ids involving player with id player_id
-def games_with_player(player_id, league_id)
+def games_with_player(player_id, league_id, limit = nil)
   database do |db|
     return db.execute('SELECT GameID From Game
                        WHERE PlayerID = :player_id
                        AND LeagueID = :league_id
-                       ORDER BY Timestamp DESC, GameID DESC',
+                       ORDER BY Timestamp DESC, GameID DESC'
+                       + (limit.nil? '' : ('LIMIT ' + limit)),
                       player_id, league_id).flatten
   end
 end
