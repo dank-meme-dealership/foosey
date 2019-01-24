@@ -260,7 +260,7 @@ def badge(emoji, definition)
 end
 
 def player_snoozin(player_id, league_id)
-  games = games_with_player(player_id, league_id, 1)
+  games = games_with_player(player_id, league_id, 10)
   return false if games.length < 10
   last_game = api_game(games.first, league_id)
   Time.now.to_i - last_game[:timestamp] > 2_419_200 # 4 weeks
