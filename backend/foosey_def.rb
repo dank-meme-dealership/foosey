@@ -147,7 +147,7 @@ def badges(league_id, player_id)
   # get players
   players = player_ids league_id
   badges = Hash.new { |h, k| h[k] = [] }
-  all_games = game_ids(league_id)
+  all_games = game_ids(league_id, 100)
 
   # tournament hack
   badges[1] << badge('🏆', 'Jan 18th Champs')   #matt
@@ -294,13 +294,14 @@ def elo_delta(rating_a, score_a, rating_b, score_b,
 end
 
 # returns an array of all game ids
-def game_ids(league_id)
+def game_ids(league_id, limit)
   database do |db|
     # return id
     return db.execute('SELECT DISTINCT GameID FROM Game
                        WHERE LeagueID = :league_id
-                       ORDER BY Timestamp DESC, GameID DESC',
-                      league_id).flatten
+                       ORDER BY Timestamp DESC, GameID DESC
+                       LIMIT :limit',
+                      league_id, limit).flatten
   end
 end
 
@@ -554,7 +555,8 @@ end
 
 def elo(player_id, game_id, league_id)
   database do |db|
-    game_id ||= game_ids(league_id).last
+    # this could break (with the limit), but Foosey 1.0 will be dead before then
+    game_id ||= game_ids(league_id, 20000).last
 
     elo = db.get_first_value 'SELECT Elo FROM EloHistory
                               WHERE PlayerID = :player_id

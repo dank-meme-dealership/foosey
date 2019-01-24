@@ -206,8 +206,8 @@ namespace '/v1' do
       ids = params['ids'].split ',' if params['ids']
       limit = params['limit'].to_i if params['limit']
       offset = params['offset'].to_i if params['offset']
-      ids ||= game_ids params['league_id'].to_i
-      limit ||= ids.length
+      limit ||= 1000 # return no more than 1000 games
+      ids ||= game_ids(params['league_id'].to_i, limit)
       offset ||= 0
 
       ids = ids[offset, limit]
